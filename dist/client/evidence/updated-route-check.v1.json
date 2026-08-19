@@ -1,0 +1,137 @@
+{
+  "format": "CHORUS_UPDATED_ROUTE_CHECK",
+  "schema_version": 1,
+  "status": "pass",
+  "environment": {
+    "server": "vinext production server",
+    "host": "127.0.0.1",
+    "port": 4181,
+    "network": "loopback only"
+  },
+  "routes": [
+    {
+      "route": "/",
+      "status": 200,
+      "content_type": "text/html",
+      "bytes": 15074,
+      "sha256": "e196cdb405f0eaa8394dcff68a7f704c442e39b0c4ac0716fd5543d9d77c5c74"
+    },
+    {
+      "route": "/notebooks/index.html",
+      "status": 200,
+      "content_type": "text/html",
+      "bytes": 9657,
+      "sha256": "fd0770998355124d8667e4b4bb80f2c09a68fb76acd75ac5165f5833de5b27ca"
+    },
+    {
+      "route": "/notebooks/chorus-systems-atlas.html",
+      "status": 200,
+      "content_type": "text/html",
+      "bytes": 39896,
+      "sha256": "0042be3267acbc103f239f4c2fad5aa34cefe29cc159ab7682c6e2aefb89af5b"
+    },
+    {
+      "route": "/notebooks/chorus-model-specification.html",
+      "status": 200,
+      "content_type": "text/html",
+      "bytes": 76007,
+      "sha256": "dff27d1ada566f5a58b8f70a2be1464368b6c9d8f2d40fb1986fb0a30a3f910b"
+    },
+    {
+      "route": "/notebooks/chorus-research-design.html",
+      "status": 200,
+      "content_type": "text/html",
+      "bytes": 75847,
+      "sha256": "58bb80fadcb629ddda615dc2cf210827002302df3d2ed6e2174f5f3d5c90c753"
+    },
+    {
+      "route": "/notebooks/chorus-validation-atlas.html",
+      "status": 200,
+      "content_type": "text/html",
+      "bytes": 65379,
+      "sha256": "0dc299d3c99ea1894992dde522ca37524908ed05e4086b0a6dd9758486c3acd9"
+    },
+    {
+      "route": "/evidence/index.html",
+      "status": 200,
+      "content_type": "text/html",
+      "bytes": 26815,
+      "sha256": "49ecc8f18995c95df6d77224f7e0d2dd9b48bf9bb57f54517ba08c20c20acb8a"
+    },
+    {
+      "route": "/evidence/updated-working-tree-status.html",
+      "status": 200,
+      "content_type": "text/html",
+      "bytes": 5711,
+      "sha256": "01157c9dab3632be66e761fa742cc22bf577216e0a970ceab65633429fe6d2ea"
+    },
+    {
+      "route": "/evidence/updated-working-tree-status.v1.json",
+      "status": 200,
+      "content_type": "application/json",
+      "bytes": 6608,
+      "sha256": "969c4a637242ac83d4a72c579f487b27be886c5c9d2f700687d3b05d31f33cba"
+    },
+    {
+      "route": "/favicon.svg",
+      "status": 200,
+      "content_type": "image/svg+xml",
+      "bytes": 1996,
+      "sha256": "9fb12a1a6e3541cf719c74ffe884092f4d7b8ab524535cbc5cf02ca7c6128ebb"
+    },
+    {
+      "route": "/favicon.ico",
+      "status": 200,
+      "content_type": "image/x-icon",
+      "bytes": 18560,
+      "sha256": "210038b330f3695d22e4813bbb050d57999e9b8e2cd1271ed49ecd7015fc8d24"
+    },
+    {
+      "route": "/favicon-16x16.png",
+      "status": 200,
+      "content_type": "image/png",
+      "bytes": 920,
+      "sha256": "27dcbf33327a6160ee508226d5156cd8d58c93f30c7c46d9f9c13ca0e894dde3"
+    },
+    {
+      "route": "/favicon-32x32.png",
+      "status": 200,
+      "content_type": "image/png",
+      "bytes": 2601,
+      "sha256": "c8ca1969987ac36d3a29d40ed47a148dc9da33231cfd76e972138befd493d671"
+    },
+    {
+      "route": "/apple-touch-icon.png",
+      "status": 200,
+      "content_type": "image/png",
+      "bytes": 24670,
+      "sha256": "6c1e32406b7e0073faa2a4e62537e2a0fd6546c2582e8c845d89b54962d1182a"
+    },
+    {
+      "route": "/icon-192.png",
+      "status": 200,
+      "content_type": "image/png",
+      "bytes": 25854,
+      "sha256": "31eebbc5239e232bcecbfc73521ff13c9fbc167481ea6ba0960866c54a8ad32e"
+    },
+    {
+      "route": "/icon-512.png",
+      "status": 200,
+      "content_type": "image/png",
+      "bytes": 63590,
+      "sha256": "03bce4b47eb6c01894a42b32d1d8679edfab64fa09789ded728176af7010e053"
+    },
+    {
+      "route": "/site.webmanifest",
+      "status": 200,
+      "content_type": "application/manifest+json",
+      "bytes": 528,
+      "sha256": "9bf823cc43957c2a096fd9d7a2c3a5ca22246945cd75b12e3fb31fb69586affb"
+    }
+  ],
+  "summary": {
+    "checked": 17,
+    "passed": 17,
+    "failed": 0
+  }
+}

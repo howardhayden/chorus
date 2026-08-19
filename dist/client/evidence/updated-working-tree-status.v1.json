@@ -1,0 +1,210 @@
+{
+  "format": "CHORUS_UPDATED_WORKING_TREE_STATUS",
+  "schema_version": 1,
+  "captured_at": "2026-08-19T21:38:00-04:00",
+  "base_repository": "howardhayden/chorus",
+  "base_commit": "e331f79b8fddd397be80891d7ddea25fda778d58",
+  "application_version": "1.0.0-rc.1",
+  "generator_version": 13,
+  "portable_save_schema": 1,
+  "working_tree_state": "held-for-evidence-renewal",
+  "state_label": "Complete updated working tree; not a promoted replacement release candidate",
+  "implementation_binding": {
+    "algorithm": "sha256-path-length-content",
+    "digest": "d8bb8701ca63e46f245aa48f11a0a67d796ca71f7cf5c8472e586d718f7573dd",
+    "file_count": 18,
+    "files": [
+      {
+        "path": "app/globals.css",
+        "bytes": 92806,
+        "sha256": "fb1a72b8381f125dcb252cde976ad3da34f8e6e7f7a558cc2dce4423e19960f5"
+      },
+      {
+        "path": "app/layout.tsx",
+        "bytes": 1088,
+        "sha256": "a7703bac2255e0ca42df55de010960b6febc78c25acd658cf4ddb4b593838b19"
+      },
+      {
+        "path": "app/night-engine.ts",
+        "bytes": 48930,
+        "sha256": "a81058d06d42a80671a25d7903a1873072ee66b85da04551223316ecbf8aebc7"
+      },
+      {
+        "path": "app/page.tsx",
+        "bytes": 90215,
+        "sha256": "e41bb75cdb71ae3aad69cdabc64c8cf4ebb047f29922f0f9a354afc7b5d656df"
+      },
+      {
+        "path": "app/privacy-panel.tsx",
+        "bytes": 9741,
+        "sha256": "fffee10ffbe897080ca022ae60e8f1fd3eed6f2ed924326d71a91ef6ff401328"
+      },
+      {
+        "path": "app/save-model.ts",
+        "bytes": 30230,
+        "sha256": "21e723d4bae7dc63239dee39c9767fba141928c1e48d79e2e830ca42f9bcf297"
+      },
+      {
+        "path": "app/scenario-generator.ts",
+        "bytes": 263122,
+        "sha256": "e0feb111e302ce029ff1e97f94b66907a3657cafabfeb7d30928d4c8d8d23a4d"
+      },
+      {
+        "path": "next.config.ts",
+        "bytes": 104,
+        "sha256": "ab4c61f6ee100ae43610a18512f1ebcec842bb2405431e1009266173f21cf772"
+      },
+      {
+        "path": "postcss.config.mjs",
+        "bytes": 94,
+        "sha256": "dfac7ac2d86d326a0e5adb024e7943c181393ed17a5fcb8f0315b24c7da6ddde"
+      },
+      {
+        "path": "scripts/run-simulation-evidence.mjs",
+        "bytes": 34479,
+        "sha256": "1bc2d77da3f5c9f6d649b7a78976e4d53f4860450029e2f6103c7d8cb0a559dc"
+      },
+      {
+        "path": "tests/accessibility-disclosure.test.mjs",
+        "bytes": 23758,
+        "sha256": "9c134a31714fdc4f55ebe629abe101ee7415c1853ed71bb4805f35961f85434e"
+      },
+      {
+        "path": "tests/concurrent-night.test.mjs",
+        "bytes": 53166,
+        "sha256": "b26d127f37a4fd8c0558780e94fa14f30088d379d8b28f371a895b19d4182f89"
+      },
+      {
+        "path": "tests/rendered-html.test.mjs",
+        "bytes": 1454,
+        "sha256": "9c3d2da7f547cf532dc0ce7a398b30f964cf5497fcbd582329781db2f9ae317e"
+      },
+      {
+        "path": "tests/save-model.test.mjs",
+        "bytes": 9624,
+        "sha256": "4fbdc7ae981fec2851b55c5e4a174d8a0c79955d0a06f3ba2f4991aba6403b6c"
+      },
+      {
+        "path": "tests/simulation-maturity.test.mjs",
+        "bytes": 4644,
+        "sha256": "6e6a9e5229c9da1f57b629ab09f7237682b2318b76d76ce82bcd39f62066b22d"
+      },
+      {
+        "path": "tests/viewport-contract.test.mjs",
+        "bytes": 11174,
+        "sha256": "79452439182296c99b98c8cfb566ee1e0de42bfab2cc4ea7783c45904e71447e"
+      },
+      {
+        "path": "tsconfig.json",
+        "bytes": 706,
+        "sha256": "72ed3722a65e2242200f164aaed26b046901f134660bf81d64464ea73a37b4a8"
+      },
+      {
+        "path": "worker/index.ts",
+        "bytes": 1756,
+        "sha256": "c70393de3e7d55739c1379b1351163966f81aee4d96c8de847096b9f3bd83aa4"
+      }
+    ]
+  },
+  "included_update": [
+    "CHORUS Model Specification executed notebook and styled HTML",
+    "CHORUS Research Design Atlas executed notebook and styled HTML",
+    "House Guide and Field Notes in-app scholarly reading alert",
+    "Standalone notebook routes and four-record notebook index",
+    "SVG, ICO, 16/32 PNG, Apple touch, and 192/512 web-manifest icon coverage",
+    "Current working-tree verification command separated from release promotion"
+  ],
+  "verification": {
+    "status": "pass",
+    "command": "npm run verify:working-tree",
+    "exit_code": 0,
+    "implementation_assertions": 118680,
+    "implementation_failures": 0,
+    "focused_tests": {
+      "passed": 80,
+      "failed": 0,
+      "groups": [
+        {
+          "name": "concurrent night",
+          "passed": 34
+        },
+        {
+          "name": "simulation maturity",
+          "passed": 5
+        },
+        {
+          "name": "save model",
+          "passed": 10
+        },
+        {
+          "name": "accessibility and disclosure",
+          "passed": 22
+        },
+        {
+          "name": "viewport contract",
+          "passed": 8
+        },
+        {
+          "name": "rendered HTML metadata",
+          "passed": 1
+        }
+      ]
+    },
+    "notebook_publication": {
+      "status": "pass",
+      "artifacts": 16,
+      "records": 4
+    },
+    "lint": "pass",
+    "typecheck": "pass",
+    "production_build": "pass",
+    "simulation_evidence": {
+      "status": "pass",
+      "seed_count": 4096,
+      "played_count": 512,
+      "assertions": 118680,
+      "failures": 0,
+      "evidence_sha256": "ffd9821c8dfd3dc3b4f3a06f2715b3d490c150e7abf65f201474fe6df25fe844"
+    },
+    "log_path": "evidence/runs/updated-working-tree-verification.v1.log"
+  },
+  "production_route_check": {
+    "status": "pass",
+    "checked": 21,
+    "passed": 21,
+    "result_path": "evidence/runs/final-output-route-check.v1.json"
+  },
+  "dependency_advisory_check": {
+    "status": "pass",
+    "package_lock_sha256": "df9b51ab24c932408bf7a8664bb9f22b5fc6dd299a7d6317811514b62d3609dc",
+    "total_dependencies": 649,
+    "vulnerabilities": {
+      "info": 0,
+      "low": 0,
+      "moderate": 0,
+      "high": 0,
+      "critical": 0,
+      "total": 0
+    },
+    "environment": {
+      "node": "v22.16.0",
+      "npm": "10.9.2"
+    },
+    "result_path": "evidence/runs/dependency-audit.updated-working-tree.v1.json",
+    "scope_note": "The registry audit was rerun against the byte-identical locked dependency graph; it is lockfile evidence rather than a browser or application-interaction run."
+  },
+  "historical_evidence_boundary": [
+    "The retained 1.0.0-rc.1 live-browser completion and neutral-distribution proof predate this implementation digest.",
+    "Those results remain published as historical evidence and are not relabeled as current-source execution."
+  ],
+  "current_observation_limits": [
+    "Live browser navigation could not be repeated in the packaging runtime because its managed Chromium policy blocked navigation, including loopback and intercepted test origins.",
+    "Current production HTML, metadata, icon assets, semantic contracts, viewport contracts, state tests, deterministic simulation evidence, dependency advisory lookup, and production routes were observed directly.",
+    "The current clean source archive was assembled and hashed, but a second independent fresh-cache installation is reserved for promotion evidence rather than inferred from the verified working tree."
+  ],
+  "promotion_requirements": [
+    "Repeat complete-night live-browser interaction against this exact implementation digest.",
+    "Repeat neutral clean-room installation and distribution proof against this exact output tree.",
+    "Bind all promoted-release gates to one source digest without reusing prior-source execution as current proof."
+  ]
+}

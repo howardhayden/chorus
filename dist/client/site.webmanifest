@@ -1,0 +1,22 @@
+{
+  "name": "CHORUS — A Social Trust Simulation",
+  "short_name": "CHORUS",
+  "description": "An interactive systems simulation about people, memes, machines, and manufactured social reality.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#050b08",
+  "theme_color": "#0b2819",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

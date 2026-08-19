@@ -33,4 +33,7 @@ test("renders only product-facing document metadata", async () => {
   const html = await response.text();
   assert.match(html, productTitle);
   assert.match(html, productDescription);
+  assert.match(html, /href=["'](?:https:\/\/chorus\.observer)?\/favicon-32x32\.png["']/i);
+  assert.match(html, /href=["'](?:https:\/\/chorus\.observer)?\/favicon\.ico["']/i);
+  assert.match(html, /href=["'](?:https:\/\/chorus\.observer)?\/site\.webmanifest["']/i);
 });

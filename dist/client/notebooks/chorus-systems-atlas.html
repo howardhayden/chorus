@@ -4,6 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="description" content="An executed map of the concurrent-night architecture, evidence boundaries, choice access, propagation, persistence, and maintenance seams.">
+<meta name="theme-color" content="#0b2819">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="icon" href="../favicon-32x32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="../favicon-16x16.png" sizes="16x16" type="image/png">
+<link rel="shortcut icon" href="../favicon.ico">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png" sizes="180x180">
+<link rel="manifest" href="../site.webmanifest">
 <title>CHORUS Systems Atlas · CHORUS documentation</title>
 <style>
 :root{
@@ -74,11 +81,7 @@ tbody th{color:var(--mint);min-width:11rem}
   <p class="eyebrow">Architecture · state · disclosure</p>
   <h1>CHORUS Systems Atlas</h1>
   <p class="lede">An executed map of the concurrent-night architecture, evidence boundaries, choice access, propagation, persistence, and maintenance seams.</p>
-  <nav class="doc-nav" aria-label="Notebook navigation">
-    <a href="index.html">Notebook index</a>
-    <a href="chorus-validation-atlas.html">Verification Ledger</a>
-    <a href="CHORUS-Systems-Atlas.ipynb" download>Download executed notebook</a>
-  </nav>
+  <nav class="doc-nav" aria-label="Notebook navigation"><a href="index.html">Notebook index</a><a href="chorus-systems-atlas.html" aria-current="page">Systems Atlas</a><a href="chorus-model-specification.html">Model Specification</a><a href="chorus-research-design.html">Research Design</a><a href="chorus-validation-atlas.html">Historical Verification Ledger</a><a href="CHORUS-Systems-Atlas.ipynb" download>Download executed notebook</a></nav>
 </header>
 <main id="main">
 <section class="notebook-cell markdown-cell"><h2>CHORUS Systems Atlas</h2>
@@ -161,7 +164,7 @@ generator_version = int(version_match.group(1))
 assert generator_version &gt; 0 and len(provenance_rows) == len(tracked_sources)
 _html = table_html(&quot;Implementation provenance&quot;, (&quot;Source&quot;, &quot;Lines&quot;, &quot;SHA-256 (12)&quot;, &quot;Authority&quot;), provenance_rows, row_headers=True)
 print(f&quot;PASS: read {len(provenance_rows)} authoritative modules; parsed generator version {generator_version}.&quot;)
-_html</code></pre></details><p class="execution-note">PASS: read 5 authoritative modules; parsed generator version 13.</p><div class="table-wrap" role="region" aria-label="Implementation provenance" tabindex="0"><table><caption>Implementation provenance</caption><thead><tr><th scope="col">Source</th><th scope="col">Lines</th><th scope="col">SHA-256 (12)</th><th scope="col">Authority</th></tr></thead><tbody><tr><th scope="row">app/scenario-generator.ts</th><td>4407</td><td>e0feb111e302</td><td>Validated night grammar and coherence gates</td></tr><tr><th scope="row">app/night-engine.ts</th><td>1150</td><td>a81058d06d42</td><td>Shared-clock event reducer and receipt validation</td></tr><tr><th scope="row">app/page.tsx</th><td>896</td><td>3c56b278e230</td><td>One-viewport disclosure and interaction shell</td></tr><tr><th scope="row">app/save-model.ts</th><td>710</td><td>21e723d4bae7</td><td>Portable-state and local-slot validation</td></tr><tr><th scope="row">app/privacy-panel.tsx</th><td>229</td><td>fffee10ffbe8</td><td>Player-directed persistence controls</td></tr></tbody></table></div></section><section class="notebook-cell markdown-cell"><h3>Runtime topology</h3>
+_html</code></pre></details><p class="execution-note">PASS: read 5 authoritative modules; parsed generator version 13.</p><div class="table-wrap" role="region" aria-label="Implementation provenance" tabindex="0"><table><caption>Implementation provenance</caption><thead><tr><th scope="col">Source</th><th scope="col">Lines</th><th scope="col">SHA-256 (12)</th><th scope="col">Authority</th></tr></thead><tbody><tr><th scope="row">app/scenario-generator.ts</th><td>4407</td><td>e0feb111e302</td><td>Validated night grammar and coherence gates</td></tr><tr><th scope="row">app/night-engine.ts</th><td>1150</td><td>a81058d06d42</td><td>Shared-clock event reducer and receipt validation</td></tr><tr><th scope="row">app/page.tsx</th><td>904</td><td>e41bb75cdb71</td><td>One-viewport disclosure and interaction shell</td></tr><tr><th scope="row">app/save-model.ts</th><td>710</td><td>21e723d4bae7</td><td>Portable-state and local-slot validation</td></tr><tr><th scope="row">app/privacy-panel.tsx</th><td>229</td><td>fffee10ffbe8</td><td>Player-directed persistence controls</td></tr></tbody></table></div></section><section class="notebook-cell markdown-cell"><h3>Runtime topology</h3>
 <p>The runtime is intentionally narrow: generation establishes a validated world, the event reducer is the sole authority for change, and the interface discloses only what the occupied seat may currently know. Persistence stores the same event-sourced state instead of creating a parallel model.</p></section><section class="notebook-cell code-cell"><details><summary>Executed cell 3: show source</summary><pre><code>modules = [
     (&quot;Scenario grammar&quot;, &quot;app/scenario-generator.ts&quot;, &quot;Creates six reviewed rooms, links, scenes, choices, ledgers, and coherence reports.&quot;),
     (&quot;Night reducer&quot;, &quot;app/night-engine.ts&quot;, &quot;Applies decisions, time advances, ambient pulses, access checks, and cross-room receipts.&quot;),
@@ -270,7 +273,7 @@ print(&quot;Maintenance map complete: each change names its authority and releas
 _html</code></pre></details><p class="execution-note">Maintenance map complete: each change names its authority and release companions.</p><div class="table-wrap" role="region" aria-label="Change routing and required companion work" tabindex="0"><table><caption>Change routing and required companion work</caption><thead><tr><th scope="col">Change</th><th scope="col">Authoritative layer</th><th scope="col">Release companions</th></tr></thead><tbody><tr><th scope="row">Add a room grammar</th><td>Generator</td><td>Coherence report, six-dynamic coverage, youth safety, route compatibility</td></tr><tr><th scope="row">Add a metric</th><td>Generator and reducer</td><td>Bounds, local effect, remote effect, persistence, receipt wording</td></tr><tr><th scope="row">Add a fatigue channel</th><td>Types, access checks, receipts</td><td>Discernment separation, caps, blocked reason, save validation</td></tr><tr><th scope="row">Add a cross-room mechanism</th><td>Link grammar and reducer</td><td>All 30 pairs, direct/ambient boundary, reveal policy</td></tr><tr><th scope="row">Add a disclosure</th><td>Renderer</td><td>Arrival gate, progressive disclosure, keyboard path, mobile fit</td></tr></tbody></table></div></section>
 </main>
 <footer class="site-footer">
-  <p>Committed source and static edition · rebuilt deterministically with the Python standard library · 2026-08-18</p>
+  <p>Committed source and static edition · rebuilt deterministically with the Python standard library · 2026-08-19</p>
 </footer>
 </body>
 </html>

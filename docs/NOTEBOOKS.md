@@ -10,6 +10,8 @@ source.
 Canonical notebook sources:
 
 - [`notebooks/CHORUS-Systems-Atlas.ipynb`](../notebooks/CHORUS-Systems-Atlas.ipynb)
+- [`notebooks/CHORUS-Model-Specification.ipynb`](../notebooks/CHORUS-Model-Specification.ipynb)
+- [`notebooks/CHORUS-Research-Design.ipynb`](../notebooks/CHORUS-Research-Design.ipynb)
 - [`notebooks/CHORUS-Validation-Atlas.ipynb`](../notebooks/CHORUS-Validation-Atlas.ipynb)
 - [Notebook run instructions and environment](../notebooks/README.md)
 
@@ -17,8 +19,12 @@ Published completed output:
 
 - [Notebook index](../public/notebooks/index.html)
 - [Systems Atlas HTML](../public/notebooks/chorus-systems-atlas.html)
+- [Model Specification HTML](../public/notebooks/chorus-model-specification.html)
+- [Research Design Atlas HTML](../public/notebooks/chorus-research-design.html)
 - [Validation Atlas HTML](../public/notebooks/chorus-validation-atlas.html)
 - [Systems Atlas source download](../public/notebooks/CHORUS-Systems-Atlas.ipynb)
+- [Model Specification source download](../public/notebooks/CHORUS-Model-Specification.ipynb)
+- [Research Design source download](../public/notebooks/CHORUS-Research-Design.ipynb)
 - [Validation Atlas source download](../public/notebooks/CHORUS-Validation-Atlas.ipynb)
 - [Release evidence index](../public/evidence/index.html), which links the
   executed notebooks to the exact retained release results they support
@@ -37,7 +43,41 @@ The Systems Atlas exposes fixed architectural declarations for:
 - fatigue, discernment, enactment, and last-resort thresholds; and
 - save/replay boundaries.
 
+## Model Specification scope
+
+The Model Specification exposes:
+
+- units and levels of analysis;
+- the construct and variable register, including why each variable exists;
+- protected distinctions among record, inference, motive, truth, style, capacity,
+  and synthetic frequency;
+- assumptions, exclusions, mechanism chains, and sensitivity priorities;
+- a multidimensional coherence rubric spanning agentic, motivational,
+  affective, relational, epistemic, temporal, causal, network, narrative,
+  ethical, and reproducibility requirements;
+- construct, internal, external, ecological, content, statistical, and ethical
+  validity boundaries; and
+- a model-change contract tying definitions to tests, disclosure, maintenance,
+  and misuse review.
+
+## Research Design Atlas scope
+
+The Research Design Atlas exposes:
+
+- twelve within-model research questions with explicit independent variables,
+  outcomes, and comparison designs;
+- matched-seed, factorial, ablation, topology, timing, and policy variants;
+- quantitative integrity, paired-effect, distribution, path, sensitivity, and
+  multiplicity practices;
+- qualitative coding for actor specificity, motivation, affect, relationships,
+  epistemic discipline, communication, narrative continuity, and ethics;
+- mixed-method joint interpretation, robustness, and falsification criteria;
+- synthetic-data and participant-research ethics boundaries; and
+- a reproducible reporting template and staged research roadmap.
+
 ## Validation Atlas scope
+
+The Validation Atlas is historical for the pre-update source binding. It preserves the retained `1.0.0-rc.1` browser, distribution, and release evidence without presenting those runs as current-source execution. The updated tree publishes its bounded status separately at [`public/evidence/updated-working-tree-status.html`](../public/evidence/updated-working-tree-status.html).
 
 The Validation Atlas exposes fixed verification declarations for:
 
@@ -95,9 +135,9 @@ described in [Testing and traceability](TESTING-TRACEABILITY.md).
 The notebook build process writes completed HTML and downloadable source copies
 to `public/notebooks/`. Release validation checks that:
 
-- both canonical sources exist;
-- both completed HTML files exist and are nonempty;
-- source downloads match the canonical notebooks;
+- all four canonical sources exist;
+- all four completed HTML files exist and are nonempty;
+- every source download matches its canonical notebook;
 - completed cells and run metadata are present;
 - every code cell has an execution count and committed output;
 - build date, builder, Python language metadata, and deterministic status are
