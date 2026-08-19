@@ -6,6 +6,11 @@ on:
       - agent/merge-complete-chorus-20260819
     paths:
       - .github/workflows/import-complete-chorus.yml
+  pull_request:
+    branches:
+      - main
+    paths:
+      - .github/workflows/import-complete-chorus.yml
 
 permissions:
   contents: write
