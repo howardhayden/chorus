@@ -1,4 +1,4 @@
-name: Export complete CHORUS source
+name: Capture CHORUS lockfile audit
 
 on:
   pull_request:
@@ -10,10 +10,10 @@ permissions:
   contents: read
 
 jobs:
-  export:
+  audit:
     if: github.event_name == 'workflow_dispatch' || github.head_ref == 'agent/export-complete-chorus-20260819'
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 20
 
     steps:
       - name: Check out exact source
@@ -28,21 +28,13 @@ jobs:
       - name: Install locked dependencies
         run: npm ci
 
-      - name: Package source and dependencies
-        shell: bash
-        run: |
-          set -euo pipefail
-          tar \
-            --exclude=.git \
-            --exclude=.github/workflows/export-complete-chorus.yml \
-            -czf /tmp/chorus-base-with-deps.tar.gz \
-            .
+      - name: Capture registry advisory evidence
+        run: python3 scripts/docs/capture_dependency_audit.py
 
-      - name: Upload exact export
+      - name: Upload audit result
         uses: actions/upload-artifact@v4
         with:
-          name: chorus-base-with-deps
-          path: /tmp/chorus-base-with-deps.tar.gz
+          name: chorus-lockfile-audit
+          path: evidence/runs/dependency-audit.v1.json
           if-no-files-found: error
-          compression-level: 0
           retention-days: 1
