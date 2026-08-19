@@ -330,3 +330,56 @@ test("privacy controls validate before restore and keep failures inside an annou
   assert.match(privacy, /document\.body\.append\(link\)[\s\S]*link\.click\(\)[\s\S]*link\.remove\(\)/);
   assert.match(privacy, /window\.setTimeout\(\(\) => URL\.revokeObjectURL\(url\), 0\)/);
 });
+test("scholarly record is executed, public, bounded, and reachable from the House Guide", async () => {
+  const record = functionSource("ResearchRecordLinks", "HouseGuide");
+  assert.match(page, /kind === "notes" && <>\{analysisAvailable \? <FieldNotes \/> : <HouseGuide \/>\}<ResearchRecordLinks \/><\/>/);
+  assert.match(record, /role="note" aria-labelledby="research-record-title"/);
+  assert.match(record, /\/notebooks\/chorus-model-specification\.html/);
+  assert.match(record, /\/notebooks\/chorus-research-design\.html/);
+  assert.match(record, /target="chorus-scholarly-frame"/);
+  assert.match(record, /target="_blank" rel="noreferrer"/);
+  assert.match(record, /<iframe name="chorus-scholarly-frame"/);
+  assert.match(record, /title="CHORUS scholarly notebook viewer"/);
+  assert.match(record, /src="\/notebooks\/index\.html"/);
+  assert.match(record, /sandbox="allow-downloads allow-popups"/);
+  assert.match(record, /\/notebooks\/chorus-systems-atlas\.html/);
+  assert.match(record, /\/notebooks\/chorus-validation-atlas\.html/);
+  assert.match(css, /CHORUS SCHOLARLY RECORD · 2026-08-19/);
+  assert.match(css, /\.research-record-cards a,\.research-record-links a\{[\s\S]*?min-height:44px/);
+  assert.match(css, /\.research-record-viewer iframe\{[^}]*height:clamp\(30rem,66dvh,52rem\)/);
+  assert.match(css, /@media\(max-width:680px\)\{[\s\S]*?\.research-record-cards,\.research-record-cards article>div:last-child,\.research-record-links\{grid-template-columns:minmax\(0,1fr\)/);
+
+  const paths = [
+    ["CHORUS-Model-Specification.ipynb", "chorus-model-specification.html", "CHORUS Model Specification"],
+    ["CHORUS-Research-Design.ipynb", "chorus-research-design.html", "CHORUS Research Design Atlas"],
+  ];
+  for (const [notebookName, htmlName, title] of paths) {
+    const notebook = JSON.parse(await readFile(path.join(root, "notebooks", notebookName), "utf8"));
+    const codeCells = notebook.cells.filter((cell) => cell.cell_type === "code");
+    assert.ok(notebook.cells.every((cell) => /^[A-Za-z0-9_-]{1,64}$/.test(cell.id)));
+    assert.equal(new Set(notebook.cells.map((cell) => cell.id)).size, notebook.cells.length);
+    assert.ok(codeCells.length > 10);
+    assert.ok(codeCells.every((cell) => Number.isInteger(cell.execution_count) && cell.execution_count > 0));
+    assert.ok(codeCells.every((cell) => Array.isArray(cell.outputs) && cell.outputs.length > 0));
+    assert.equal(notebook.metadata.chorus.claim_boundary, "synthetic explanatory model; not externally predictive");
+    const rendered = await readFile(path.join(root, "public/notebooks", htmlName), "utf8");
+    assert.match(rendered, new RegExp(`<title>${title}`));
+    assert.match(rendered, /<main id="main">/);
+    assert.match(rendered, /Download executed notebook/);
+    assert.match(rendered, /href="\.\.\/favicon\.ico"/);
+    assert.doesNotMatch(rendered, /<script/i);
+  }
+
+  const layout = await readFile(path.join(root, "app/layout.tsx"), "utf8");
+  assert.match(layout, /metadataBase: new URL\("https:\/\/chorus\.observer"\)/);
+  assert.match(layout, /favicon-32x32\.png/);
+  assert.match(layout, /shortcut: "\/favicon\.ico"/);
+  assert.match(layout, /apple-touch-icon\.png/);
+  assert.match(layout, /manifest: "\/site\.webmanifest"/);
+  assert.match(layout, /themeColor: "#0b2819"/);
+  for (const iconName of ["favicon.ico", "favicon-32x32.png", "apple-touch-icon.png", "icon-192.png", "icon-512.png", "site.webmanifest"]) {
+    const bytes = await readFile(path.join(root, "public", iconName));
+    assert.ok(bytes.length > 100, `${iconName} is unexpectedly small`);
+  }
+});
+

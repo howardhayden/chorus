@@ -1005,3 +1005,38 @@ button:focus-visible,a:focus-visible,summary:focus-visible,[tabindex]:focus-visi
 @media(forced-colors:active){
   .language-receipt,.language-profile,.language-profile-body>section,.language-model-comparison>article{border:1px solid CanvasText}
 }
+/* CHORUS SCHOLARLY RECORD · 2026-08-19
+   The bounded House Guide hosts a scroll-contained notebook reading alert and
+   preserves standalone public routes for long-form or assistive reading. */
+.research-record-alert{
+  margin-top:14px;padding:14px;display:grid;grid-template-columns:minmax(0,1fr);gap:13px;
+  border:1px solid rgba(202,169,96,.32);border-left:3px solid var(--brass);border-radius:8px 13px 9px 11px;
+  background:radial-gradient(circle at 88% 8%,rgba(127,201,155,.12),transparent 34%),linear-gradient(145deg,rgba(12,52,30,.82),rgba(3,17,9,.94));
+}
+.research-record-intro>span{color:var(--mint);font:650 .6875rem/1.4 var(--mono);letter-spacing:.07em}
+.research-record-alert h3{margin:6px 0 0;color:var(--cream);font:400 clamp(1.35rem,2.6vw,2rem)/1.05 var(--display)}
+.research-record-alert p{max-width:74ch;margin:8px 0 0;color:var(--muted);font-size:.8125rem;line-height:1.58}
+.research-record-cards{min-width:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.research-record-cards article{min-width:0;padding:11px;display:grid;grid-template-rows:minmax(0,1fr) auto;gap:10px;border:1px solid rgba(127,201,155,.24);border-radius:7px 11px 8px 10px;background:rgba(7,34,19,.76)}
+.research-record-cards h4{margin:0;color:var(--cream);font:400 1.05rem/1.15 var(--display)}
+.research-record-cards article>div:last-child{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.research-record-cards a,.research-record-links a{
+  min-width:0;min-height:44px;padding:8px 10px;display:flex;align-items:center;justify-content:center;gap:8px;
+  border:1px solid rgba(202,169,96,.28);border-radius:7px 11px 8px 10px;color:var(--cream);background:rgba(9,39,22,.76);
+  font:650 .72rem/1.35 var(--mono);text-align:center;text-decoration:none;overflow-wrap:anywhere;
+}
+.research-record-cards a[data-primary="true"]{border-color:rgba(127,201,155,.56);background:linear-gradient(145deg,rgba(22,86,50,.82),rgba(7,37,20,.9))}
+.research-record-cards a:hover,.research-record-links a:hover{border-color:rgba(225,196,126,.72);background:rgba(26,87,51,.86)}
+.research-record-cards a span,.research-record-links a span{color:var(--amber);font-size:.9rem}
+.research-record-viewer{min-width:0;overflow:hidden;border:1px solid rgba(202,169,96,.28);border-radius:8px 13px 9px 11px;background:#07140d}
+.research-record-viewer>header{padding:9px 11px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 12px;border-bottom:1px solid rgba(202,169,96,.18)}
+.research-record-viewer>header strong{color:var(--brass);font:650 .6875rem/1.4 var(--mono);letter-spacing:.05em}
+.research-record-viewer>header span{color:var(--muted);font:.6875rem/1.4 var(--mono)}
+.research-record-viewer iframe{width:100%;height:clamp(30rem,66dvh,52rem);display:block;border:0;background:#07140d}
+.research-record-links{min-width:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+@media(max-width:680px){
+  .research-record-cards,.research-record-cards article>div:last-child,.research-record-links{grid-template-columns:minmax(0,1fr)}
+  .research-record-viewer iframe{height:62dvh;min-height:26rem}
+}
+@media(forced-colors:active){.research-record-alert,.research-record-cards article,.research-record-viewer,.research-record-cards a,.research-record-links a{border:1px solid CanvasText}}
+

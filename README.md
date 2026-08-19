@@ -1,5 +1,10 @@
 # CHORUS
 
+> **Updated output status:** the scholarly-reader and icon update is complete and
+> directly checked, but it does not inherit the earlier browser/distribution
+> release binding. Read the [current bounded status](public/evidence/updated-working-tree-status.html).
+
+
 CHORUS is a fictional, PG-safe social-trust simulation about how ambiguous
 artifacts acquire social meaning. One generated night contains six concurrent
 incidents on one logical clock. The player may move between rooms at will, but
@@ -46,21 +51,28 @@ player deliberately selects them.
 ## Verify
 
 ```sh
+npm run verify:working-tree
+```
+
+`npm run verify:working-tree` checks the updated source, deterministic simulation
+evidence, all focused suites, four executed notebook publications, the production
+build, and rendered metadata without rebinding the historical browser and
+clean-room records. The narrower commands remain available:
+
+```sh
 npm run lint
 npm run test:night
 npm run test:simulation
 npm run test:save
 npm run test:a11y
 npm run test:viewport
-npm run docs:check
-npm run verify:release
+npm run docs:check:working-tree
 ```
 
-`npm run verify:release` adds lint, type checking, the committed 4,096-seed
-simulation-evidence drift check, and `npm test`. The latter runs documentation,
-night, simulation-contract, save, accessibility, viewport, portability,
-distribution, production-build, and rendered-output checks. Focused suites
-remain available so a failure can be traced to its owning boundary.
+`npm run verify:release` remains the promotion gate. It is expected to remain
+held until live-browser, registry-audit, and neutral-distribution evidence are
+renewed for the exact updated implementation digest; missing current evidence
+is not converted into a pass.
 
 ## Repository map
 
@@ -73,7 +85,7 @@ remain available so a failure can be traced to its owning boundary.
 | `app/privacy-panel.tsx` | Player-controlled local slots and preview-before-load portable input. |
 | `tests/` | Executable coherence, runtime, save, disclosure, accessibility, viewport, portability, and rendering contracts. |
 | `docs/` | Design rationale, technical specifications, assurance evidence, maintenance rules, and published analysis. |
-| `notebooks/` | Executable systems and validation atlases; rendered copies are published with the application. |
+| `notebooks/` | Executable systems, model-specification, research-design, and validation atlases; rendered copies are published with the application. |
 
 ## Documentation
 

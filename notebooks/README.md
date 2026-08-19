@@ -5,9 +5,12 @@ This directory contains the canonical executed notebook sources. Static, self-co
 ## Editions
 
 - [CHORUS Systems Atlas](../public/notebooks/chorus-systems-atlas.html) · [executed notebook](CHORUS-Systems-Atlas.ipynb)
-- [CHORUS Verification Ledger](../public/notebooks/chorus-validation-atlas.html) · [executed notebook](CHORUS-Validation-Atlas.ipynb)
+- [CHORUS Model Specification](../public/notebooks/chorus-model-specification.html) · [executed notebook](CHORUS-Model-Specification.ipynb)
+- [CHORUS Research Design Atlas](../public/notebooks/chorus-research-design.html) · [executed notebook](CHORUS-Research-Design.ipynb)
+- [CHORUS Historical Verification Ledger](../public/notebooks/chorus-validation-atlas.html) · [executed notebook](CHORUS-Validation-Atlas.ipynb)
 - [Published index](../public/notebooks/index.html)
-- [Bounded release evidence](../public/evidence/index.html)
+- [Updated working-tree status](../public/evidence/updated-working-tree-status.html)
+- [Historical bounded release evidence](../public/evidence/index.html)
 - [Integrity manifest](artifact-manifest.json)
 
 ## Rebuild and verify

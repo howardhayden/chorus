@@ -42,7 +42,7 @@ information timing, data handling, and degraded states.
 
 ### Verify or maintain the repository
 
-1. [Current bounded release status](RELEASE-STATUS.md)
+1. [Release status and current working-tree hold](RELEASE-STATUS.md)
 2. [Testing and traceability](TESTING-TRACEABILITY.md)
 3. [Dependencies and supply chain](DEPENDENCIES-SUPPLY-CHAIN.md)
 4. [Maintenance and release discipline](MAINTENANCE.md)
@@ -55,8 +55,11 @@ system without weakening its boundaries.
 
 ### Inspect the evidence
 
+- [Updated working-tree status](../public/evidence/updated-working-tree-status.html)
 - [Executed notebook publication](NOTEBOOKS.md)
 - [Systems Atlas](../public/notebooks/chorus-systems-atlas.html)
+- [Model Specification](../public/notebooks/chorus-model-specification.html)
+- [Research Design Atlas](../public/notebooks/chorus-research-design.html)
 - [Validation Atlas](../public/notebooks/chorus-validation-atlas.html)
 - [Notebook downloads and run metadata](../public/notebooks/index.html)
 - [Release evidence and retained results](../public/evidence/index.html)
@@ -70,6 +73,7 @@ remain available beside them so a result can be inspected and reproduced.
 |---|---|
 | Product thesis, audience, educational and ethical boundaries | [Thesis and ethical argument](THESIS-AND-ETHICS.md) |
 | Communication dynamics, linguistic repertoires, motive/evidence separation, fatigue semantics | [Communication and fatigue atlas](COMMUNICATION-ATLAS.md) |
+| Model constructs, assumptions, claim limits, coherence evaluation, and research variants | [Executed notebook publication](NOTEBOOKS.md) |
 | Module boundaries and data flow | [Architecture](ARCHITECTURE.md) |
 | Grammar, seed handling, assignment, rejection, and coherence gates | [Generation and coherence](GENERATION-COHERENCE.md) |
 | Clock, events, scheduling, propagation, replay, and state invariants | [Concurrent-night runtime](CONCURRENT-NIGHT.md) |

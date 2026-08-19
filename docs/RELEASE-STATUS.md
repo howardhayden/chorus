@@ -1,5 +1,12 @@
 # Release status
 
+> **Current updated working tree — held for evidence renewal (19 August 2026).**
+> The Model Specification, Research Design Atlas, in-app scholarly reader, and
+> expanded icon set change the implementation binding. The `1.0.0-rc.1` browser
+> and neutral-distribution records below remain historical evidence for their
+> recorded source and are not relabeled as proof for this later tree. See the
+> [updated working-tree status](../public/evidence/updated-working-tree-status.html).
+
 ## Decision
 
 CHORUS `1.0.0-rc.1` is a **bounded release candidate**, not a claim of
