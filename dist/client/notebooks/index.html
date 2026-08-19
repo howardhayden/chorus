@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Executed CHORUS architecture and verification notebooks with self-contained static editions.">
+<title>CHORUS notebook documentation</title>
+<style>
+:root{
+  color-scheme:dark;
+  --ink:#f2f1e8;--muted:#c7d1c9;--green:#0b2819;--green-2:#123d27;
+  --mint:#a7e0bd;--gold:#e2c57f;--silver:#d5dedc;--line:rgba(213,222,220,.24);
+  --paper:#07140d;--panel:#0b1f14;--focus:#f1cf78;
+  font-family:Georgia,"Times New Roman",serif;
+}
+*{box-sizing:border-box}
+html{background:var(--paper);color:var(--ink);scroll-behavior:smooth}
+body{margin:0;min-width:280px;background:
+  radial-gradient(circle at 10% 0%,rgba(37,101,64,.32),transparent 34rem),
+  radial-gradient(circle at 92% 12%,rgba(196,155,72,.13),transparent 28rem),var(--paper);line-height:1.65}
+a{color:var(--mint);text-underline-offset:.18em}
+a:hover{text-decoration-thickness:.15em}
+a:focus-visible,summary:focus-visible,.table-wrap:focus-visible{outline:3px solid var(--focus);outline-offset:4px}
+.skip-link{position:absolute;left:1rem;top:-8rem;z-index:20;padding:.7rem 1rem;background:#fff;color:#07140d;border-radius:.4rem}
+.skip-link:focus{top:1rem}
+.site-header{border-bottom:1px solid var(--line);padding:clamp(2rem,7vw,5.5rem) max(1rem,calc((100vw - 76rem)/2));background:rgba(4,18,11,.72)}
+.eyebrow{margin:0 0 .8rem;color:var(--gold);font:700 .78rem/1.4 ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:.14em;text-transform:uppercase}
+h1,h2,h3,h4{line-height:1.15;text-wrap:balance}
+h1{margin:0;max-width:15ch;font-size:clamp(2.4rem,7vw,5.8rem);font-weight:600;letter-spacing:-.035em}
+.lede{max-width:70ch;margin:1.2rem 0 0;color:var(--silver);font-size:clamp(1rem,2vw,1.24rem)}
+.doc-nav{display:flex;flex-wrap:wrap;gap:.65rem;margin-top:1.5rem}
+.doc-nav a{display:inline-flex;align-items:center;min-height:44px;padding:.55rem .9rem;border:1px solid var(--line);border-radius:999px;background:rgba(11,40,25,.72);text-decoration:none}
+main{width:min(76rem,calc(100% - 2rem));margin:0 auto;padding:2rem 0 5rem}
+.notebook-cell{margin:0 0 1.2rem;padding:clamp(1rem,3vw,1.7rem);border:1px solid var(--line);border-radius:.75rem 1.25rem .85rem 1.05rem;background:linear-gradient(145deg,rgba(11,31,20,.96),rgba(8,24,15,.9));box-shadow:0 1rem 3rem rgba(0,0,0,.12)}
+.notebook-cell h2{margin-top:0;font-size:clamp(1.55rem,3.4vw,2.35rem);color:var(--gold)}
+.notebook-cell h3{font-size:clamp(1.2rem,2.5vw,1.6rem);color:var(--silver)}
+.notebook-cell p,.notebook-cell li{max-width:78ch}
+.code-cell details{border-top:1px solid var(--line);margin-bottom:1rem}
+.code-cell summary{cursor:pointer;min-height:44px;padding:.7rem 0;color:var(--muted);font-family:ui-monospace,SFMono-Regular,Consolas,monospace}
+pre{margin:0;padding:1rem;border:1px solid var(--line);border-radius:.65rem;background:#041009;color:#e7eee8;white-space:pre-wrap;overflow-wrap:anywhere;font:500 .86rem/1.55 ui-monospace,SFMono-Regular,Consolas,monospace}
+.execution-note{margin:.8rem 0;color:var(--mint);font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:.86rem}
+.table-wrap{max-width:100%;overflow-x:auto;border:1px solid var(--line);border-radius:.7rem;background:rgba(5,19,11,.8)}
+table{width:100%;border-collapse:collapse;min-width:42rem}
+caption{padding:1rem;text-align:left;color:var(--gold);font-size:1.04rem;font-weight:700}
+th,td{padding:.75rem;vertical-align:top;text-align:left;border-top:1px solid var(--line)}
+thead th{color:var(--silver);background:rgba(20,61,39,.72)}
+tbody th{color:var(--mint);min-width:11rem}
+.metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,12rem),1fr));gap:.75rem}
+.metric-card{min-width:0;padding:1rem;border:1px solid var(--line);border-radius:.7rem;background:rgba(14,54,33,.58)}
+.metric-card h4{margin:0;color:var(--silver);font-size:.88rem;text-transform:uppercase;letter-spacing:.07em}
+.metric-card strong{display:block;margin:.45rem 0;color:var(--gold);font-size:2rem}
+.metric-card p{margin:0;color:var(--muted)}
+.checklist ul{display:grid;gap:.7rem;margin:0;padding:0;list-style:none}
+.checklist li{display:grid;grid-template-columns:auto minmax(0,1fr);gap:.3rem .8rem;padding:1rem;border:1px solid var(--line);border-radius:.7rem;background:rgba(14,54,33,.45)}
+.checklist .status{grid-row:1/3;align-self:start;padding:.15rem .45rem;border:1px solid currentColor;border-radius:999px;color:var(--gold);font:700 .72rem/1.4 ui-monospace,SFMono-Regular,Consolas,monospace}
+.checklist strong{color:var(--silver)}
+.checklist p{margin:0;color:var(--muted)}
+.site-footer{border-top:1px solid var(--line);padding:1.5rem max(1rem,calc((100vw - 76rem)/2));color:var(--muted)}
+.card-index{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,20rem),1fr));gap:1rem}
+.index-card{padding:1.25rem;border:1px solid var(--line);border-radius:.8rem 1.3rem .9rem 1.1rem;background:rgba(11,31,20,.94)}
+.index-card h2{margin-top:0;color:var(--gold)}
+.link-row{display:flex;flex-wrap:wrap;gap:.65rem;margin-top:1rem}
+.link-row a{display:inline-flex;align-items:center;min-height:44px;padding:.55rem .85rem;border:1px solid var(--line);border-radius:.5rem;text-decoration:none}
+.publication-note{margin-top:1.25rem;padding:1rem;border-left:4px solid var(--gold);background:rgba(14,54,33,.38)}
+@media(max-width:42rem){main{width:min(100% - 1rem,76rem)}.notebook-cell{padding:1rem}.checklist li{grid-template-columns:minmax(0,1fr)}.checklist .status{grid-row:auto;width:max-content}table{min-width:36rem}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
+@media(forced-colors:active){*{box-shadow:none!important}.notebook-cell,.metric-card,.checklist li,.table-wrap,.index-card{border:1px solid CanvasText}.status{forced-color-adjust:none}}
+@media print{html,body{background:#fff;color:#111}.site-header,.notebook-cell,.metric-card,.checklist li,.index-card{background:#fff;color:#111;box-shadow:none}.doc-nav,.skip-link{display:none}a{color:#111}.table-wrap{overflow:visible}table{min-width:0}.code-cell details{display:none}}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to notebook list</a>
+<header class="site-header">
+  <p class="eyebrow">CHORUS technical record</p>
+  <h1>Executed notebooks</h1>
+  <p class="lede">Architecture and release evidence presented as committed notebook source and accessible, self-contained HTML.</p>
+</header>
+<main id="main">
+  <section class="card-index" aria-label="Available notebooks"><article class="index-card"><p class="eyebrow">Architecture · state · disclosure</p><h2>CHORUS Systems Atlas</h2><p>An executed map of the concurrent-night architecture, evidence boundaries, choice access, propagation, persistence, and maintenance seams.</p><div class="link-row"><a href="chorus-systems-atlas.html">Read static edition</a><a href="CHORUS-Systems-Atlas.ipynb" download>Download notebook</a></div></article><article class="index-card"><p class="eyebrow">Invariants · accessibility · resilience</p><h2>CHORUS Verification Ledger</h2><p>An executed verification ledger for fixed night geometry, causal receipts, accessibility, privacy, hostile-input boundaries, and release evidence.</p><div class="link-row"><a href="chorus-validation-atlas.html">Read static edition</a><a href="CHORUS-Validation-Atlas.ipynb" download>Download notebook</a></div></article></section>
+  <aside class="publication-note" aria-label="Publication note">
+    <strong>Offline by construction.</strong>
+    <p>The static editions load no remote fonts, scripts, analytics, or media. Each notebook carries executed outputs; the manifest records sizes and SHA-256 digests.</p>
+    <p><a href="../evidence/index.html">Open the bounded release evidence</a> to inspect retained test results, environment limits, and the machine-readable implementation binding.</p>
+  </aside>
+</main>
+<footer class="site-footer"><p>CHORUS notebook documentation · 2026-08-18</p></footer>
+</body>
+</html>

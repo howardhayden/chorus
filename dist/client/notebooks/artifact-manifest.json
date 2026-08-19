@@ -1,0 +1,51 @@
+{
+  "format": "CHORUS_NOTEBOOK_ARTIFACTS",
+  "version": 1,
+  "build_date": "2026-08-18",
+  "builder": "scripts/docs/build_notebooks.py",
+  "deterministic": true,
+  "artifacts": [
+    {
+      "path": "notebooks/CHORUS-Systems-Atlas.ipynb",
+      "media_type": "application/x-ipynb+json",
+      "bytes": 41261,
+      "sha256": "0dcb1803950022fc74f0631ccd6cc98e579948f9d78b0221b455704151ccfe3f"
+    },
+    {
+      "path": "notebooks/CHORUS-Validation-Atlas.ipynb",
+      "media_type": "application/x-ipynb+json",
+      "bytes": 72209,
+      "sha256": "e0017a45f64f371540ed0b1f4700679b943a607bdb2b6ebf1e0dff4bc1032aee"
+    },
+    {
+      "path": "public/notebooks/CHORUS-Systems-Atlas.ipynb",
+      "media_type": "application/x-ipynb+json",
+      "bytes": 41261,
+      "sha256": "0dcb1803950022fc74f0631ccd6cc98e579948f9d78b0221b455704151ccfe3f"
+    },
+    {
+      "path": "public/notebooks/CHORUS-Validation-Atlas.ipynb",
+      "media_type": "application/x-ipynb+json",
+      "bytes": 72209,
+      "sha256": "e0017a45f64f371540ed0b1f4700679b943a607bdb2b6ebf1e0dff4bc1032aee"
+    },
+    {
+      "path": "public/notebooks/chorus-systems-atlas.html",
+      "media_type": "text/html",
+      "bytes": 39274,
+      "sha256": "a17a5bd94af733b452625d0c3ac7d2bf84b2b10a4f12bdc2ceed7523e901d88c"
+    },
+    {
+      "path": "public/notebooks/chorus-validation-atlas.html",
+      "media_type": "text/html",
+      "bytes": 64049,
+      "sha256": "960503b82ac21597452362a2e6d0123bc9aae986771fa5dedffb3a7b493fb00d"
+    },
+    {
+      "path": "public/notebooks/index.html",
+      "media_type": "text/html",
+      "bytes": 8060,
+      "sha256": "8d442d4cb9b6427706de9db5ba226b23d27e3a765c457fefd4048bb2262f3d07"
+    }
+  ]
+}

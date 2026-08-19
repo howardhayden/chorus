@@ -1,0 +1,59 @@
+{
+  "format": "CHORUS_DEPENDENCY_AUDIT",
+  "schema_version": 1,
+  "release": "1.0.0-rc.1",
+  "package_lock_sha256": "df9b51ab24c932408bf7a8664bb9f22b5fc6dd299a7d6317811514b62d3609dc",
+  "environment": {
+    "node": "v24.19.0",
+    "npm": "11.9.0"
+  },
+  "results": [
+    {
+      "command": "npm audit --json",
+      "exit_code": 0,
+      "vulnerabilities": {
+        "info": 0,
+        "low": 0,
+        "moderate": 0,
+        "high": 0,
+        "critical": 0,
+        "total": 0
+      },
+      "dependency_counts": {
+        "prod": 18,
+        "dev": 595,
+        "optional": 172,
+        "peer": 48,
+        "peerOptional": 0,
+        "total": 649
+      },
+      "advisory_ids": []
+    },
+    {
+      "command": "npm audit --omit=dev --json",
+      "exit_code": 0,
+      "vulnerabilities": {
+        "info": 0,
+        "low": 0,
+        "moderate": 0,
+        "high": 0,
+        "critical": 0,
+        "total": 0
+      },
+      "dependency_counts": {
+        "prod": 18,
+        "dev": 595,
+        "optional": 172,
+        "peer": 48,
+        "peerOptional": 0,
+        "total": 649
+      },
+      "advisory_ids": []
+    }
+  ],
+  "status": "pass",
+  "limitations": [
+    "Registry advisory data is time-bound; rerunning later may produce different results without a lockfile change.",
+    "An empty advisory set is not a proof that every dependency is defect-free."
+  ]
+}

@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="An executed map of the concurrent-night architecture, evidence boundaries, choice access, propagation, persistence, and maintenance seams.">
+<title>CHORUS Systems Atlas · CHORUS documentation</title>
+<style>
+:root{
+  color-scheme:dark;
+  --ink:#f2f1e8;--muted:#c7d1c9;--green:#0b2819;--green-2:#123d27;
+  --mint:#a7e0bd;--gold:#e2c57f;--silver:#d5dedc;--line:rgba(213,222,220,.24);
+  --paper:#07140d;--panel:#0b1f14;--focus:#f1cf78;
+  font-family:Georgia,"Times New Roman",serif;
+}
+*{box-sizing:border-box}
+html{background:var(--paper);color:var(--ink);scroll-behavior:smooth}
+body{margin:0;min-width:280px;background:
+  radial-gradient(circle at 10% 0%,rgba(37,101,64,.32),transparent 34rem),
+  radial-gradient(circle at 92% 12%,rgba(196,155,72,.13),transparent 28rem),var(--paper);line-height:1.65}
+a{color:var(--mint);text-underline-offset:.18em}
+a:hover{text-decoration-thickness:.15em}
+a:focus-visible,summary:focus-visible,.table-wrap:focus-visible{outline:3px solid var(--focus);outline-offset:4px}
+.skip-link{position:absolute;left:1rem;top:-8rem;z-index:20;padding:.7rem 1rem;background:#fff;color:#07140d;border-radius:.4rem}
+.skip-link:focus{top:1rem}
+.site-header{border-bottom:1px solid var(--line);padding:clamp(2rem,7vw,5.5rem) max(1rem,calc((100vw - 76rem)/2));background:rgba(4,18,11,.72)}
+.eyebrow{margin:0 0 .8rem;color:var(--gold);font:700 .78rem/1.4 ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:.14em;text-transform:uppercase}
+h1,h2,h3,h4{line-height:1.15;text-wrap:balance}
+h1{margin:0;max-width:15ch;font-size:clamp(2.4rem,7vw,5.8rem);font-weight:600;letter-spacing:-.035em}
+.lede{max-width:70ch;margin:1.2rem 0 0;color:var(--silver);font-size:clamp(1rem,2vw,1.24rem)}
+.doc-nav{display:flex;flex-wrap:wrap;gap:.65rem;margin-top:1.5rem}
+.doc-nav a{display:inline-flex;align-items:center;min-height:44px;padding:.55rem .9rem;border:1px solid var(--line);border-radius:999px;background:rgba(11,40,25,.72);text-decoration:none}
+main{width:min(76rem,calc(100% - 2rem));margin:0 auto;padding:2rem 0 5rem}
+.notebook-cell{margin:0 0 1.2rem;padding:clamp(1rem,3vw,1.7rem);border:1px solid var(--line);border-radius:.75rem 1.25rem .85rem 1.05rem;background:linear-gradient(145deg,rgba(11,31,20,.96),rgba(8,24,15,.9));box-shadow:0 1rem 3rem rgba(0,0,0,.12)}
+.notebook-cell h2{margin-top:0;font-size:clamp(1.55rem,3.4vw,2.35rem);color:var(--gold)}
+.notebook-cell h3{font-size:clamp(1.2rem,2.5vw,1.6rem);color:var(--silver)}
+.notebook-cell p,.notebook-cell li{max-width:78ch}
+.code-cell details{border-top:1px solid var(--line);margin-bottom:1rem}
+.code-cell summary{cursor:pointer;min-height:44px;padding:.7rem 0;color:var(--muted);font-family:ui-monospace,SFMono-Regular,Consolas,monospace}
+pre{margin:0;padding:1rem;border:1px solid var(--line);border-radius:.65rem;background:#041009;color:#e7eee8;white-space:pre-wrap;overflow-wrap:anywhere;font:500 .86rem/1.55 ui-monospace,SFMono-Regular,Consolas,monospace}
+.execution-note{margin:.8rem 0;color:var(--mint);font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:.86rem}
+.table-wrap{max-width:100%;overflow-x:auto;border:1px solid var(--line);border-radius:.7rem;background:rgba(5,19,11,.8)}
+table{width:100%;border-collapse:collapse;min-width:42rem}
+caption{padding:1rem;text-align:left;color:var(--gold);font-size:1.04rem;font-weight:700}
+th,td{padding:.75rem;vertical-align:top;text-align:left;border-top:1px solid var(--line)}
+thead th{color:var(--silver);background:rgba(20,61,39,.72)}
+tbody th{color:var(--mint);min-width:11rem}
+.metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,12rem),1fr));gap:.75rem}
+.metric-card{min-width:0;padding:1rem;border:1px solid var(--line);border-radius:.7rem;background:rgba(14,54,33,.58)}
+.metric-card h4{margin:0;color:var(--silver);font-size:.88rem;text-transform:uppercase;letter-spacing:.07em}
+.metric-card strong{display:block;margin:.45rem 0;color:var(--gold);font-size:2rem}
+.metric-card p{margin:0;color:var(--muted)}
+.checklist ul{display:grid;gap:.7rem;margin:0;padding:0;list-style:none}
+.checklist li{display:grid;grid-template-columns:auto minmax(0,1fr);gap:.3rem .8rem;padding:1rem;border:1px solid var(--line);border-radius:.7rem;background:rgba(14,54,33,.45)}
+.checklist .status{grid-row:1/3;align-self:start;padding:.15rem .45rem;border:1px solid currentColor;border-radius:999px;color:var(--gold);font:700 .72rem/1.4 ui-monospace,SFMono-Regular,Consolas,monospace}
+.checklist strong{color:var(--silver)}
+.checklist p{margin:0;color:var(--muted)}
+.site-footer{border-top:1px solid var(--line);padding:1.5rem max(1rem,calc((100vw - 76rem)/2));color:var(--muted)}
+.card-index{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,20rem),1fr));gap:1rem}
+.index-card{padding:1.25rem;border:1px solid var(--line);border-radius:.8rem 1.3rem .9rem 1.1rem;background:rgba(11,31,20,.94)}
+.index-card h2{margin-top:0;color:var(--gold)}
+.link-row{display:flex;flex-wrap:wrap;gap:.65rem;margin-top:1rem}
+.link-row a{display:inline-flex;align-items:center;min-height:44px;padding:.55rem .85rem;border:1px solid var(--line);border-radius:.5rem;text-decoration:none}
+.publication-note{margin-top:1.25rem;padding:1rem;border-left:4px solid var(--gold);background:rgba(14,54,33,.38)}
+@media(max-width:42rem){main{width:min(100% - 1rem,76rem)}.notebook-cell{padding:1rem}.checklist li{grid-template-columns:minmax(0,1fr)}.checklist .status{grid-row:auto;width:max-content}table{min-width:36rem}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
+@media(forced-colors:active){*{box-shadow:none!important}.notebook-cell,.metric-card,.checklist li,.table-wrap,.index-card{border:1px solid CanvasText}.status{forced-color-adjust:none}}
+@media print{html,body{background:#fff;color:#111}.site-header,.notebook-cell,.metric-card,.checklist li,.index-card{background:#fff;color:#111;box-shadow:none}.doc-nav,.skip-link{display:none}a{color:#111}.table-wrap{overflow:visible}table{min-width:0}.code-cell details{display:none}}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to notebook</a>
+<header class="site-header">
+  <p class="eyebrow">Architecture · state · disclosure</p>
+  <h1>CHORUS Systems Atlas</h1>
+  <p class="lede">An executed map of the concurrent-night architecture, evidence boundaries, choice access, propagation, persistence, and maintenance seams.</p>
+  <nav class="doc-nav" aria-label="Notebook navigation">
+    <a href="index.html">Notebook index</a>
+    <a href="chorus-validation-atlas.html">Verification Ledger</a>
+    <a href="CHORUS-Systems-Atlas.ipynb" download>Download executed notebook</a>
+  </nav>
+</header>
+<main id="main">
+<section class="notebook-cell markdown-cell"><h2>CHORUS Systems Atlas</h2>
+<p>This atlas explains how one locally generated night remains coherent while six rooms advance on one clock. It is an engineering companion to the prose documentation, not a player tutorial and not a substitute for the source.</p>
+<p>The diagrams and tables below are computed from fixed architectural declarations. They are intended to make system boundaries inspectable without running the game.</p></section><section class="notebook-cell code-cell"><details><summary>Executed cell 1: show source</summary><pre><code>from html import escape
+
+class HTMLResult(str):
+    def _repr_html_(self):
+        return str(self)
+
+def table_html(caption, columns, rows, row_headers=False):
+    head = &quot;&quot;.join(f&#x27;&lt;th scope=&quot;col&quot;&gt;{escape(str(column))}&lt;/th&gt;&#x27; for column in columns)
+    body_rows = []
+    for row in rows:
+        rendered = []
+        for index, value in enumerate(row):
+            tag = &quot;th&quot; if row_headers and index == 0 else &quot;td&quot;
+            scope = &#x27; scope=&quot;row&quot;&#x27; if tag == &quot;th&quot; else &quot;&quot;
+            rendered.append(f&#x27;&lt;{tag}{scope}&gt;{escape(str(value))}&lt;/{tag}&gt;&#x27;)
+        body_rows.append(&quot;&lt;tr&gt;&quot; + &quot;&quot;.join(rendered) + &quot;&lt;/tr&gt;&quot;)
+    label = escape(caption)
+    return HTMLResult(
+        f&#x27;&lt;div class=&quot;table-wrap&quot; role=&quot;region&quot; aria-label=&quot;{label}&quot; tabindex=&quot;0&quot;&gt;&#x27;
+        f&#x27;&lt;table&gt;&lt;caption&gt;{label}&lt;/caption&gt;&lt;thead&gt;&lt;tr&gt;{head}&lt;/tr&gt;&lt;/thead&gt;&#x27;
+        f&#x27;&lt;tbody&gt;{&quot;&quot;.join(body_rows)}&lt;/tbody&gt;&lt;/table&gt;&lt;/div&gt;&#x27;
+    )
+
+def cards_html(title, cards):
+    items = []
+    for label, value, note in cards:
+        items.append(
+            &#x27;&lt;article class=&quot;metric-card&quot;&gt;&#x27;
+            f&#x27;&lt;h4&gt;{escape(str(label))}&lt;/h4&gt;&lt;strong&gt;{escape(str(value))}&lt;/strong&gt;&#x27;
+            f&#x27;&lt;p&gt;{escape(str(note))}&lt;/p&gt;&lt;/article&gt;&#x27;
+        )
+    return HTMLResult(f&#x27;&lt;section class=&quot;metric-grid&quot; aria-label=&quot;{escape(title)}&quot;&gt;{&quot;&quot;.join(items)}&lt;/section&gt;&#x27;)
+
+def checklist_html(title, rows):
+    items = []
+    for status, label, evidence in rows:
+        items.append(
+            &#x27;&lt;li&gt;&#x27;
+            f&#x27;&lt;span class=&quot;status&quot;&gt;{escape(status)}&lt;/span&gt;&#x27;
+            f&#x27;&lt;strong&gt;{escape(label)}&lt;/strong&gt;&lt;p&gt;{escape(evidence)}&lt;/p&gt;&#x27;
+            &#x27;&lt;/li&gt;&#x27;
+        )
+    return HTMLResult(f&#x27;&lt;section class=&quot;checklist&quot; aria-label=&quot;{escape(title)}&quot;&gt;&lt;ul&gt;{&quot;&quot;.join(items)}&lt;/ul&gt;&lt;/section&gt;&#x27;)
+
+print(&quot;Standard-library rendering helpers loaded.&quot;)</code></pre></details><p class="execution-note">Standard-library rendering helpers loaded.</p></section><section class="notebook-cell markdown-cell"><h3>Source provenance</h3>
+<p>The atlas is tied to the implementation rather than an independently maintained diagram. This executed cell reads the authoritative modules, records their line counts and short content digests, and extracts the generator version that governs deterministic nights.</p></section><section class="notebook-cell code-cell"><details><summary>Executed cell 2: show source</summary><pre><code>from hashlib import sha256
+from pathlib import Path
+import re
+
+def find_repository_root():
+    for candidate in (Path.cwd(), *Path.cwd().parents):
+        if (candidate / &quot;app&quot; / &quot;scenario-generator.ts&quot;).is_file():
+            return candidate
+    raise FileNotFoundError(&quot;Run this notebook from within the CHORUS source tree.&quot;)
+
+repository_root = find_repository_root()
+tracked_sources = [
+    (&quot;app/scenario-generator.ts&quot;, &quot;Validated night grammar and coherence gates&quot;),
+    (&quot;app/night-engine.ts&quot;, &quot;Shared-clock event reducer and receipt validation&quot;),
+    (&quot;app/page.tsx&quot;, &quot;One-viewport disclosure and interaction shell&quot;),
+    (&quot;app/save-model.ts&quot;, &quot;Portable-state and local-slot validation&quot;),
+    (&quot;app/privacy-panel.tsx&quot;, &quot;Player-directed persistence controls&quot;),
+]
+provenance_rows = []
+generator_text = &quot;&quot;
+for relative_path, role in tracked_sources:
+    payload = (repository_root / relative_path).read_bytes()
+    source_text = payload.decode(&quot;utf-8&quot;)
+    if relative_path == &quot;app/scenario-generator.ts&quot;:
+        generator_text = source_text
+    provenance_rows.append((relative_path, len(source_text.splitlines()), sha256(payload).hexdigest()[:12], role))
+
+version_match = re.search(r&quot;const\s+GENERATOR_VERSION\s*=\s*(\d+)\s+as\s+const&quot;, generator_text)
+assert version_match is not None
+generator_version = int(version_match.group(1))
+assert generator_version &gt; 0 and len(provenance_rows) == len(tracked_sources)
+_html = table_html(&quot;Implementation provenance&quot;, (&quot;Source&quot;, &quot;Lines&quot;, &quot;SHA-256 (12)&quot;, &quot;Authority&quot;), provenance_rows, row_headers=True)
+print(f&quot;PASS: read {len(provenance_rows)} authoritative modules; parsed generator version {generator_version}.&quot;)
+_html</code></pre></details><p class="execution-note">PASS: read 5 authoritative modules; parsed generator version 13.</p><div class="table-wrap" role="region" aria-label="Implementation provenance" tabindex="0"><table><caption>Implementation provenance</caption><thead><tr><th scope="col">Source</th><th scope="col">Lines</th><th scope="col">SHA-256 (12)</th><th scope="col">Authority</th></tr></thead><tbody><tr><th scope="row">app/scenario-generator.ts</th><td>4407</td><td>e0feb111e302</td><td>Validated night grammar and coherence gates</td></tr><tr><th scope="row">app/night-engine.ts</th><td>1150</td><td>a81058d06d42</td><td>Shared-clock event reducer and receipt validation</td></tr><tr><th scope="row">app/page.tsx</th><td>896</td><td>3c56b278e230</td><td>One-viewport disclosure and interaction shell</td></tr><tr><th scope="row">app/save-model.ts</th><td>710</td><td>21e723d4bae7</td><td>Portable-state and local-slot validation</td></tr><tr><th scope="row">app/privacy-panel.tsx</th><td>229</td><td>fffee10ffbe8</td><td>Player-directed persistence controls</td></tr></tbody></table></div></section><section class="notebook-cell markdown-cell"><h3>Runtime topology</h3>
+<p>The runtime is intentionally narrow: generation establishes a validated world, the event reducer is the sole authority for change, and the interface discloses only what the occupied seat may currently know. Persistence stores the same event-sourced state instead of creating a parallel model.</p></section><section class="notebook-cell code-cell"><details><summary>Executed cell 3: show source</summary><pre><code>modules = [
+    (&quot;Scenario grammar&quot;, &quot;app/scenario-generator.ts&quot;, &quot;Creates six reviewed rooms, links, scenes, choices, ledgers, and coherence reports.&quot;),
+    (&quot;Night reducer&quot;, &quot;app/night-engine.ts&quot;, &quot;Applies decisions, time advances, ambient pulses, access checks, and cross-room receipts.&quot;),
+    (&quot;Interface&quot;, &quot;app/page.tsx&quot;, &quot;Renders the bounded house, room switching, progressive disclosure, relations, and closing receipts.&quot;),
+    (&quot;Persistence&quot;, &quot;app/save-model.ts&quot;, &quot;Validates local slots and portable state with provenance, size, schema, and digest checks.&quot;),
+    (&quot;Privacy controls&quot;, &quot;app/privacy-panel.tsx&quot;, &quot;Keeps session-only use as the default and exposes explicit save, import, export, and deletion controls.&quot;),
+]
+_html = table_html(&quot;Primary runtime modules&quot;, (&quot;Responsibility&quot;, &quot;Source&quot;, &quot;Boundary&quot;), modules, row_headers=True)
+print(f&quot;Mapped {len(modules)} primary modules; state changes remain concentrated in the generator and reducer.&quot;)
+_html</code></pre></details><p class="execution-note">Mapped 5 primary modules; state changes remain concentrated in the generator and reducer.</p><div class="table-wrap" role="region" aria-label="Primary runtime modules" tabindex="0"><table><caption>Primary runtime modules</caption><thead><tr><th scope="col">Responsibility</th><th scope="col">Source</th><th scope="col">Boundary</th></tr></thead><tbody><tr><th scope="row">Scenario grammar</th><td>app/scenario-generator.ts</td><td>Creates six reviewed rooms, links, scenes, choices, ledgers, and coherence reports.</td></tr><tr><th scope="row">Night reducer</th><td>app/night-engine.ts</td><td>Applies decisions, time advances, ambient pulses, access checks, and cross-room receipts.</td></tr><tr><th scope="row">Interface</th><td>app/page.tsx</td><td>Renders the bounded house, room switching, progressive disclosure, relations, and closing receipts.</td></tr><tr><th scope="row">Persistence</th><td>app/save-model.ts</td><td>Validates local slots and portable state with provenance, size, schema, and digest checks.</td></tr><tr><th scope="row">Privacy controls</th><td>app/privacy-panel.tsx</td><td>Keeps session-only use as the default and exposes explicit save, import, export, and deletion controls.</td></tr></tbody></table></div></section><section class="notebook-cell code-cell"><details><summary>Executed cell 4: show source</summary><pre><code>flow = [
+    (1, &quot;Seed&quot;, &quot;One unsigned 32-bit value&quot;, &quot;No state mutation&quot;),
+    (2, &quot;Validated night pack&quot;, &quot;Rooms, truth, language, routes, beats, choices&quot;, &quot;Generation boundary&quot;),
+    (3, &quot;Night state&quot;, &quot;Clock, room runtimes, decisions, pulses&quot;, &quot;Reducer-owned&quot;),
+    (4, &quot;Visible house&quot;, &quot;Current seat plus bounded cross-room cues&quot;, &quot;Disclosure policy&quot;),
+    (5, &quot;Portable state&quot;, &quot;Versioned envelope and deterministic digest&quot;, &quot;Player-controlled&quot;),
+]
+_html = table_html(&quot;State flow from seed to portable record&quot;, (&quot;Order&quot;, &quot;Stage&quot;, &quot;Contents&quot;, &quot;Control&quot;), flow)
+print(&quot;State flow verified: presentation does not become a second source of truth.&quot;)
+_html</code></pre></details><p class="execution-note">State flow verified: presentation does not become a second source of truth.</p><div class="table-wrap" role="region" aria-label="State flow from seed to portable record" tabindex="0"><table><caption>State flow from seed to portable record</caption><thead><tr><th scope="col">Order</th><th scope="col">Stage</th><th scope="col">Contents</th><th scope="col">Control</th></tr></thead><tbody><tr><td>1</td><td>Seed</td><td>One unsigned 32-bit value</td><td>No state mutation</td></tr><tr><td>2</td><td>Validated night pack</td><td>Rooms, truth, language, routes, beats, choices</td><td>Generation boundary</td></tr><tr><td>3</td><td>Night state</td><td>Clock, room runtimes, decisions, pulses</td><td>Reducer-owned</td></tr><tr><td>4</td><td>Visible house</td><td>Current seat plus bounded cross-room cues</td><td>Disclosure policy</td></tr><tr><td>5</td><td>Portable state</td><td>Versioned envelope and deterministic digest</td><td>Player-controlled</td></tr></tbody></table></div></section><section class="notebook-cell markdown-cell"><h3>Concurrent-night geometry</h3>
+<p>Room switching is navigation, not turn-taking. A decision advances the shared clock and writes one local effect plus one bounded effect for each other room. Direct content transfer is rarer than systemic influence and must pass its own compatibility gate.</p></section><section class="notebook-cell code-cell"><details><summary>Executed cell 5: show source</summary><pre><code>geometry = {
+    &quot;rooms&quot;: 6,
+    &quot;beats_per_room&quot;: 4,
+    &quot;decisions&quot;: 6 * 4,
+    &quot;effects_per_decision&quot;: 6,
+    &quot;decision_effect_receipts&quot;: 6 * 4 * 6,
+    &quot;ordered_room_pairs&quot;: 6 * 5,
+    &quot;sparse_direct_crossings&quot;: 6,
+}
+cards = [
+    (&quot;Rooms&quot;, geometry[&quot;rooms&quot;], &quot;All exist from minute zero.&quot;),
+    (&quot;Decisions&quot;, geometry[&quot;decisions&quot;], &quot;Four causal beats in each room.&quot;),
+    (&quot;Decision receipts&quot;, geometry[&quot;decision_effect_receipts&quot;], &quot;One local and five remote per decision.&quot;),
+    (&quot;Directed routes&quot;, geometry[&quot;ordered_room_pairs&quot;], &quot;Every ordered room pair has a bounded systemic route.&quot;),
+    (&quot;Direct crossings&quot;, geometry[&quot;sparse_direct_crossings&quot;], &quot;Only compatibility-checked content crossings.&quot;),
+]
+_html = cards_html(&quot;Concurrent-night fixed geometry&quot;, cards)
+assert geometry[&quot;decision_effect_receipts&quot;] == 144
+assert geometry[&quot;ordered_room_pairs&quot;] == 30
+print(&quot;PASS: 24 decisions yield 144 decision-effect receipts across 30 directed room pairs.&quot;)
+_html</code></pre></details><p class="execution-note">PASS: 24 decisions yield 144 decision-effect receipts across 30 directed room pairs.</p><section class="metric-grid" aria-label="Concurrent-night fixed geometry"><article class="metric-card"><h4>Rooms</h4><strong>6</strong><p>All exist from minute zero.</p></article><article class="metric-card"><h4>Decisions</h4><strong>24</strong><p>Four causal beats in each room.</p></article><article class="metric-card"><h4>Decision receipts</h4><strong>144</strong><p>One local and five remote per decision.</p></article><article class="metric-card"><h4>Directed routes</h4><strong>30</strong><p>Every ordered room pair has a bounded systemic route.</p></article><article class="metric-card"><h4>Direct crossings</h4><strong>6</strong><p>Only compatibility-checked content crossings.</p></article></section></section><section class="notebook-cell code-cell"><details><summary>Executed cell 6: show source</summary><pre><code>propagation = [
+    (&quot;Local effect&quot;, &quot;Always&quot;, &quot;The occupied room&#x27;s metrics and ledgers&quot;, &quot;Accepted decision&quot;),
+    (&quot;Ambient systemic effect&quot;, &quot;Five per decision&quot;, &quot;Pressure, reach, fatigue, trust, or repair conditions&quot;, &quot;Typed directed route&quot;),
+    (&quot;Direct crossing&quot;, &quot;Sparse&quot;, &quot;A supported fragment or recognizable carrier&quot;, &quot;Shared channel or artifact compatibility&quot;),
+    (&quot;Scheduled pulse&quot;, &quot;Once when due&quot;, &quot;Background change independent of visit order&quot;, &quot;Shared logical clock&quot;),
+    (&quot;Afterimage&quot;, &quot;After room close&quot;, &quot;Later incoming effects without rewriting close metrics&quot;, &quot;Immutable completion snapshot&quot;),
+]
+_html = table_html(&quot;Propagation layers and their evidence requirements&quot;, (&quot;Layer&quot;, &quot;Frequency&quot;, &quot;May change&quot;, &quot;Required basis&quot;), propagation, row_headers=True)
+print(&quot;Propagation layers remain distinct; ambient influence never asserts shared content.&quot;)
+_html</code></pre></details><p class="execution-note">Propagation layers remain distinct; ambient influence never asserts shared content.</p><div class="table-wrap" role="region" aria-label="Propagation layers and their evidence requirements" tabindex="0"><table><caption>Propagation layers and their evidence requirements</caption><thead><tr><th scope="col">Layer</th><th scope="col">Frequency</th><th scope="col">May change</th><th scope="col">Required basis</th></tr></thead><tbody><tr><th scope="row">Local effect</th><td>Always</td><td>The occupied room&#x27;s metrics and ledgers</td><td>Accepted decision</td></tr><tr><th scope="row">Ambient systemic effect</th><td>Five per decision</td><td>Pressure, reach, fatigue, trust, or repair conditions</td><td>Typed directed route</td></tr><tr><th scope="row">Direct crossing</th><td>Sparse</td><td>A supported fragment or recognizable carrier</td><td>Shared channel or artifact compatibility</td></tr><tr><th scope="row">Scheduled pulse</th><td>Once when due</td><td>Background change independent of visit order</td><td>Shared logical clock</td></tr><tr><th scope="row">Afterimage</th><td>After room close</td><td>Later incoming effects without rewriting close metrics</td><td>Immutable completion snapshot</td></tr></tbody></table></div></section><section class="notebook-cell markdown-cell"><h3>Evidence and interpretation boundaries</h3>
+<p>The simulation can represent motive because the player occupies a fictional seat. That authored interior is still separate from the incident record. Presentation, relationship, class position, register, group status, and audience reaction are never promoted into facts about conduct on their own.</p></section><section class="notebook-cell code-cell"><details><summary>Executed cell 7: show source</summary><pre><code>layers = [
+    (&quot;Ground truth&quot;, &quot;Fixed incident facts&quot;, &quot;Generation only&quot;, &quot;Never altered by play&quot;),
+    (&quot;Observation&quot;, &quot;Represented conduct or artifact&quot;, &quot;Source-backed scene record&quot;, &quot;May support bounded correction&quot;),
+    (&quot;Audience inference&quot;, &quot;What others make the conduct mean&quot;, &quot;Relational ledger&quot;, &quot;Cannot become fact without evidence&quot;),
+    (&quot;Authored interior&quot;, &quot;Occupied protagonist motive and emotional load&quot;, &quot;Seat model&quot;, &quot;Explains access; does not excuse choice&quot;),
+    (&quot;Unknown&quot;, &quot;Unresolved cause, intent, or scope&quot;, &quot;Explicit uncertainty ledger&quot;, &quot;Must remain unresolved until supported&quot;),
+]
+_html = table_html(&quot;Evidence and interpretation layers&quot;, (&quot;Layer&quot;, &quot;Contains&quot;, &quot;Authority&quot;, &quot;Prohibition&quot;), layers, row_headers=True)
+print(&quot;PASS: five layers retain distinct authority and correction rules.&quot;)
+_html</code></pre></details><p class="execution-note">PASS: five layers retain distinct authority and correction rules.</p><div class="table-wrap" role="region" aria-label="Evidence and interpretation layers" tabindex="0"><table><caption>Evidence and interpretation layers</caption><thead><tr><th scope="col">Layer</th><th scope="col">Contains</th><th scope="col">Authority</th><th scope="col">Prohibition</th></tr></thead><tbody><tr><th scope="row">Ground truth</th><td>Fixed incident facts</td><td>Generation only</td><td>Never altered by play</td></tr><tr><th scope="row">Observation</th><td>Represented conduct or artifact</td><td>Source-backed scene record</td><td>May support bounded correction</td></tr><tr><th scope="row">Audience inference</th><td>What others make the conduct mean</td><td>Relational ledger</td><td>Cannot become fact without evidence</td></tr><tr><th scope="row">Authored interior</th><td>Occupied protagonist motive and emotional load</td><td>Seat model</td><td>Explains access; does not excuse choice</td></tr><tr><th scope="row">Unknown</th><td>Unresolved cause, intent, or scope</td><td>Explicit uncertainty ledger</td><td>Must remain unresolved until supported</td></tr></tbody></table></div></section><section class="notebook-cell code-cell"><details><summary>Executed cell 8: show source</summary><pre><code>communication = [
+    (&quot;Linguistic repertoire&quot;, &quot;Several learned registers available to one actor&quot;, &quot;Region, family, peers, profession, institution, politics, platform&quot;, &quot;Does not determine belief or worth&quot;),
+    (&quot;Register action&quot;, &quot;Maintain, bridge, or switch for a represented audience&quot;, &quot;Scene, relationship, pressure, channel&quot;, &quot;Does not prove deceit&quot;),
+    (&quot;Mental model&quot;, &quot;Assumptions about care, evidence, authority, disagreement, responsibility&quot;, &quot;Actor-level world model&quot;, &quot;May diverge even under a shared register&quot;),
+    (&quot;Presentation temperature&quot;, &quot;Warm or cool surface in one exchange&quot;, &quot;Bounded scene wording&quot;, &quot;Is not a stable personality type&quot;),
+]
+_html = table_html(&quot;Communication model separations&quot;, (&quot;Construct&quot;, &quot;Representation&quot;, &quot;Inputs&quot;, &quot;Boundary&quot;), communication, row_headers=True)
+print(&quot;Communication codes, world models, motives, and truth remain independently represented.&quot;)
+_html</code></pre></details><p class="execution-note">Communication codes, world models, motives, and truth remain independently represented.</p><div class="table-wrap" role="region" aria-label="Communication model separations" tabindex="0"><table><caption>Communication model separations</caption><thead><tr><th scope="col">Construct</th><th scope="col">Representation</th><th scope="col">Inputs</th><th scope="col">Boundary</th></tr></thead><tbody><tr><th scope="row">Linguistic repertoire</th><td>Several learned registers available to one actor</td><td>Region, family, peers, profession, institution, politics, platform</td><td>Does not determine belief or worth</td></tr><tr><th scope="row">Register action</th><td>Maintain, bridge, or switch for a represented audience</td><td>Scene, relationship, pressure, channel</td><td>Does not prove deceit</td></tr><tr><th scope="row">Mental model</th><td>Assumptions about care, evidence, authority, disagreement, responsibility</td><td>Actor-level world model</td><td>May diverge even under a shared register</td></tr><tr><th scope="row">Presentation temperature</th><td>Warm or cool surface in one exchange</td><td>Bounded scene wording</td><td>Is not a stable personality type</td></tr></tbody></table></div></section><section class="notebook-cell markdown-cell"><h3>Choice access and fatigue</h3>
+<p>Discernment and enactment are separate. A seat can continue to recognize the sound action while accumulated platform load makes that action temporarily impossible to carry. An attempted blocked ideal produces a concise explanation inside that choice pane and does not mutate the night.</p></section><section class="notebook-cell code-cell"><details><summary>Executed cell 9: show source</summary><pre><code>access = [
+    (&quot;Visible&quot;, &quot;Beat has arrived&quot;, &quot;Future choice content remains sealed before arrival.&quot;),
+    (&quot;Structurally available&quot;, &quot;Required source, authority, evidence, relationship, and distribution supports exist&quot;, &quot;Prior decisions in other rooms may assemble support.&quot;),
+    (&quot;Enactable&quot;, &quot;Required follow-through is within remaining modeled capacity&quot;, &quot;Fatigue can block enactment without lowering discernment.&quot;),
+    (&quot;Accepted&quot;, &quot;Scene is current, event is unique, access passes&quot;, &quot;Reducer writes one decision and six effect receipts.&quot;),
+    (&quot;Non-amplification floor&quot;, &quot;Always enactable&quot;, &quot;The player is never forced to repeat, personalize, or spread a claim.&quot;),
+]
+_html = table_html(&quot;Choice access gates&quot;, (&quot;Gate&quot;, &quot;Condition&quot;, &quot;System promise&quot;), access, row_headers=True)
+print(&quot;PASS: access separates arrival, structural support, follow-through capacity, and acceptance.&quot;)
+_html</code></pre></details><p class="execution-note">PASS: access separates arrival, structural support, follow-through capacity, and acceptance.</p><div class="table-wrap" role="region" aria-label="Choice access gates" tabindex="0"><table><caption>Choice access gates</caption><thead><tr><th scope="col">Gate</th><th scope="col">Condition</th><th scope="col">System promise</th></tr></thead><tbody><tr><th scope="row">Visible</th><td>Beat has arrived</td><td>Future choice content remains sealed before arrival.</td></tr><tr><th scope="row">Structurally available</th><td>Required source, authority, evidence, relationship, and distribution supports exist</td><td>Prior decisions in other rooms may assemble support.</td></tr><tr><th scope="row">Enactable</th><td>Required follow-through is within remaining modeled capacity</td><td>Fatigue can block enactment without lowering discernment.</td></tr><tr><th scope="row">Accepted</th><td>Scene is current, event is unique, access passes</td><td>Reducer writes one decision and six effect receipts.</td></tr><tr><th scope="row">Non-amplification floor</th><td>Always enactable</td><td>The player is never forced to repeat, personalize, or spread a claim.</td></tr></tbody></table></div></section><section class="notebook-cell code-cell"><details><summary>Executed cell 10: show source</summary><pre><code>fatigue = [
+    (&quot;Attentional&quot;, &quot;Competing artifacts and context switches&quot;, &quot;Focus cost&quot;),
+    (&quot;Affective&quot;, &quot;Repeated urgency, outrage, and anticipated threat&quot;, &quot;Alarm cost&quot;),
+    (&quot;Relational&quot;, &quot;Continuous calculation of tone, loyalty, and reply cost&quot;, &quot;Social cost&quot;),
+    (&quot;Verification&quot;, &quot;Source recovery across fragmented copies&quot;, &quot;Checking cost&quot;),
+    (&quot;Efficacy&quot;, &quot;Repeated experience of repair lagging behind spread&quot;, &quot;Action-will cost&quot;),
+]
+_html = table_html(&quot;Modeled fatigue channels&quot;, (&quot;Channel&quot;, &quot;Accumulation source&quot;, &quot;Primary load&quot;), fatigue, row_headers=True)
+print(&quot;Five fatigue channels affect enactment; none reduces the seat&#x27;s discernment metric.&quot;)
+_html</code></pre></details><p class="execution-note">Five fatigue channels affect enactment; none reduces the seat&#x27;s discernment metric.</p><div class="table-wrap" role="region" aria-label="Modeled fatigue channels" tabindex="0"><table><caption>Modeled fatigue channels</caption><thead><tr><th scope="col">Channel</th><th scope="col">Accumulation source</th><th scope="col">Primary load</th></tr></thead><tbody><tr><th scope="row">Attentional</th><td>Competing artifacts and context switches</td><td>Focus cost</td></tr><tr><th scope="row">Affective</th><td>Repeated urgency, outrage, and anticipated threat</td><td>Alarm cost</td></tr><tr><th scope="row">Relational</th><td>Continuous calculation of tone, loyalty, and reply cost</td><td>Social cost</td></tr><tr><th scope="row">Verification</th><td>Source recovery across fragmented copies</td><td>Checking cost</td></tr><tr><th scope="row">Efficacy</th><td>Repeated experience of repair lagging behind spread</td><td>Action-will cost</td></tr></tbody></table></div></section><section class="notebook-cell markdown-cell"><h3>Persistence, privacy, and replay</h3>
+<p>The baseline session remains ephemeral. Local slots require an explicit choice, and portable export is a player-directed file operation. A canonical replay restores the entire night because a single-room rewind would break concurrency and causal provenance.</p></section><section class="notebook-cell code-cell"><details><summary>Executed cell 11: show source</summary><pre><code>persistence = [
+    (&quot;Session only&quot;, &quot;Default&quot;, &quot;Memory for the current browser session&quot;, &quot;Nothing written to a slot&quot;),
+    (&quot;Local slot&quot;, &quot;Explicit per-slot consent&quot;, &quot;Versioned complete night state&quot;, &quot;Inspect and delete controls&quot;),
+    (&quot;Portable export&quot;, &quot;Explicit download&quot;, &quot;Text envelope, schema, provenance, digest&quot;, &quot;512 KiB maximum on import&quot;),
+    (&quot;Import&quot;, &quot;Player-selected file&quot;, &quot;Parse, migrate, validate, preview, restore&quot;, &quot;No mutation before validation&quot;),
+    (&quot;Replay&quot;, &quot;Whole-night state&quot;, &quot;Seed plus complete ordered event record&quot;, &quot;No isolated room rewind&quot;),
+]
+_html = table_html(&quot;Persistence and replay contract&quot;, (&quot;Mode&quot;, &quot;Consent&quot;, &quot;Contents&quot;, &quot;Boundary&quot;), persistence, row_headers=True)
+print(&quot;Persistence remains local, bounded, versioned, and reversible by the player.&quot;)
+_html</code></pre></details><p class="execution-note">Persistence remains local, bounded, versioned, and reversible by the player.</p><div class="table-wrap" role="region" aria-label="Persistence and replay contract" tabindex="0"><table><caption>Persistence and replay contract</caption><thead><tr><th scope="col">Mode</th><th scope="col">Consent</th><th scope="col">Contents</th><th scope="col">Boundary</th></tr></thead><tbody><tr><th scope="row">Session only</th><td>Default</td><td>Memory for the current browser session</td><td>Nothing written to a slot</td></tr><tr><th scope="row">Local slot</th><td>Explicit per-slot consent</td><td>Versioned complete night state</td><td>Inspect and delete controls</td></tr><tr><th scope="row">Portable export</th><td>Explicit download</td><td>Text envelope, schema, provenance, digest</td><td>512 KiB maximum on import</td></tr><tr><th scope="row">Import</th><td>Player-selected file</td><td>Parse, migrate, validate, preview, restore</td><td>No mutation before validation</td></tr><tr><th scope="row">Replay</th><td>Whole-night state</td><td>Seed plus complete ordered event record</td><td>No isolated room rewind</td></tr></tbody></table></div></section><section class="notebook-cell markdown-cell"><h3>Maintenance seams</h3>
+<p>Changes should begin at the narrowest authoritative layer. New narrative grammar belongs in the generator; new transition behavior belongs in the reducer; new disclosure belongs in the renderer only after the underlying state already exists.</p></section><section class="notebook-cell code-cell"><details><summary>Executed cell 12: show source</summary><pre><code>maintenance = [
+    (&quot;Add a room grammar&quot;, &quot;Generator&quot;, &quot;Coherence report, six-dynamic coverage, youth safety, route compatibility&quot;),
+    (&quot;Add a metric&quot;, &quot;Generator and reducer&quot;, &quot;Bounds, local effect, remote effect, persistence, receipt wording&quot;),
+    (&quot;Add a fatigue channel&quot;, &quot;Types, access checks, receipts&quot;, &quot;Discernment separation, caps, blocked reason, save validation&quot;),
+    (&quot;Add a cross-room mechanism&quot;, &quot;Link grammar and reducer&quot;, &quot;All 30 pairs, direct/ambient boundary, reveal policy&quot;),
+    (&quot;Add a disclosure&quot;, &quot;Renderer&quot;, &quot;Arrival gate, progressive disclosure, keyboard path, mobile fit&quot;),
+]
+_html = table_html(&quot;Change routing and required companion work&quot;, (&quot;Change&quot;, &quot;Authoritative layer&quot;, &quot;Release companions&quot;), maintenance, row_headers=True)
+print(&quot;Maintenance map complete: each change names its authority and release companions.&quot;)
+_html</code></pre></details><p class="execution-note">Maintenance map complete: each change names its authority and release companions.</p><div class="table-wrap" role="region" aria-label="Change routing and required companion work" tabindex="0"><table><caption>Change routing and required companion work</caption><thead><tr><th scope="col">Change</th><th scope="col">Authoritative layer</th><th scope="col">Release companions</th></tr></thead><tbody><tr><th scope="row">Add a room grammar</th><td>Generator</td><td>Coherence report, six-dynamic coverage, youth safety, route compatibility</td></tr><tr><th scope="row">Add a metric</th><td>Generator and reducer</td><td>Bounds, local effect, remote effect, persistence, receipt wording</td></tr><tr><th scope="row">Add a fatigue channel</th><td>Types, access checks, receipts</td><td>Discernment separation, caps, blocked reason, save validation</td></tr><tr><th scope="row">Add a cross-room mechanism</th><td>Link grammar and reducer</td><td>All 30 pairs, direct/ambient boundary, reveal policy</td></tr><tr><th scope="row">Add a disclosure</th><td>Renderer</td><td>Arrival gate, progressive disclosure, keyboard path, mobile fit</td></tr></tbody></table></div></section>
+</main>
+<footer class="site-footer">
+  <p>Committed source and static edition · rebuilt deterministically with the Python standard library · 2026-08-18</p>
+</footer>
+</body>
+</html>

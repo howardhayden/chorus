@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <circle cx="32" cy="32" r="31" fill="#06130c" stroke="#c9a85f" stroke-width="2"/>
+  <g fill="none" stroke-linecap="square" stroke-linejoin="bevel">
+    <path d="M54 11 44 8 33 14 21 11 11 22 14 34 9 45 21 54 34 50 48 55" stroke="#020705" stroke-width="7"/>
+    <path d="M54 11 44 8 33 14 21 11 11 22 14 34 9 45 21 54 34 50 48 55" stroke="#17663d" stroke-width="4.4"/>
+    <path d="M53 20 44 14 34 8 22 15 14 28 9 38 17 49 29 56 41 50 52 45" stroke="#020705" stroke-width="7"/>
+    <path d="M53 20 44 14 34 8 22 15 14 28 9 38 17 49 29 56 41 50 52 45" stroke="#c89d42" stroke-width="4.4"/>
+    <path d="M55 29 46 24 38 15 25 9 14 18 9 31 15 42 24 51 37 56 50 49" stroke="#020705" stroke-width="7"/>
+    <path d="M55 29 46 24 38 15 25 9 14 18 9 31 15 42 24 51 37 56 50 49" stroke="#c3cfcb" stroke-width="4.4"/>
+    <path d="M33 14 21 11 11 22" stroke="#020705" stroke-width="7"/>
+    <path d="M33 14 21 11 11 22" stroke="#17663d" stroke-width="4.4"/>
+    <path d="M9 38 17 49 29 56" stroke="#020705" stroke-width="7"/>
+    <path d="M9 38 17 49 29 56" stroke="#c89d42" stroke-width="4.4"/>
+    <path d="M24 51 37 56 50 49" stroke="#020705" stroke-width="7"/>
+    <path d="M24 51 37 56 50 49" stroke="#c3cfcb" stroke-width="4.4"/>
+  </g>
+  <g stroke="#020705" stroke-width="1.5" stroke-linejoin="bevel">
+    <polygon points="50,7 59,8 61,12 56,16 49,14" fill="#17663d"/>
+    <polygon points="49,16 58,17 60,21 55,25 48,22" fill="#c89d42"/>
+    <polygon points="51,25 60,26 62,30 57,34 50,31" fill="#c3cfcb"/>
+  </g>
+  <g fill="#07110c"><circle cx="57" cy="10.8" r="1"/><circle cx="56" cy="19.8" r=".9"/><circle cx="58" cy="28.8" r=".9"/></g>
+  <g fill="none" stroke-width="1.25" opacity=".82" stroke-linecap="square">
+    <path d="M44 8 33 14M11 22 14 34M21 54 34 50" stroke="#46a56d"/>
+    <path d="M44 14 34 8M14 28 9 38M29 56 41 50" stroke="#f1d786"/>
+    <path d="M46 24 38 15M9 31 15 42M37 56 50 49" stroke="#f2f5ee"/>
+  </g>
+</svg>
