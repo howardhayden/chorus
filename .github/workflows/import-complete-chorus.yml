@@ -1,0 +1,158 @@
+name: Import complete CHORUS tree
+
+on:
+  push:
+    branches:
+      - agent/merge-complete-chorus-20260819
+    paths:
+      - .github/workflows/import-complete-chorus.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: chorus-complete-tree-import
+  cancel-in-progress: false
+
+jobs:
+  import-and-verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+
+    steps:
+      - name: Check out the exact import branch
+        uses: actions/checkout@v6
+        with:
+          ref: agent/merge-complete-chorus-20260819
+          fetch-depth: 0
+
+      - name: Reconstruct and apply the source update
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat .import/source-update.part-* | base64 --decode > /tmp/source-update.patch.xz
+          echo "7a4c0cdb2e13d2c832ba8aa95df6b1d97f833655eb7c3775d3bf1107e5f703f0  /tmp/source-update.patch.xz" | sha256sum --check -
+          xz --decompress --stdout /tmp/source-update.patch.xz > /tmp/source-update.patch
+          echo "2ce3b0168fa6d5c86fd85538259849a35f2d335595efd0b002ce458785ca09ce  /tmp/source-update.patch" | sha256sum --check -
+          git apply --index /tmp/source-update.patch
+
+      - name: Remove local-only tracked state
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf .next .wrangler .DS_Store
+          cat > .gitignore <<'EOF'
+          node_modules
+          .next
+          .wrangler
+          .DS_Store
+          __pycache__
+          *.pyc
+          EOF
+
+      - name: Install icon rendering tools
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends librsvg2-bin imagemagick
+
+      - name: Generate browser and application icons
+        shell: bash
+        run: |
+          set -euo pipefail
+          rsvg-convert -w 16 -h 16 public/favicon.svg > public/favicon-16x16.png
+          rsvg-convert -w 32 -h 32 public/favicon.svg > public/favicon-32x32.png
+          rsvg-convert -w 48 -h 48 public/favicon.svg > /tmp/favicon-48.png
+          rsvg-convert -w 64 -h 64 public/favicon.svg > /tmp/favicon-64.png
+          rsvg-convert -w 180 -h 180 public/favicon.svg > public/apple-touch-icon.png
+          rsvg-convert -w 192 -h 192 public/favicon.svg > public/icon-192.png
+          rsvg-convert -w 512 -h 512 public/favicon.svg > public/icon-512.png
+          convert public/favicon-16x16.png public/favicon-32x32.png /tmp/favicon-48.png /tmp/favicon-64.png public/favicon.ico
+          test -s public/favicon.ico
+          test -s public/icon-512.png
+
+      - name: Use the validated Node.js runtime
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24.19.0
+          cache: npm
+
+      - name: Install the locked dependency graph
+        run: npm ci
+
+      - name: Generate executed scholarly publications
+        run: |
+          npm run docs:build:working-tree
+          npm run status:build
+
+      - name: Verify the complete updated working tree
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf dist .next
+          npm run verify:working-tree
+
+      - name: Remove import and build-local scaffolding
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf .import .next .wrangler scripts/docs/__pycache__ tests/__pycache__
+          rm -f .DS_Store .github/workflows/import-complete-chorus.yml
+
+      - name: Refresh complete-tree manifest and checksums
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import hashlib
+          import json
+
+          root = Path('.')
+          excluded_roots = {'.git', 'node_modules', '.next', '.wrangler'}
+          excluded_names = {'.DS_Store', 'OUTPUT-MANIFEST.json', 'CHECKSUMS.sha256'}
+          rows = []
+          for path in sorted(root.rglob('*')):
+              if not path.is_file():
+                  continue
+              relative = path.relative_to(root)
+              if relative.parts[0] in excluded_roots:
+                  continue
+              if path.name in excluded_names or '__pycache__' in relative.parts or path.suffix == '.pyc':
+                  continue
+              payload = path.read_bytes()
+              rows.append({
+                  'path': relative.as_posix(),
+                  'bytes': len(payload),
+                  'sha256': hashlib.sha256(payload).hexdigest(),
+              })
+
+          manifest = {
+              'format': 'CHORUS_COMPLETE_OUTPUT_MANIFEST',
+              'schema_version': 1,
+              'algorithm': 'sha256',
+              'file_count': len(rows),
+              'total_payload_bytes': sum(row['bytes'] for row in rows),
+              'artifacts': rows,
+          }
+          Path('OUTPUT-MANIFEST.json').write_text(json.dumps(manifest, indent=2) + '\n')
+          Path('CHECKSUMS.sha256').write_text(
+              ''.join(f"{row['sha256']}  {row['path']}\n" for row in rows)
+          )
+          PY
+
+      - name: Commit the verified CHORUS tree
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Integrate complete CHORUS scholarly record"
+          git fetch origin main
+          if git diff --name-only origin/main...HEAD | grep -E '^(\.import/|\.github/workflows/import-complete-chorus\.yml$)'; then
+            echo "Import scaffolding remains in the proposed tree." >&2
+            exit 1
+          fi
+          git push origin HEAD:agent/merge-complete-chorus-20260819
