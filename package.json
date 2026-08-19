@@ -1,0 +1,54 @@
+{
+  "name": "chorus",
+  "version": "1.0.0-rc.1",
+  "private": true,
+  "engines": {
+    "node": ">=22.13.0"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vinext build",
+    "start": "vinext start",
+    "test": "npm run docs:check && npm run test:night && npm run test:simulation && npm run test:save && npm run test:a11y && npm run test:viewport && npm run build && node --test tests/rendered-html.test.mjs",
+    "test:night": "node --experimental-strip-types --experimental-specifier-resolution=node --test tests/concurrent-night.test.mjs",
+    "test:simulation": "node --experimental-strip-types --experimental-specifier-resolution=node --test tests/simulation-maturity.test.mjs",
+    "test:save": "node --experimental-strip-types --experimental-specifier-resolution=node --test tests/save-model.test.mjs",
+    "test:viewport": "node --test tests/viewport-contract.test.mjs",
+    "test:a11y": "node --test tests/accessibility-disclosure.test.mjs",
+    "docs:build": "python3 scripts/docs/build_notebooks.py",
+    "docs:check": "python3 scripts/docs/build_notebooks.py --check",
+    "evidence:simulation": "node --experimental-strip-types --experimental-specifier-resolution=node scripts/run-simulation-evidence.mjs --check",
+    "verify:release": "npm run lint && npx tsc --noEmit && npm run evidence:simulation && npm test",
+    "lint": "eslint . --ignore-pattern dist --ignore-pattern .next"
+  },
+  "dependencies": {
+    "next": "16.3.1",
+    "react": "19.2.8",
+    "react-dom": "19.2.8"
+  },
+  "devDependencies": {
+    "@cloudflare/vite-plugin": "1.53.0",
+    "@tailwindcss/postcss": "4.3.3",
+    "@types/node": "22.19.19",
+    "@types/react": "19.2.14",
+    "@types/react-dom": "19.2.3",
+    "@vitejs/plugin-react": "6.0.5",
+    "@vitejs/plugin-rsc": "0.5.34",
+    "eslint": "9.39.5",
+    "eslint-config-next": "16.3.1",
+    "react-server-dom-webpack": "19.2.8",
+    "tailwindcss": "4.3.3",
+    "typescript": "5.9.3",
+    "vinext": "1.0.0-beta.6",
+    "vite": "8.2.1",
+    "wrangler": "4.124.0"
+  },
+  "allowScripts": {
+    "esbuild@0.28.1": true,
+    "fsevents@2.3.3": true,
+    "unrs-resolver@1.11.1": true,
+    "workerd@1.20260815.1": true
+  },
+  "type": "module",
+  "displayName": "CHORUS"
+}

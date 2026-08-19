@@ -1,0 +1,221 @@
+{
+  "format": "CHORUS_DEPENDENCY_INVENTORY",
+  "schema_version": 1,
+  "release": "1.0.0-rc.1",
+  "dependency_manifest_sha256": "93c3bc1ef845236038c597aebeaeb2e2e6f8c67c4289fe96026f4f1ee568488d",
+  "package_lock_sha256": "df9b51ab24c932408bf7a8664bb9f22b5fc6dd299a7d6317811514b62d3609dc",
+  "lockfile_version": 3,
+  "direct_dependencies": [
+    {
+      "name": "next",
+      "scope": "runtime",
+      "declared": "16.3.1",
+      "locked": "16.3.1",
+      "integrity": "sha512-hsAp0i7Rh+/dhe7DGIeN2YlpLM1DP4MNxti9EtDMtqcO612X81MvvEj388/oTce9U1EcEIOWDlGq0zRwrBKvuA==",
+      "has_install_script": false
+    },
+    {
+      "name": "react",
+      "scope": "runtime",
+      "declared": "19.2.8",
+      "locked": "19.2.8",
+      "integrity": "sha512-PWaYA1L/q9u2u7xYQi+Y3L3Yfnie7XyLeaJICV1MGD6LprsBxcAqGjYyr0eY3p+QdsA+x/Irkt4Qif8D63+Sbw==",
+      "has_install_script": false
+    },
+    {
+      "name": "react-dom",
+      "scope": "runtime",
+      "declared": "19.2.8",
+      "locked": "19.2.8",
+      "integrity": "sha512-rVprimfGBG3DR+Tq0IQG2DT5PxKth1WIGDmj5yPmlzr4YBe7uyE+Du4oVqTDXZSHGGGXRtTJEGSSePyQCMBglQ==",
+      "has_install_script": false
+    },
+    {
+      "name": "@cloudflare/vite-plugin",
+      "scope": "development",
+      "declared": "1.53.0",
+      "locked": "1.53.0",
+      "integrity": "sha512-WiHZeicMiv5ukc2Aj30lS3KmayTNIXfZvhzEq4+Ha2cF1MtY0HAOCwJzngZT+vlh/h3yKiaVUoT2+yFQgGNoSA==",
+      "has_install_script": false
+    },
+    {
+      "name": "@tailwindcss/postcss",
+      "scope": "development",
+      "declared": "4.3.3",
+      "locked": "4.3.3",
+      "integrity": "sha512-JTSZZGQi1AyKirbLN3azmjVzef92tcX7h+iSqPdaeStyFpGpDlKvvpxeOE8njhbUanbRwr3z8DyzhICWnMtQeg==",
+      "has_install_script": false
+    },
+    {
+      "name": "@types/node",
+      "scope": "development",
+      "declared": "22.19.19",
+      "locked": "22.19.19",
+      "integrity": "sha512-dyh/xO2Fh5bYrfWaaqGrRQQGkNdmYw6AmaAUvYeUMNTWQtvb796ikLdmTchRmOlOiIJ1TDXfWgVx1QkUlQ6Hew==",
+      "has_install_script": false
+    },
+    {
+      "name": "@types/react",
+      "scope": "development",
+      "declared": "19.2.14",
+      "locked": "19.2.14",
+      "integrity": "sha512-ilcTH/UniCkMdtexkoCN0bI7pMcJDvmQFPvuPvmEaYA/NSfFTAgdUSLAoVjaRJm7+6PvcM+q1zYOwS4wTYMF9w==",
+      "has_install_script": false
+    },
+    {
+      "name": "@types/react-dom",
+      "scope": "development",
+      "declared": "19.2.3",
+      "locked": "19.2.3",
+      "integrity": "sha512-jp2L/eY6fn+KgVVQAOqYItbF0VY/YApe5Mz2F0aykSO8gx31bYCZyvSeYxCHKvzHG5eZjc+zyaS5BrBWya2+kQ==",
+      "has_install_script": false
+    },
+    {
+      "name": "@vitejs/plugin-react",
+      "scope": "development",
+      "declared": "6.0.5",
+      "locked": "6.0.5",
+      "integrity": "sha512-BOVzne/NL162sMdResB25mUv+vWMF5NoAjNf09TeGlE7ZpszZWSD3winycicLJw72yeVsoCn/2kOhEuCvEShMA==",
+      "has_install_script": false
+    },
+    {
+      "name": "@vitejs/plugin-rsc",
+      "scope": "development",
+      "declared": "0.5.34",
+      "locked": "0.5.34",
+      "integrity": "sha512-95V6fyGQklQMYIWTr5qwwNmpDYxsHkTunuzq8i/keIcgdckL9zb6nyEgTnb1CEl1IPJWVxGgORMkTFHrct7XJg==",
+      "has_install_script": false
+    },
+    {
+      "name": "eslint",
+      "scope": "development",
+      "declared": "9.39.5",
+      "locked": "9.39.5",
+      "integrity": "sha512-DgZS62aPLXKlnxILS/AYCoRvHaZeXceIzlXPkkGGzJWSow1aEk0lbTlxUSlyjC8jcaKxAdOnTDz+o1JFSBsyjw==",
+      "has_install_script": false
+    },
+    {
+      "name": "eslint-config-next",
+      "scope": "development",
+      "declared": "16.3.1",
+      "locked": "16.3.1",
+      "integrity": "sha512-0vtrpwFVHFEkycUgV/DyrG29OS+HSRdah5Yu8YuZoiBMtlAT6NIiWzaLwDkJZxr2kGfx+9LIvfQ7KHAlEs0VsA==",
+      "has_install_script": false
+    },
+    {
+      "name": "react-server-dom-webpack",
+      "scope": "development",
+      "declared": "19.2.8",
+      "locked": "19.2.8",
+      "integrity": "sha512-rFO1VJZ+cH9ZH6hGy9+qmIsmZHZpCMKJZXhWHqT71UnSfg+w+W+gwrwp58MVzMqdFquG8GF1c6C8q0OGphkEdg==",
+      "has_install_script": false
+    },
+    {
+      "name": "tailwindcss",
+      "scope": "development",
+      "declared": "4.3.3",
+      "locked": "4.3.3",
+      "integrity": "sha512-gOhV3P7ufE62QDGg1zVaTgCR+EtPv92k2nIhVcVKcLmxT1sUBsQGhnZj175j+MqRt4zLF7ic+sCYjfhxMxj7YQ==",
+      "has_install_script": false
+    },
+    {
+      "name": "typescript",
+      "scope": "development",
+      "declared": "5.9.3",
+      "locked": "5.9.3",
+      "integrity": "sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw==",
+      "has_install_script": false
+    },
+    {
+      "name": "vinext",
+      "scope": "development",
+      "declared": "1.0.0-beta.6",
+      "locked": "1.0.0-beta.6",
+      "integrity": "sha512-JzgT+jByuDXO0bIzPhdbLu3SboEUhgBWelcjcMoC7Xlnqqfpd5qDvsIQTQYZdw8S0CkyISd8DpMwZIixwDq7HQ==",
+      "has_install_script": false
+    },
+    {
+      "name": "vite",
+      "scope": "development",
+      "declared": "8.2.1",
+      "locked": "8.2.1",
+      "integrity": "sha512-EU/eS7BH3XROHh2YnBefjM6DBKA6ZeMZEYQbj7NLWg5wHYlhB8B/Mayd5XsgWq+NFYccDOTemRpdETWR6Ka/lw==",
+      "has_install_script": false
+    },
+    {
+      "name": "wrangler",
+      "scope": "development",
+      "declared": "4.124.0",
+      "locked": "4.124.0",
+      "integrity": "sha512-75euoZKjVTJYFy+Xhctt/5JlZL4M6A4xmovZsUlep+6GHcCm14n9VtdGzNIybOW2t8wuNxRj5iMUwjT5E7Ctog==",
+      "has_install_script": false
+    }
+  ],
+  "reviewed_install_script_allowlist": [
+    {
+      "package": "esbuild",
+      "version": "0.28.1",
+      "allowed": true,
+      "lock_has_install_script": true,
+      "optional": false,
+      "development_only": true,
+      "reviewed": true,
+      "lifecycle": "postinstall",
+      "command": "node install.js",
+      "purpose": "Select and verify the exact platform compiler binary used by the development build.",
+      "platform_boundary": "Runs only during dependency installation; not imported by the simulation core."
+    },
+    {
+      "package": "fsevents",
+      "version": "2.3.3",
+      "allowed": true,
+      "lock_has_install_script": true,
+      "optional": true,
+      "development_only": true,
+      "reviewed": true,
+      "lifecycle": "install",
+      "command": "node-gyp rebuild",
+      "purpose": "Build the optional native filesystem watcher on Darwin hosts.",
+      "platform_boundary": "Optional Darwin-only development helper; absent from the Linux installation used for automated verification."
+    },
+    {
+      "package": "unrs-resolver",
+      "version": "1.11.1",
+      "allowed": true,
+      "lock_has_install_script": true,
+      "optional": false,
+      "development_only": true,
+      "reviewed": true,
+      "lifecycle": "postinstall",
+      "command": "napi-postinstall unrs-resolver 1.11.1 check",
+      "purpose": "Verify the resolver's exact native package for the installation platform.",
+      "platform_boundary": "Development and build resolution only; not imported by the simulation core."
+    },
+    {
+      "package": "workerd",
+      "version": "1.20260815.1",
+      "allowed": true,
+      "lock_has_install_script": true,
+      "optional": false,
+      "development_only": true,
+      "reviewed": true,
+      "lifecycle": "postinstall",
+      "command": "node install.js",
+      "purpose": "Select and verify the exact local worker-runtime binary used for development and build checks.",
+      "platform_boundary": "Development and packaging only; the browser simulation does not invoke it."
+    }
+  ],
+  "lock_install_script_packages": [
+    "esbuild@0.28.1",
+    "fsevents@2.3.3",
+    "unrs-resolver@1.11.1",
+    "workerd@1.20260815.1"
+  ],
+  "unapproved_install_script_packages": [],
+  "stale_install_script_approvals": [],
+  "notes": [
+    "The lockfile is authoritative for the complete transitive graph and registry integrity values.",
+    "The allowlist is exact-package and exact-version; no wildcard script approval is present.",
+    "Audit status is time-bound and retained as a separate release run rather than embedded in this deterministic inventory."
+  ]
+}

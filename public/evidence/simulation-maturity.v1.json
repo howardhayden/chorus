@@ -1,0 +1,194 @@
+{
+  "schema": "chorus.simulation-maturity-evidence.v1",
+  "releaseCandidate": "1.0.0-rc.1",
+  "deterministic": true,
+  "command": "node --experimental-strip-types --experimental-specifier-resolution=node scripts/run-simulation-evidence.mjs --write",
+  "executionContract": {
+    "runtime": "Node.js",
+    "minimumVersion": "22.13.0",
+    "networkRequired": false,
+    "wallClockDataCommitted": false
+  },
+  "source": {
+    "identity": "content-addressed",
+    "files": [
+      {
+        "path": "app/night-engine.ts",
+        "sha256": "a81058d06d42a80671a25d7903a1873072ee66b85da04551223316ecbf8aebc7",
+        "bytes": 48930
+      },
+      {
+        "path": "app/scenario-generator.ts",
+        "sha256": "e0feb111e302ce029ff1e97f94b66907a3657cafabfeb7d30928d4c8d8d23a4d",
+        "bytes": 263122
+      },
+      {
+        "path": "scripts/run-simulation-evidence.mjs",
+        "sha256": "1bc2d77da3f5c9f6d649b7a78976e4d53f4860450029e2f6103c7d8cb0a559dc",
+        "bytes": 34479
+      },
+      {
+        "path": "tests/simulation-maturity.test.mjs",
+        "sha256": "6e6a9e5229c9da1f57b629ab09f7237682b2318b76d76ce82bcd39f62066b22d",
+        "bytes": 4644
+      }
+    ],
+    "sha256": "ad53810218a17ba9b199174e370f2421e87ff97dd367246e33d238055036c2da"
+  },
+  "seedDomain": {
+    "startInclusive": 0,
+    "endExclusive": 4096,
+    "count": 4096,
+    "playedStartInclusive": 0,
+    "playedEndExclusive": 512,
+    "playedCount": 512
+  },
+  "samples": {
+    "autonomousClockSeeds": 128,
+    "deterministicRegenerationSeeds": 64,
+    "invalidStateSeeds": 16,
+    "invalidStateMutationsPerSeed": 27,
+    "invalidActionSeeds": 64,
+    "invalidActionAttemptsPerSeed": 10,
+    "choicePolicies": {
+      "seeded-mixed": 128,
+      "last-available": 128,
+      "repair-preferring": 128,
+      "refusal-floor": 128
+    }
+  },
+  "results": {
+    "status": "pass",
+    "assertions": 118680,
+    "invariantFailures": 0,
+    "validationFailures": 0,
+    "coherentNights": 4096,
+    "generatedRooms": 24576,
+    "generatedScenes": 98304,
+    "generatedDirectedLinks": 122880,
+    "completedNights": 512,
+    "replayedNights": 512,
+    "randomizedInterleavings": 512,
+    "roomSwitches": 10239,
+    "decisions": 12288,
+    "decisionEffects": 73728,
+    "localDecisionEffects": 12288,
+    "remoteDecisionEffects": 61440,
+    "autonomousPulses": 12288,
+    "autonomousEffects": 73728,
+    "localAutonomousEffects": 12288,
+    "remoteAutonomousEffects": 61440,
+    "dueBoundaryChecks": 256,
+    "steppedClockEquivalenceChecks": 128,
+    "waitingRoomEvolutionChecks": 768,
+    "deterministicRegenerations": 64,
+    "invalidStateMutationsRejected": 432,
+    "invalidActionNoOps": 640,
+    "choiceExhaustionFailures": 0,
+    "stateValidationFailures": 0,
+    "replayFailures": 0,
+    "bounds": {
+      "stateObservations": 13019,
+      "roomObservations": 78114,
+      "reach": {
+        "minimum": 32,
+        "maximum": 3307,
+        "rule": "non-negative safe integer"
+      },
+      "normalizedMetrics": {
+        "heat": {
+          "minimum": 4.98,
+          "maximum": 86.7462
+        },
+        "crossover": {
+          "minimum": 2,
+          "maximum": 70.0714
+        },
+        "belief": {
+          "minimum": 4,
+          "maximum": 6
+        },
+        "consensus": {
+          "minimum": 0,
+          "maximum": 64.9011
+        },
+        "provenance": {
+          "minimum": 55.5412,
+          "maximum": 100
+        },
+        "verification": {
+          "minimum": 4,
+          "maximum": 82.2608
+        },
+        "trust": {
+          "minimum": 33.878,
+          "maximum": 72.3704
+        },
+        "coordination": {
+          "minimum": 0,
+          "maximum": 18
+        },
+        "blame": {
+          "minimum": 0,
+          "maximum": 63.3556
+        },
+        "interpretiveGap": {
+          "minimum": 0,
+          "maximum": 75.8152
+        },
+        "commonGround": {
+          "minimum": 0,
+          "maximum": 86.0918
+        },
+        "threadFocus": {
+          "minimum": 43.7176,
+          "maximum": 76
+        },
+        "discernment": {
+          "minimum": 62,
+          "maximum": 92.42
+        },
+        "enactment": {
+          "minimum": 9.6276,
+          "maximum": 87.9736
+        }
+      },
+      "fatigue": {
+        "attentional": {
+          "minimum": 0.08,
+          "maximum": 63.31
+        },
+        "affective": {
+          "minimum": 0.06,
+          "maximum": 60.93
+        },
+        "relational": {
+          "minimum": 0.04,
+          "maximum": 68.86
+        },
+        "verification": {
+          "minimum": 0.04,
+          "maximum": 56.12
+        },
+        "efficacy": {
+          "minimum": 0.02,
+          "maximum": 47.92
+        }
+      },
+      "normalizedRule": "finite and within 0–100 inclusive"
+    },
+    "digests": {
+      "generatedPackSignaturesSha256": "57cd8bf6666ef0f58dfac72dbc8f74afde992133b04ca1f3d6b55d3383b220d3",
+      "completedStatesSha256": "cab7b3c5318994a07c4943ecd77be65436a253920aa3a6d9c8f45fb98fe819df",
+      "actionOrdersSha256": "b1b966bc952b7442dba9782463cbd56b513ab3fa9d2da4c70389d68f6e8d4e95"
+    },
+    "failures": []
+  },
+  "limitations": [
+    "The run covers a deterministic finite seed domain; it is not a proof over every possible integer seed.",
+    "Replay invariance means identical initial seed plus identical ordered action ledger; different action orders are intentionally allowed to produce different consequences.",
+    "Normalized state metrics and fatigue are bounded to 0–100; reach is a non-negative safe integer because it is a cumulative audience count.",
+    "The harness exercises four deterministic choice policies, not the combinatorial total of every possible 24-choice path."
+  ],
+  "evidenceSha256": "ffd9821c8dfd3dc3b4f3a06f2715b3d490c150e7abf65f201474fe6df25fe844"
+}

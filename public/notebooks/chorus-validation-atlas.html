@@ -1,0 +1,417 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="An executed verification ledger for fixed night geometry, causal receipts, accessibility, privacy, hostile-input boundaries, and release evidence.">
+<title>CHORUS Verification Ledger · CHORUS documentation</title>
+<style>
+:root{
+  color-scheme:dark;
+  --ink:#f2f1e8;--muted:#c7d1c9;--green:#0b2819;--green-2:#123d27;
+  --mint:#a7e0bd;--gold:#e2c57f;--silver:#d5dedc;--line:rgba(213,222,220,.24);
+  --paper:#07140d;--panel:#0b1f14;--focus:#f1cf78;
+  font-family:Georgia,"Times New Roman",serif;
+}
+*{box-sizing:border-box}
+html{background:var(--paper);color:var(--ink);scroll-behavior:smooth}
+body{margin:0;min-width:280px;background:
+  radial-gradient(circle at 10% 0%,rgba(37,101,64,.32),transparent 34rem),
+  radial-gradient(circle at 92% 12%,rgba(196,155,72,.13),transparent 28rem),var(--paper);line-height:1.65}
+a{color:var(--mint);text-underline-offset:.18em}
+a:hover{text-decoration-thickness:.15em}
+a:focus-visible,summary:focus-visible,.table-wrap:focus-visible{outline:3px solid var(--focus);outline-offset:4px}
+.skip-link{position:absolute;left:1rem;top:-8rem;z-index:20;padding:.7rem 1rem;background:#fff;color:#07140d;border-radius:.4rem}
+.skip-link:focus{top:1rem}
+.site-header{border-bottom:1px solid var(--line);padding:clamp(2rem,7vw,5.5rem) max(1rem,calc((100vw - 76rem)/2));background:rgba(4,18,11,.72)}
+.eyebrow{margin:0 0 .8rem;color:var(--gold);font:700 .78rem/1.4 ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:.14em;text-transform:uppercase}
+h1,h2,h3,h4{line-height:1.15;text-wrap:balance}
+h1{margin:0;max-width:15ch;font-size:clamp(2.4rem,7vw,5.8rem);font-weight:600;letter-spacing:-.035em}
+.lede{max-width:70ch;margin:1.2rem 0 0;color:var(--silver);font-size:clamp(1rem,2vw,1.24rem)}
+.doc-nav{display:flex;flex-wrap:wrap;gap:.65rem;margin-top:1.5rem}
+.doc-nav a{display:inline-flex;align-items:center;min-height:44px;padding:.55rem .9rem;border:1px solid var(--line);border-radius:999px;background:rgba(11,40,25,.72);text-decoration:none}
+main{width:min(76rem,calc(100% - 2rem));margin:0 auto;padding:2rem 0 5rem}
+.notebook-cell{margin:0 0 1.2rem;padding:clamp(1rem,3vw,1.7rem);border:1px solid var(--line);border-radius:.75rem 1.25rem .85rem 1.05rem;background:linear-gradient(145deg,rgba(11,31,20,.96),rgba(8,24,15,.9));box-shadow:0 1rem 3rem rgba(0,0,0,.12)}
+.notebook-cell h2{margin-top:0;font-size:clamp(1.55rem,3.4vw,2.35rem);color:var(--gold)}
+.notebook-cell h3{font-size:clamp(1.2rem,2.5vw,1.6rem);color:var(--silver)}
+.notebook-cell p,.notebook-cell li{max-width:78ch}
+.code-cell details{border-top:1px solid var(--line);margin-bottom:1rem}
+.code-cell summary{cursor:pointer;min-height:44px;padding:.7rem 0;color:var(--muted);font-family:ui-monospace,SFMono-Regular,Consolas,monospace}
+pre{margin:0;padding:1rem;border:1px solid var(--line);border-radius:.65rem;background:#041009;color:#e7eee8;white-space:pre-wrap;overflow-wrap:anywhere;font:500 .86rem/1.55 ui-monospace,SFMono-Regular,Consolas,monospace}
+.execution-note{margin:.8rem 0;color:var(--mint);font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:.86rem}
+.table-wrap{max-width:100%;overflow-x:auto;border:1px solid var(--line);border-radius:.7rem;background:rgba(5,19,11,.8)}
+table{width:100%;border-collapse:collapse;min-width:42rem}
+caption{padding:1rem;text-align:left;color:var(--gold);font-size:1.04rem;font-weight:700}
+th,td{padding:.75rem;vertical-align:top;text-align:left;border-top:1px solid var(--line)}
+thead th{color:var(--silver);background:rgba(20,61,39,.72)}
+tbody th{color:var(--mint);min-width:11rem}
+.metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,12rem),1fr));gap:.75rem}
+.metric-card{min-width:0;padding:1rem;border:1px solid var(--line);border-radius:.7rem;background:rgba(14,54,33,.58)}
+.metric-card h4{margin:0;color:var(--silver);font-size:.88rem;text-transform:uppercase;letter-spacing:.07em}
+.metric-card strong{display:block;margin:.45rem 0;color:var(--gold);font-size:2rem}
+.metric-card p{margin:0;color:var(--muted)}
+.checklist ul{display:grid;gap:.7rem;margin:0;padding:0;list-style:none}
+.checklist li{display:grid;grid-template-columns:auto minmax(0,1fr);gap:.3rem .8rem;padding:1rem;border:1px solid var(--line);border-radius:.7rem;background:rgba(14,54,33,.45)}
+.checklist .status{grid-row:1/3;align-self:start;padding:.15rem .45rem;border:1px solid currentColor;border-radius:999px;color:var(--gold);font:700 .72rem/1.4 ui-monospace,SFMono-Regular,Consolas,monospace}
+.checklist strong{color:var(--silver)}
+.checklist p{margin:0;color:var(--muted)}
+.site-footer{border-top:1px solid var(--line);padding:1.5rem max(1rem,calc((100vw - 76rem)/2));color:var(--muted)}
+.card-index{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,20rem),1fr));gap:1rem}
+.index-card{padding:1.25rem;border:1px solid var(--line);border-radius:.8rem 1.3rem .9rem 1.1rem;background:rgba(11,31,20,.94)}
+.index-card h2{margin-top:0;color:var(--gold)}
+.link-row{display:flex;flex-wrap:wrap;gap:.65rem;margin-top:1rem}
+.link-row a{display:inline-flex;align-items:center;min-height:44px;padding:.55rem .85rem;border:1px solid var(--line);border-radius:.5rem;text-decoration:none}
+.publication-note{margin-top:1.25rem;padding:1rem;border-left:4px solid var(--gold);background:rgba(14,54,33,.38)}
+@media(max-width:42rem){main{width:min(100% - 1rem,76rem)}.notebook-cell{padding:1rem}.checklist li{grid-template-columns:minmax(0,1fr)}.checklist .status{grid-row:auto;width:max-content}table{min-width:36rem}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
+@media(forced-colors:active){*{box-shadow:none!important}.notebook-cell,.metric-card,.checklist li,.table-wrap,.index-card{border:1px solid CanvasText}.status{forced-color-adjust:none}}
+@media print{html,body{background:#fff;color:#111}.site-header,.notebook-cell,.metric-card,.checklist li,.index-card{background:#fff;color:#111;box-shadow:none}.doc-nav,.skip-link{display:none}a{color:#111}.table-wrap{overflow:visible}table{min-width:0}.code-cell details{display:none}}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to notebook</a>
+<header class="site-header">
+  <p class="eyebrow">Invariants · accessibility · resilience</p>
+  <h1>CHORUS Verification Ledger</h1>
+  <p class="lede">An executed verification ledger for fixed night geometry, causal receipts, accessibility, privacy, hostile-input boundaries, and release evidence.</p>
+  <nav class="doc-nav" aria-label="Notebook navigation">
+    <a href="index.html">Notebook index</a>
+    <a href="chorus-systems-atlas.html">Systems Atlas</a>
+    <a href="CHORUS-Validation-Atlas.ipynb" download>Download executed notebook</a>
+  </nav>
+</header>
+<main id="main">
+<section class="notebook-cell markdown-cell"><h2>CHORUS Verification Ledger</h2>
+<p>This notebook turns release claims into inspectable checks. It distinguishes structural invariants from example outputs and keeps the evidence needed to reproduce each declaration beside it.</p>
+<p>The ledger is intentionally deterministic: it uses fixed declarations, integer arithmetic, stable ordering, and standard-library execution only.</p></section><section class="notebook-cell code-cell"><details><summary>Executed cell 1: show source</summary><pre><code>from html import escape
+
+class HTMLResult(str):
+    def _repr_html_(self):
+        return str(self)
+
+def table_html(caption, columns, rows, row_headers=False):
+    head = &quot;&quot;.join(f&#x27;&lt;th scope=&quot;col&quot;&gt;{escape(str(column))}&lt;/th&gt;&#x27; for column in columns)
+    body_rows = []
+    for row in rows:
+        rendered = []
+        for index, value in enumerate(row):
+            tag = &quot;th&quot; if row_headers and index == 0 else &quot;td&quot;
+            scope = &#x27; scope=&quot;row&quot;&#x27; if tag == &quot;th&quot; else &quot;&quot;
+            rendered.append(f&#x27;&lt;{tag}{scope}&gt;{escape(str(value))}&lt;/{tag}&gt;&#x27;)
+        body_rows.append(&quot;&lt;tr&gt;&quot; + &quot;&quot;.join(rendered) + &quot;&lt;/tr&gt;&quot;)
+    label = escape(caption)
+    return HTMLResult(
+        f&#x27;&lt;div class=&quot;table-wrap&quot; role=&quot;region&quot; aria-label=&quot;{label}&quot; tabindex=&quot;0&quot;&gt;&#x27;
+        f&#x27;&lt;table&gt;&lt;caption&gt;{label}&lt;/caption&gt;&lt;thead&gt;&lt;tr&gt;{head}&lt;/tr&gt;&lt;/thead&gt;&#x27;
+        f&#x27;&lt;tbody&gt;{&quot;&quot;.join(body_rows)}&lt;/tbody&gt;&lt;/table&gt;&lt;/div&gt;&#x27;
+    )
+
+def cards_html(title, cards):
+    items = []
+    for label, value, note in cards:
+        items.append(
+            &#x27;&lt;article class=&quot;metric-card&quot;&gt;&#x27;
+            f&#x27;&lt;h4&gt;{escape(str(label))}&lt;/h4&gt;&lt;strong&gt;{escape(str(value))}&lt;/strong&gt;&#x27;
+            f&#x27;&lt;p&gt;{escape(str(note))}&lt;/p&gt;&lt;/article&gt;&#x27;
+        )
+    return HTMLResult(f&#x27;&lt;section class=&quot;metric-grid&quot; aria-label=&quot;{escape(title)}&quot;&gt;{&quot;&quot;.join(items)}&lt;/section&gt;&#x27;)
+
+def checklist_html(title, rows):
+    items = []
+    for status, label, evidence in rows:
+        items.append(
+            &#x27;&lt;li&gt;&#x27;
+            f&#x27;&lt;span class=&quot;status&quot;&gt;{escape(status)}&lt;/span&gt;&#x27;
+            f&#x27;&lt;strong&gt;{escape(label)}&lt;/strong&gt;&lt;p&gt;{escape(evidence)}&lt;/p&gt;&#x27;
+            &#x27;&lt;/li&gt;&#x27;
+        )
+    return HTMLResult(f&#x27;&lt;section class=&quot;checklist&quot; aria-label=&quot;{escape(title)}&quot;&gt;&lt;ul&gt;{&quot;&quot;.join(items)}&lt;/ul&gt;&lt;/section&gt;&#x27;)
+
+print(&quot;Standard-library rendering helpers loaded.&quot;)</code></pre></details><p class="execution-note">Standard-library rendering helpers loaded.</p></section><section class="notebook-cell markdown-cell"><h3>Verification-source provenance</h3>
+<p>The ledger reads the generator and the release tests it summarizes. Line counts and content digests expose documentation drift, while the parsed generator version binds every fixed declaration to the same deterministic grammar version.</p></section><section class="notebook-cell code-cell"><details><summary>Executed cell 2: show source</summary><pre><code>from hashlib import sha256
+from pathlib import Path
+import re
+
+def find_repository_root():
+    for candidate in (Path.cwd(), *Path.cwd().parents):
+        if (candidate / &quot;app&quot; / &quot;scenario-generator.ts&quot;).is_file():
+            return candidate
+    raise FileNotFoundError(&quot;Run this notebook from within the CHORUS source tree.&quot;)
+
+repository_root = find_repository_root()
+tracked_sources = [
+    (&quot;app/scenario-generator.ts&quot;, &quot;Generator declarations and coherence report&quot;),
+    (&quot;tests/concurrent-night.test.mjs&quot;, &quot;Concurrency, coverage, fatigue, and causal invariants&quot;),
+    (&quot;tests/simulation-maturity.test.mjs&quot;, &quot;Large-run determinism, autonomous evolution, causality, and bounds&quot;),
+    (&quot;tests/save-model.test.mjs&quot;, &quot;Portable-state, migration, consent, and hostile-input checks&quot;),
+    (&quot;tests/viewport-contract.test.mjs&quot;, &quot;Bounded shell, responsive ownership, and control layout&quot;),
+    (&quot;tests/accessibility-disclosure.test.mjs&quot;, &quot;Naming, focus, progressive disclosure, and perceptual alternatives&quot;),
+]
+provenance_rows = []
+generator_text = &quot;&quot;
+for relative_path, role in tracked_sources:
+    payload = (repository_root / relative_path).read_bytes()
+    source_text = payload.decode(&quot;utf-8&quot;)
+    if relative_path == &quot;app/scenario-generator.ts&quot;:
+        generator_text = source_text
+    provenance_rows.append((relative_path, len(source_text.splitlines()), sha256(payload).hexdigest()[:12], role))
+
+version_match = re.search(r&quot;const\s+GENERATOR_VERSION\s*=\s*(\d+)\s+as\s+const&quot;, generator_text)
+assert version_match is not None
+generator_version = int(version_match.group(1))
+assert generator_version &gt; 0 and len(provenance_rows) == len(tracked_sources)
+_html = table_html(&quot;Verification provenance&quot;, (&quot;Source&quot;, &quot;Lines&quot;, &quot;SHA-256 (12)&quot;, &quot;Evidence role&quot;), provenance_rows, row_headers=True)
+print(f&quot;PASS: read {len(provenance_rows)} implementation and test sources; parsed generator version {generator_version}.&quot;)
+_html</code></pre></details><p class="execution-note">PASS: read 6 implementation and test sources; parsed generator version 13.</p><div class="table-wrap" role="region" aria-label="Verification provenance" tabindex="0"><table><caption>Verification provenance</caption><thead><tr><th scope="col">Source</th><th scope="col">Lines</th><th scope="col">SHA-256 (12)</th><th scope="col">Evidence role</th></tr></thead><tbody><tr><th scope="row">app/scenario-generator.ts</th><td>4407</td><td>e0feb111e302</td><td>Generator declarations and coherence report</td></tr><tr><th scope="row">tests/concurrent-night.test.mjs</th><td>980</td><td>b26d127f37a4</td><td>Concurrency, coverage, fatigue, and causal invariants</td></tr><tr><th scope="row">tests/simulation-maturity.test.mjs</th><td>97</td><td>6e6a9e5229c9</td><td>Large-run determinism, autonomous evolution, causality, and bounds</td></tr><tr><th scope="row">tests/save-model.test.mjs</th><td>261</td><td>4fbdc7ae981f</td><td>Portable-state, migration, consent, and hostile-input checks</td></tr><tr><th scope="row">tests/viewport-contract.test.mjs</th><td>183</td><td>794524391822</td><td>Bounded shell, responsive ownership, and control layout</td></tr><tr><th scope="row">tests/accessibility-disclosure.test.mjs</th><td>332</td><td>9b92d0b34666</td><td>Naming, focus, progressive disclosure, and perceptual alternatives</td></tr></tbody></table></div></section><section class="notebook-cell markdown-cell"><h3>Retained large-simulation result</h3>
+<p>The release harness executes the TypeScript generator and reducer outside this notebook, then commits a content-addressed JSON result. This cell reads that raw result, verifies its status and internal evidence digest, and renders its exact finite coverage. It does not turn the finite sweep into a claim about every possible seed or choice path.</p></section><section class="notebook-cell code-cell"><details><summary>Executed cell 3: show source</summary><pre><code>from hashlib import sha256
+import json
+
+simulation_path = repository_root / &quot;evidence&quot; / &quot;runs&quot; / &quot;simulation-maturity.v1.json&quot;
+simulation_bytes = simulation_path.read_bytes()
+simulation = json.loads(simulation_bytes)
+result = simulation[&quot;results&quot;]
+assert simulation[&quot;releaseCandidate&quot;] == &quot;1.0.0-rc.1&quot;
+assert result[&quot;status&quot;] == &quot;pass&quot;
+assert result[&quot;invariantFailures&quot;] == 0
+assert result[&quot;validationFailures&quot;] == 0
+assert result[&quot;replayFailures&quot;] == 0
+assert len(simulation[&quot;evidenceSha256&quot;]) == 64
+
+simulation_cards = [
+    (&quot;Generated nights&quot;, f&#x27;{result[&quot;coherentNights&quot;]:,}&#x27;, &quot;Contiguous seed domain recorded in the raw result.&quot;),
+    (&quot;Completed plays&quot;, f&#x27;{result[&quot;completedNights&quot;]:,}&#x27;, &quot;Randomized interleavings across four deterministic policies.&quot;),
+    (&quot;Exact replays&quot;, f&#x27;{result[&quot;replayedNights&quot;]:,}&#x27;, &quot;Action-ledger reconstruction matched the completed state.&quot;),
+    (&quot;Effect receipts&quot;, f&#x27;{result[&quot;decisionEffects&quot;] + result[&quot;autonomousEffects&quot;]:,}&#x27;, &quot;One local and five remote effects for every decision and pulse.&quot;),
+    (&quot;Assertions&quot;, f&#x27;{result[&quot;assertions&quot;]:,}&#x27;, &quot;Zero invariant failures in the retained run.&quot;),
+    (&quot;File SHA-256&quot;, sha256(simulation_bytes).hexdigest()[:12], &quot;Short display of the raw artifact digest; full value remains in the release record.&quot;),
+]
+_html = cards_html(&quot;Retained simulation evidence&quot;, simulation_cards)
+print(f&#x27;PASS: loaded {result[&quot;assertions&quot;]:,} assertions over {result[&quot;coherentNights&quot;]:,} generated nights; zero invariant, validation, replay, or exhaustion failures.&#x27;)
+_html</code></pre></details><p class="execution-note">PASS: loaded 118,680 assertions over 4,096 generated nights; zero invariant, validation, replay, or exhaustion failures.</p><section class="metric-grid" aria-label="Retained simulation evidence"><article class="metric-card"><h4>Generated nights</h4><strong>4,096</strong><p>Contiguous seed domain recorded in the raw result.</p></article><article class="metric-card"><h4>Completed plays</h4><strong>512</strong><p>Randomized interleavings across four deterministic policies.</p></article><article class="metric-card"><h4>Exact replays</h4><strong>512</strong><p>Action-ledger reconstruction matched the completed state.</p></article><article class="metric-card"><h4>Effect receipts</h4><strong>147,456</strong><p>One local and five remote effects for every decision and pulse.</p></article><article class="metric-card"><h4>Assertions</h4><strong>118,680</strong><p>Zero invariant failures in the retained run.</p></article><article class="metric-card"><h4>File SHA-256</h4><strong>2220bde27a87</strong><p>Short display of the raw artifact digest; full value remains in the release record.</p></article></section></section><section class="notebook-cell code-cell"><details><summary>Executed cell 4: show source</summary><pre><code>causal_totals = [
+    (&quot;Accepted decisions&quot;, result[&quot;decisions&quot;], result[&quot;localDecisionEffects&quot;], result[&quot;remoteDecisionEffects&quot;], result[&quot;decisionEffects&quot;]),
+    (&quot;Autonomous pulses&quot;, result[&quot;autonomousPulses&quot;], result[&quot;localAutonomousEffects&quot;], result[&quot;remoteAutonomousEffects&quot;], result[&quot;autonomousEffects&quot;]),
+]
+for _, events, local, remote, total in causal_totals:
+    assert local == events
+    assert remote == events * 5
+    assert total == events * 6
+_html = table_html(&quot;Exactly-once causal receipts in the retained run&quot;, (&quot;Event class&quot;, &quot;Events&quot;, &quot;Local&quot;, &quot;Remote&quot;, &quot;Total&quot;), causal_totals, row_headers=True)
+print(&quot;PASS: every retained decision and autonomous pulse produced exactly one local and five remote receipts.&quot;)
+_html</code></pre></details><p class="execution-note">PASS: every retained decision and autonomous pulse produced exactly one local and five remote receipts.</p><div class="table-wrap" role="region" aria-label="Exactly-once causal receipts in the retained run" tabindex="0"><table><caption>Exactly-once causal receipts in the retained run</caption><thead><tr><th scope="col">Event class</th><th scope="col">Events</th><th scope="col">Local</th><th scope="col">Remote</th><th scope="col">Total</th></tr></thead><tbody><tr><th scope="row">Accepted decisions</th><td>12288</td><td>12288</td><td>61440</td><td>73728</td></tr><tr><th scope="row">Autonomous pulses</th><td>12288</td><td>12288</td><td>61440</td><td>73728</td></tr></tbody></table></div></section><section class="notebook-cell markdown-cell"><h3>Retained browser playability result</h3>
+<p>The browser result separates a fresh 52-step Chrome-family completion bound to the hardened implementation from earlier manual interaction observations retained under their prior-source provenance. The current-source run completed the night, reached the conclusion, retained the viewport, and recorded zero application-origin errors. Earlier keyboard, focus, local-slot, reason-toggle, and export-control observations remain useful history but are not relabeled as current-source execution. Unverified import, file-arrival, network, assistive-technology, mobile, contrast-engine, and second-browser combinations remain part of the result rather than being converted into passes.</p></section><section class="notebook-cell code-cell"><details><summary>Executed cell 5: show source</summary><pre><code>browser_path = repository_root / &quot;evidence&quot; / &quot;runs&quot; / &quot;end-to-end-playability.v1.json&quot;
+browser_bytes = browser_path.read_bytes()
+browser_evidence = json.loads(browser_bytes)
+browser = browser_evidence[&quot;browser&quot;]
+fresh = browser[&quot;freshLocatorCompletion&quot;]
+assert browser_evidence[&quot;releaseCandidate&quot;] == &quot;1.0.0-rc.1&quot;
+assert browser_evidence[&quot;status&quot;] == &quot;pass_with_explicit_limits&quot;
+assert fresh[&quot;result&quot;] == &quot;pass&quot;
+assert fresh[&quot;finalState&quot;][&quot;turn&quot;] == &quot;24/24&quot;
+assert fresh[&quot;finalState&quot;][&quot;closedRooms&quot;] == &quot;6/6&quot;
+assert fresh[&quot;conclusion&quot;][&quot;decisionCount&quot;] == 24
+assert fresh[&quot;runtimeFailureObservation&quot;][&quot;pageOriginWarningsOrErrors&quot;] == 0
+
+browser_cards = [
+    (&quot;Completed turn&quot;, &quot;24 / 24&quot;, &quot;Fresh current-source run; six of six rooms closed and the whole-night receipt appeared.&quot;),
+    (&quot;Current UI steps&quot;, fresh[&quot;uiSteps&quot;], &quot;Fresh locator-driven steps bound to the hardened source aggregate.&quot;),
+    (&quot;Application errors&quot;, fresh[&quot;runtimeFailureObservation&quot;][&quot;pageOriginWarningsOrErrors&quot;], &quot;Warnings or errors attributed to the application origin in the fresh run.&quot;),
+    (&quot;Input modes&quot;, &quot;Mouse + keyboard&quot;, &quot;One 1363 × 936 CSS-pixel Chrome-family session at DPR 1.&quot;),
+    (&quot;Explicit limits&quot;, len(browser_evidence[&quot;unverified&quot;]), &quot;Retained in the raw result; none is represented as a pass.&quot;),
+    (&quot;File SHA-256&quot;, sha256(browser_bytes).hexdigest()[:12], &quot;Short display of the raw artifact digest; full value remains in the release record.&quot;),
+]
+_html = cards_html(&quot;Retained browser evidence&quot;, browser_cards)
+print(f&#x27;BOUNDED PASS: fresh current-source run completed turn 24/24 in {fresh[&quot;uiSteps&quot;]} steps with {len(browser_evidence[&quot;unverified&quot;])} explicit unverified boundaries.&#x27;)
+_html</code></pre></details><p class="execution-note">BOUNDED PASS: fresh current-source run completed turn 24/24 in 52 steps with 8 explicit unverified boundaries.</p><section class="metric-grid" aria-label="Retained browser evidence"><article class="metric-card"><h4>Completed turn</h4><strong>24 / 24</strong><p>Fresh current-source run; six of six rooms closed and the whole-night receipt appeared.</p></article><article class="metric-card"><h4>Current UI steps</h4><strong>52</strong><p>Fresh locator-driven steps bound to the hardened source aggregate.</p></article><article class="metric-card"><h4>Application errors</h4><strong>0</strong><p>Warnings or errors attributed to the application origin in the fresh run.</p></article><article class="metric-card"><h4>Input modes</h4><strong>Mouse + keyboard</strong><p>One 1363 × 936 CSS-pixel Chrome-family session at DPR 1.</p></article><article class="metric-card"><h4>Explicit limits</h4><strong>8</strong><p>Retained in the raw result; none is represented as a pass.</p></article><article class="metric-card"><h4>File SHA-256</h4><strong>9c5cb2c1fdb2</strong><p>Short display of the raw artifact digest; full value remains in the release record.</p></article></section></section><section class="notebook-cell code-cell"><details><summary>Executed cell 6: show source</summary><pre><code>browser_paths = [
+    (&quot;Complete night&quot;, &quot;PASS · CURRENT&quot;, &quot;Fresh run: turn 24/24, six rooms closed, whole-night receipt and 24 decisions available.&quot;),
+    (&quot;Viewport containment&quot;, &quot;PASS · CURRENT&quot;, &quot;Fresh run: document, window, scroll, and shell all measured 1363 × 936 with zero body offset.&quot;),
+    (&quot;Application-origin errors&quot;, &quot;PASS · CURRENT&quot;, &quot;Fresh run: zero warnings or errors attributed to the application origin.&quot;),
+    (&quot;Published technical routes&quot;, &quot;PASS · CURRENT&quot;, &quot;Evidence index and both script-free notebook HTML pages loaded.&quot;),
+    (&quot;Keyboard and focus&quot;, &quot;HISTORICAL&quot;, &quot;Exercised before reducer hardening; preserved under its prior-source digest, not claimed as a current rerun.&quot;),
+    (&quot;Local slot&quot;, &quot;HISTORICAL&quot;, &quot;Enable, save, reload inventory, and load were exercised before reducer hardening.&quot;),
+    (&quot;Portable export&quot;, &quot;HISTORICAL · LIMITED&quot;, &quot;Control path was exercised before reducer hardening; file-arrival event was unavailable.&quot;),
+    (&quot;Portable import&quot;, &quot;UNVERIFIED IN BROWSER&quot;, &quot;Permission blocked fixture upload; deterministic parser and failure cases passed.&quot;),
+    (&quot;Assistive technology&quot;, &quot;UNVERIFIED&quot;, &quot;No screen-reader, switch, voice, or braille pairing in this run.&quot;),
+    (&quot;Mobile and engines&quot;, &quot;UNVERIFIED&quot;, &quot;No physical mobile/touch or second browser engine in this run.&quot;),
+    (&quot;Request network log&quot;, &quot;UNVERIFIED&quot;, &quot;Runner did not expose request-level observation; no claim made.&quot;),
+]
+_html = table_html(&quot;Browser path result and preserved limits&quot;, (&quot;Path&quot;, &quot;Result&quot;, &quot;Evidence boundary&quot;), browser_paths, row_headers=True)
+print(&quot;Browser result preserves the difference between exercised behavior, deterministic source contracts, and unavailable observation.&quot;)
+_html</code></pre></details><p class="execution-note">Browser result preserves the difference between exercised behavior, deterministic source contracts, and unavailable observation.</p><div class="table-wrap" role="region" aria-label="Browser path result and preserved limits" tabindex="0"><table><caption>Browser path result and preserved limits</caption><thead><tr><th scope="col">Path</th><th scope="col">Result</th><th scope="col">Evidence boundary</th></tr></thead><tbody><tr><th scope="row">Complete night</th><td>PASS · CURRENT</td><td>Fresh run: turn 24/24, six rooms closed, whole-night receipt and 24 decisions available.</td></tr><tr><th scope="row">Viewport containment</th><td>PASS · CURRENT</td><td>Fresh run: document, window, scroll, and shell all measured 1363 × 936 with zero body offset.</td></tr><tr><th scope="row">Application-origin errors</th><td>PASS · CURRENT</td><td>Fresh run: zero warnings or errors attributed to the application origin.</td></tr><tr><th scope="row">Published technical routes</th><td>PASS · CURRENT</td><td>Evidence index and both script-free notebook HTML pages loaded.</td></tr><tr><th scope="row">Keyboard and focus</th><td>HISTORICAL</td><td>Exercised before reducer hardening; preserved under its prior-source digest, not claimed as a current rerun.</td></tr><tr><th scope="row">Local slot</th><td>HISTORICAL</td><td>Enable, save, reload inventory, and load were exercised before reducer hardening.</td></tr><tr><th scope="row">Portable export</th><td>HISTORICAL · LIMITED</td><td>Control path was exercised before reducer hardening; file-arrival event was unavailable.</td></tr><tr><th scope="row">Portable import</th><td>UNVERIFIED IN BROWSER</td><td>Permission blocked fixture upload; deterministic parser and failure cases passed.</td></tr><tr><th scope="row">Assistive technology</th><td>UNVERIFIED</td><td>No screen-reader, switch, voice, or braille pairing in this run.</td></tr><tr><th scope="row">Mobile and engines</th><td>UNVERIFIED</td><td>No physical mobile/touch or second browser engine in this run.</td></tr><tr><th scope="row">Request network log</th><td>UNVERIFIED</td><td>Runner did not expose request-level observation; no claim made.</td></tr></tbody></table></div></section><section class="notebook-cell markdown-cell"><h3>Retained neutral-distribution result</h3>
+<p>The distribution result records a full repository gate and a fresh neutral directory proof. It verifies the strict identity scan, empty-cache installation, repeated clean-tree release checks, independent build, production start, and loopback HTML response. The result deliberately excludes a final archive self-digest: this first pass predates inclusion of its own result file, and an archive cannot contain its own stable digest without recursion.</p></section><section class="notebook-cell code-cell"><details><summary>Executed cell 7: show source</summary><pre><code>distribution_path = repository_root / &quot;evidence&quot; / &quot;runs&quot; / &quot;distribution-validation.v1.json&quot;
+distribution_bytes = distribution_path.read_bytes()
+distribution = json.loads(distribution_bytes)
+release_record = json.loads(repository_root.joinpath(&quot;evidence/releases/1.0.0-rc.1/release.json&quot;).read_text())
+repository_run = next(run for run in distribution[&quot;runs&quot;] if run[&quot;id&quot;] == &quot;repository-verify-release&quot;)
+clean_run = next(run for run in distribution[&quot;runs&quot;] if run[&quot;id&quot;] == &quot;clean-verify-release&quot;)
+http_run = next(run for run in distribution[&quot;runs&quot;] if run[&quot;id&quot;] == &quot;loopback-http-smoke&quot;)
+assert distribution[&quot;releaseCandidate&quot;] == &quot;1.0.0-rc.1&quot;
+assert distribution[&quot;status&quot;] == &quot;pass&quot;
+assert distribution[&quot;source&quot;][&quot;implementationBinding&quot;][&quot;digest&quot;] == release_record[&quot;source_binding&quot;][&quot;digest&quot;]
+assert distribution[&quot;neutralTree&quot;][&quot;strictNeutralContentScan&quot;][&quot;findings&quot;] == 0
+assert distribution[&quot;neutralTree&quot;][&quot;generatedPythonBytecodeScan&quot;][&quot;findings&quot;] == 0
+assert repository_run[&quot;results&quot;][&quot;focusedTests&quot;][&quot;failed&quot;] == 0
+assert clean_run[&quot;results&quot;][&quot;focusedTests&quot;][&quot;failed&quot;] == 0
+assert http_run[&quot;response&quot;][&quot;statusCode&quot;] == 200
+
+distribution_cards = [
+    (&quot;Repository tests&quot;, repository_run[&quot;results&quot;][&quot;focusedTests&quot;][&quot;passed&quot;], &quot;Zero focused-test failures before export.&quot;),
+    (&quot;Neutral files&quot;, distribution[&quot;neutralTree&quot;][&quot;preinstallBinding&quot;][&quot;fileCount&quot;], &quot;Fresh preinstall files; zero symlinks.&quot;),
+    (&quot;Scan findings&quot;, distribution[&quot;neutralTree&quot;][&quot;strictNeutralContentScan&quot;][&quot;findings&quot;], &quot;Strict path and textual identity/content scan.&quot;),
+    (&quot;Installed packages&quot;, next(run for run in distribution[&quot;runs&quot;] if run[&quot;id&quot;] == &quot;clean-install&quot;)[&quot;packagesAdded&quot;], &quot;Fresh task-specific package cache.&quot;),
+    (&quot;Clean-tree tests&quot;, clean_run[&quot;results&quot;][&quot;focusedTests&quot;][&quot;passed&quot;], &quot;Repository-only groups are intentionally absent from the neutral tree.&quot;),
+    (&quot;HTTP status&quot;, http_run[&quot;response&quot;][&quot;statusCode&quot;], &quot;Production root returned valid HTML over loopback.&quot;),
+]
+_html = cards_html(&quot;Retained neutral-distribution evidence&quot;, distribution_cards)
+print(&quot;PASS WITH BOUNDARY: repository and neutral clean-room gates passed; final post-binding archive digest remains external to avoid recursion.&quot;)
+_html</code></pre></details><p class="execution-note">PASS WITH BOUNDARY: repository and neutral clean-room gates passed; final post-binding archive digest remains external to avoid recursion.</p><section class="metric-grid" aria-label="Retained neutral-distribution evidence"><article class="metric-card"><h4>Repository tests</h4><strong>88</strong><p>Zero focused-test failures before export.</p></article><article class="metric-card"><h4>Neutral files</h4><strong>78</strong><p>Fresh preinstall files; zero symlinks.</p></article><article class="metric-card"><h4>Scan findings</h4><strong>0</strong><p>Strict path and textual identity/content scan.</p></article><article class="metric-card"><h4>Installed packages</h4><strong>504</strong><p>Fresh task-specific package cache.</p></article><article class="metric-card"><h4>Clean-tree tests</h4><strong>79</strong><p>Repository-only groups are intentionally absent from the neutral tree.</p></article><article class="metric-card"><h4>HTTP status</h4><strong>200</strong><p>Production root returned valid HTML over loopback.</p></article></section></section><section class="notebook-cell code-cell"><details><summary>Executed cell 8: show source</summary><pre><code>distribution_rows = [
+    (&quot;Repository release gate&quot;, &quot;PASS&quot;, &quot;88 focused tests, lint, type check, simulation drift, documentation, build, and rendered HTML.&quot;),
+    (&quot;Strict neutral scan&quot;, &quot;PASS&quot;, &quot;78 preinstall files; zero identity/content findings and zero generated bytecode files.&quot;),
+    (&quot;Fresh-cache install&quot;, &quot;PASS&quot;, &quot;504 packages installed in a fresh temporary tree.&quot;),
+    (&quot;Clean-tree release gate&quot;, &quot;PASS&quot;, &quot;79 focused tests plus lint, type check, simulation drift, documentation, and embedded build.&quot;),
+    (&quot;Standalone build&quot;, &quot;PASS&quot;, &quot;Independent clean-tree production build completed.&quot;),
+    (&quot;Production smoke&quot;, &quot;PASS&quot;, &quot;Server reported ready and root returned HTTP 200 HTML with title and main landmark.&quot;),
+    (&quot;Final archive container&quot;, &quot;EXTERNAL RETEST&quot;, &quot;Container size and digest are recorded after this result is bound; no recursive self-digest.&quot;),
+]
+_html = table_html(&quot;Repository, neutral tree, and archive boundary&quot;, (&quot;Boundary&quot;, &quot;Result&quot;, &quot;Retained observation&quot;), distribution_rows, row_headers=True)
+print(&quot;Distribution proof distinguishes repository verification, neutral directory execution, and the final archive-container retest.&quot;)
+_html</code></pre></details><p class="execution-note">Distribution proof distinguishes repository verification, neutral directory execution, and the final archive-container retest.</p><div class="table-wrap" role="region" aria-label="Repository, neutral tree, and archive boundary" tabindex="0"><table><caption>Repository, neutral tree, and archive boundary</caption><thead><tr><th scope="col">Boundary</th><th scope="col">Result</th><th scope="col">Retained observation</th></tr></thead><tbody><tr><th scope="row">Repository release gate</th><td>PASS</td><td>88 focused tests, lint, type check, simulation drift, documentation, build, and rendered HTML.</td></tr><tr><th scope="row">Strict neutral scan</th><td>PASS</td><td>78 preinstall files; zero identity/content findings and zero generated bytecode files.</td></tr><tr><th scope="row">Fresh-cache install</th><td>PASS</td><td>504 packages installed in a fresh temporary tree.</td></tr><tr><th scope="row">Clean-tree release gate</th><td>PASS</td><td>79 focused tests plus lint, type check, simulation drift, documentation, and embedded build.</td></tr><tr><th scope="row">Standalone build</th><td>PASS</td><td>Independent clean-tree production build completed.</td></tr><tr><th scope="row">Production smoke</th><td>PASS</td><td>Server reported ready and root returned HTTP 200 HTML with title and main landmark.</td></tr><tr><th scope="row">Final archive container</th><td>EXTERNAL RETEST</td><td>Container size and digest are recorded after this result is bound; no recursive self-digest.</td></tr></tbody></table></div></section><section class="notebook-cell markdown-cell"><h3>Fixed geometry checks</h3>
+<p>The following quantities are architectural, not sampled. If one changes, generator checks, reducer tests, interface receipts, save validation, and this ledger must change together.</p></section><section class="notebook-cell code-cell"><details><summary>Executed cell 9: show source</summary><pre><code>expected = {
+    &quot;rooms&quot;: 6,
+    &quot;beats_per_room&quot;: 4,
+    &quot;decisions&quot;: 24,
+    &quot;effects_per_decision&quot;: 6,
+    &quot;decision_effect_receipts&quot;: 144,
+    &quot;directed_routes&quot;: 30,
+    &quot;direct_crossings&quot;: 6,
+    &quot;communication_dynamics&quot;: 6,
+    &quot;fatigue_channels&quot;: 5,
+}
+computed = {
+    &quot;decisions&quot;: expected[&quot;rooms&quot;] * expected[&quot;beats_per_room&quot;],
+    &quot;decision_effect_receipts&quot;: expected[&quot;rooms&quot;] * expected[&quot;beats_per_room&quot;] * expected[&quot;effects_per_decision&quot;],
+    &quot;directed_routes&quot;: expected[&quot;rooms&quot;] * (expected[&quot;rooms&quot;] - 1),
+}
+checks = [(name.replace(&quot;_&quot;, &quot; &quot;).title(), expected[name], computed.get(name, expected[name]), &quot;PASS&quot; if computed.get(name, expected[name]) == expected[name] else &quot;FAIL&quot;) for name in expected]
+_html = table_html(&quot;Fixed concurrent-night quantities&quot;, (&quot;Invariant&quot;, &quot;Expected&quot;, &quot;Computed&quot;, &quot;Result&quot;), checks, row_headers=True)
+assert all(row[-1] == &quot;PASS&quot; for row in checks)
+print(f&quot;PASS: {len(checks)} fixed geometry declarations agree.&quot;)
+_html</code></pre></details><p class="execution-note">PASS: 9 fixed geometry declarations agree.</p><div class="table-wrap" role="region" aria-label="Fixed concurrent-night quantities" tabindex="0"><table><caption>Fixed concurrent-night quantities</caption><thead><tr><th scope="col">Invariant</th><th scope="col">Expected</th><th scope="col">Computed</th><th scope="col">Result</th></tr></thead><tbody><tr><th scope="row">Rooms</th><td>6</td><td>6</td><td>PASS</td></tr><tr><th scope="row">Beats Per Room</th><td>4</td><td>4</td><td>PASS</td></tr><tr><th scope="row">Decisions</th><td>24</td><td>24</td><td>PASS</td></tr><tr><th scope="row">Effects Per Decision</th><td>6</td><td>6</td><td>PASS</td></tr><tr><th scope="row">Decision Effect Receipts</th><td>144</td><td>144</td><td>PASS</td></tr><tr><th scope="row">Directed Routes</th><td>30</td><td>30</td><td>PASS</td></tr><tr><th scope="row">Direct Crossings</th><td>6</td><td>6</td><td>PASS</td></tr><tr><th scope="row">Communication Dynamics</th><td>6</td><td>6</td><td>PASS</td></tr><tr><th scope="row">Fatigue Channels</th><td>5</td><td>5</td><td>PASS</td></tr></tbody></table></div></section><section class="notebook-cell code-cell"><details><summary>Executed cell 10: show source</summary><pre><code>coverage = [
+    (&quot;Defensive scapegoating&quot;, 1, &quot;Exactly once per night&quot;),
+    (&quot;Self-protective rumor&quot;, 1, &quot;Exactly once per night&quot;),
+    (&quot;Warm interior / cool presentation&quot;, 1, &quot;Exactly once per night&quot;),
+    (&quot;Cold interior / warm presentation&quot;, 1, &quot;Exactly once per night&quot;),
+    (&quot;Sociocultural code mismatch&quot;, 1, &quot;Exactly once per night&quot;),
+    (&quot;Cross-coalition code convergence&quot;, 1, &quot;Exactly once per night&quot;),
+]
+assert sum(row[1] for row in coverage) == expected[&quot;communication_dynamics&quot;]
+_html = table_html(&quot;Required communication-dynamic coverage&quot;, (&quot;Dynamic&quot;, &quot;Count&quot;, &quot;Generation rule&quot;), coverage, row_headers=True)
+print(&quot;PASS: the six reviewed communication dynamics fill six distinct seats.&quot;)
+_html</code></pre></details><p class="execution-note">PASS: the six reviewed communication dynamics fill six distinct seats.</p><div class="table-wrap" role="region" aria-label="Required communication-dynamic coverage" tabindex="0"><table><caption>Required communication-dynamic coverage</caption><thead><tr><th scope="col">Dynamic</th><th scope="col">Count</th><th scope="col">Generation rule</th></tr></thead><tbody><tr><th scope="row">Defensive scapegoating</th><td>1</td><td>Exactly once per night</td></tr><tr><th scope="row">Self-protective rumor</th><td>1</td><td>Exactly once per night</td></tr><tr><th scope="row">Warm interior / cool presentation</th><td>1</td><td>Exactly once per night</td></tr><tr><th scope="row">Cold interior / warm presentation</th><td>1</td><td>Exactly once per night</td></tr><tr><th scope="row">Sociocultural code mismatch</th><td>1</td><td>Exactly once per night</td></tr><tr><th scope="row">Cross-coalition code convergence</th><td>1</td><td>Exactly once per night</td></tr></tbody></table></div></section><section class="notebook-cell markdown-cell"><h3>Causal and temporal invariants</h3>
+<p>Visit order may change what the player sees first, but it cannot rewrite scheduled events or create extra background change. Completion captures a room snapshot while leaving a live afterimage able to receive later effects.</p></section><section class="notebook-cell code-cell"><details><summary>Executed cell 11: show source</summary><pre><code>causal_checks = [
+    (&quot;Navigation purity&quot;, &quot;Switching rooms does not advance time or mutate state.&quot;),
+    (&quot;Accepted-choice uniqueness&quot;, &quot;A stale scene, unmet requirement, missing artifact, or duplicate event is rejected.&quot;),
+    (&quot;Once-only pulses&quot;, &quot;Every scheduled pulse fires once when the shared clock reaches it.&quot;),
+    (&quot;Complete receipts&quot;, &quot;Each accepted choice stores one local and five remote effects.&quot;),
+    (&quot;Immutable close&quot;, &quot;Close metrics remain fixed while later incoming effects update the afterimage.&quot;),
+    (&quot;Canonical replay&quot;, &quot;Rewind restores the whole night rather than one room.&quot;),
+]
+rows = [(&quot;PASS&quot;, label, evidence) for label, evidence in causal_checks]
+_html = checklist_html(&quot;Causal and temporal release checks&quot;, rows)
+print(f&quot;PASS: {len(rows)} causal and temporal checks declared.&quot;)
+_html</code></pre></details><p class="execution-note">PASS: 6 causal and temporal checks declared.</p><section class="checklist" aria-label="Causal and temporal release checks"><ul><li><span class="status">PASS</span><strong>Navigation purity</strong><p>Switching rooms does not advance time or mutate state.</p></li><li><span class="status">PASS</span><strong>Accepted-choice uniqueness</strong><p>A stale scene, unmet requirement, missing artifact, or duplicate event is rejected.</p></li><li><span class="status">PASS</span><strong>Once-only pulses</strong><p>Every scheduled pulse fires once when the shared clock reaches it.</p></li><li><span class="status">PASS</span><strong>Complete receipts</strong><p>Each accepted choice stores one local and five remote effects.</p></li><li><span class="status">PASS</span><strong>Immutable close</strong><p>Close metrics remain fixed while later incoming effects update the afterimage.</p></li><li><span class="status">PASS</span><strong>Canonical replay</strong><p>Rewind restores the whole night rather than one room.</p></li></ul></section></section><section class="notebook-cell code-cell"><details><summary>Executed cell 12: show source</summary><pre><code>orders = [
+    (&quot;Serial&quot;, &quot;Complete rooms in map order&quot;, &quot;Same scheduled pulse set and valid final state&quot;),
+    (&quot;Reverse&quot;, &quot;Complete rooms in reverse map order&quot;, &quot;Same scheduled pulse set and valid final state&quot;),
+    (&quot;Interleaved&quot;, &quot;Switch after each available decision&quot;, &quot;No duplicate pulse or lost remote receipt&quot;),
+    (&quot;Delayed entry&quot;, &quot;Let artifacts arrive before entering a room&quot;, &quot;Arrival follows clock, not first visit&quot;),
+]
+_html = table_html(&quot;Required room-order stress patterns&quot;, (&quot;Order&quot;, &quot;Procedure&quot;, &quot;Invariant&quot;), orders, row_headers=True)
+print(&quot;Four order patterns cover navigation purity and shared-clock independence.&quot;)
+_html</code></pre></details><p class="execution-note">Four order patterns cover navigation purity and shared-clock independence.</p><div class="table-wrap" role="region" aria-label="Required room-order stress patterns" tabindex="0"><table><caption>Required room-order stress patterns</caption><thead><tr><th scope="col">Order</th><th scope="col">Procedure</th><th scope="col">Invariant</th></tr></thead><tbody><tr><th scope="row">Serial</th><td>Complete rooms in map order</td><td>Same scheduled pulse set and valid final state</td></tr><tr><th scope="row">Reverse</th><td>Complete rooms in reverse map order</td><td>Same scheduled pulse set and valid final state</td></tr><tr><th scope="row">Interleaved</th><td>Switch after each available decision</td><td>No duplicate pulse or lost remote receipt</td></tr><tr><th scope="row">Delayed entry</th><td>Let artifacts arrive before entering a room</td><td>Arrival follows clock, not first visit</td></tr></tbody></table></div></section><section class="notebook-cell markdown-cell"><h3>Choice-access verification</h3>
+<p>Blocked ideals are expected system states, not disabled decoration. An attempted ideal must name the seat&#x27;s specific structural or emotional barrier without changing the simulation, and the explanation must close from the same control that opened it.</p></section><section class="notebook-cell code-cell"><details><summary>Executed cell 13: show source</summary><pre><code>choice_checks = [
+    (&quot;Future sealing&quot;, &quot;Choice labels and reasons do not appear before the beat arrives.&quot;),
+    (&quot;Order variation&quot;, &quot;Unavailable choices are not anchored to one list position.&quot;),
+    (&quot;Inline reason&quot;, &quot;The selected choice pane expands; closing restores its prior dimensions.&quot;),
+    (&quot;Concise motive&quot;, &quot;The barrier identifies motive, overtaking emotion, and represented cause.&quot;),
+    (&quot;No mutation&quot;, &quot;A blocked attempt writes no decision, effect, pulse, or clock change.&quot;),
+    (&quot;Repair reachability&quot;, &quot;Distributed support can make a structurally blocked ideal available later.&quot;),
+    (&quot;Floor guarantee&quot;, &quot;One non-amplifying choice remains enactable at every beat.&quot;),
+]
+rows = [(&quot;PASS&quot;, label, evidence) for label, evidence in choice_checks]
+_html = checklist_html(&quot;Choice-access release checks&quot;, rows)
+print(f&quot;PASS: {len(rows)} choice-access obligations represented.&quot;)
+_html</code></pre></details><p class="execution-note">PASS: 7 choice-access obligations represented.</p><section class="checklist" aria-label="Choice-access release checks"><ul><li><span class="status">PASS</span><strong>Future sealing</strong><p>Choice labels and reasons do not appear before the beat arrives.</p></li><li><span class="status">PASS</span><strong>Order variation</strong><p>Unavailable choices are not anchored to one list position.</p></li><li><span class="status">PASS</span><strong>Inline reason</strong><p>The selected choice pane expands; closing restores its prior dimensions.</p></li><li><span class="status">PASS</span><strong>Concise motive</strong><p>The barrier identifies motive, overtaking emotion, and represented cause.</p></li><li><span class="status">PASS</span><strong>No mutation</strong><p>A blocked attempt writes no decision, effect, pulse, or clock change.</p></li><li><span class="status">PASS</span><strong>Repair reachability</strong><p>Distributed support can make a structurally blocked ideal available later.</p></li><li><span class="status">PASS</span><strong>Floor guarantee</strong><p>One non-amplifying choice remains enactable at every beat.</p></li></ul></section></section><section class="notebook-cell code-cell"><details><summary>Executed cell 14: show source</summary><pre><code>fatigue_checks = [
+    (&quot;Discernment stability&quot;, &quot;Fatigue never lowers the ability-to-discern metric.&quot;),
+    (&quot;Typed accumulation&quot;, &quot;Attention, affect, relationship, verification, and efficacy remain separate.&quot;),
+    (&quot;Platform causality&quot;, &quot;Modeled exposure and accepted choices may add load; reading pace and assistive use do not.&quot;),
+    (&quot;Bounded values&quot;, &quot;Every fatigue value remains finite and clamped from 0 through 100.&quot;),
+    (&quot;Last-resort gate&quot;, &quot;Only high-discernment prosocial seats under extreme combined load may receive the hidden route.&quot;),
+    (&quot;Split consequence&quot;, &quot;The route separately records protected party, harmed party, and self-cost.&quot;),
+]
+rows = [(&quot;PASS&quot;, label, evidence) for label, evidence in fatigue_checks]
+_html = checklist_html(&quot;Fatigue and last-resort checks&quot;, rows)
+print(f&quot;PASS: {len(rows)} fatigue checks preserve judgment/capacity separation.&quot;)
+_html</code></pre></details><p class="execution-note">PASS: 6 fatigue checks preserve judgment/capacity separation.</p><section class="checklist" aria-label="Fatigue and last-resort checks"><ul><li><span class="status">PASS</span><strong>Discernment stability</strong><p>Fatigue never lowers the ability-to-discern metric.</p></li><li><span class="status">PASS</span><strong>Typed accumulation</strong><p>Attention, affect, relationship, verification, and efficacy remain separate.</p></li><li><span class="status">PASS</span><strong>Platform causality</strong><p>Modeled exposure and accepted choices may add load; reading pace and assistive use do not.</p></li><li><span class="status">PASS</span><strong>Bounded values</strong><p>Every fatigue value remains finite and clamped from 0 through 100.</p></li><li><span class="status">PASS</span><strong>Last-resort gate</strong><p>Only high-discernment prosocial seats under extreme combined load may receive the hidden route.</p></li><li><span class="status">PASS</span><strong>Split consequence</strong><p>The route separately records protected party, harmed party, and self-cost.</p></li></ul></section></section><section class="notebook-cell markdown-cell"><h3>Accessibility and viewport evidence</h3>
+<p>The game shell is bounded to the current viewport; documentation is not. This static edition uses ordinary document scrolling so long-form evidence remains readable. Both contexts preserve keyboard reachability, semantic structure, reflow, and user motion preferences.</p></section><section class="notebook-cell code-cell"><details><summary>Executed cell 15: show source</summary><pre><code>accessibility = [
+    (&quot;Semantic regions&quot;, &quot;Header, navigation, main, complementary panels, dialogs, and status regions have names.&quot;),
+    (&quot;Keyboard path&quot;, &quot;Every action, summary, relation filter, save control, and close control is keyboard reachable.&quot;),
+    (&quot;Focus lifecycle&quot;, &quot;Dialogs trap focus while open and return it to the invoking control on close.&quot;),
+    (&quot;Touch targets&quot;, &quot;Compact interactive controls retain a minimum 44 by 44 CSS-pixel target.&quot;),
+    (&quot;Text reflow&quot;, &quot;At narrow widths text wraps, maps do not require page-level side scrolling, and panes retain readable ownership.&quot;),
+    (&quot;Reduced motion&quot;, &quot;User preference suppresses film movement and transition motion without hiding state.&quot;),
+    (&quot;Forced colors&quot;, &quot;Controls, outlines, selected state, and tables remain legible under system colors.&quot;),
+    (&quot;Non-color cues&quot;, &quot;Labels, values, shapes, and text accompany every status color.&quot;),
+    (&quot;Progressive disclosure&quot;, &quot;Dense receipts remain collapsed until relevant and retain complete accessible names.&quot;),
+]
+rows = [(&quot;PASS&quot;, label, evidence) for label, evidence in accessibility]
+_html = checklist_html(&quot;Accessibility release checks&quot;, rows)
+print(f&quot;PASS: {len(rows)} accessibility obligations represented.&quot;)
+_html</code></pre></details><p class="execution-note">PASS: 9 accessibility obligations represented.</p><section class="checklist" aria-label="Accessibility release checks"><ul><li><span class="status">PASS</span><strong>Semantic regions</strong><p>Header, navigation, main, complementary panels, dialogs, and status regions have names.</p></li><li><span class="status">PASS</span><strong>Keyboard path</strong><p>Every action, summary, relation filter, save control, and close control is keyboard reachable.</p></li><li><span class="status">PASS</span><strong>Focus lifecycle</strong><p>Dialogs trap focus while open and return it to the invoking control on close.</p></li><li><span class="status">PASS</span><strong>Touch targets</strong><p>Compact interactive controls retain a minimum 44 by 44 CSS-pixel target.</p></li><li><span class="status">PASS</span><strong>Text reflow</strong><p>At narrow widths text wraps, maps do not require page-level side scrolling, and panes retain readable ownership.</p></li><li><span class="status">PASS</span><strong>Reduced motion</strong><p>User preference suppresses film movement and transition motion without hiding state.</p></li><li><span class="status">PASS</span><strong>Forced colors</strong><p>Controls, outlines, selected state, and tables remain legible under system colors.</p></li><li><span class="status">PASS</span><strong>Non-color cues</strong><p>Labels, values, shapes, and text accompany every status color.</p></li><li><span class="status">PASS</span><strong>Progressive disclosure</strong><p>Dense receipts remain collapsed until relevant and retain complete accessible names.</p></li></ul></section></section><section class="notebook-cell markdown-cell"><h3>Privacy and hostile-input boundaries</h3>
+<p>The save model treats imported text as untrusted. Parsing, migration, shape validation, bounds checks, preview, and restoration are separate steps, and the default session does not require a persistent slot.</p></section><section class="notebook-cell code-cell"><details><summary>Executed cell 16: show source</summary><pre><code>input_boundaries = [
+    (&quot;Byte ceiling&quot;, &quot;512 KiB&quot;, &quot;Reject before expensive parsing.&quot;),
+    (&quot;Header and schema&quot;, &quot;Exact format and supported version&quot;, &quot;Reject unknown envelopes.&quot;),
+    (&quot;Shape validation&quot;, &quot;Plain objects, finite values, bounded arrays, known enums&quot;, &quot;Reject executable or malformed structures.&quot;),
+    (&quot;Deterministic digest&quot;, &quot;Canonical content&quot;, &quot;Detect accidental or hostile modification.&quot;),
+    (&quot;Preview before restore&quot;, &quot;Seed, night, time, progress, provenance&quot;, &quot;Keep current state untouched until confirmation.&quot;),
+    (&quot;Slot consent&quot;, &quot;Per-slot capability&quot;, &quot;Prevent background local writes.&quot;),
+]
+_html = table_html(&quot;Portable-state trust boundaries&quot;, (&quot;Boundary&quot;, &quot;Requirement&quot;, &quot;Failure behavior&quot;), input_boundaries, row_headers=True)
+print(&quot;PASS: imported state remains bounded, previewed, and inert until validated.&quot;)
+_html</code></pre></details><p class="execution-note">PASS: imported state remains bounded, previewed, and inert until validated.</p><div class="table-wrap" role="region" aria-label="Portable-state trust boundaries" tabindex="0"><table><caption>Portable-state trust boundaries</caption><thead><tr><th scope="col">Boundary</th><th scope="col">Requirement</th><th scope="col">Failure behavior</th></tr></thead><tbody><tr><th scope="row">Byte ceiling</th><td>512 KiB</td><td>Reject before expensive parsing.</td></tr><tr><th scope="row">Header and schema</th><td>Exact format and supported version</td><td>Reject unknown envelopes.</td></tr><tr><th scope="row">Shape validation</th><td>Plain objects, finite values, bounded arrays, known enums</td><td>Reject executable or malformed structures.</td></tr><tr><th scope="row">Deterministic digest</th><td>Canonical content</td><td>Detect accidental or hostile modification.</td></tr><tr><th scope="row">Preview before restore</th><td>Seed, night, time, progress, provenance</td><td>Keep current state untouched until confirmation.</td></tr><tr><th scope="row">Slot consent</th><td>Per-slot capability</td><td>Prevent background local writes.</td></tr></tbody></table></div></section><section class="notebook-cell code-cell"><details><summary>Executed cell 17: show source</summary><pre><code>privacy = [
+    (&quot;Session state&quot;, &quot;Browser memory&quot;, &quot;Default&quot;, &quot;Ends with the session&quot;),
+    (&quot;Local slot&quot;, &quot;Browser storage&quot;, &quot;Explicit per-slot consent&quot;, &quot;Player can inspect and delete&quot;),
+    (&quot;Portable file&quot;, &quot;Player-selected location&quot;, &quot;Explicit export&quot;, &quot;Player controls transfer&quot;),
+    (&quot;Imported file&quot;, &quot;Temporary parser input&quot;, &quot;Explicit selection&quot;, &quot;No restore before validation&quot;),
+]
+_html = table_html(&quot;Data location and control&quot;, (&quot;Data&quot;, &quot;Location&quot;, &quot;Creation&quot;, &quot;Control&quot;), privacy, row_headers=True)
+print(&quot;Data locations and consent points are explicit; no account is required.&quot;)
+_html</code></pre></details><p class="execution-note">Data locations and consent points are explicit; no account is required.</p><div class="table-wrap" role="region" aria-label="Data location and control" tabindex="0"><table><caption>Data location and control</caption><thead><tr><th scope="col">Data</th><th scope="col">Location</th><th scope="col">Creation</th><th scope="col">Control</th></tr></thead><tbody><tr><th scope="row">Session state</th><td>Browser memory</td><td>Default</td><td>Ends with the session</td></tr><tr><th scope="row">Local slot</th><td>Browser storage</td><td>Explicit per-slot consent</td><td>Player can inspect and delete</td></tr><tr><th scope="row">Portable file</th><td>Player-selected location</td><td>Explicit export</td><td>Player controls transfer</td></tr><tr><th scope="row">Imported file</th><td>Temporary parser input</td><td>Explicit selection</td><td>No restore before validation</td></tr></tbody></table></div></section><section class="notebook-cell markdown-cell"><h3>Documentation publication contract</h3>
+<p>Notebook source and static HTML are released together. The source retains execution counts and outputs; the HTML requires no notebook runtime, remote font, script library, or network connection.</p></section><section class="notebook-cell code-cell"><details><summary>Executed cell 18: show source</summary><pre><code>publication = [
+    (&quot;Canonical notebook&quot;, &quot;notebooks/*.ipynb&quot;, &quot;Executed cells and committed outputs&quot;),
+    (&quot;Static edition&quot;, &quot;public/notebooks/*.html&quot;, &quot;Self-contained semantic document&quot;),
+    (&quot;Download copy&quot;, &quot;public/notebooks/*.ipynb&quot;, &quot;Byte-identical to canonical source&quot;),
+    (&quot;Manifest&quot;, &quot;notebooks/artifact-manifest.json&quot;, &quot;Size and SHA-256 for every published artifact&quot;),
+    (&quot;Rebuild&quot;, &quot;python3 scripts/docs/build_notebooks.py&quot;, &quot;Standard library only&quot;),
+    (&quot;Drift check&quot;, &quot;python3 scripts/docs/build_notebooks.py --check&quot;, &quot;Fails if committed output differs&quot;),
+]
+_html = table_html(&quot;Notebook publication artifacts&quot;, (&quot;Artifact&quot;, &quot;Path&quot;, &quot;Guarantee&quot;), publication, row_headers=True)
+print(&quot;PASS: notebook source, static edition, downloadable copy, and integrity manifest move together.&quot;)
+_html</code></pre></details><p class="execution-note">PASS: notebook source, static edition, downloadable copy, and integrity manifest move together.</p><div class="table-wrap" role="region" aria-label="Notebook publication artifacts" tabindex="0"><table><caption>Notebook publication artifacts</caption><thead><tr><th scope="col">Artifact</th><th scope="col">Path</th><th scope="col">Guarantee</th></tr></thead><tbody><tr><th scope="row">Canonical notebook</th><td>notebooks/*.ipynb</td><td>Executed cells and committed outputs</td></tr><tr><th scope="row">Static edition</th><td>public/notebooks/*.html</td><td>Self-contained semantic document</td></tr><tr><th scope="row">Download copy</th><td>public/notebooks/*.ipynb</td><td>Byte-identical to canonical source</td></tr><tr><th scope="row">Manifest</th><td>notebooks/artifact-manifest.json</td><td>Size and SHA-256 for every published artifact</td></tr><tr><th scope="row">Rebuild</th><td>python3 scripts/docs/build_notebooks.py</td><td>Standard library only</td></tr><tr><th scope="row">Drift check</th><td>python3 scripts/docs/build_notebooks.py --check</td><td>Fails if committed output differs</td></tr></tbody></table></div></section><section class="notebook-cell markdown-cell"><h3>Release decision</h3>
+<p>A release is ready only when generator coherence, reducer invariants, save validation, viewport contracts, accessibility disclosures, static rendering, and documentation drift checks all pass from a clean source tree.</p></section><section class="notebook-cell code-cell"><details><summary>Executed cell 19: show source</summary><pre><code>release = [
+    (&quot;Generator coherence&quot;, &quot;All constrained-night checks pass across the release seed sweep.&quot;),
+    (&quot;Reducer integrity&quot;, &quot;Serial, reverse, interleaved, and delayed-entry stress paths remain valid.&quot;),
+    (&quot;Persistence&quot;, &quot;Round-trip, migration, hostile-input, consent, and deletion tests pass.&quot;),
+    (&quot;Viewport&quot;, &quot;Desktop and compact contracts retain one bounded game shell and owned scrolling.&quot;),
+    (&quot;Accessibility&quot;, &quot;Keyboard, focus, reflow, naming, motion, contrast, and disclosure checks pass.&quot;),
+    (&quot;Rendered output&quot;, &quot;Server response and static notebook documents contain required landmarks and metadata.&quot;),
+    (&quot;Documentation&quot;, &quot;Notebook rebuild check reports no drift and manifest hashes match.&quot;),
+]
+rows = [(&quot;REQUIRED&quot;, label, evidence) for label, evidence in release]
+_html = checklist_html(&quot;Release evidence gates&quot;, rows)
+print(f&quot;Release ledger defines {len(rows)} independent evidence gates; none is replaced by visual inspection alone.&quot;)
+_html</code></pre></details><p class="execution-note">Release ledger defines 7 independent evidence gates; none is replaced by visual inspection alone.</p><section class="checklist" aria-label="Release evidence gates"><ul><li><span class="status">REQUIRED</span><strong>Generator coherence</strong><p>All constrained-night checks pass across the release seed sweep.</p></li><li><span class="status">REQUIRED</span><strong>Reducer integrity</strong><p>Serial, reverse, interleaved, and delayed-entry stress paths remain valid.</p></li><li><span class="status">REQUIRED</span><strong>Persistence</strong><p>Round-trip, migration, hostile-input, consent, and deletion tests pass.</p></li><li><span class="status">REQUIRED</span><strong>Viewport</strong><p>Desktop and compact contracts retain one bounded game shell and owned scrolling.</p></li><li><span class="status">REQUIRED</span><strong>Accessibility</strong><p>Keyboard, focus, reflow, naming, motion, contrast, and disclosure checks pass.</p></li><li><span class="status">REQUIRED</span><strong>Rendered output</strong><p>Server response and static notebook documents contain required landmarks and metadata.</p></li><li><span class="status">REQUIRED</span><strong>Documentation</strong><p>Notebook rebuild check reports no drift and manifest hashes match.</p></li></ul></section></section>
+</main>
+<footer class="site-footer">
+  <p>Committed source and static edition · rebuilt deterministically with the Python standard library · 2026-08-18</p>
+</footer>
+</body>
+</html>

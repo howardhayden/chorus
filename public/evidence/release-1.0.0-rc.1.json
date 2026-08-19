@@ -1,0 +1,448 @@
+{
+  "format": "CHORUS_RELEASE_EVIDENCE",
+  "schema_version": 1,
+  "release": {
+    "id": "1.0.0-rc.1",
+    "application_version": "1.0.0-rc.1",
+    "generator_version": 13,
+    "portable_save_schema": 1,
+    "state": "release-candidate",
+    "state_label": "Bounded release candidate",
+    "evidence_date": "2026-08-18",
+    "decision": "The implementation satisfies the bounded 1.0.0-rc.1 release-candidate gates for its recorded scope: complete browser play, deterministic large simulation, current-source contract suites, executed technical publications, dependency review, and a fresh neutral clean-room directory proof. This is not a general-availability, universal conformance, or untested-environment claim."
+  },
+  "source_binding": {
+    "algorithm": "sha256-path-length-content",
+    "digest": "b8315e499064b000cce9d5e9bde78152f58b944596e01ae5da170ec165decffa",
+    "file_count": 18,
+    "files": [
+      {
+        "path": "app/globals.css",
+        "bytes": 89504,
+        "sha256": "dafa16a6450b62badc2a1121768ebce2b1a2dc793d3bb2e46a440a03e9da99a7"
+      },
+      {
+        "path": "app/layout.tsx",
+        "bytes": 675,
+        "sha256": "ac81784d89db1491724c03209e74fd06ddfbf36578b8c247691b4562a6e3360b"
+      },
+      {
+        "path": "app/night-engine.ts",
+        "bytes": 48930,
+        "sha256": "a81058d06d42a80671a25d7903a1873072ee66b85da04551223316ecbf8aebc7"
+      },
+      {
+        "path": "app/page.tsx",
+        "bytes": 87957,
+        "sha256": "3c56b278e23044a54f23fa23707e9c653724e4a850ea815eb73490e19f754695"
+      },
+      {
+        "path": "app/privacy-panel.tsx",
+        "bytes": 9741,
+        "sha256": "fffee10ffbe897080ca022ae60e8f1fd3eed6f2ed924326d71a91ef6ff401328"
+      },
+      {
+        "path": "app/save-model.ts",
+        "bytes": 30230,
+        "sha256": "21e723d4bae7dc63239dee39c9767fba141928c1e48d79e2e830ca42f9bcf297"
+      },
+      {
+        "path": "app/scenario-generator.ts",
+        "bytes": 263122,
+        "sha256": "e0feb111e302ce029ff1e97f94b66907a3657cafabfeb7d30928d4c8d8d23a4d"
+      },
+      {
+        "path": "next.config.ts",
+        "bytes": 104,
+        "sha256": "ab4c61f6ee100ae43610a18512f1ebcec842bb2405431e1009266173f21cf772"
+      },
+      {
+        "path": "postcss.config.mjs",
+        "bytes": 94,
+        "sha256": "dfac7ac2d86d326a0e5adb024e7943c181393ed17a5fcb8f0315b24c7da6ddde"
+      },
+      {
+        "path": "scripts/run-simulation-evidence.mjs",
+        "bytes": 34479,
+        "sha256": "1bc2d77da3f5c9f6d649b7a78976e4d53f4860450029e2f6103c7d8cb0a559dc"
+      },
+      {
+        "path": "tests/accessibility-disclosure.test.mjs",
+        "bytes": 20176,
+        "sha256": "9b92d0b346663d1d9a14ff30193d86f7a442f67fe6e866e340fedb15feff4e24"
+      },
+      {
+        "path": "tests/concurrent-night.test.mjs",
+        "bytes": 53166,
+        "sha256": "b26d127f37a4fd8c0558780e94fa14f30088d379d8b28f371a895b19d4182f89"
+      },
+      {
+        "path": "tests/rendered-html.test.mjs",
+        "bytes": 1188,
+        "sha256": "8d7e73200fe13ae549a64dc5439270c41b4d7cdb0f587a3536cefd374f3fbca8"
+      },
+      {
+        "path": "tests/save-model.test.mjs",
+        "bytes": 9624,
+        "sha256": "4fbdc7ae981fec2851b55c5e4a174d8a0c79955d0a06f3ba2f4991aba6403b6c"
+      },
+      {
+        "path": "tests/simulation-maturity.test.mjs",
+        "bytes": 4644,
+        "sha256": "6e6a9e5229c9da1f57b629ab09f7237682b2318b76d76ce82bcd39f62066b22d"
+      },
+      {
+        "path": "tests/viewport-contract.test.mjs",
+        "bytes": 11174,
+        "sha256": "79452439182296c99b98c8cfb566ee1e0de42bfab2cc4ea7783c45904e71447e"
+      },
+      {
+        "path": "tsconfig.json",
+        "bytes": 706,
+        "sha256": "72ed3722a65e2242200f164aaed26b046901f134660bf81d64464ea73a37b4a8"
+      },
+      {
+        "path": "worker/index.ts",
+        "bytes": 1756,
+        "sha256": "c70393de3e7d55739c1379b1351163966f81aee4d96c8de847096b9f3bd83aa4"
+      }
+    ]
+  },
+  "included_scope": [
+    "One deterministic single-player browser night with six concurrent rooms and twenty-four accepted decisions.",
+    "Autonomous logical-time room evolution, exactly-once cross-room receipts, close snapshots, afterimages, replay, and complete-night interpretation.",
+    "Player-controlled session, local-slot, portable export, bounded import, migration, validation, and recovery behavior.",
+    "One-viewport interaction, progressive disclosure, relationship exploration with text parity, motion controls, and responsive layout contracts.",
+    "Canonical source, tests, documentation, executed notebooks, raw static HTML, machine results, and a neutral source distribution."
+  ],
+  "excluded_scope": [
+    "Accounts, remote state synchronization, collaborative multiplayer, live scenario feeds, analytics, and player profiling.",
+    "Prediction, diagnosis, deception detection, trust scoring, empirical effect estimation, or reconstruction of a real person or dispute.",
+    "Every possible 32-bit seed, every combinatorial action path, and browser or assistive-technology combinations absent from the verified matrix.",
+    "Violence, emergency response, clinical care, legal process, abuse assessment, or operational manipulation instruction.",
+    "General-availability or universal accessibility-conformance certification."
+  ],
+  "gates": [
+    {
+      "id": "simulation-scale",
+      "label": "Large simulation and edge cases",
+      "status": "pass",
+      "release_blocking": true,
+      "claim": "A finite contiguous 4,096-seed sweep generated coherent nights; 512 interleaved nights completed and replayed with exactly-once decision and autonomous receipts and zero recorded invariant failures.",
+      "evidence": [
+        "run:simulation-write",
+        "run:simulation-drift-check",
+        "evidence/runs/simulation-maturity.v1.json",
+        "tests/simulation-maturity.test.mjs"
+      ],
+      "limit": "Finite domain and four deterministic choice policies; not exhaustive over all seeds or all action paths."
+    },
+    {
+      "id": "end-to-end-play",
+      "label": "End-to-end playable night",
+      "status": "pass",
+      "release_blocking": true,
+      "claim": "A fresh 52-step Chrome-family run bound to the hardened source reached turn 24/24, closed six of six rooms, opened the whole-night conclusion with 24 decisions, retained exact 1363 by 936 viewport containment, and recorded zero application-origin warnings or errors.",
+      "evidence": [
+        "run:end-to-end-browser",
+        "artifact:end-to-end-browser"
+      ],
+      "limit": "One Chrome-family engine, desktop viewport, and locator-driven completion; no physical mobile, assistive-technology pair, or second engine. Earlier keyboard, focus, local-slot, and export-control observations retain prior-source provenance."
+    },
+    {
+      "id": "persistence-privacy",
+      "label": "Persistence, import/export, privacy, and failure states",
+      "status": "pass",
+      "release_blocking": true,
+      "claim": "The hardened-source clean-room run passed 10 save-model tests covering session-only default, consent, round trip, migration, hostile input, integrity, replay, and atomic rejection. Browser local-slot and export-control observations are retained separately under their earlier-source provenance.",
+      "evidence": [
+        "run:distribution-validation",
+        "run:end-to-end-browser",
+        "tests/save-model.test.mjs"
+      ],
+      "limit": "Browser fixture upload, runtime import, download file arrival, and request-level network observation were unavailable; no pass is claimed for those runtime observations."
+    },
+    {
+      "id": "accessibility-layout",
+      "label": "Accessibility and responsive interaction",
+      "status": "pass",
+      "release_blocking": true,
+      "claim": "The hardened-source repository and clean-room runs passed 21 accessibility-disclosure and 8 viewport contracts; the fresh browser completion retained exact viewport containment and zero application-origin errors.",
+      "evidence": [
+        "run:distribution-validation",
+        "run:end-to-end-browser",
+        "tests/accessibility-disclosure.test.mjs",
+        "tests/viewport-contract.test.mjs"
+      ],
+      "limit": "No accessibility-rule scanner, screen-reader or other assistive-technology pairing, physical mobile/touch device, second browser engine, or multi-engine zoom matrix was run; no universal conformance claim is made."
+    },
+    {
+      "id": "dependency-integrity",
+      "label": "Dependency and supply-chain state",
+      "status": "pass",
+      "release_blocking": true,
+      "claim": "Direct dependency pins, registry integrity, and exact lifecycle-script approvals are recorded; complete and runtime-only advisory queries returned zero known advisories for the bound lockfile.",
+      "evidence": [
+        "run:dependency-audit",
+        "evidence/releases/1.0.0-rc.1/dependency-inventory.json",
+        "evidence/runs/dependency-audit.v1.json"
+      ],
+      "limit": "Registry advisories are time-bound and cannot prove that dependencies contain no undisclosed defect."
+    },
+    {
+      "id": "technical-publication",
+      "label": "Executed notebooks and raw HTML",
+      "status": "pass",
+      "release_blocking": true,
+      "claim": "Repository and neutral clean-room documentation checks verified executed notebook source, static script-free HTML, publication metadata, local links, contrast floors, and artifact digests; the browser loaded the evidence index and both notebook HTML routes.",
+      "evidence": [
+        "run:distribution-validation",
+        "run:end-to-end-browser",
+        "artifact:systems-atlas-html",
+        "artifact:validation-atlas-html",
+        "scripts/docs/build_notebooks.py",
+        "scripts/docs/build_release_evidence.py"
+      ],
+      "limit": "Notebook cells render retained evidence and fixed declarations; they do not execute the browser or TypeScript release harnesses."
+    },
+    {
+      "id": "neutral-distribution",
+      "label": "Neutral clean distribution",
+      "status": "pass",
+      "release_blocking": true,
+      "claim": "A fresh 78-file neutral directory passed the strict identity/content scan, installed 504 packages with an empty task cache, repeated release verification with zero focused-test failures, built independently, started production, and returned HTTP 200 root HTML.",
+      "evidence": [
+        "run:distribution-validation",
+        "artifact:distribution-validation"
+      ],
+      "limit": "The retained machine result is the first pre-binding directory proof. Final post-binding archive container bytes and SHA-256 are verified externally to avoid recursive self-digests."
+    }
+  ],
+  "runs": [
+    {
+      "id": "simulation-write",
+      "label": "Full simulation evidence write",
+      "command": "node --experimental-strip-types --experimental-specifier-resolution=node scripts/run-simulation-evidence.mjs --write",
+      "result": "pass",
+      "summary": "118,680 assertions; 4,096 coherent nights; 512 completed and replayed interleavings; 147,456 effect receipts; 432 targeted malformed states rejected; zero recorded invariant, validation, replay, or exhaustion failures across the targeted probes.",
+      "environment": "Node v24.19.0 · Linux x86_64 · network not required",
+      "implementation_digest": "b8315e499064b000cce9d5e9bde78152f58b944596e01ae5da170ec165decffa",
+      "result_path": "evidence/runs/simulation-maturity.v1.json",
+      "result_sha256": "2220bde27a87440e439e69acb2466cbfa6504710026b6cc1dea88d577d1d60e2"
+    },
+    {
+      "id": "simulation-drift-check",
+      "label": "Repeated deterministic simulation drift check",
+      "command": "node --experimental-strip-types --experimental-specifier-resolution=node scripts/run-simulation-evidence.mjs --check",
+      "result": "pass",
+      "summary": "Recomputed output was byte-identical to the committed machine result.",
+      "environment": "Node v24.19.0 · Linux x86_64 · network not required",
+      "implementation_digest": "b8315e499064b000cce9d5e9bde78152f58b944596e01ae5da170ec165decffa",
+      "result_path": "evidence/runs/simulation-maturity.v1.json",
+      "result_sha256": "2220bde27a87440e439e69acb2466cbfa6504710026b6cc1dea88d577d1d60e2"
+    },
+    {
+      "id": "dependency-audit",
+      "label": "Complete and runtime dependency advisory queries",
+      "command": "python3 scripts/docs/capture_dependency_audit.py",
+      "result": "pass",
+      "summary": "Both complete and runtime-only registry queries exited zero with 0 total known advisories across every severity.",
+      "environment": "Node v24.19.0 · npm 11.9.0 · package-lock SHA-256 df9b51ab24c",
+      "implementation_digest": "b8315e499064b000cce9d5e9bde78152f58b944596e01ae5da170ec165decffa",
+      "result_path": "evidence/runs/dependency-audit.v1.json",
+      "result_sha256": "d3121cb2ed18b5377203b605808e5a3f5cef06be7f9e85ce2c35b2258babda3c"
+    },
+    {
+      "id": "end-to-end-browser",
+      "label": "Hardened-source browser completion",
+      "command": "Chrome-family locator run against the local agent preview",
+      "result": "limited",
+      "summary": "Fresh 52-step current-source completion reached turn 24/24, six of six closed rooms, one whole-night receipt, 24 conclusion decisions, exact viewport containment, and zero application-origin warnings or errors.",
+      "environment": "Chrome family · 1363 × 936 CSS pixels · DPR 1 · mouse and keyboard",
+      "implementation_digest": "b8315e499064b000cce9d5e9bde78152f58b944596e01ae5da170ec165decffa",
+      "result_path": "evidence/runs/end-to-end-playability.v1.json",
+      "result_sha256": "9c5cb2c1fdb2e99453fe80ce52880f6ba591e2c21f77417cfa9f7dbd4589f36a"
+    },
+    {
+      "id": "distribution-validation",
+      "label": "Repository and neutral clean-room verification",
+      "command": "Repository verify, strict neutral export, fresh-cache install, clean-tree verify and build, production start, and loopback HTTP smoke",
+      "result": "pass",
+      "summary": "Repository verify passed 88 focused tests; the 78-file neutral tree had zero scan findings, installed 504 packages, passed 79 clean-tree focused tests, built, started, and returned HTTP 200 with valid root HTML.",
+      "environment": "Node v24.19.0 · npm 11.9.0 · Python 3.12.13 · Linux 6.18.35 x86_64",
+      "implementation_digest": "b8315e499064b000cce9d5e9bde78152f58b944596e01ae5da170ec165decffa",
+      "result_path": "evidence/runs/distribution-validation.v1.json",
+      "result_sha256": "1040e7e7a1f8a5465316f9fc57f64ccb2c4faac9bccd07ed6977d69217927b83"
+    }
+  ],
+  "verified_matrix": [
+    {
+      "surface": "Simulation core",
+      "environment": "Node v24.19.0 · Linux x86_64",
+      "coverage": "4,096 generation seeds; 512 complete interleavings; autonomous clocks, causal receipts, replay, invalid states and actions, and numeric bounds.",
+      "evidence": "simulation-maturity.v1.json"
+    },
+    {
+      "surface": "Dependency advisory state",
+      "environment": "npm 11.9.0 registry audit",
+      "coverage": "Complete and runtime-only advisory queries for the exact lockfile.",
+      "evidence": "dependency-audit.v1.json"
+    },
+    {
+      "surface": "Complete-night browser path",
+      "environment": "Chrome family · 1363 × 936 CSS pixels · DPR 1 · mouse and keyboard",
+      "coverage": "Fresh 52-step current-source completion: turn 24/24, six rooms closed, conclusion opened, 24 decisions, exact viewport containment, and zero application-origin warnings or errors.",
+      "evidence": "end-to-end-playability.v1.json"
+    },
+    {
+      "surface": "Repository release gate",
+      "environment": "Node v24.19.0 · npm 11.9.0 · Python 3.12.13 · Linux x86_64",
+      "coverage": "Lint, type check, simulation drift, documentation publication, 88 focused tests, production build, and rendered HTML.",
+      "evidence": "distribution-validation.v1.json"
+    },
+    {
+      "surface": "Neutral clean-room distribution",
+      "environment": "Fresh temporary Linux x86_64 tree and empty task-specific package cache",
+      "coverage": "Strict scan, zero bytecode residue, 504-package install, 79 focused tests, independent build, production start, and HTTP 200 root smoke.",
+      "evidence": "distribution-validation.v1.json"
+    }
+  ],
+  "unverified_matrix": [
+    {
+      "combination": "Safari with VoiceOver on macOS or iOS",
+      "boundary": "No retained assistive-technology session yet.",
+      "promotion_action": "Complete keyboard, focus, announcement, reflow, relation-list, and import/export pass."
+    },
+    {
+      "combination": "Firefox with NVDA on Windows",
+      "boundary": "No retained assistive-technology session yet.",
+      "promotion_action": "Complete dialog, live-region, reason-toggle, graph alternative, and full-night pass."
+    },
+    {
+      "combination": "Chrome or Edge with JAWS on Windows",
+      "boundary": "No retained assistive-technology session yet.",
+      "promotion_action": "Complete equivalent primary flow and disclosure-boundary pass."
+    },
+    {
+      "combination": "Physical narrow mobile and short-landscape devices",
+      "boundary": "Static viewport contracts are not a physical-device result.",
+      "promotion_action": "Exercise safe areas, software keyboard, touch targets, pane scrolling, map wrapping, and file controls."
+    },
+    {
+      "combination": "200% and 400% browser zoom across engines",
+      "boundary": "Responsive source contracts do not replace retained multi-engine zoom observation.",
+      "promotion_action": "Complete reflow, focus visibility, text intake, relation view, and blocked-reason checks."
+    },
+    {
+      "combination": "Browser portable-import fixture",
+      "boundary": "Fixture upload permission was unavailable; deterministic import, preview, replay, corruption, and hostile-input contracts passed.",
+      "promotion_action": "Upload a valid and invalid portable file through the browser and retain preview, cancel, restore, and unchanged-state observations."
+    },
+    {
+      "combination": "Browser download file arrival",
+      "boundary": "Serialization and export-control behavior were observed before reducer hardening, but the runner exposed no download-arrival event.",
+      "promotion_action": "Retain a browser download event and verify the resulting file round trip."
+    },
+    {
+      "combination": "Request-level browser network trace",
+      "boundary": "The browser runner did not expose request-level observation; no runtime transmission claim is made from that session.",
+      "promotion_action": "Capture requests during generation, play, storage, export, and import and verify that no night state leaves the client."
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "simulation-result",
+      "label": "Simulation maturity result",
+      "description": "Machine-readable large-run totals, bounds, digests, failures, source binding, and finite-coverage limits.",
+      "media_type": "application/json",
+      "source_path": "evidence/runs/simulation-maturity.v1.json",
+      "publish_as": "simulation-maturity.v1.json",
+      "public_href": "simulation-maturity.v1.json",
+      "bytes": 5787,
+      "sha256": "2220bde27a87440e439e69acb2466cbfa6504710026b6cc1dea88d577d1d60e2"
+    },
+    {
+      "id": "dependency-audit",
+      "label": "Dependency advisory result",
+      "description": "Time-bound complete and runtime-only registry advisory results for the exact lockfile.",
+      "media_type": "application/json",
+      "source_path": "evidence/runs/dependency-audit.v1.json",
+      "publish_as": "dependency-audit.v1.json",
+      "public_href": "dependency-audit.v1.json",
+      "bytes": 1376,
+      "sha256": "d3121cb2ed18b5377203b605808e5a3f5cef06be7f9e85ce2c35b2258babda3c"
+    },
+    {
+      "id": "dependency-inventory",
+      "label": "Dependency inventory",
+      "description": "Direct pins, lock digest, registry integrity values, and reviewed exact-version lifecycle-script approvals.",
+      "media_type": "application/json",
+      "source_path": "evidence/releases/1.0.0-rc.1/dependency-inventory.json",
+      "publish_as": "dependency-inventory.json",
+      "public_href": "dependency-inventory.json",
+      "bytes": 7996,
+      "sha256": "511494994c632bbbe282c3d990aaf48256c912442180a28046af7e24aa7a30f1"
+    },
+    {
+      "id": "end-to-end-browser",
+      "label": "End-to-end playability result",
+      "description": "Machine-readable current-source browser completion, viewport and runtime observations, historical interaction provenance, and explicit unverified combinations.",
+      "media_type": "application/json",
+      "source_path": "evidence/runs/end-to-end-playability.v1.json",
+      "publish_as": "end-to-end-playability.v1.json",
+      "public_href": "end-to-end-playability.v1.json",
+      "bytes": 13714,
+      "sha256": "9c5cb2c1fdb2e99453fe80ce52880f6ba591e2c21f77417cfa9f7dbd4589f36a"
+    },
+    {
+      "id": "distribution-validation",
+      "label": "Neutral distribution validation",
+      "description": "Machine-readable repository gate, strict neutral scan, fresh-cache installation, clean-tree verification, independent build, production start, HTTP smoke, and recursive-digest boundary.",
+      "media_type": "application/json",
+      "source_path": "evidence/runs/distribution-validation.v1.json",
+      "publish_as": "distribution-validation.v1.json",
+      "public_href": "distribution-validation.v1.json",
+      "bytes": 10975,
+      "sha256": "1040e7e7a1f8a5465316f9fc57f64ccb2c4faac9bccd07ed6977d69217927b83"
+    },
+    {
+      "id": "systems-atlas-html",
+      "label": "Systems Atlas raw HTML",
+      "description": "Self-contained executed architecture, state, causality, disclosure, fatigue, and persistence demonstration.",
+      "media_type": "text/html",
+      "source_path": "public/notebooks/chorus-systems-atlas.html",
+      "public_href": "../notebooks/chorus-systems-atlas.html",
+      "bytes": 39274,
+      "sha256": "a17a5bd94af733b452625d0c3ac7d2bf84b2b10a4f12bdc2ceed7523e901d88c"
+    },
+    {
+      "id": "validation-atlas-html",
+      "label": "Verification Ledger raw HTML",
+      "description": "Self-contained executed verification atlas linked to the retained simulation result and release contracts.",
+      "media_type": "text/html",
+      "source_path": "public/notebooks/chorus-validation-atlas.html",
+      "public_href": "../notebooks/chorus-validation-atlas.html",
+      "bytes": 64049,
+      "sha256": "960503b82ac21597452362a2e6d0123bc9aae986771fa5dedffb3a7b493fb00d"
+    },
+    {
+      "id": "notebook-manifest",
+      "label": "Notebook artifact manifest",
+      "description": "Machine-readable sizes and SHA-256 digests for canonical notebooks, download copies, static HTML, and the notebook index.",
+      "media_type": "application/json",
+      "source_path": "public/notebooks/artifact-manifest.json",
+      "public_href": "../notebooks/artifact-manifest.json",
+      "bytes": 1704,
+      "sha256": "60f410051774dbc16bfcb4bc216c53a21dcf37ca6da19237f8551a8d892a7d92"
+    }
+  ],
+  "limitations": [
+    "The large simulation is a deterministic finite sample, not exhaustive proof over every seed or every action path.",
+    "A real-browser complete-night path is current-source evidence, but manual keyboard, focus, local-slot, and export-control observations in the same artifact retain their earlier-source provenance and are not relabeled as current execution.",
+    "The retained neutral directory proof predates inclusion of its own result file; a final post-binding archive retest and external archive SHA-256 are required because embedding the archive digest inside that archive would be recursive.",
+    "Automated semantic and viewport contracts cannot establish full accessibility conformance across absent browser and assistive-technology combinations.",
+    "Runtime browser import, download arrival, and request-level network observation remain unverified even though deterministic save, hostile-input, and export-control contracts passed.",
+    "Executed notebooks render retained evidence and fixed declarations; they do not themselves run the browser or TypeScript simulation harness.",
+    "Dependency advisory results are time-bound and do not establish absence of unknown defects."
+  ]
+}

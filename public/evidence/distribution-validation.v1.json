@@ -1,0 +1,290 @@
+{
+  "schema": "chorus.distribution-validation-evidence.v1",
+  "releaseCandidate": "1.0.0-rc.1",
+  "status": "pass",
+  "deterministic": true,
+  "executionContract": {
+    "runtime": "Node.js v24.19.0",
+    "packageManager": "npm 11.9.0",
+    "python": "Python 3.12.13",
+    "platform": "Linux 6.18.35 x86_64",
+    "proofRoot": "$PROOF_ROOT",
+    "proofRootCreation": "mktemp -d /tmp/chorus-distribution-proof-XXXXXX",
+    "freshTemporaryRoot": true,
+    "freshTaskCache": "$PROOF_ROOT/npm-cache",
+    "networkPolicy": {
+      "install": "Package-registry access was permitted and the task-specific cache began empty.",
+      "verificationBuildAndSmoke": "No external resource was required; the HTTP probe used loopback only."
+    },
+    "wallClockDataCommitted": false,
+    "randomTemporaryPathCommitted": false
+  },
+  "source": {
+    "sourceControlState": "Content-addressed worktree, including the intended release-candidate changes.",
+    "implementationBinding": {
+      "algorithm": "sha256-path-length-content",
+      "algorithmDefinition": "For each sorted repository-relative path: four-byte big-endian UTF-8 path length, path bytes, eight-byte big-endian payload length, then payload bytes.",
+      "digest": "b8315e499064b000cce9d5e9bde78152f58b944596e01ae5da170ec165decffa",
+      "fileCount": 18
+    },
+    "repositoryPackageJsonSha256": "831e00fb20a09d57ad70591e1948c8d0ec22dabac1636c5c81e3a5c4d17c23c1",
+    "packageLockSha256": "df9b51ab24c932408bf7a8664bb9f22b5fc6dd299a7d6317811514b62d3609dc",
+    "exporterSha256": "0ba27c366c97d8d99f8e0e39f8aa7f02d048dec374233948aa6695b0558cbca4",
+    "neutralViteConfigSha256": "3278c42c80e0e278aa8854aa061a61dc79b7ba2c87db31ea4dbc9d54e224ec79"
+  },
+  "neutralTree": {
+    "format": "directory",
+    "path": "$PROOF_ROOT/CHORUS-source",
+    "sourceNodeModulesPresentBeforeInstall": false,
+    "preinstallBinding": {
+      "algorithm": "sha256-path-length-content",
+      "algorithmDefinition": "For each sorted export-relative regular-file path: four-byte big-endian UTF-8 path length, path bytes, eight-byte big-endian payload length, then payload bytes.",
+      "digest": "544c0cd197d75bdfc4e2d45ca40c353cf4cb9010fa8c02d51c02ae2364366536",
+      "fileCount": 78,
+      "totalPayloadBytes": 1771590,
+      "symlinkCount": 0
+    },
+    "neutralPackageJsonSha256": "e8e339648bdf8429b9ba23a262ff0c51a40459db3505b3718859bdfdecf05768",
+    "packageLockSha256": "df9b51ab24c932408bf7a8664bb9f22b5fc6dd299a7d6317811514b62d3609dc",
+    "viteConfigSha256": "3278c42c80e0e278aa8854aa061a61dc79b7ba2c87db31ea4dbc9d54e224ec79",
+    "strictNeutralContentScan": {
+      "rulesSource": "scripts/export-source.mjs auditDistributionTree",
+      "status": "pass",
+      "findings": 0
+    },
+    "generatedPythonBytecodeScan": {
+      "status": "pass",
+      "findings": 0
+    },
+    "postRunFreshExportComparison": {
+      "status": "pass",
+      "filesComparedByteForByte": 78,
+      "differences": 0
+    }
+  },
+  "runs": [
+    {
+      "id": "repository-verify-release",
+      "scope": "repository",
+      "command": "npm run verify:release",
+      "workingDirectory": "repository root",
+      "exitCode": 0,
+      "status": "pass",
+      "results": {
+        "lint": {
+          "status": "pass",
+          "exitCode": 0
+        },
+        "typecheck": {
+          "command": "npx tsc --noEmit",
+          "status": "pass",
+          "exitCode": 0
+        },
+        "simulationEvidenceCheck": {
+          "status": "pass",
+          "exitCode": 0,
+          "assertions": 118680,
+          "failures": 0,
+          "evidenceDigest": "ffd9821c8dfd3dc3b4f3a06f2715b3d490c150e7abf65f201474fe6df25fe844",
+          "resultFileSha256": "2220bde27a87440e439e69acb2466cbfa6504710026b6cc1dea88d577d1d60e2"
+        },
+        "documentationCheck": {
+          "status": "pass",
+          "exitCode": 0,
+          "notebookArtifacts": 10,
+          "releaseArtifacts": 6,
+          "retainedReleaseRuns": 4
+        },
+        "focusedTests": {
+          "status": "pass",
+          "passed": 88,
+          "failed": 0,
+          "groups": [
+            {
+              "name": "concurrent night",
+              "passed": 34,
+              "failed": 0
+            },
+            {
+              "name": "simulation maturity",
+              "passed": 5,
+              "failed": 0
+            },
+            {
+              "name": "save model",
+              "passed": 10,
+              "failed": 0
+            },
+            {
+              "name": "accessibility and disclosure",
+              "passed": 21,
+              "failed": 0
+            },
+            {
+              "name": "viewport contract",
+              "passed": 8,
+              "failed": 0
+            },
+            {
+              "name": "portable source",
+              "passed": 5,
+              "failed": 0
+            },
+            {
+              "name": "distribution contract",
+              "passed": 4,
+              "failed": 0
+            },
+            {
+              "name": "rendered HTML",
+              "passed": 1,
+              "failed": 0
+            }
+          ]
+        },
+        "repositoryBuild": {
+          "status": "pass",
+          "exitCode": 0
+        }
+      }
+    },
+    {
+      "id": "neutral-export",
+      "scope": "repository to fresh temporary root",
+      "command": "node scripts/export-source.mjs --output \"$PROOF_ROOT/CHORUS-source\"",
+      "exitCode": 0,
+      "status": "pass"
+    },
+    {
+      "id": "neutral-content-scan",
+      "scope": "preinstall neutral tree",
+      "command": "auditDistributionTree(\"$PROOF_ROOT/CHORUS-source\")",
+      "exitCode": 0,
+      "status": "pass",
+      "findings": 0
+    },
+    {
+      "id": "clean-install",
+      "scope": "fresh neutral tree",
+      "command": "NPM_CONFIG_CACHE=\"$PROOF_ROOT/npm-cache\" npm ci",
+      "workingDirectory": "$PROOF_ROOT/CHORUS-source",
+      "exitCode": 0,
+      "status": "pass",
+      "packagesAdded": 504
+    },
+    {
+      "id": "clean-verify-release",
+      "scope": "installed neutral tree",
+      "command": "NPM_CONFIG_CACHE=\"$PROOF_ROOT/npm-cache\" npm run verify:release",
+      "workingDirectory": "$PROOF_ROOT/CHORUS-source",
+      "exitCode": 0,
+      "status": "pass",
+      "results": {
+        "lint": {
+          "status": "pass",
+          "exitCode": 0
+        },
+        "typecheck": {
+          "command": "npx tsc --noEmit",
+          "status": "pass",
+          "exitCode": 0
+        },
+        "simulationEvidenceCheck": {
+          "status": "pass",
+          "exitCode": 0,
+          "assertions": 118680,
+          "failures": 0,
+          "evidenceDigest": "ffd9821c8dfd3dc3b4f3a06f2715b3d490c150e7abf65f201474fe6df25fe844",
+          "resultFileSha256": "2220bde27a87440e439e69acb2466cbfa6504710026b6cc1dea88d577d1d60e2"
+        },
+        "documentationCheck": {
+          "status": "pass",
+          "exitCode": 0,
+          "notebookArtifacts": 10,
+          "releaseArtifacts": 6,
+          "retainedReleaseRuns": 4
+        },
+        "focusedTests": {
+          "status": "pass",
+          "passed": 79,
+          "failed": 0,
+          "repositoryOnlyGroupsExcluded": [
+            "portable source",
+            "distribution contract"
+          ]
+        },
+        "embeddedBuild": {
+          "status": "pass",
+          "exitCode": 0
+        }
+      }
+    },
+    {
+      "id": "standalone-clean-build",
+      "scope": "installed neutral tree",
+      "command": "NPM_CONFIG_CACHE=\"$PROOF_ROOT/npm-cache\" npm run build",
+      "workingDirectory": "$PROOF_ROOT/CHORUS-source",
+      "exitCode": 0,
+      "status": "pass"
+    },
+    {
+      "id": "production-start",
+      "scope": "installed and built neutral tree",
+      "command": "PORT=4180 NPM_CONFIG_CACHE=\"$PROOF_ROOT/npm-cache\" npm run start",
+      "workingDirectory": "$PROOF_ROOT/CHORUS-source",
+      "exitCode": null,
+      "status": "pass",
+      "startupObservation": "Production server reported ready on 0.0.0.0:4180.",
+      "termination": {
+        "signal": "SIGTERM",
+        "reason": "Deliberately stopped after the successful loopback response; a long-running server has no natural success exit."
+      }
+    },
+    {
+      "id": "loopback-http-smoke",
+      "scope": "running neutral production server",
+      "command": "GET http://127.0.0.1:4180/",
+      "exitCode": 0,
+      "status": "pass",
+      "response": {
+        "statusCode": 200,
+        "contentType": "text/html; charset=utf-8",
+        "bodyBytes": 13806,
+        "bodySha256": "ffd7c069905d948e4bde773c19941c6272bc691cba6e412d2afb32fd17da17c9",
+        "doctypePresent": true,
+        "productTitlePresent": true,
+        "mainLandmarkPresent": true
+      }
+    }
+  ],
+  "discardedPreflights": [
+    {
+      "boundary": "install orchestration",
+      "result": "discarded before verification",
+      "reason": "An initial disposable tree inherited a sandbox-default package cache that was not writable. The retained proof restarted from a fresh export with the explicit task-specific cache recorded above."
+    },
+    {
+      "boundary": "HTTP assertion contract",
+      "result": "discarded after receiving HTTP 200",
+      "reason": "An initial assertion expected an obsolete title or root selector. The retained probe checked the current title, document type, and main landmark without changing application source."
+    }
+  ],
+  "claimBoundary": {
+    "proved": [
+      "The bound repository verification command completed with zero failed focused tests.",
+      "A fresh neutral directory export passed the repository's strict path and textual-content audit.",
+      "The neutral tree installed with a fresh task-specific cache, repeated its release verification, built independently, started its production server, and returned valid root HTML over loopback.",
+      "The retained tree's 78 preinstall files remained byte-identical to a fresh re-export after the run."
+    ],
+    "notProved": [
+      "The result is not an independent oracle or an external certification; it is repeatable execution evidence from the repository's own contracts and harnesses.",
+      "This first pass binds the neutral tree before this result file is added to the export. The release binder must incorporate the result, then retain a final post-binding archive retest.",
+      "No final archive digest is embedded because embedding that digest in an included result would be recursive.",
+      "The directory proof does not establish final archive container bytes or metadata.",
+      "The environment matrix is limited to the runtime, package manager, kernel, and architecture recorded above.",
+      "The HTTP smoke validates the root HTML response only; it does not traverse every route or fetch every static asset.",
+      "Browser, assistive-technology, physical-device, persistence-control, and interaction coverage are retained in separate evidence and keep their own stated limits.",
+      "Registry availability and advisory state may change after this run."
+    ]
+  }
+}

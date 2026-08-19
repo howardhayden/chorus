@@ -1,0 +1,364 @@
+{
+  "schema": "chorus.end-to-end-playability-evidence.v1",
+  "releaseCandidate": "1.0.0-rc.1",
+  "capturedAt": "2026-08-19T00:44:29Z",
+  "reboundAt": "2026-08-19T01:03:48Z",
+  "status": "pass_with_explicit_limits",
+  "source": {
+    "identity": "content-addressed",
+    "aggregateSha256": "0a51c726a8b5d86e76217e418bd33a83543679e47d619926d17669beb85764cc",
+    "aggregateRule": "SHA-256 of the ordered sha256sum output for the listed files",
+    "bindingScope": "The fresh locator-driven browser completion is bound to this source. Earlier manual and deterministic observations retain their prior-source provenance below.",
+    "files": [
+      {
+        "path": "app/page.tsx",
+        "sha256": "3c56b278e23044a54f23fa23707e9c653724e4a850ea815eb73490e19f754695",
+        "bytes": 87957
+      },
+      {
+        "path": "app/privacy-panel.tsx",
+        "sha256": "fffee10ffbe897080ca022ae60e8f1fd3eed6f2ed924326d71a91ef6ff401328",
+        "bytes": 9741
+      },
+      {
+        "path": "app/night-engine.ts",
+        "sha256": "a81058d06d42a80671a25d7903a1873072ee66b85da04551223316ecbf8aebc7",
+        "bytes": 48930
+      },
+      {
+        "path": "app/save-model.ts",
+        "sha256": "21e723d4bae7dc63239dee39c9767fba141928c1e48d79e2e830ca42f9bcf297",
+        "bytes": 30230
+      },
+      {
+        "path": "app/scenario-generator.ts",
+        "sha256": "e0feb111e302ce029ff1e97f94b66907a3657cafabfeb7d30928d4c8d8d23a4d",
+        "bytes": 263122
+      },
+      {
+        "path": "app/globals.css",
+        "sha256": "dafa16a6450b62badc2a1121768ebce2b1a2dc793d3bb2e46a440a03e9da99a7",
+        "bytes": 89504
+      },
+      {
+        "path": "tests/accessibility-disclosure.test.mjs",
+        "sha256": "9b92d0b346663d1d9a14ff30193d86f7a442f67fe6e866e340fedb15feff4e24",
+        "bytes": 20176
+      },
+      {
+        "path": "tests/concurrent-night.test.mjs",
+        "sha256": "b26d127f37a4fd8c0558780e94fa14f30088d379d8b28f371a895b19d4182f89",
+        "bytes": 53166
+      },
+      {
+        "path": "package-lock.json",
+        "sha256": "df9b51ab24c932408bf7a8664bb9f22b5fc6dd299a7d6317811514b62d3609dc",
+        "bytes": 346142
+      }
+    ]
+  },
+  "automated": {
+    "provenance": {
+      "sourceAggregateSha256": "f46c3b52174b05d50bd1009d0a84ccf05d1d452ce5f69892ff753f34e046045c",
+      "relationshipToCurrentSource": "These retained deterministic results predate the hardened night-state validator. They are historical coverage, not a claim that the commands were rerun against the current source binding."
+    },
+    "environment": {
+      "runtime": "Node.js v24.19.0",
+      "packageManager": "npm 11.9.0",
+      "networkRequired": false
+    },
+    "commands": [
+      {
+        "command": "node --experimental-strip-types --experimental-specifier-resolution=node --test tests/concurrent-night.test.mjs",
+        "exitCode": 0,
+        "tests": 34,
+        "passed": 34,
+        "failed": 0,
+        "durationMs": 72762.118096
+      },
+      {
+        "command": "node --experimental-strip-types --experimental-specifier-resolution=node --test tests/save-model.test.mjs",
+        "exitCode": 0,
+        "tests": 10,
+        "passed": 10,
+        "failed": 0,
+        "durationMs": 891.896309
+      },
+      {
+        "command": "node --test tests/accessibility-disclosure.test.mjs",
+        "exitCode": 0,
+        "tests": 21,
+        "passed": 21,
+        "failed": 0,
+        "durationMs": 97.06397
+      },
+      {
+        "command": "node --test tests/viewport-contract.test.mjs",
+        "exitCode": 0,
+        "tests": 8,
+        "passed": 8,
+        "failed": 0,
+        "durationMs": 83.523016
+      },
+      {
+        "command": "npm run lint",
+        "exitCode": 0,
+        "failed": 0
+      },
+      {
+        "command": "tsc --noEmit",
+        "exitCode": 0,
+        "failed": 0
+      }
+    ],
+    "focusedTestTotal": 73,
+    "focusedTestFailures": 0,
+    "interleavedWholeNightProof": {
+      "seeds": 256,
+      "completedNights": 256,
+      "acceptedChoices": 6144,
+      "remoteChoiceReceipts": 30720,
+      "roomsPerNight": 6,
+      "decisionsPerNight": 24,
+      "autonomousPulsesPerNight": 24,
+      "validatedConditions": [
+        "arbitrary room switching completes every sampled night",
+        "every accepted action advances exactly one turn",
+        "every accepted action creates one local and five remote effects",
+        "every remote effect appears in its target room inbound ledger",
+        "all rooms finish at scene index four",
+        "all completed states satisfy the night-state validator"
+      ]
+    },
+    "persistenceAndFailureStates": {
+      "roundTrip": "pass",
+      "explicitSlotConsent": "pass",
+      "selectedKeyIsolation": "pass",
+      "slotInventoryCorruptionIsolation": "pass",
+      "schemaMigration": "pass",
+      "generatorVersionMismatch": "rejected",
+      "integrityMismatch": "rejected",
+      "fabricatedStateWithFreshChecksum": "rejected",
+      "registerTransitionTampering": "rejected",
+      "oversizedInput": "rejected",
+      "excessiveNesting": "rejected",
+      "foreignFormat": "rejected",
+      "unsupportedSchema": "rejected"
+    }
+  },
+  "browser": {
+    "provenance": {
+      "retainedManualSegments": {
+        "sourceAggregateSha256": "f46c3b52174b05d50bd1009d0a84ccf05d1d452ce5f69892ff753f34e046045c",
+        "relationshipToCurrentSource": "Retained interaction, focus, storage, export-control, and failure-boundary observations from the pre-hardening source."
+      },
+      "freshLocatorCompletion": {
+        "sourceAggregateSha256": "0a51c726a8b5d86e76217e418bd33a83543679e47d619926d17669beb85764cc",
+        "relationshipToCurrentSource": "Fresh browser completion on the current hardened source binding."
+      }
+    },
+    "environment": {
+      "browserFamily": "Chrome",
+      "browserVersion": "not exposed by the runner",
+      "surface": "Chromium agent preview",
+      "viewportCssPixels": {
+        "width": 1363,
+        "height": 936
+      },
+      "devicePixelRatio": 1,
+      "inputMethods": [
+        "mouse",
+        "keyboard"
+      ]
+    },
+    "startedAt": "2026-08-19T00:23:17Z",
+    "completedAt": "2026-08-19T00:44:29Z",
+    "durationSeconds": 1272,
+    "freshLocatorCompletion": {
+      "result": "pass",
+      "recordedAt": "2026-08-19T01:03:48Z",
+      "startTimeAndDuration": "not retained",
+      "uiSteps": 52,
+      "finalState": {
+        "houseTime": "8:53 PM",
+        "turn": "24/24",
+        "closedRooms": "6/6",
+        "wholeNightReceiptControlCount": 1
+      },
+      "conclusion": {
+        "opened": true,
+        "heading": "The chorus was never six separate stories.",
+        "decisionCount": 24
+      },
+      "viewportAndContainment": {
+        "documentElementClientPixels": {
+          "width": 1363,
+          "height": 936
+        },
+        "windowInnerPixels": {
+          "width": 1363,
+          "height": 936
+        },
+        "documentScrollPixels": {
+          "width": 1363,
+          "height": 936
+        },
+        "shellRectPixels": {
+          "x": 0,
+          "y": 0,
+          "width": 1363,
+          "height": 936
+        },
+        "bodyScrollOffsetPixels": {
+          "x": 0,
+          "y": 0
+        },
+        "documentElementOverflow": "hidden"
+      },
+      "runtimeFailureObservation": {
+        "pageOriginWarningsOrErrors": 0,
+        "browserExtensionErrorsExcluded": 214,
+        "browserExtensionExclusionReason": "Every observed console error originated in browser extension code rather than the application origin."
+      }
+    },
+    "sameTabSegments": [
+      {
+        "turns": "0 through 7",
+        "result": "pass",
+        "retainedObservations": [
+          "switching between two unopened rooms left HOUSE 7:19 PM and TURN 0/24 unchanged",
+          "one unavailable choice expanded from aria-expanded false to true and returned to false from the same control",
+          "the expanded reason kept focus on its choice and exposed motive, pressure, fatigue, and missing support",
+          "one accepted choice was enacted with Enter and advanced TURN 0/24 to TURN 1/24",
+          "scene tabs responded to ArrowRight and End and moved selection to Seat and Echoes",
+          "privacy drawer focus entered on Close, wrapped backward to the last visible summary, and wrapped forward to Close",
+          "Escape closed the drawer and restored focus to the Privacy control",
+          "a local slot changed from EMPTY to TURN 0 only after explicit enable and save actions",
+          "loading that slot restored TURN 0 and returned focus to the house heading after rendering"
+        ]
+      },
+      {
+        "turns": "7 through 24",
+        "result": "pass",
+        "acceptedChoices": 17,
+        "roomEntries": 1,
+        "roomSelections": 18,
+        "assertions": [
+          "each accepted choice changed turn by exactly one",
+          "the final state displayed HOUSE 8:53 PM and TURN 24/24",
+          "the room rail displayed 6/6 CLOSED",
+          "exactly one Whole-night receipt control was available"
+        ]
+      }
+    ],
+    "conclusion": {
+      "result": "pass",
+      "heading": "The chorus was never six separate stories.",
+      "tabCount": 7,
+      "tabs": [
+        "House",
+        "Choices",
+        "Interpretation",
+        "Crossings",
+        "Fatigue",
+        "Practice",
+        "The heart"
+      ],
+      "keyboardObservation": "ArrowRight changed the selected tab from House to Choices and focused tab-choices"
+    },
+    "accessibilityObservations": {
+      "result": "pass_for_exercised_interactions",
+      "modalInitialFocus": "pass",
+      "modalFocusWrap": "pass",
+      "modalEscapeAndReturnFocus": "pass",
+      "lockedChoiceDisclosureAndFocus": "pass",
+      "sceneTabKeyboardNavigation": "pass",
+      "debriefTabKeyboardNavigation": "pass",
+      "acceptedChoiceByKeyboard": "pass",
+      "liveStatusAndSemanticContractSuite": "pass"
+    },
+    "storageObservations": {
+      "result": "pass_for_exercised_local_slot_path",
+      "initialInventory": [
+        "Slot A EMPTY",
+        "Slot B EMPTY",
+        "Slot C EMPTY"
+      ],
+      "afterExplicitSave": [
+        "Slot A TURN 0",
+        "Slot B EMPTY",
+        "Slot C EMPTY"
+      ],
+      "afterReloadAndExplicitCheck": [
+        "Slot A TURN 0",
+        "Slot B EMPTY",
+        "Slot C EMPTY"
+      ],
+      "focusAfterSave": "Save current night",
+      "loadResult": "TURN 0 restored"
+    },
+    "portableTextObservations": {
+      "exportControlStatus": "Portable text created. Your browser controls where it is kept.",
+      "downloadEventObserved": false,
+      "downloadResult": "limited",
+      "importFixtureUploadAttempted": true,
+      "importFixtureUploadResult": "blocked_by_browser_permission",
+      "runtimeImportResult": "not_run",
+      "deterministicImportAndFailureModel": "pass"
+    },
+    "runtimeFailureObservations": {
+      "pageOriginWarningsOrErrors": 0,
+      "visibleErrorBoundaryMessages": 0,
+      "runnerExtensionErrorsExcluded": 152,
+      "runnerExtensionExclusionReason": "The repeated metadata errors originated in browser extension code, not the application origin.",
+      "provenance": "retained manual segments"
+    },
+    "networkObservation": {
+      "status": "not_available_from_runner",
+      "claimMade": false
+    },
+    "publicationObservations": {
+      "result": "pass_for_exercised_routes",
+      "loadedRoutes": [
+        "/evidence/index.html",
+        "/notebooks/index.html",
+        "/notebooks/chorus-systems-atlas.html",
+        "/notebooks/chorus-validation-atlas.html"
+      ],
+      "scriptFreeNotebookPages": {
+        "/notebooks/chorus-systems-atlas.html": 0,
+        "/notebooks/chorus-validation-atlas.html": 0
+      }
+    }
+  },
+  "defectsCorrectedDuringRun": [
+    {
+      "area": "drawer focus stability",
+      "before": "the focus-trap effect remounted when an announcement changed the parent",
+      "after": "the trap mounts once and reads the current close callback from a ref",
+      "browserVerification": "pass"
+    },
+    {
+      "area": "drawer backward focus wrap",
+      "before": "collapsed disclosure descendants could be chosen as the last focus target",
+      "after": "focus wrapping excludes descendants of closed details except their direct summary",
+      "browserVerification": "pass"
+    },
+    {
+      "area": "portable download lifecycle",
+      "before": "the temporary object URL was revoked immediately after a detached-link click",
+      "after": "the hidden link is attached, clicked, removed, and the object URL is revoked on the next task",
+      "browserVerification": "control status pass; download event not exposed"
+    }
+  ],
+  "unverified": [
+    "No automated accessibility-rule scanner was installed or run; the violation count is unknown, not zero.",
+    "No screen-reader, switch-control, voice-control, or braille-display pairing was exercised.",
+    "No physical mobile device, touch input, or second browser engine was exercised end to end.",
+    "Mobile and short-landscape behavior is covered by deterministic CSS and source contracts, not a retained real-mobile browser run.",
+    "Portable import was not exercised in the browser because fixture upload permission was unavailable; the parser, preview-before-restore wiring, atomic restore boundary, and hostile inputs passed deterministic tests.",
+    "The browser runner did not surface a download event for the generated blob; portable serialization and the export control path passed, but browser file arrival is unverified.",
+    "Request-level network inspection was unavailable from this runner; this record makes no browser-network claim.",
+    "Contrast was not measured with a dedicated automated contrast engine in this run."
+  ]
+}
