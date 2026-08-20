@@ -8,74 +8,74 @@
     {
       "path": "notebooks/CHORUS-Model-Specification.ipynb",
       "media_type": "application/x-ipynb+json",
-      "bytes": 91774,
-      "sha256": "13ab00c8836a1421e6e7cbaab227d69aa4a04bf91f22e976cd2c1b4dfcf32dd4"
+      "bytes": 260598,
+      "sha256": "81c559024457299b68ff22972b43fa63a5cc83b57aa090a888e980d0373407c8"
     },
     {
       "path": "notebooks/CHORUS-Research-Design.ipynb",
       "media_type": "application/x-ipynb+json",
-      "bytes": 90833,
-      "sha256": "3beb21ea75fe7b9a9e3f6df8b9563f1cd07e5d1cec8a3fc3d6d5ff464e47527f"
+      "bytes": 234358,
+      "sha256": "c5dde01679f1b8d794731e77b1053a3d4e9fe87df7e28d0097b97e456a844141"
     },
     {
       "path": "notebooks/CHORUS-Systems-Atlas.ipynb",
       "media_type": "application/x-ipynb+json",
-      "bytes": 41840,
-      "sha256": "79d7548df08b5e06cf2e5f80f0c5b8174ae6b3634ac78688865cd678f93e5028"
+      "bytes": 162378,
+      "sha256": "e05fbd1dc8c0c263817dbedce37e5bd71ead471b05e90331f4e4cf1fa29ede7d"
     },
     {
       "path": "notebooks/CHORUS-Validation-Atlas.ipynb",
       "media_type": "application/x-ipynb+json",
-      "bytes": 73682,
-      "sha256": "9ca6aa6f6c14174b92cc87e4429d83717f19c1ffa62255d3d94744c1665d155d"
+      "bytes": 181589,
+      "sha256": "627461122d5b3cf2774249b7d1f33c54f000bf4709bc260f5186e83a14ef229c"
     },
     {
       "path": "public/notebooks/CHORUS-Model-Specification.ipynb",
       "media_type": "application/x-ipynb+json",
-      "bytes": 91774,
-      "sha256": "13ab00c8836a1421e6e7cbaab227d69aa4a04bf91f22e976cd2c1b4dfcf32dd4"
+      "bytes": 260598,
+      "sha256": "81c559024457299b68ff22972b43fa63a5cc83b57aa090a888e980d0373407c8"
     },
     {
       "path": "public/notebooks/CHORUS-Research-Design.ipynb",
       "media_type": "application/x-ipynb+json",
-      "bytes": 90833,
-      "sha256": "3beb21ea75fe7b9a9e3f6df8b9563f1cd07e5d1cec8a3fc3d6d5ff464e47527f"
+      "bytes": 234358,
+      "sha256": "c5dde01679f1b8d794731e77b1053a3d4e9fe87df7e28d0097b97e456a844141"
     },
     {
       "path": "public/notebooks/CHORUS-Systems-Atlas.ipynb",
       "media_type": "application/x-ipynb+json",
-      "bytes": 41840,
-      "sha256": "79d7548df08b5e06cf2e5f80f0c5b8174ae6b3634ac78688865cd678f93e5028"
+      "bytes": 162378,
+      "sha256": "e05fbd1dc8c0c263817dbedce37e5bd71ead471b05e90331f4e4cf1fa29ede7d"
     },
     {
       "path": "public/notebooks/CHORUS-Validation-Atlas.ipynb",
       "media_type": "application/x-ipynb+json",
-      "bytes": 73682,
-      "sha256": "9ca6aa6f6c14174b92cc87e4429d83717f19c1ffa62255d3d94744c1665d155d"
+      "bytes": 181589,
+      "sha256": "627461122d5b3cf2774249b7d1f33c54f000bf4709bc260f5186e83a14ef229c"
     },
     {
       "path": "public/notebooks/chorus-model-specification.html",
       "media_type": "text/html",
-      "bytes": 76007,
-      "sha256": "dff27d1ada566f5a58b8f70a2be1464368b6c9d8f2d40fb1986fb0a30a3f910b"
+      "bytes": 223736,
+      "sha256": "c9a6b47fe9ce7d2f85c180fc528d40a64cde28a7c6f1c694c0fdf1266208647f"
     },
     {
       "path": "public/notebooks/chorus-research-design.html",
       "media_type": "text/html",
-      "bytes": 75847,
-      "sha256": "58bb80fadcb629ddda615dc2cf210827002302df3d2ed6e2174f5f3d5c90c753"
+      "bytes": 199769,
+      "sha256": "efdd9e47c8c008325abf9c4a49025a7ed551d58b48d2fa383e648d00e3168ae0"
     },
     {
       "path": "public/notebooks/chorus-systems-atlas.html",
       "media_type": "text/html",
-      "bytes": 39896,
-      "sha256": "0042be3267acbc103f239f4c2fad5aa34cefe29cc159ab7682c6e2aefb89af5b"
+      "bytes": 145577,
+      "sha256": "54705e6dcc584ccd2e5aa9a559920cf8be6a4978b2321e84df88ef1c8fd8e6f6"
     },
     {
       "path": "public/notebooks/chorus-validation-atlas.html",
       "media_type": "text/html",
-      "bytes": 65379,
-      "sha256": "0dc299d3c99ea1894992dde522ca37524908ed05e4086b0a6dd9758486c3acd9"
+      "bytes": 159330,
+      "sha256": "5bf4142aa171d21b52aaa08afc495e8277afbfd4980004853931741bbc6dea9f"
     },
     {
       "path": "public/notebooks/index.html",

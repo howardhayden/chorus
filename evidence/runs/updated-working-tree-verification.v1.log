@@ -1,6 +1,6 @@
 
 > chorus@1.0.0-rc.1 verify:working-tree
-> npm run lint && npx tsc --noEmit && npm run evidence:simulation && npm run docs:check:working-tree && npm run test:night && npm run test:simulation && npm run test:save && npm run test:a11y && npm run test:viewport && npm run build && node --test tests/rendered-html.test.mjs
+> npm run lint && npx tsc --noEmit && npm run evidence:simulation && npm run docs:check:working-tree && npm run test:night && npm run test:simulation && npm run test:save && npm run test:a11y && npm run test:viewport && npm run build && node --test tests/rendered-html.test.mjs && npm run status:check
 
 
 > chorus@1.0.0-rc.1 lint
@@ -10,8 +10,6 @@
 > chorus@1.0.0-rc.1 evidence:simulation
 > node --experimental-strip-types --experimental-specifier-resolution=node scripts/run-simulation-evidence.mjs --check
 
-(node:2799) ExperimentalWarning: Type Stripping is an experimental feature and might change at any time
-(Use `node --trace-warnings ...` to show where the warning was created)
 PASS 118680 assertions; 0 failures; ffd9821c8dfd3dc3b4f3a06f2715b3d490c150e7abf65f201474fe6df25fe844
 
 > chorus@1.0.0-rc.1 docs:check:working-tree
@@ -22,552 +20,141 @@ Notebook publication verified: 16 artifacts.
 > chorus@1.0.0-rc.1 test:night
 > node --experimental-strip-types --experimental-specifier-resolution=node --test tests/concurrent-night.test.mjs
 
-TAP version 13
-# (node:2887) ExperimentalWarning: Type Stripping is an experimental feature and might change at any time
-# (Use `node --trace-warnings ...` to show where the warning was created)
-# Subtest: 1,000 generated nights satisfy room and night coherence
-ok 1 - 1,000 generated nights satisfy room and night coherence
-  ---
-  duration_ms: 19105.772719
-  type: 'test'
-  ...
-# Subtest: all six seats can be entered in any order without advancing the shared clock
-ok 2 - all six seats can be entered in any order without advancing the shared clock
-  ---
-  duration_ms: 18.667213
-  type: 'test'
-  ...
-# Subtest: serial and reverse runs create one local plus five remote receipts
-ok 3 - serial and reverse runs create one local plus five remote receipts
-  ---
-  duration_ms: 2695.361618
-  type: 'test'
-  ...
-# Subtest: interleaved room switching completes 256 whole nights with attributable causal ledgers
-ok 4 - interleaved room switching completes 256 whole nights with attributable causal ledgers
-  ---
-  duration_ms: 7346.869244
-  type: 'test'
-  ...
-# Subtest: scheduled autonomous pulses fire once and do not depend on repeated clock reads
-ok 5 - scheduled autonomous pulses fire once and do not depend on repeated clock reads
-  ---
-  duration_ms: 15.624956
-  type: 'test'
-  ...
-# Subtest: a completed room keeps a frozen close receipt and a moving afterimage
-ok 6 - a completed room keeps a frozen close receipt and a moving afterimage
-  ---
-  duration_ms: 16.708354
-  type: 'test'
-  ...
-# Subtest: stale scene IDs and locked choices do not mutate the night
-ok 7 - stale scene IDs and locked choices do not mutate the night
-  ---
-  duration_ms: 15.475783
-  type: 'test'
-  ...
-# Subtest: a future artifact cannot be revealed through an early decision
-ok 8 - a future artifact cannot be revealed through an early decision
-  ---
-  duration_ms: 15.6743
-  type: 'test'
-  ...
-# Subtest: disclosure remains vague in every entered/unentered combination
-ok 9 - disclosure remains vague in every entered/unentered combination
-  ---
-  duration_ms: 32.141272
-  type: 'test'
-  ...
-# Subtest: distributed choices can make a previously blocked crossover ideal reachable
-ok 10 - distributed choices can make a previously blocked crossover ideal reachable
-  ---
-  duration_ms: 1849.187122
-  type: 'test'
-  ...
-# Subtest: the same seed and action order replay to the same state
-ok 11 - the same seed and action order replay to the same state
-  ---
-  duration_ms: 24.008914
-  type: 'test'
-  ...
-# Subtest: every night contains the six distinct communication dynamics exactly once
-ok 12 - every night contains the six distinct communication dynamics exactly once
-  ---
-  duration_ms: 4170.732651
-  type: 'test'
-  ...
-# Subtest: generated actors keep cohesive situated repertoires while code and world model remain independent
-ok 13 - generated actors keep cohesive situated repertoires while code and world model remain independent
-  ---
-  duration_ms: 6478.348536
-  type: 'test'
-  ...
-# Subtest: a selected code switch persists bounded load without changing truth or discernment
-ok 14 - a selected code switch persists bounded load without changing truth or discernment
-  ---
-  duration_ms: 19.547341
-  type: 'test'
-  ...
-# Subtest: locked ideals are deterministically shuffled through every choice position
-ok 15 - locked ideals are deterministically shuffled through every choice position
-  ---
-  duration_ms: 8007.795721
-  type: 'test'
-  ...
-# Subtest: every night represents deliberate protection of self, friend, family, and a person under authority
-ok 16 - every night represents deliberate protection of self, friend, family, and a person under authority
-  ---
-  duration_ms: 7969.191435
-  type: 'test'
-  ...
-# Subtest: conversation diversion stays sparse, deterministic, and distinct from truth status
-ok 17 - conversation diversion stays sparse, deterministic, and distinct from truth status
-  ---
-  duration_ms: 9095.593054
-  type: 'test'
-  ...
-# Subtest: a chosen diversion persists beside its relational move and emits no incident repair support
-ok 18 - a chosen diversion persists beside its relational move and emits no incident repair support
-  ---
-  duration_ms: 32.787054
-  type: 'test'
-  ...
-# Subtest: every communication lesson is bound to its active incident truth and four represented artifacts
-ok 19 - every communication lesson is bound to its active incident truth and four represented artifacts
-  ---
-  duration_ms: 3916.463657
-  type: 'test'
-  ...
-# Subtest: relational crossing mechanisms require compatible represented dynamics
-ok 20 - relational crossing mechanisms require compatible represented dynamics
-  ---
-  duration_ms: 4190.992434
-  type: 'test'
-  ...
-# Subtest: scapegoat and defensive-rumor ledgers separate event, character, benefit, and reply asymmetry
-ok 21 - scapegoat and defensive-rumor ledgers separate event, character, benefit, and reply asymmetry
-  ---
-  duration_ms: 15.659638
-  type: 'test'
-  ...
-# Subtest: cross-code conflict preserves one concrete common-ground proposition
-ok 22 - cross-code conflict preserves one concrete common-ground proposition
-  ---
-  duration_ms: 2470.789346
-  type: 'test'
-  ...
-# Subtest: modeled platform exposure lowers prosocial follow-through without lowering discernment
-ok 23 - modeled platform exposure lowers prosocial follow-through without lowering discernment
-  ---
-  duration_ms: 18.658153
-  type: 'test'
-  ...
-# Subtest: a tired seat still sees the ideal and can always refuse amplification
-ok 24 - a tired seat still sees the ideal and can always refuse amplification
-  ---
-  duration_ms: 15.181122
-  type: 'test'
-  ...
-# Subtest: high-discernment prosocial seats gain one last resort only under extreme modeled fatigue
-ok 25 - high-discernment prosocial seats gain one last resort only under extreme modeled fatigue
-  ---
-  duration_ms: 22.084808
-  type: 'test'
-  ...
-# Subtest: a last-resort decision persists its asymmetric protection and cost receipt
-ok 26 - a last-resort decision persists its asymmetric protection and cost receipt
-  ---
-  duration_ms: 20.7084
-  type: 'test'
-  ...
-# Subtest: escalation phases are situational rather than a mandatory seven-step script
-ok 27 - escalation phases are situational rather than a mandatory seven-step script
-  ---
-  duration_ms: 3325.476054
-  type: 'test'
-  ...
-# Subtest: choices can intensify, interrupt, skip crisis, relapse, and reach recovery only after de-escalation
-ok 28 - choices can intensify, interrupt, skip crisis, relapse, and reach recovery only after de-escalation
-  ---
-  duration_ms: 17.433717
-  type: 'test'
-  ...
-# Subtest: played behavior transitions persist without fabricating phases for instrumental strategy
-ok 29 - played behavior transitions persist without fabricating phases for instrumental strategy
-  ---
-  duration_ms: 22.084705
-  type: 'test'
-  ...
-# Subtest: situated leadership and repair conversation remain sparse and situational
-ok 30 - situated leadership and repair conversation remain sparse and situational
-  ---
-  duration_ms: 4843.974154
-  type: 'test'
-  ...
-# Subtest: the internal situated action review remains sparse, ordered, and situational
-ok 31 - the internal situated action review remains sparse, ordered, and situational
-  ---
-  duration_ms: 4887.687478
-  type: 'test'
-  ...
-# Subtest: academic social-theory lenses represent context-bound problems, ideas, and solutions without operational tactics
-ok 32 - academic social-theory lenses represent context-bound problems, ideas, and solutions without operational tactics
-  ---
-  duration_ms: 4960.825303
-  type: 'test'
-  ...
-# Subtest: one unnamed classical strategy tradition is reappropriated as social theory per night
-ok 33 - one unnamed classical strategy tradition is reappropriated as social theory per night
-  ---
-  duration_ms: 4850.772888
-  type: 'test'
-  ...
-# Subtest: selected framework applications persist on the decision receipt
-ok 34 - selected framework applications persist on the decision receipt
-  ---
-  duration_ms: 20.063934
-  type: 'test'
-  ...
-1..34
-# tests 34
-# suites 0
-# pass 34
-# fail 0
-# cancelled 0
-# skipped 0
-# todo 0
-# duration_ms 100716.433521
+✔ 1,000 generated nights satisfy room and night coherence (16926.279925ms)
+✔ all six seats can be entered in any order without advancing the shared clock (18.73394ms)
+✔ serial and reverse runs create one local plus five remote receipts (2857.070286ms)
+✔ interleaved room switching completes 256 whole nights with attributable causal ledgers (7025.483774ms)
+✔ scheduled autonomous pulses fire once and do not depend on repeated clock reads (16.931433ms)
+✔ a completed room keeps a frozen close receipt and a moving afterimage (17.181974ms)
+✔ stale scene IDs and locked choices do not mutate the night (16.14661ms)
+✔ a future artifact cannot be revealed through an early decision (17.567765ms)
+✔ disclosure remains vague in every entered/unentered combination (29.227339ms)
+✔ distributed choices can make a previously blocked crossover ideal reachable (1824.449902ms)
+✔ the same seed and action order replay to the same state (20.998608ms)
+✔ every night contains the six distinct communication dynamics exactly once (4146.271121ms)
+✔ generated actors keep cohesive situated repertoires while code and world model remain independent (6682.980383ms)
+✔ a selected code switch persists bounded load without changing truth or discernment (18.632641ms)
+✔ locked ideals are deterministically shuffled through every choice position (8294.85807ms)
+✔ every night represents deliberate protection of self, friend, family, and a person under authority (4133.59345ms)
+✔ conversation diversion stays sparse, deterministic, and distinct from truth status (8254.703758ms)
+✔ a chosen diversion persists beside its relational move and emits no incident repair support (26.685209ms)
+✔ every communication lesson is bound to its active incident truth and four represented artifacts (4147.186522ms)
+✔ relational crossing mechanisms require compatible represented dynamics (4119.802717ms)
+✔ scapegoat and defensive-rumor ledgers separate event, character, benefit, and reply asymmetry (16.458759ms)
+✔ cross-code conflict preserves one concrete common-ground proposition (1655.883858ms)
+✔ modeled platform exposure lowers prosocial follow-through without lowering discernment (17.572127ms)
+✔ a tired seat still sees the ideal and can always refuse amplification (16.376547ms)
+✔ high-discernment prosocial seats gain one last resort only under extreme modeled fatigue (16.494832ms)
+✔ a last-resort decision persists its asymmetric protection and cost receipt (18.02574ms)
+✔ escalation phases are situational rather than a mandatory seven-step script (3274.303523ms)
+✔ choices can intensify, interrupt, skip crisis, relapse, and reach recovery only after de-escalation (16.815837ms)
+✔ played behavior transitions persist without fabricating phases for instrumental strategy (22.109879ms)
+✔ situated leadership and repair conversation remain sparse and situational (4923.463045ms)
+✔ the internal situated action review remains sparse, ordered, and situational (4940.695611ms)
+✔ academic social-theory lenses represent context-bound problems, ideas, and solutions without operational tactics (4945.260292ms)
+✔ one unnamed classical strategy tradition is reappropriated as social theory per night (4938.371762ms)
+✔ selected framework applications persist on the decision receipt (19.745981ms)
+ℹ tests 34
+ℹ suites 0
+ℹ pass 34
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 93620.493002
 
 > chorus@1.0.0-rc.1 test:simulation
 > node --experimental-strip-types --experimental-specifier-resolution=node --test tests/simulation-maturity.test.mjs
 
-TAP version 13
-# (node:2983) ExperimentalWarning: Type Stripping is an experimental feature and might change at any time
-# (Use `node --trace-warnings ...` to show where the warning was created)
-# Subtest: the maturity harness is deterministic and content-addressed
-ok 1 - the maturity harness is deterministic and content-addressed
-  ---
-  duration_ms: 1335.871186
-  type: 'test'
-  ...
-# Subtest: unentered rooms evolve only when autonomous scenes become due
-ok 2 - unentered rooms evolve only when autonomous scenes become due
-  ---
-  duration_ms: 23.783028
-  type: 'test'
-  ...
-# Subtest: randomized interleavings produce exactly-once local and remote causality
-ok 3 - randomized interleavings produce exactly-once local and remote causality
-  ---
-  duration_ms: 0.258037
-  type: 'test'
-  ...
-# Subtest: invalid-state probes and invalid actions are rejected without corrupting play
-ok 4 - invalid-state probes and invalid actions are rejected without corrupting play
-  ---
-  duration_ms: 0.102325
-  type: 'test'
-  ...
-# Subtest: large-run bounds preserve cumulative reach and normalized 0–100 domains
-ok 5 - large-run bounds preserve cumulative reach and normalized 0–100 domains
-  ---
-  duration_ms: 0.218135
-  type: 'test'
-  ...
-1..5
-# tests 5
-# suites 0
-# pass 5
-# fail 0
-# cancelled 0
-# skipped 0
-# todo 0
-# duration_ms 2983.735736
+✔ the maturity harness is deterministic and content-addressed (1403.110049ms)
+✔ unentered rooms evolve only when autonomous scenes become due (26.591489ms)
+✔ randomized interleavings produce exactly-once local and remote causality (0.19644ms)
+✔ invalid-state probes and invalid actions are rejected without corrupting play (0.144815ms)
+✔ large-run bounds preserve cumulative reach and normalized 0–100 domains (0.304451ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3110.163899
 
 > chorus@1.0.0-rc.1 test:save
 > node --experimental-strip-types --experimental-specifier-resolution=node --test tests/save-model.test.mjs
 
-TAP version 13
-# (node:3015) ExperimentalWarning: Type Stripping is an experimental feature and might change at any time
-# (Use `node --trace-warnings ...` to show where the warning was created)
-# Subtest: the save model defaults to memory only and performs no storage I/O
-ok 1 - the save model defaults to memory only and performs no storage I/O
-  ---
-  duration_ms: 1.264435
-  type: 'test'
-  ...
-# Subtest: portable text round-trips a reconstructed night and exposes a bounded preview
-ok 2 - portable text round-trips a reconstructed night and exposes a bounded preview
-  ---
-  duration_ms: 207.573394
-  type: 'test'
-  ...
-# Subtest: an earlier scenario model reports a version mismatch before ledger replay
-ok 3 - an earlier scenario model reports a version mismatch before ledger replay
-  ---
-  duration_ms: 77.409492
-  type: 'test'
-  ...
-# Subtest: an ordinary text mutation fails the deterministic corruption check
-ok 4 - an ordinary text mutation fails the deterministic corruption check
-  ---
-  duration_ms: 51.415265
-  type: 'test'
-  ...
-# Subtest: a recomputed checksum cannot make a fabricated state reproducible
-ok 5 - a recomputed checksum cannot make a fabricated state reproducible
-  ---
-  duration_ms: 109.446986
-  type: 'test'
-  ...
-# Subtest: an enacted register switch survives replay and rejects active-code or transition tampering
-ok 6 - an enacted register switch survives replay and rejects active-code or transition tampering
-  ---
-  duration_ms: 266.39517
-  type: 'test'
-  ...
-# Subtest: local slots require an explicit slot capability and only touch the selected key
-ok 7 - local slots require an explicit slot capability and only touch the selected key
-  ---
-  duration_ms: 171.968242
-  type: 'test'
-  ...
-# Subtest: slot inventory reads only when called and isolates corrupt entries
-ok 8 - slot inventory reads only when called and isolates corrupt entries
-  ---
-  duration_ms: 0.258484
-  type: 'test'
-  ...
-# Subtest: schema 0 uses the migration hook after validating its own checksum
-ok 9 - schema 0 uses the migration hook after validating its own checksum
-  ---
-  duration_ms: 86.540946
-  type: 'test'
-  ...
-# Subtest: oversized, deep, foreign, and unsupported inputs fail closed
-ok 10 - oversized, deep, foreign, and unsupported inputs fail closed
-  ---
-  duration_ms: 3.806988
-  type: 'test'
-  ...
-1..10
-# tests 10
-# suites 0
-# pass 10
-# fail 0
-# cancelled 0
-# skipped 0
-# todo 0
-# duration_ms 1169.902995
+✔ the save model defaults to memory only and performs no storage I/O (1.942206ms)
+✔ portable text round-trips a reconstructed night and exposes a bounded preview (225.553972ms)
+✔ an earlier scenario model reports a version mismatch before ledger replay (77.906712ms)
+✔ an ordinary text mutation fails the deterministic corruption check (58.756086ms)
+✔ a recomputed checksum cannot make a fabricated state reproducible (113.320376ms)
+✔ an enacted register switch survives replay and rejects active-code or transition tampering (247.626801ms)
+✔ local slots require an explicit slot capability and only touch the selected key (165.855224ms)
+✔ slot inventory reads only when called and isolates corrupt entries (0.348436ms)
+✔ schema 0 uses the migration hook after validating its own checksum (75.098453ms)
+✔ oversized, deep, foreign, and unsupported inputs fail closed (1.18863ms)
+ℹ tests 10
+ℹ suites 0
+ℹ pass 10
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1136.107802
 
 > chorus@1.0.0-rc.1 test:a11y
 > node --test tests/accessibility-disclosure.test.mjs
 
-TAP version 13
-# Subtest: prelude offers directional hints without naming the lessons
-ok 1 - prelude offers directional hints without naming the lessons
-  ---
-  duration_ms: 1.432744
-  type: 'test'
-  ...
-# Subtest: active play withholds classifications and recognition checklists
-ok 2 - active play withholds classifications and recognition checklists
-  ---
-  duration_ms: 3.284174
-  type: 'test'
-  ...
-# Subtest: play exposes a bounded language surface rather than the analytic repertoire
-ok 3 - play exposes a bounded language surface rather than the analytic repertoire
-  ---
-  duration_ms: 1.633085
-  type: 'test'
-  ...
-# Subtest: conversation routing is named only in one collapsed whole-night receipt
-ok 4 - conversation routing is named only in one collapsed whole-night receipt
-  ---
-  duration_ms: 3.036358
-  type: 'test'
-  ...
-# Subtest: linguistic repertoires open only inside the concluding Interpretation receipt
-ok 5 - linguistic repertoires open only inside the concluding Interpretation receipt
-  ---
-  duration_ms: 0.926104
-  type: 'test'
-  ...
-# Subtest: the internal pressure contour is never taught as an in-game taxonomy
-ok 6 - the internal pressure contour is never taught as an in-game taxonomy
-  ---
-  duration_ms: 3.769496
-  type: 'test'
-  ...
-# Subtest: practice receipts use CHORUS-native lenses and keep the internal action review sealed
-ok 7 - practice receipts use CHORUS-native lenses and keep the internal action review sealed
-  ---
-  duration_ms: 0.710068
-  type: 'test'
-  ...
-# Subtest: deliberate-protection analysis stays sealed until the final receipt
-ok 8 - deliberate-protection analysis stays sealed until the final receipt
-  ---
-  duration_ms: 0.281887
-  type: 'test'
-  ...
-# Subtest: explicit interpretation remains gated behind whole-night completion
-ok 9 - explicit interpretation remains gated behind whole-night completion
-  ---
-  duration_ms: 0.827264
-  type: 'test'
-  ...
-# Subtest: new nights remain available through one regeneration control without a campaign counter
-ok 10 - new nights remain available through one regeneration control without a campaign counter
-  ---
-  duration_ms: 0.741169
-  type: 'test'
-  ...
-# Subtest: rooms remain switchable while scheduled artifacts retain their clock
-ok 11 - rooms remain switchable while scheduled artifacts retain their clock
-  ---
-  duration_ms: 0.598925
-  type: 'test'
-  ...
-# Subtest: relationship plot is filterable, keyboard explorable, and disclosure-bounded
-ok 12 - relationship plot is filterable, keyboard explorable, and disclosure-bounded
-  ---
-  duration_ms: 0.359677
-  type: 'test'
-  ...
-# Subtest: each visible navigation destination has one control per viewport
-ok 13 - each visible navigation destination has one control per viewport
-  ---
-  duration_ms: 4.080587
-  type: 'test'
-  ...
-# Subtest: the CHORUS mark is a three-color faceted serpent C in both header and favicon
-ok 14 - the CHORUS mark is a three-color faceted serpent C in both header and favicon
-  ---
-  duration_ms: 0.789649
-  type: 'test'
-  ...
-# Subtest: modal content isolates the background and restores keyboard focus
-ok 15 - modal content isolates the background and restores keyboard focus
-  ---
-  duration_ms: 1.190435
-  type: 'test'
-  ...
-# Subtest: meters expose names and values without relying on color
-ok 16 - meters expose names and values without relying on color
-  ---
-  duration_ms: 0.150119
-  type: 'test'
-  ...
-# Subtest: focus, text scaling, and target-size floors are explicit
-ok 17 - focus, text scaling, and target-size floors are explicit
-  ---
-  duration_ms: 0.254134
-  type: 'test'
-  ...
-# Subtest: locked ideals are discoverable without revealing the reason early
-ok 18 - locked ideals are discoverable without revealing the reason early
-  ---
-  duration_ms: 7.918207
-  type: 'test'
-  ...
-# Subtest: The heart defines the represented ideas without instructional imperatives
-ok 19 - The heart defines the represented ideas without instructional imperatives
-  ---
-  duration_ms: 0.90049
-  type: 'test'
-  ...
-# Subtest: privacy and saves are one optional, progressively disclosed destination
-ok 20 - privacy and saves are one optional, progressively disclosed destination
-  ---
-  duration_ms: 0.559201
-  type: 'test'
-  ...
-# Subtest: privacy controls validate before restore and keep failures inside an announced status
-ok 21 - privacy controls validate before restore and keep failures inside an announced status
-  ---
-  duration_ms: 0.901991
-  type: 'test'
-  ...
-# Subtest: scholarly record is executed, public, bounded, and reachable from the House Guide
-ok 22 - scholarly record is executed, public, bounded, and reachable from the House Guide
-  ---
-  duration_ms: 67.457231
-  type: 'test'
-  ...
-1..22
-# tests 22
-# suites 0
-# pass 22
-# fail 0
-# cancelled 0
-# skipped 0
-# todo 0
-# duration_ms 203.420104
+✔ prelude offers directional hints without naming the lessons (1.439512ms)
+✔ active play withholds classifications and recognition checklists (0.438119ms)
+✔ play exposes a bounded language surface rather than the analytic repertoire (0.300485ms)
+✔ conversation routing is named only in one collapsed whole-night receipt (0.574941ms)
+✔ linguistic repertoires open only inside the concluding Interpretation receipt (1.667649ms)
+✔ the internal pressure contour is never taught as an in-game taxonomy (0.43276ms)
+✔ practice receipts use CHORUS-native lenses and keep the internal action review sealed (0.307255ms)
+✔ deliberate-protection analysis stays sealed until the final receipt (0.27047ms)
+✔ explicit interpretation remains gated behind whole-night completion (0.20273ms)
+✔ new nights remain available through one regeneration control without a campaign counter (0.593359ms)
+✔ rooms remain switchable while scheduled artifacts retain their clock (0.406402ms)
+✔ relationship plot is filterable, keyboard explorable, and disclosure-bounded (0.31752ms)
+✔ each visible navigation destination has one control per viewport (0.585137ms)
+✔ the CHORUS mark is a three-color faceted serpent C in both header and favicon (0.361115ms)
+✔ modal content isolates the background and restores keyboard focus (0.664684ms)
+✔ meters expose names and values without relying on color (0.176071ms)
+✔ focus, text scaling, and target-size floors are explicit (0.312153ms)
+✔ locked ideals are discoverable without revealing the reason early (0.300205ms)
+✔ The heart defines the represented ideas without instructional imperatives (0.201088ms)
+✔ privacy and saves are one optional, progressively disclosed destination (0.304251ms)
+✔ privacy controls validate before restore and keep failures inside an announced status (0.240636ms)
+✔ scholarly record is executed, public, bounded, and reachable from the House Guide (27.585957ms)
+ℹ tests 22
+ℹ suites 0
+ℹ pass 22
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 100.360388
 
 > chorus@1.0.0-rc.1 test:viewport
 > node --test tests/viewport-contract.test.mjs
 
-TAP version 13
-# Subtest: the application shell owns exactly one dynamic viewport
-ok 1 - the application shell owns exactly one dynamic viewport
-  ---
-  duration_ms: 1.258008
-  type: 'test'
-  ...
-# Subtest: viewport metadata permits safe-area layout without limiting zoom
-ok 2 - viewport metadata permits safe-area layout without limiting zoom
-  ---
-  duration_ms: 0.265606
-  type: 'test'
-  ...
-# Subtest: navigation changes app state or an internal pane, never the document
-ok 3 - navigation changes app state or an internal pane, never the document
-  ---
-  duration_ms: 14.124098
-  type: 'test'
-  ...
-# Subtest: overflow is confined to named, accessible internal regions
-ok 4 - overflow is confined to named, accessible internal regions
-  ---
-  duration_ms: 1.080053
-  type: 'test'
-  ...
-# Subtest: mobile and short-landscape layouts preserve a bounded stage
-ok 5 - mobile and short-landscape layouts preserve a bounded stage
-  ---
-  duration_ms: 1.811212
-  type: 'test'
-  ...
-# Subtest: locked choices remain operable explanations, not disabled dead ends
-ok 6 - locked choices remain operable explanations, not disabled dead ends
-  ---
-  duration_ms: 2.482919
-  type: 'test'
-  ...
-# Subtest: the concluding conversation receipt expands in normal flow
-ok 7 - the concluding conversation receipt expands in normal flow
-  ---
-  duration_ms: 1.738483
-  type: 'test'
-  ...
-# Subtest: the concluding linguistic receipt and actor disclosures expand in normal flow
-ok 8 - the concluding linguistic receipt and actor disclosures expand in normal flow
-  ---
-  duration_ms: 1.794931
-  type: 'test'
-  ...
-1..8
-# tests 8
-# suites 0
-# pass 8
-# fail 0
-# cancelled 0
-# skipped 0
-# todo 0
-# duration_ms 95.593045
+✔ the application shell owns exactly one dynamic viewport (1.394184ms)
+✔ viewport metadata permits safe-area layout without limiting zoom (0.321867ms)
+✔ navigation changes app state or an internal pane, never the document (9.049422ms)
+✔ overflow is confined to named, accessible internal regions (1.098417ms)
+✔ mobile and short-landscape layouts preserve a bounded stage (1.840285ms)
+✔ locked choices remain operable explanations, not disabled dead ends (1.777272ms)
+✔ the concluding conversation receipt expands in normal flow (0.821787ms)
+✔ the concluding linguistic receipt and actor disclosures expand in normal flow (1.800065ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 79.270887
 
 > chorus@1.0.0-rc.1 build
 > vinext build
@@ -575,37 +162,30 @@ ok 8 - the concluding linguistic receipt and actor disclosures expand in normal 
 
   vinext build  (Vite 8.2.1)
 
-(node:3109) ExperimentalWarning: glob is an experimental feature and might change at any time
-(Use `node --trace-warnings ...` to show where the warning was created)
-[1/5] analyze client references...
-
-transforming...✓ 233 modules transformed.
+[34m[1/5] analyze client references...[39m
+[2Ktransforming...✓ 233 modules transformed.
 rendering chunks...
-✓ built in 940ms
-[2/5] analyze server references...
-
-transforming...✓ 90 modules transformed.
+[32m✓ built in 765ms[39m
+[34m[2/5] analyze server references...[39m
+[2Ktransforming...✓ 90 modules transformed.
 rendering chunks...
-✓ built in 522ms
-[3/5] build rsc environment...
-
-transforming...✓ 227 modules transformed.
+[32m✓ built in 313ms[39m
+[34m[3/5] build rsc environment...[39m
+[2Ktransforming...✓ 227 modules transformed.
 rendering chunks...
 computing gzip size...
-✓ built in 1.59s
-[4/5] build client environment...
-
-transforming...✓ 130 modules transformed.
+[32m✓ built in 559ms[39m
+[34m[4/5] build client environment...[39m
+[2Ktransforming...✓ 130 modules transformed.
 rendering chunks...
 computing gzip size...
-✓ built in 1.09s
-[5/5] build ssr environment...
-
-transforming...✓ 96 modules transformed.
+[32m✓ built in 490ms[39m
+[34m[5/5] build ssr environment...[39m
+[2Ktransforming...✓ 96 modules transformed.
 rendering chunks...
 computing gzip size...
-✓ built in 617ms
-
+[32m✓ built in 461ms[39m
+[0m
   Route (app)
   ─ ? /
 
@@ -617,19 +197,17 @@ computing gzip size...
 
   Build complete. Run `vinext start` to start the production server.
 
-TAP version 13
-# Subtest: renders only product-facing document metadata
-ok 1 - renders only product-facing document metadata
-  ---
-  duration_ms: 280.085432
-  type: 'test'
-  ...
-1..1
-# tests 1
-# suites 0
-# pass 1
-# fail 0
-# cancelled 0
-# skipped 0
-# todo 0
-# duration_ms 338.927182
+✔ renders only product-facing document metadata (158.570344ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 1
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 216.619326
+
+> chorus@1.0.0-rc.1 status:check
+> python3 scripts/docs/build_working_tree_status.py --check
+
+Working-tree status verified: 2 artifacts.
