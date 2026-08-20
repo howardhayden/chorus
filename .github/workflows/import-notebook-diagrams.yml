@@ -259,7 +259,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
           git diff --cached --check
-          if git diff --cached --name-only | grep -E '^(\.import/|\.github/workflows/import-notebook-diagrams\.yml$)'; then
+          if git diff --cached --diff-filter=ACMRT --name-only | grep -E '^(\.import/|\.github/workflows/import-notebook-diagrams\.yml$)'; then
             echo "Transfer scaffolding remains in the proposed tree." >&2
             exit 1
           fi
