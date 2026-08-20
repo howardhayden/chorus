@@ -3,17 +3,18 @@
 ## Output identity
 
 - **Base repository:** `howardhayden/chorus`
-- **Base commit:** `e331f79b8fddd397be80891d7ddea25fda778d58`
+- **Base commit:** `18dee9c499e7b83c36ef4395604b406dd5804792`
 - **Application version:** `1.0.0-rc.1`
 - **Generator version:** `13`
 - **Portable-save schema:** `1`
-- **Updated implementation digest:** `d8bb8701ca63e46f245aa48f11a0a67d796ca71f7cf5c8472e586d718f7573dd`
+- **Updated implementation digest:** `4eca1183a19c0c6397cb5907f3c3f078f0c0721aae747c106f58079657d4fb16`
 - **Output date:** 19 August 2026
 
 This directory is the complete updated CHORUS source tree and current built
 `dist/` output. It integrates the scholarly-legibility notebooks, their styled
-HTML publications, the House Guide / Field Notes in-app reader, the standalone
-notebook index, and the complete icon fallback set.
+HTML publications, 17 deterministic explanatory diagrams, the House Guide /
+Field Notes in-app reader, the standalone notebook index, and the complete icon
+fallback set.
 
 ## Direct verification
 
@@ -26,7 +27,11 @@ The updated tree passed:
   10 save-model, 22 accessibility/disclosure, 8 viewport, and 1 rendered-HTML
   metadata test;
 - deterministic publication and drift verification for **four executed Jupyter
-  notebooks** and **16 generated notebook artifacts**;
+  notebooks**, **16 generated notebook artifacts**, and **17 semantic SVG
+  diagrams** distributed 5/5/4/3 across Model, Research, Systems, and Validation;
+- build-time rejection of diagonal or crossing routes, collinear connector
+  overlap, unrelated-node incursions, node overlap, invalid boundary anchors,
+  and out-of-bounds diagram geometry;
 - a production Vinext build; and
 - a loopback production check of **21 routes**, all returning HTTP 200.
 
@@ -49,7 +54,7 @@ Primary records:
 This is a **complete updated working tree held for evidence renewal**, rather
 than a silently relabeled replacement release candidate. The retained live
 browser completion and neutral clean-room proof under `public/evidence/` predate
-the scholarly-reader and icon changes and are now explicitly presented as
+the scholarly-reader, diagram, and icon changes and are now explicitly presented as
 historical evidence for their recorded source binding.
 
 Current source, production HTML, metadata, assets, route publication,
@@ -85,7 +90,10 @@ and Python bytecode. It retains:
 - deployment workflow and configuration;
 - tests and evidence harnesses;
 - canonical documentation and decision records;
-- all four executed notebooks and static HTML publications;
+- all four executed notebooks and static HTML publications, including the C4,
+  component, ERD, activity/state, causal-DAG, research-design, validity-boundary,
+  measurement, ethics, architecture, publication, provenance, and coverage
+  diagrams;
 - current and historical evidence with explicit source boundaries;
 - all icon and manifest assets; and
 - the current production `dist/` output.

@@ -3,14 +3,14 @@
   "schema_version": 1,
   "output_date": "2026-08-19",
   "base_repository": "howardhayden/chorus",
-  "base_commit": "e331f79b8fddd397be80891d7ddea25fda778d58",
-  "implementation_digest": "d8bb8701ca63e46f245aa48f11a0a67d796ca71f7cf5c8472e586d718f7573dd",
+  "base_commit": "18dee9c499e7b83c36ef4395604b406dd5804792",
+  "implementation_digest": "4eca1183a19c0c6397cb5907f3c3f078f0c0721aae747c106f58079657d4fb16",
   "assembly": [
-    "Exact public main snapshot exported through a temporary non-merged branch workflow.",
-    "CHORUS scholarly-legibility and icon update integrated into that snapshot.",
-    "Rendered-metadata test corrected to match the intended icon metadata contract.",
-    "Historical release evidence labeled as historical; current working-tree status added.",
-    "Current production distribution rebuilt after all source and publication changes."
+    "Exact merged main snapshot at 18dee9c499e7b83c36ef4395604b406dd5804792 used as the source baseline.",
+    "Seventeen deterministic, semantically typed SVG diagrams integrated across all four executed notebooks.",
+    "Diagram routes validated for orthogonality, source/target boundary anchoring, line crossings, collinear overlap, unrelated-node incursions, node overlap, and bounds.",
+    "Canonical notebooks, public source copies, styled HTML editions, documentation, tests, status evidence, and production output regenerated together.",
+    "Historical browser and neutral-distribution evidence retained under its original source binding rather than relabeled as current."
   ],
   "excluded_generated_state": [
     "node_modules",
@@ -24,6 +24,8 @@
     "simulation_assertions": 118680,
     "focused_tests": 80,
     "production_routes": 21,
-    "dependency_vulnerabilities": 0
+    "dependency_vulnerabilities": 0,
+    "diagram_count": 17,
+    "notebook_artifacts": 16
   }
 }

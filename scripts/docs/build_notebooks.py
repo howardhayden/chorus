@@ -44,6 +44,8 @@ class NotebookSpec:
 
 
 HELPERS = r'''from html import escape
+from hashlib import sha256
+import re
 
 class HTMLResult(str):
     def _repr_html_(self):
@@ -87,7 +89,1067 @@ def checklist_html(title, rows):
         )
     return HTMLResult(f'<section class="checklist" aria-label="{escape(title)}"><ul>{"".join(items)}</ul></section>')
 
-print("Standard-library rendering helpers loaded.")'''
+DIAGRAM_STYLE = r"""
+.diagram-figure{margin:1rem 0;padding:1rem;border:1px solid rgba(213,222,220,.24);border-radius:.8rem 1.3rem .9rem 1.1rem;background:rgba(4,16,10,.76)}
+.diagram-figure figcaption{display:grid;gap:.3rem;margin-bottom:.8rem}.diagram-figure figcaption span{color:#e2c57f;font:700 .72rem/1.35 ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:.08em;text-transform:uppercase}.diagram-figure figcaption strong{font-size:1.25rem;color:#f2f1e8}.diagram-figure figcaption p{max-width:78ch;margin:0;color:#c7d1c9}
+.diagram-canvas{max-width:100%;overflow-x:auto;border:1px solid rgba(213,222,220,.16);border-radius:.65rem;background:#06130c}.diagram-svg{display:block;width:100%;min-width:760px;height:auto}.diagram-legend{display:flex;flex-wrap:wrap;gap:.5rem 1rem;margin:.8rem 0 0;padding:0;list-style:none;color:#c7d1c9;font-size:.8rem}.diagram-legend li{display:flex;align-items:center;gap:.4rem}.diagram-key{width:1.8rem;height:.2rem;display:inline-block;background:#e2c57f}.diagram-key-data{background:#a7e0bd}.diagram-key-evidence{height:0;border-top:2px dashed #c9b6db;background:none}.diagram-key-boundary{height:0;border-top:2px dashed #d5dedc;background:none}.diagram-key-association{background:#b8c0bc}.diagram-assurance{display:block;margin-top:.7rem;color:#a7e0bd;font:700 .72rem/1.4 ui-monospace,SFMono-Regular,Consolas,monospace}.diagram-equivalent{margin-top:.7rem;border-top:1px solid rgba(213,222,220,.18)}.diagram-equivalent summary{min-height:44px;padding:.7rem 0;cursor:pointer;color:#d5dedc}.diagram-equivalent h4{margin:.7rem 0 .3rem;color:#e2c57f}.diagram-equivalent ul{margin:.2rem 0 0;padding-left:1.2rem}.diagram-notes{color:#c7d1c9}
+@media(max-width:42rem){.diagram-figure{padding:.65rem}.diagram-svg{min-width:700px}}
+@media(forced-colors:active){.diagram-figure,.diagram-canvas{border:1px solid CanvasText}}
+"""
+
+SVG_COLORS = {
+    "canvas": "#06130c",
+    "group_fill": "#0b2819",
+    "group_stroke": "#799886",
+    "person_fill": "#163e2a",
+    "person_stroke": "#a7e0bd",
+    "system_fill": "#103522",
+    "system_stroke": "#e2c57f",
+    "component_fill": "#0d281a",
+    "component_stroke": "#9bc8aa",
+    "data_fill": "#262b22",
+    "data_stroke": "#d5dedc",
+    "evidence_fill": "#282433",
+    "evidence_stroke": "#c9b6db",
+    "boundary_fill": "#2d271b",
+    "boundary_stroke": "#e2c57f",
+    "risk_fill": "#351f1f",
+    "risk_stroke": "#e0a8a8",
+    "decision_fill": "#352b18",
+    "decision_stroke": "#e2c57f",
+    "title": "#f2f1e8",
+    "body": "#c7d1c9",
+    "role": "#a7e0bd",
+    "flow": "#e2c57f",
+    "data": "#a7e0bd",
+    "evidence": "#c9b6db",
+    "boundary": "#d5dedc",
+    "association": "#b8c0bc",
+    "label_bg": "#07140d",
+    "label_stroke": "#5a6c60",
+}
+
+
+def dnode(node_id, x, y, w, h, title, body="", kind="component", shape="rect", role=""):
+    return {
+        "id": node_id, "x": float(x), "y": float(y), "w": float(w), "h": float(h),
+        "title": title, "body": body, "kind": kind, "shape": shape, "role": role,
+    }
+
+
+def dedge(source, target, points, kind="flow", label="", label_at=None, arrow=True):
+    return {
+        "source": source, "target": target,
+        "points": tuple((float(x), float(y)) for x, y in points),
+        "kind": kind, "label": label, "label_at": label_at, "arrow": arrow,
+    }
+
+
+def dgroup(group_id, x, y, w, h, label, kind="boundary"):
+    return {
+        "id": group_id, "x": float(x), "y": float(y), "w": float(w),
+        "h": float(h), "label": label, "kind": kind,
+    }
+
+
+def _slug(value):
+    cleaned = re.sub(r"[^a-z0-9]+", "-", value.lower()).strip("-")
+    return cleaned or "diagram"
+
+
+def _lines(value, max_chars, max_lines=4):
+    raw_lines = str(value).split("\n") if value else []
+    lines = []
+    for raw in raw_lines:
+        words = raw.split()
+        if not words:
+            lines.append("")
+            continue
+        current = words[0]
+        for word in words[1:]:
+            candidate = current + " " + word
+            if len(candidate) <= max_chars:
+                current = candidate
+            else:
+                lines.append(current)
+                current = word
+        lines.append(current)
+    if len(lines) > max_lines:
+        lines = lines[:max_lines]
+        lines[-1] = lines[-1].rstrip(" …") + "…"
+    return lines
+
+
+def _segments(points):
+    return list(zip(points, points[1:]))
+
+
+def _on_boundary(point, node, tolerance=0.01):
+    x, y = point
+    left, top = node["x"], node["y"]
+    right, bottom = left + node["w"], top + node["h"]
+    on_vertical = (
+        (abs(x - left) <= tolerance or abs(x - right) <= tolerance)
+        and top - tolerance <= y <= bottom + tolerance
+    )
+    on_horizontal = (
+        (abs(y - top) <= tolerance or abs(y - bottom) <= tolerance)
+        and left - tolerance <= x <= right + tolerance
+    )
+    return on_vertical or on_horizontal
+
+
+def _segment_axis(segment):
+    (x1, y1), (x2, y2) = segment
+    if x1 == x2 and y1 != y2:
+        return "v"
+    if y1 == y2 and x1 != x2:
+        return "h"
+    raise AssertionError(f"Diagram route segment must be orthogonal and nonzero: {segment}")
+
+
+def _segment_crosses_rect(segment, node):
+    (x1, y1), (x2, y2) = segment
+    left, top = node["x"], node["y"]
+    right, bottom = left + node["w"], top + node["h"]
+    axis = _segment_axis(segment)
+    if axis == "h":
+        if not top < y1 < bottom:
+            return False
+        return max(min(x1, x2), left) < min(max(x1, x2), right)
+    if not left < x1 < right:
+        return False
+    return max(min(y1, y2), top) < min(max(y1, y2), bottom)
+
+
+def _segment_intersection(first, second):
+    a1, a2 = first
+    b1, b2 = second
+    axis_a, axis_b = _segment_axis(first), _segment_axis(second)
+    if axis_a != axis_b:
+        horizontal = first if axis_a == "h" else second
+        vertical = second if axis_a == "h" else first
+        (hx1, hy), (hx2, _) = horizontal
+        (vx, vy1), (_, vy2) = vertical
+        if min(hx1, hx2) <= vx <= max(hx1, hx2) and min(vy1, vy2) <= hy <= max(vy1, vy2):
+            return (vx, hy)
+        return None
+    if axis_a == "h" and a1[1] == b1[1]:
+        lo = max(min(a1[0], a2[0]), min(b1[0], b2[0]))
+        hi = min(max(a1[0], a2[0]), max(b1[0], b2[0]))
+        if lo < hi:
+            return ("overlap", lo, hi, a1[1])
+        if lo == hi:
+            return (lo, a1[1])
+    if axis_a == "v" and a1[0] == b1[0]:
+        lo = max(min(a1[1], a2[1]), min(b1[1], b2[1]))
+        hi = min(max(a1[1], a2[1]), max(b1[1], b2[1]))
+        if lo < hi:
+            return ("overlap", lo, hi, a1[0])
+        if lo == hi:
+            return (a1[0], lo)
+    return None
+
+
+def _rectangles_overlap(first, second):
+    return (
+        max(first["x"], second["x"]) < min(first["x"] + first["w"], second["x"] + second["w"])
+        and max(first["y"], second["y"]) < min(first["y"] + first["h"], second["y"] + second["h"])
+    )
+
+
+def _validate_diagram(width, height, nodes, edges):
+    assert width > 0 and height > 0
+    node_map = {node["id"]: node for node in nodes}
+    assert len(node_map) == len(nodes), "Diagram node IDs must be unique."
+    for node in nodes:
+        assert node["w"] > 0 and node["h"] > 0
+        assert 0 <= node["x"] < width and 0 <= node["y"] < height
+        assert node["x"] + node["w"] <= width and node["y"] + node["h"] <= height
+    for index, first in enumerate(nodes):
+        for second in nodes[index + 1:]:
+            assert not _rectangles_overlap(first, second), (
+                f"Diagram nodes overlap: {first['id']} and {second['id']}"
+            )
+
+    all_segments = []
+    for edge_index, edge in enumerate(edges):
+        assert edge["source"] in node_map and edge["target"] in node_map
+        points = edge["points"]
+        assert len(points) >= 2
+        assert _on_boundary(points[0], node_map[edge["source"]]), (
+            f"Route must start on source boundary: {edge}"
+        )
+        assert _on_boundary(points[-1], node_map[edge["target"]]), (
+            f"Route must end on target boundary: {edge}"
+        )
+        for segment_index, segment in enumerate(_segments(points)):
+            _segment_axis(segment)
+            for node_id, node in node_map.items():
+                if node_id in (edge["source"], edge["target"]):
+                    continue
+                assert not _segment_crosses_rect(segment, node), (
+                    f"Route crosses node {node_id}: {edge}"
+                )
+            all_segments.append((edge_index, segment_index, edge, segment))
+
+    for index, first in enumerate(all_segments):
+        for second in all_segments[index + 1:]:
+            edge_a, edge_b = first[2], second[2]
+            if first[0] == second[0]:
+                continue
+            intersection = _segment_intersection(first[3], second[3])
+            if intersection is None:
+                continue
+            shared_terminal_points = (
+                set((edge_a["points"][0], edge_a["points"][-1]))
+                & set((edge_b["points"][0], edge_b["points"][-1]))
+            )
+            if (
+                isinstance(intersection, tuple)
+                and intersection
+                and intersection[0] != "overlap"
+                and intersection in shared_terminal_points
+            ):
+                continue
+            raise AssertionError(
+                f"Diagram routes cross or overlap at {intersection}: {edge_a} / {edge_b}"
+            )
+    return {
+        "nodes": len(nodes), "edges": len(edges), "segments": len(all_segments),
+        "crossings": 0, "node_incursions": 0, "node_overlaps": 0,
+    }
+
+
+def _svg_text(x, y, lines, fill, size, weight=400, line_height=15, anchor="start", letter_spacing=0):
+    if not lines:
+        return ""
+    spans = []
+    for index, line in enumerate(lines):
+        dy = 0 if index == 0 else line_height
+        spans.append(f'<tspan x="{x:g}" dy="{dy:g}">{escape(line)}</tspan>')
+    return (
+        f'<text x="{x:g}" y="{y:g}" fill="{fill}" font-size="{size:g}" '
+        f'font-weight="{weight}" text-anchor="{anchor}" letter-spacing="{letter_spacing:g}" '
+        'font-family="Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif">'
+        f'{"".join(spans)}</text>'
+    )
+
+
+def _node_colors(kind):
+    return (
+        SVG_COLORS.get(f"{kind}_fill", SVG_COLORS["component_fill"]),
+        SVG_COLORS.get(f"{kind}_stroke", SVG_COLORS["component_stroke"]),
+    )
+
+
+def _edge_dash(kind):
+    if kind == "evidence":
+        return ' stroke-dasharray="7 5"'
+    if kind == "boundary":
+        return ' stroke-dasharray="3 5"'
+    return ""
+
+
+def _figure_shell(diagram_type, title, description, svg, assurance, legend=(), notes=(), equivalent=""):
+    legend_html = ""
+    if legend:
+        legend_items = ''.join(
+            f'<li><i class="diagram-key diagram-key-{escape(kind)}" aria-hidden="true"></i>'
+            f'<span>{escape(label)}</span></li>'
+            for kind, label in legend
+        )
+        legend_html = f'<ul class="diagram-legend" aria-label="Diagram legend">{legend_items}</ul>'
+    notes_html = ''.join(f'<li>{escape(str(note))}</li>' for note in notes)
+    if notes_html:
+        notes_html = f'<ul class="diagram-notes">{notes_html}</ul>'
+    return HTMLResult(
+        f'<figure class="diagram-figure" data-diagram-type="{escape(diagram_type)}" '
+        'data-routing="orthogonal-crossing-free">'
+        f'<figcaption><span>{escape(diagram_type)}</span><strong>{escape(title)}</strong>'
+        f'<p>{escape(description)}</p></figcaption>'
+        f'<div class="diagram-canvas" role="region" aria-label="{escape(title)} diagram" tabindex="0">{svg}</div>'
+        f'{legend_html}{notes_html}<span class="diagram-assurance">{escape(assurance)}</span>{equivalent}'
+        '</figure>'
+    )
+
+
+def diagram_html(diagram_type, title, description, width, height, nodes, edges, groups=(), legend=(), notes=()):
+    nodes = tuple(nodes)
+    edges = tuple(edges)
+    groups = tuple(groups)
+    assurance = _validate_diagram(width, height, nodes, edges)
+    uid = _slug(title) + "-" + sha256(title.encode("utf-8")).hexdigest()[:8]
+    title_id, desc_id = uid + "-title", uid + "-desc"
+    node_map = {node["id"]: node for node in nodes}
+
+    marker_kinds = sorted(set(edge.get("kind", "flow") for edge in edges if edge.get("arrow", True)))
+    defs = []
+    for kind in marker_kinds:
+        marker = uid + "-arrow-" + _slug(kind)
+        color = SVG_COLORS.get(kind, SVG_COLORS["flow"])
+        defs.append(
+            f'<marker id="{marker}" viewBox="0 0 10 10" refX="9" refY="5" '
+            'markerWidth="7" markerHeight="7" orient="auto-start-reverse">'
+            f'<path d="M 0 0 L 10 5 L 0 10 z" fill="{color}"/></marker>'
+        )
+
+    parts = [
+        f'<svg class="diagram-svg" width="{width:g}" height="{height:g}" '
+        f'viewBox="0 0 {width:g} {height:g}" role="img" aria-labelledby="{title_id} {desc_id}">',
+        f'<title id="{title_id}">{escape(title)}</title>',
+        f'<desc id="{desc_id}">{escape(description)}</desc>',
+        f'<rect x="0" y="0" width="{width:g}" height="{height:g}" fill="{SVG_COLORS["canvas"]}"/>',
+        f'<defs>{"".join(defs)}</defs>',
+    ]
+
+    for group in groups:
+        parts.append(
+            f'<rect x="{group["x"]:g}" y="{group["y"]:g}" width="{group["w"]:g}" '
+            f'height="{group["h"]:g}" rx="18" fill="{SVG_COLORS["group_fill"]}" fill-opacity=".28" '
+            f'stroke="{SVG_COLORS["group_stroke"]}" stroke-width="1.2" stroke-dasharray="7 5"/>'
+        )
+        parts.append(
+            _svg_text(group["x"] + 14, group["y"] + 21, [group["label"]], SVG_COLORS["title"], 12, 700, 14, "start", .7)
+        )
+
+    for edge in edges:
+        points = " ".join(f'{x:g},{y:g}' for x, y in edge["points"])
+        color = SVG_COLORS.get(edge["kind"], SVG_COLORS["flow"])
+        marker_attr = ""
+        if edge.get("arrow", True):
+            marker_attr = f' marker-end="url(#{uid}-arrow-{_slug(edge["kind"])})"'
+        parts.append(
+            f'<polyline points="{points}" fill="none" stroke="{color}" stroke-width="2" '
+            f'stroke-linecap="round" stroke-linejoin="round"{_edge_dash(edge["kind"])}{marker_attr}/>'
+        )
+        if edge.get("label"):
+            lx, ly = edge.get("label_at") or edge["points"][len(edge["points"]) // 2]
+            label_width = max(72, min(150, len(edge["label"]) * 6.4 + 18))
+            parts.append(
+                f'<rect x="{lx - label_width / 2:g}" y="{ly - 12:g}" width="{label_width:g}" height="22" '
+                f'rx="7" fill="{SVG_COLORS["label_bg"]}" stroke="{SVG_COLORS["label_stroke"]}" stroke-width=".8"/>'
+            )
+            parts.append(_svg_text(lx, ly + 3, [edge["label"]], SVG_COLORS["title"], 10, 700, 12, "middle"))
+
+    for node in nodes:
+        x, y, w, h = node["x"], node["y"], node["w"], node["h"]
+        shape = node.get("shape", "rect")
+        fill, stroke = _node_colors(node.get("kind", "component"))
+        common = f'fill="{fill}" stroke="{stroke}" stroke-width="1.6"'
+        if shape == "diamond":
+            points = f'{x + w / 2:g},{y:g} {x + w:g},{y + h / 2:g} {x + w / 2:g},{y + h:g} {x:g},{y + h / 2:g}'
+            parts.append(f'<polygon points="{points}" {common}/>' )
+        elif shape == "pill":
+            parts.append(f'<rect x="{x:g}" y="{y:g}" width="{w:g}" height="{h:g}" rx="{h / 2:g}" {common}/>' )
+        elif shape == "document":
+            fold = min(18, w * .12)
+            d = (
+                f'M {x:g} {y:g} H {x + w - fold:g} L {x + w:g} {y + fold:g} '
+                f'V {y + h:g} H {x:g} Z M {x + w - fold:g} {y:g} V {y + fold:g} H {x + w:g}'
+            )
+            parts.append(f'<path d="{d}" {common} stroke-linejoin="round"/>' )
+        else:
+            parts.append(f'<rect x="{x:g}" y="{y:g}" width="{w:g}" height="{h:g}" rx="12" {common}/>' )
+
+        char_width = max(13, int((w - 24) / 7.1))
+        title_lines = _lines(node["title"], char_width, 2)
+        body_lines = _lines(node.get("body", ""), char_width, 4)
+        role = node.get("role", "")
+        top = y + 20
+        if role:
+            parts.append(_svg_text(x + w / 2, top, [role.upper()], SVG_COLORS["role"], 10, 700, 12, "middle", .8))
+            top += 18
+        parts.append(_svg_text(x + w / 2, top, title_lines, SVG_COLORS["title"], 14, 700, 16, "middle"))
+        body_y = top + 16 * len(title_lines) + 5
+        parts.append(_svg_text(x + w / 2, body_y, body_lines, SVG_COLORS["body"], 11.5, 400, 14, "middle"))
+
+    parts.append('</svg>')
+    relation_items = []
+    for edge in edges:
+        relation = f'{node_map[edge["source"]]["title"]} → {node_map[edge["target"]]["title"]}'
+        if edge.get("label"):
+            relation += f' ({edge["label"]})'
+        relation_items.append(f'<li>{escape(relation)}</li>')
+    node_items = [
+        f'<li><strong>{escape(node["title"])}</strong>'
+        f'{": " + escape(node["body"]) if node.get("body") else ""}</li>'
+        for node in nodes
+    ]
+    equivalent = (
+        '<details class="diagram-equivalent"><summary>Text equivalent</summary>'
+        f'<h4>Elements</h4><ul>{"".join(node_items)}</ul>'
+        f'<h4>Relationships</h4><ul>{"".join(relation_items) if relation_items else "<li>No connector relationships; the diagram uses nested evidentiary zones.</li>"}</ul>'
+        '</details>'
+    )
+    assurance_text = (
+        f'Validated: {assurance["nodes"]} nodes · {assurance["edges"]} edges · '
+        'orthogonal routing · 0 crossings · 0 node incursions · 0 node overlaps'
+    )
+    return _figure_shell(
+        diagram_type, title, description, ''.join(parts), assurance_text,
+        legend=legend, notes=notes, equivalent=equivalent,
+    )
+
+
+def matrix_diagram_html(diagram_type, title, description, rows, columns, coverage, notes=()):
+    rows = tuple(rows)
+    columns = tuple(columns)
+    valid_marks = {"P", "S", ""}
+    assert len(set(rows)) == len(rows) and len(set(columns)) == len(columns)
+    for key, mark in coverage.items():
+        assert key[0] in rows and key[1] in columns and mark in valid_marks
+
+    left = 255
+    top = 125
+    cell_w = 125
+    cell_h = 72
+    right_pad = 25
+    bottom_pad = 35
+    width = left + cell_w * len(columns) + right_pad
+    height = top + cell_h * len(rows) + bottom_pad
+    uid = _slug(title) + "-" + sha256(title.encode("utf-8")).hexdigest()[:8]
+    title_id, desc_id = uid + "-title", uid + "-desc"
+    parts = [
+        f'<svg class="diagram-svg" width="{width:g}" height="{height:g}" viewBox="0 0 {width:g} {height:g}" '
+        f'role="img" aria-labelledby="{title_id} {desc_id}">',
+        f'<title id="{title_id}">{escape(title)}</title>',
+        f'<desc id="{desc_id}">{escape(description)}</desc>',
+        f'<rect x="0" y="0" width="{width:g}" height="{height:g}" fill="{SVG_COLORS["canvas"]}"/>',
+    ]
+    for column_index, column in enumerate(columns):
+        x = left + column_index * cell_w
+        lines = _lines(column, 15, 3)
+        parts.append(_svg_text(x + cell_w / 2, 38, lines, SVG_COLORS["title"], 11, 700, 14, "middle"))
+    for row_index, row in enumerate(rows):
+        y = top + row_index * cell_h
+        parts.append(
+            f'<rect x="8" y="{y:g}" width="{left - 16:g}" height="{cell_h:g}" rx="8" '
+            f'fill="{SVG_COLORS["component_fill"]}" stroke="{SVG_COLORS["component_stroke"]}" stroke-width="1"/>'
+        )
+        parts.append(_svg_text(20, y + 28, _lines(row, 30, 2), SVG_COLORS["title"], 12, 700, 15, "start"))
+        for column_index, column in enumerate(columns):
+            x = left + column_index * cell_w
+            mark = coverage.get((row, column), "")
+            if mark == "P":
+                fill, stroke, label = "#173d29", "#a7e0bd", "P"
+            elif mark == "S":
+                fill, stroke, label = "#2b2835", "#c9b6db", "S"
+            else:
+                fill, stroke, label = "#0a1a11", "#38483e", "—"
+            parts.append(
+                f'<rect x="{x:g}" y="{y:g}" width="{cell_w:g}" height="{cell_h:g}" '
+                f'fill="{fill}" stroke="{stroke}" stroke-width="1"/>'
+            )
+            parts.append(_svg_text(x + cell_w / 2, y + 42, [label], SVG_COLORS["title"] if mark else SVG_COLORS["body"], 17, 700, 18, "middle"))
+    parts.append('</svg>')
+
+    table_rows = []
+    for row in rows:
+        table_rows.append((row, *({"P": "Primary", "S": "Supporting", "": "Not claimed"}[coverage.get((row, column), "")] for column in columns)))
+    equivalent = str(table_html(
+        title + " text equivalent",
+        ("Test family", *columns),
+        table_rows,
+        row_headers=True,
+    ))
+    equivalent = f'<details class="diagram-equivalent"><summary>Text equivalent</summary>{equivalent}</details>'
+    return _figure_shell(
+        diagram_type, title, description, ''.join(parts),
+        f'Validated: {len(rows)} test families · {len(columns)} concern columns · matrix topology · 0 connector lines',
+        legend=(("data", "P = primary coverage"), ("evidence", "S = supporting coverage")),
+        notes=notes,
+        equivalent=equivalent,
+    )
+
+
+_html = HTMLResult(f"<style>{DIAGRAM_STYLE}</style>")
+print("Standard-library rendering helpers loaded, including deterministic SVG diagrams with crossing validation.")
+'''
+
+
+SYSTEMS_DIAGRAM_CELLS = (
+    (
+        "markdown",
+        """### Layered technical architecture
+
+The layered view separates generation, runtime state, interaction surfaces, and assurance/publication. Vertical alignment names the principal dependency chain while preserving the reducer as the sole runtime authority.""",
+    ),
+    (
+        "code",
+        r'''nodes=[
+ dnode('sg',70,100,240,90,'Scenario grammar','Incidents, routes, artifacts, choices','component','rect','generation'),
+ dnode('ag',380,100,240,90,'Actor generation','Motives, affect, ties, repertoires','component','rect','generation'),
+ dnode('cg',690,100,240,90,'Coherence gates','Schema, agency, ethics, replay readiness','evidence','rect','generation'),
+ dnode('ne',70,290,240,90,'Night engine','Clock, access, reducer, completion','component','rect','runtime'),
+ dnode('ce',380,290,240,90,'Cross-room effects','Directed ambient and direct receipts','component','rect','runtime'),
+ dnode('sp',690,290,240,90,'State and persistence','Night state, save schema, digest','data','rect','runtime'),
+ dnode('ui',70,480,240,90,'UI shell','One viewport and room navigation','system','rect','surface'),
+ dnode('tr',380,480,240,90,'Trace / Relations / Receipts','Bounded inspection and interpretation','system','rect','surface'),
+ dnode('hg',690,480,240,90,'House Guide / Privacy','Help, scholarship, local controls','system','rect','surface'),
+ dnode('ft',70,670,240,90,'Focused tests','Generation, runtime, save, a11y, viewport','evidence','rect','assurance'),
+ dnode('ev',380,670,240,90,'Evidence records','Simulation runs, status, route checks','evidence','document','assurance'),
+ dnode('nb',690,670,240,90,'Notebook publication','Executed sources, HTML, manifests','evidence','document','publication'),
+]
+edges=[
+ dedge('sg','ne',[(190,190),(190,290)],'data'),dedge('ag','ce',[(500,190),(500,290)],'data'),dedge('cg','sp',[(810,190),(810,290)],'evidence'),
+ dedge('ne','ui',[(190,380),(190,480)],'flow'),dedge('ce','tr',[(500,380),(500,480)],'data'),dedge('sp','hg',[(810,380),(810,480)],'data'),
+ dedge('ui','ft',[(190,570),(190,670)],'evidence'),dedge('tr','ev',[(500,570),(500,670)],'evidence'),dedge('hg','nb',[(810,570),(810,670)],'evidence'),
+]
+_html = diagram_html('Layered technical architecture','Layered CHORUS technical architecture','The architecture is organized as generation, runtime, player-facing surfaces, and assurance/publication. Vertical alignment shows the principal dependency chain without implying that presentation owns model state.',1000,810,nodes,edges,groups=[dgroup('lg',25,55,950,155,'Generation layer'),dgroup('lr',25,245,950,155,'Runtime and state layer'),dgroup('ls',25,435,950,155,'Interaction and disclosure layer'),dgroup('la',25,625,950,155,'Assurance and publication layer')],legend=[('data','Data/state dependency'),('flow','Runtime control'),('evidence','Verification/publication dependency')])
+print("PASS: deterministic SVG diagram rendered; orthogonal routing and node separation validated.")''',
+    ),
+    (
+        "markdown",
+        """### Build and publication pipeline
+
+One deterministic standard-library builder executes notebook cells, renders the HTML editions, verifies identities and hashes, and publishes the same records into public routes and the production distribution.""",
+    ),
+    (
+        "code",
+        r'''nodes=[
+ dnode('source',30,210,190,100,'Notebook specifications','Four declarative cell sets in the standard-library builder','component','document','source'),
+ dnode('builder',280,210,200,100,'Deterministic builder','Fresh namespace, executed cells, stable IDs','component','rect','build step'),
+ dnode('ipynb',560,80,210,100,'Executed .ipynb','Canonical source with committed outputs','data','document','artifact'),
+ dnode('html',560,330,210,100,'Styled HTML edition','Self-contained, script-free, accessible route','evidence','document','artifact'),
+ dnode('manifest',850,205,210,110,'Manifest and drift gate','Bytes, SHA-256, source-copy identity','evidence','document','verification'),
+ dnode('public',1130,120,220,100,'public/notebooks/','Downloads, HTML index, direct routes','system','rect','publication'),
+ dnode('dist',1130,330,220,100,'Production dist/','Built client assets and Worker routes','system','rect','deployment artifact'),
+]
+edges=[
+ dedge('source','builder',[(220,260),(280,260)],'data'),
+ dedge('builder','ipynb',[(480,240),(520,240),(520,130),(560,130)],'data','execute'),
+ dedge('builder','html',[(480,280),(530,280),(530,380),(560,380)],'evidence','render'),
+ dedge('ipynb','manifest',[(770,130),(810,130),(810,245),(850,245)],'evidence'),
+ dedge('html','manifest',[(770,380),(820,380),(820,275),(850,275)],'evidence'),
+ dedge('manifest','public',[(1060,240),(1090,240),(1090,170),(1130,170)],'evidence','publish'),
+ dedge('manifest','dist',[(1060,270),(1100,270),(1100,380),(1130,380)],'evidence','build'),
+]
+_html = diagram_html('Build and publication pipeline','Deterministic notebook build and publication pipeline','One builder produces executed notebook source and styled HTML, verifies their identity and hashes, then publishes the same records into public routes and the production distribution.',1390,520,nodes,edges,legend=[('data','Executed source'),('evidence','Rendered or verified artifact')])
+print("PASS: deterministic SVG diagram rendered; orthogonal routing and node separation validated.")''',
+    ),
+    (
+        "markdown",
+        """### Artifact publication structure
+
+Canonical notebooks, public source copies, static HTML editions, and integrity metadata are separate artifact families that move together. The structure makes ownership, reproducibility, and drift detection visible.""",
+    ),
+    (
+        "code",
+        r'''nodes=[
+ dnode('builder-root',300,40,800,100,'scripts/docs/build_notebooks.py','Single canonical specification and execution authority','component','rect','publication root'),
+ dnode('canonical',80,230,220,100,'notebooks/','Four canonical executed .ipynb sources','data','document','source collection'),
+ dnode('downloads',380,230,220,100,'public/notebooks/*.ipynb','Byte-identical downloadable copies','data','document','published source'),
+ dnode('htmls',680,230,220,100,'public/notebooks/*.html','Four self-contained styled editions','evidence','document','published edition'),
+ dnode('manifest',980,230,220,100,'artifact-manifest.json','Path, media type, bytes, SHA-256','evidence','document','integrity'),
+ dnode('canon-detail',80,470,220,90,'Model · Research · Systems · Validation','Stable notebook filenames and cell outputs','component','rect','contents'),
+ dnode('download-detail',380,470,220,90,'Direct source downloads','Inspect, rerun, and compare committed outputs','system','rect','route behavior'),
+ dnode('html-detail',680,470,220,90,'Notebook index and direct pages','Long-form semantic reading outside the game shell','system','rect','route behavior'),
+ dnode('manifest-detail',980,470,220,90,'Drift and identity checks','Build fails when committed artifacts differ','evidence','rect','assurance'),
+]
+edges=[
+ dedge('builder-root','canonical',[(370,140),(370,155),(190,155),(190,230)],'data'),
+ dedge('builder-root','downloads',[(570,140),(570,170),(490,170),(490,230)],'data'),
+ dedge('builder-root','htmls',[(770,140),(770,185),(790,185),(790,230)],'evidence'),
+ dedge('builder-root','manifest',[(970,140),(970,200),(1090,200),(1090,230)],'evidence'),
+ dedge('canonical','canon-detail',[(190,330),(190,470)],'association'),
+ dedge('downloads','download-detail',[(490,330),(490,470)],'association'),
+ dedge('htmls','html-detail',[(790,330),(790,470)],'association'),
+ dedge('manifest','manifest-detail',[(1090,330),(1090,470)],'association'),
+]
+_html = diagram_html('Artifact publication structure diagram','Notebook artifact publication structure','The builder owns four coordinated artifact families. Canonical sources, download copies, static editions, and integrity metadata move together and have distinct responsibilities.',1280,620,nodes,edges,legend=[('data','Notebook source'),('evidence','Published or integrity artifact'),('association','Contains / elaborates')])
+print("PASS: deterministic SVG diagram rendered; orthogonal routing and node separation validated.")''',
+    ),
+    (
+        "markdown",
+        """### Route and document relationships
+
+The route map distinguishes the fixed application, the House Guide reading alert, standalone notebook pages, evidence pages, and the downloadable notebook sources paired with each rendered edition.""",
+    ),
+    (
+        "code",
+        r'''nodes=[
+ dnode('app',30,300,180,100,'/','CHORUS application route','system','rect','entry'),
+ dnode('guide',280,100,230,100,'House Guide / Field Notes','In-app alert and named iframe','system','rect','in-app surface'),
+ dnode('index',280,300,230,100,'/notebooks/index.html','Standalone record index','system','rect','public route'),
+ dnode('evidence-index',280,500,230,100,'/evidence/index.html','Assurance and status index','system','rect','public route'),
+ dnode('inapp',650,100,270,100,'In-app scholarly viewer','Model Specification and Research Design','evidence','rect','embedded document'),
+ dnode('standalone',650,280,270,140,'Four standalone records','Systems · Model · Research · Validation','evidence','rect','document routes'),
+ dnode('status',650,500,270,100,'Current and historical evidence','Working-tree status, retained runs, route checks','evidence','rect','evidence routes'),
+ dnode('downloads-r',1050,280,250,140,'Downloadable .ipynb sources','Same four records beside HTML editions','data','document','source routes'),
+]
+edges=[
+ dedge('app','guide',[(210,325),(240,325),(240,150),(280,150)],'flow','opens'),
+ dedge('app','index',[(210,350),(280,350)],'flow','links'),
+ dedge('app','evidence-index',[(210,375),(250,375),(250,550),(280,550)],'flow','links'),
+ dedge('guide','inapp',[(510,150),(650,150)],'evidence','loads'),
+ dedge('index','standalone',[(510,350),(650,350)],'evidence','lists'),
+ dedge('evidence-index','status',[(510,550),(650,550)],'evidence','lists'),
+ dedge('standalone','downloads-r',[(920,350),(1050,350)],'data','pairs with'),
+]
+_html = diagram_html('Route and document relationship map','Application, notebook, and evidence routes','The fixed game route opens scholarship inside House Guide while the notebook and evidence indexes expose long-form standalone documents. Every HTML edition remains paired with its executed notebook source.',1340,670,nodes,edges,legend=[('flow','Application navigation'),('evidence','Published document relation'),('data','Source-download relation')])
+print("PASS: deterministic SVG diagram rendered; orthogonal routing and node separation validated.")''',
+    ),
+)
+
+MODEL_CONTEXT_DIAGRAM_CELLS = (
+    (
+        "markdown",
+        """### System context
+
+A C4-style context view places CHORUS inside the actual interaction and publication environment. It distinguishes the player, the application, local persistence, scholarly publication, and assurance outputs without presenting any of them as a hidden remote service.""",
+    ),
+    (
+        "code",
+        r'''nodes=[
+ dnode('player',40,250,180,110,'Player','Occupies fictional seats; inspects records; chooses actions','person','rect','person'),
+ dnode('chorus',360,180,300,250,'CHORUS application','Local deterministic generation, concurrent runtime, disclosure, and receipts','system','rect','software system'),
+ dnode('save',850,70,250,110,'Local save / export','Session memory, consented slots, portable text','data','document','local boundary'),
+ dnode('scholar',850,255,250,110,'Scholarly publication','Executed notebooks and styled HTML editions','evidence','document','publication'),
+ dnode('evidence',850,440,250,110,'Evidence outputs','Tests, retained runs, manifests, checksums','evidence','document','assurance'),
+]
+edges=[
+ dedge('player','chorus',[(220,305),(360,305)],'flow','interacts', (290,292)),
+ dedge('chorus','save',[(660,225),(760,225),(760,125),(850,125)],'data','writes only by choice',(755,178)),
+ dedge('chorus','scholar',[(660,305),(850,305)],'evidence','publishes',(755,292)),
+ dedge('chorus','evidence',[(660,365),(780,365),(780,495),(850,495)],'evidence','produces',(785,420)),
+]
+_html = diagram_html('C4 system-context diagram','CHORUS in its local and published environment','The player interacts with one local application. Persistence remains player-directed; scholarly records and assurance outputs are published as inspectable artifacts rather than hidden services.',1200,620,nodes,edges,groups=[dgroup('records',810,35,330,550,'Local and published records')],legend=[('flow','Human interaction'),('data','Local data movement'),('evidence','Publication or assurance evidence')])
+print("PASS: deterministic SVG diagram rendered; orthogonal routing and node separation validated.")''',
+    ),
+)
+
+MODEL_STRUCTURE_DIAGRAM_CELLS = (
+    (
+        "markdown",
+        """### Component architecture
+
+The component view assigns generation, runtime mutation, records, persistence, and disclosure to separate authorities. Connector direction describes data, control, or evidence movement; it does not grant the interface permission to become a second source of truth.""",
+    ),
+    (
+        "code",
+        r'''nodes=[
+ dnode('actor-gen',60,100,210,90,'Actor generation','Roles, objectives, stakes, relationships, repertoires','component','rect','generation'),
+ dnode('scenario-gen',60,230,210,90,'Scenario generator','Incidents, artifacts, choices, directed routes','component','rect','generation'),
+ dnode('coherence',60,360,210,90,'Coherence gates','Schema, motivation, affect, relations, ethics','evidence','rect','validation'),
+ dnode('night-pack',60,500,210,90,'Validated night pack','Six rooms, one clock, deterministic seed','data','document','immutable input'),
+ dnode('night-engine',370,170,210,100,'Room / night engine','Choice access, logical time, event reduction','component','rect','runtime'),
+ dnode('cross-effects',370,330,210,100,'Cross-scenario effects','Local receipt plus five bounded remote receipts','component','rect','runtime'),
+ dnode('night-state',370,500,210,90,'Concurrent night state','Rooms, decisions, pulses, fatigue, afterimages','data','document','state'),
+ dnode('receipts',660,200,160,100,'Interpretation / receipt layer','Typed local and remote effects; ordered causal record','evidence','document','record'),
+ dnode('save-model',660,470,160,100,'Save model','Schema, digest, preview, consent','data','document','persistence'),
+ dnode('house-guide',980,520,220,100,'House Guide / Field Notes','Progressive help and scholarly records','system','rect','surface'),
+ dnode('ui-shell',980,360,220,100,'UI shell','One viewport, room switching, privacy controls','system','rect','surface'),
+ dnode('trace',980,200,220,100,'Trace / Relations / Receipts','Bounded inspection and concluding interpretation','system','rect','surface'),
+]
+edges=[
+ dedge('actor-gen','scenario-gen',[(165,190),(165,230)],'data','feeds'),
+ dedge('scenario-gen','coherence',[(165,320),(165,360)],'data','candidate'),
+ dedge('coherence','night-pack',[(165,450),(165,500)],'evidence','accepts'),
+ dedge('night-pack','night-engine',[(270,545),(320,545),(320,220),(370,220)],'data','initializes',(320,385)),
+ dedge('night-engine','cross-effects',[(475,270),(475,330)],'flow','accepted action'),
+ dedge('cross-effects','night-state',[(475,430),(475,500)],'data','mutates'),
+ dedge('cross-effects','receipts',[(580,380),(620,380),(620,250),(660,250)],'evidence','emits',(620,315)),
+ dedge('night-state','save-model',[(580,545),(620,545),(620,520),(660,520)],'data','serializes',(620,532)),
+ dedge('receipts','trace',[(820,250),(980,250)],'evidence','discloses',(900,237)),
+ dedge('save-model','ui-shell',[(820,520),(900,520),(900,410),(980,410)],'data','controls',(900,465)),
+ dedge('ui-shell','house-guide',[(1090,460),(1090,520)],'flow','opens'),
+ dedge('ui-shell','trace',[(1090,360),(1090,300)],'flow','renders'),
+]
+_html = diagram_html('Component diagram','CHORUS component architecture','Generation creates a validated immutable night pack; the reducer owns state change; records and persistence remain separate; the interface discloses the same authoritative state through bounded surfaces.',1280,700,nodes,edges,groups=[dgroup('g1',25,55,280,580,'Generation'),dgroup('g2',335,55,280,580,'Runtime'),dgroup('g3',630,55,350,580,'Records and persistence'),dgroup('g4',960,55,280,580,'Player-facing surfaces')],legend=[('data','Data or state'),('flow','Runtime control'),('evidence','Receipt / assurance record')])
+print("PASS: deterministic SVG diagram rendered; orthogonal routing and node separation validated.")''',
+    ),
+    (
+        "markdown",
+        """### Domain model
+
+The entity and event model separates structural social context from the information, decisions, state variables, and causal records produced during play. This prevents an actor label or presentation cue from standing in for a fact about conduct.""",
+    ),
+    (
+        "code",
+        r'''nodes=[
+ dnode('night',500,35,240,90,'Night / house','Seeded aggregate containing six concurrent rooms','data','rect','aggregate root'),
+ dnode('scenario',80,200,200,90,'Scenario','Incident truth, objective, schedule, communication model','component','rect','entity'),
+ dnode('room',80,340,200,90,'Room','Four beats, local state, completion snapshot','component','rect','entity'),
+ dnode('actor',80,480,200,90,'Actor / seat','Role, motives, affect, capacities, repertoire','person','rect','entity'),
+ dnode('relation',80,620,200,90,'Relation','Typed directed tie: trust, care, authority, market','component','rect','entity'),
+ dnode('artifact',820,200,200,90,'Artifact','Bounded information object with source and channel','data','document','entity'),
+ dnode('signal',820,340,200,90,'Signal','Trace, fit, social proof, presentation surface','component','rect','value object'),
+ dnode('decision',820,480,200,90,'Decision','Choice, access requirements, time cost, policy tags','decision','rect','event'),
+ dnode('state',820,620,200,90,'State variables','Reach, blame, common ground, fatigue, enactment','data','rect','state'),
+ dnode('receipt',820,760,200,70,'Receipts / logs / ledgers','Typed effects and ordered causal provenance','evidence','document','record'),
+]
+edges=[
+ dedge('night','scenario',[(560,125),(560,160),(180,160),(180,200)],'association','contains 6'),
+ dedge('night','artifact',[(680,125),(680,160),(920,160),(920,200)],'association','schedules'),
+ dedge('scenario','room',[(180,290),(180,340)],'association','instantiates'),
+ dedge('room','actor',[(180,430),(180,480)],'association','occupied by'),
+ dedge('actor','relation',[(180,570),(180,620)],'association','participates in'),
+ dedge('artifact','signal',[(920,290),(920,340)],'association','carries'),
+ dedge('signal','decision',[(920,430),(920,480)],'flow','conditions'),
+ dedge('decision','state',[(920,570),(920,620)],'data','updates'),
+ dedge('state','receipt',[(920,710),(920,760)],'evidence','recorded as'),
+ dedge('room','artifact',[(280,385),(600,385),(600,245),(820,245)],'association','presents',(600,315)),
+ dedge('actor','decision',[(280,525),(820,525)],'flow','selects',(550,512)),
+ dedge('relation','state',[(280,665),(820,665)],'data','constrains',(550,652)),
+]
+_html = diagram_html('ERD / domain model','Core CHORUS domain model','Structural entities on the left define the fictional social situation; event and state entities on the right describe what arrives, is chosen, changes, and becomes attributable.',1120,860,nodes,edges,groups=[dgroup('struct',35,150,300,610,'Structural model'),dgroup('event',765,150,300,700,'Event and state model')],legend=[('association','Containment or association'),('flow','Actor/event control'),('data','State mutation'),('evidence','Causal record')])
+print("PASS: deterministic SVG diagram rendered; orthogonal routing and node separation validated.")''',
+    ),
+)
+
+MODEL_DYNAMICS_DIAGRAM_CELLS = (
+    (
+        "markdown",
+        """### Concurrent-night activity flow
+
+The activity diagram shows where navigation ends and mutation begins. It makes blocked choices, parallel local and remote effects, validation, receipt generation, looping work, and the final interpretation gate explicit.""",
+    ),
+    (
+        "code",
+        r'''nodes=[
+ dnode('start',420,25,200,60,'Start generated night','Seed and reviewed pack available','system','pill','start'),
+ dnode('init',380,120,280,80,'Night initialization','Create shared clock and six room runtimes','component','rect','activity'),
+ dnode('enter',380,240,280,80,'Enter or resume a room','Navigation does not advance time','component','rect','activity'),
+ dnode('attempt',380,360,280,80,'Attempt a decision','Current beat and visible choice selected','decision','rect','activity'),
+ dnode('access',430,480,180,100,'Access passes?','Evidence, structure, enactment','decision','diamond','decision'),
+ dnode('blocked',80,500,220,90,'Explain unavailable path','Name motive, pressure, and capacity; do not mutate','boundary','rect','alternate'),
+ dnode('accepted',380,630,280,80,'Accept event','Advance modeled time exactly once','component','rect','activity'),
+ dnode('local',180,760,240,80,'Apply local update','Source room state and fatigue','data','rect','parallel activity'),
+ dnode('remote',620,760,240,80,'Propagate remote effects','Five bounded directed receipts','data','rect','parallel activity'),
+ dnode('coherence',380,890,280,80,'Validate transition','Bounds, causality, compatibility, replay','evidence','rect','gate'),
+ dnode('receipts',380,1010,280,80,'Generate causal receipts','Local, remote, scheduled, and afterimage records','evidence','document','activity'),
+ dnode('more',430,1130,180,100,'More beats?','Any room has due work','decision','diamond','decision'),
+ dnode('end',380,1260,280,80,'End-of-night interpretation','Unseal whole-house receipt and research record','system','pill','end'),
+]
+edges=[
+ dedge('start','init',[(520,85),(520,120)],'flow'),
+ dedge('init','enter',[(520,200),(520,240)],'flow'),
+ dedge('enter','attempt',[(520,320),(520,360)],'flow'),
+ dedge('attempt','access',[(520,440),(520,480)],'flow'),
+ dedge('access','blocked',[(430,530),(340,530),(340,545),(300,545)],'boundary','no',(345,515)),
+ dedge('blocked','attempt',[(80,545),(40,545),(40,400),(380,400)],'boundary','retry',(210,387)),
+ dedge('access','accepted',[(520,580),(520,630)],'flow','yes',(555,605)),
+ dedge('accepted','local',[(450,710),(450,730),(300,730),(300,760)],'data','local'),
+ dedge('accepted','remote',[(590,710),(590,730),(740,730),(740,760)],'data','remote'),
+ dedge('local','coherence',[(300,840),(300,870),(480,870),(480,890)],'evidence'),
+ dedge('remote','coherence',[(740,840),(740,870),(560,870),(560,890)],'evidence'),
+ dedge('coherence','receipts',[(520,970),(520,1010)],'evidence'),
+ dedge('receipts','more',[(520,1090),(520,1130)],'flow'),
+ dedge('more','enter',[(610,1180),(950,1180),(950,280),(660,280)],'flow','yes',(945,730)),
+ dedge('more','end',[(520,1230),(520,1260)],'flow','no',(555,1245)),
+]
+_html = diagram_html('UML activity / state-flow diagram','Concurrent-night decision lifecycle','The activity diagram separates navigation, choice access, accepted mutation, parallel local and remote effects, validation, receipt generation, looping work, and the final interpretation gate.',1040,1370,nodes,edges,legend=[('flow','Control flow'),('data','State effect'),('evidence','Validation / receipt'),('boundary','Unavailable path without mutation')])
+print("PASS: deterministic SVG diagram rendered; orthogonal routing and node separation validated.")''',
+    ),
+    (
+        "markdown",
+        """### Propagation pathways
+
+The directed acyclic graph separates trust and social capital, salience and amplification, and accountability pressure with rumor or scapegoat dynamics. These are authored causal pathways inside CHORUS, not calibrated causal estimates for real populations.""",
+    ),
+    (
+        "code",
+        r'''nodes=[
+ dnode('action',40,310,180,100,'Accepted action','One situated choice at one decision beat','decision','rect','cause'),
+ dnode('trust',300,100,220,100,'Trust / social capital','Source standing, dependence, reciprocal access','component','rect','pathway'),
+ dnode('salience',300,310,220,100,'Salience','Attention, urgency, repetition, visibility','component','rect','pathway'),
+ dnode('accountability',300,520,220,100,'Accountability pressure','Threat, reply asymmetry, status protection','component','rect','pathway'),
+ dnode('correction',600,100,220,100,'Correction uptake','Whether source restoration is carried or resisted','component','rect','mechanism'),
+ dnode('amplification',600,310,220,100,'Amplification','Reach, perceived consensus, repeated exposure','component','rect','mechanism'),
+ dnode('rumor',600,520,220,100,'Rumor / scapegoat dynamics','Personalization, blame concentration, displaced question','component','rect','mechanism'),
+ dnode('remote-trust',900,100,220,100,'Cross-room trust conditions','Credibility and repair access elsewhere','data','rect','remote effect'),
+ dnode('remote-reach',900,310,220,100,'Cross-room reach conditions','Ambient impressions and consensus pressure','data','rect','remote effect'),
+ dnode('remote-blame',900,520,220,100,'Cross-room attribution conditions','Blame, interpretation gap, thread focus','data','rect','remote effect'),
+ dnode('house',1200,300,180,120,'House state / later choices','Updated access, fatigue, common ground, and afterimages','system','rect','downstream state'),
+]
+edges=[
+ dedge('action','trust',[(220,335),(260,335),(260,150),(300,150)],'flow'),
+ dedge('action','salience',[(220,360),(300,360)],'flow'),
+ dedge('action','accountability',[(220,385),(260,385),(260,570),(300,570)],'flow'),
+ dedge('trust','correction',[(520,150),(600,150)],'data'),
+ dedge('salience','amplification',[(520,360),(600,360)],'data'),
+ dedge('accountability','rumor',[(520,570),(600,570)],'data'),
+ dedge('correction','remote-trust',[(820,150),(900,150)],'data'),
+ dedge('amplification','remote-reach',[(820,360),(900,360)],'data'),
+ dedge('rumor','remote-blame',[(820,570),(900,570)],'data'),
+ dedge('remote-trust','house',[(1120,150),(1150,150),(1150,345),(1200,345)],'data'),
+ dedge('remote-reach','house',[(1120,360),(1200,360)],'data'),
+ dedge('remote-blame','house',[(1120,570),(1165,570),(1165,390),(1200,390)],'data'),
+]
+_html = diagram_html('Directed acyclic causal diagram','Authored propagation pathways','One accepted action can alter three distinct modeled pathways. They remain separate until their bounded remote consequences update the shared house state; arrows describe CHORUS rules, not calibrated real-world causation.',1400,720,nodes,edges,legend=[('flow','Accepted action enters pathway'),('data','Authored state dependency')],notes=['Parallel rows are intentionally non-interchangeable: trust, salience, and accountability pressure are distinct constructs.'])
+print("PASS: deterministic SVG diagram rendered; orthogonal routing and node separation validated.")''',
+    ),
+)
+
+RESEARCH_FOUNDATION_DIAGRAM_CELLS = (
+    (
+        "markdown",
+        """### Research design map
+
+A valid study preserves the chain from construct to operationalization to measure to output. The parallel rows prevent one convenient metric from silently substituting for several distinct research questions.""",
+    ),
+    (
+        "code",
+        r'''cols=[('c','Construct'),('o','Operationalization'),('m','Measure'),('x','Output')]
+xs=[30,360,690,1020]
+rows_y=[90,245,400,555]
+row_data=[
+ ('Provenance and fit','Independent trace / fit levels','Interpretation gap; verification','Paired effects + receipt trace'),
+ ('Social capital','Tie type and route weighting','Correction uptake; remote reach','Topology comparison'),
+ ('Capacity and fatigue','Channel allocation; thresholds','Accessible actions; enactment','Sensitivity profile'),
+ ('Reply access','Authority and response gates','Blame; active-question focus','Qualitative case set + boundary report'),
+]
+nodes=[]
+for ci,(prefix,label) in enumerate(cols):
+ for ri,row in enumerate(row_data):
+  nodes.append(dnode(f'{prefix}{ri}',xs[ci]+20,rows_y[ri],240,95,row[ci],f'Family {ri+1}', 'component' if ci<2 else ('data' if ci==2 else 'evidence'),'rect',label))
+edges=[]
+for ri,y in enumerate(rows_y):
+ mid=y+47.5
+ edges.extend([
+  dedge(f'c{ri}',f'o{ri}',[(xs[0]+260,mid),(xs[1]+20,mid)],'flow'),
+  dedge(f'o{ri}',f'm{ri}',[(xs[1]+260,mid),(xs[2]+20,mid)],'data'),
+  dedge(f'm{ri}',f'x{ri}',[(xs[2]+260,mid),(xs[3]+20,mid)],'evidence'),
+ ])
+_html = diagram_html('Research design map','From construct to interpretable output','Four aligned research families preserve the chain from an explicitly defined construct through an authored operationalization and bounded measure to a reportable within-model output.',1320,700,nodes,edges,groups=[dgroup('gc',30,45,280,635,'Constructs'),dgroup('go',360,45,280,635,'Operationalizations'),dgroup('gm',690,45,280,635,'Measures'),dgroup('gx',1020,45,280,635,'Outputs')],legend=[('flow','Declared construct mapping'),('data','Measurement derivation'),('evidence','Reportable evidence')])
+print("PASS: deterministic SVG diagram rendered; orthogonal routing and node separation validated.")''',
+    ),
+    (
+        "markdown",
+        """### Validity and claims boundary
+
+Nested evidentiary zones show what the simulation establishes internally, what requires an empirical bridge, and what is presently unsupported. No number of generated nights automatically moves a claim from the inner zone to a claim about real people or institutions.""",
+    ),
+    (
+        "code",
+        r'''nodes=[
+ dnode('internal1',370,285,180,80,'Deterministic behavior','Same state and action produce the same receipts','system','rect','supported'),
+ dnode('internal2',590,285,180,80,'Matched mechanism contrast','One authored condition changes one model outcome','system','rect','supported'),
+ dnode('internal3',480,385,180,80,'Causal receipt tracing','Typed events explain divergence inside the model','evidence','rect','supported'),
+ dnode('bridge1',210,165,200,80,'Ecological plausibility','Requires task comparison and domain review','boundary','rect','caution'),
+ dnode('bridge2',500,145,200,80,'User interpretation','Requires human-subject study and analysis','boundary','rect','caution'),
+ dnode('bridge3',790,165,200,80,'Intervention hypothesis','Requires external calibration and testing','boundary','rect','caution'),
+ dnode('outside1',65,535,220,80,'Population prevalence','Not supplied by generated frequencies','risk','rect','not supported'),
+ dnode('outside2',365,555,220,80,'Individual diagnosis / trust score','Not supported for real people','risk','rect','not supported'),
+ dnode('outside3',665,555,220,80,'Real-world forecast','No calibrated predictive probability','risk','rect','not supported'),
+ dnode('outside4',965,535,220,80,'Operational efficacy','No deployment claim without empirical validation','risk','rect','not supported'),
+]
+_html = diagram_html('Validity / claims-boundary diagram','Where CHORUS claims stop','Nested zones distinguish results established by the authored simulation, questions that require an empirical bridge, and uses that the present model does not support. The absence of arrows is deliberate: these are evidentiary jurisdictions, not automatic promotion steps.',1240,700,nodes,[],groups=[dgroup('outer',25,25,1190,650,'External world claims — independent empirical evidence required','boundary'),dgroup('bridge',150,95,940,420,'Empirical bridge — interpretive caution and validation','boundary'),dgroup('inner',320,245,560,250,'Within-model evidence — supported when verification passes','boundary')],notes=['No simulated sample size moves a claim outward across these boundaries.', 'Prediction, diagnosis, prevalence, and operational efficacy remain outside the supported zone.'])
+print("PASS: deterministic SVG diagram rendered; orthogonal routing and node separation validated.")''',
+    ),
+)
+
+RESEARCH_COMPARISON_DIAGRAM_CELLS = (
+    (
+        "markdown",
+        """### Experimental and comparative design
+
+The matched-variant design freezes the shared world before changing one declared parameter, scenario rule, or actor-profile condition. Each variant is paired with a comparison rule that states when the contrast remains causally interpretable inside the model.""",
+    ),
+    (
+        "code",
+        r'''nodes=[
+ dnode('baseline',40,280,220,110,'Baseline CHORUS','Declared version, seed domain, policy, and outcomes','system','rect','reference'),
+ dnode('freeze',340,280,220,110,'Freeze matched world','Truth, actors, routes, schedule, and random stream','boundary','rect','control'),
+ dnode('param',650,80,240,110,'Parameter variant','Change one threshold, magnitude, or timing','component','rect','intervention'),
+ dnode('scenario',650,290,240,110,'Scenario variant','Change one grammar rule or mechanism assignment','component','rect','intervention'),
+ dnode('actor',650,500,240,110,'Actor-profile variant','Change one role, repertoire, capacity, or tie condition','component','rect','intervention'),
+ dnode('param-c',1020,80,270,110,'Valid comparison','Paired difference when all non-target conditions remain frozen','evidence','rect','analysis rule'),
+ dnode('scenario-c',1020,290,270,110,'Valid comparison','Matched grammar contrast with incident truth and policy declared','evidence','rect','analysis rule'),
+ dnode('actor-c',1020,500,270,110,'Valid comparison','Matched actor contrast without silently changing topology or evidence','evidence','rect','analysis rule'),
+]
+edges=[
+ dedge('baseline','freeze',[(260,335),(340,335)],'flow','register'),
+ dedge('freeze','param',[(560,305),(610,305),(610,135),(650,135)],'data','one change',(610,220)),
+ dedge('freeze','scenario',[(560,335),(650,335)],'data','one change'),
+ dedge('freeze','actor',[(560,365),(625,365),(625,555),(650,555)],'data','one change',(625,460)),
+ dedge('param','param-c',[(890,135),(1020,135)],'evidence','paired'),
+ dedge('scenario','scenario-c',[(890,345),(1020,345)],'evidence','paired'),
+ dedge('actor','actor-c',[(890,555),(1020,555)],'evidence','paired'),
+]
+_html = diagram_html('Controlled comparative design diagram','Matched-variant comparison architecture','A valid CHORUS comparison freezes the shared world, changes one declared target, and applies a comparison rule appropriate to that target. Unmatched narrative substitutions are not treated as causal contrasts.',1340,680,nodes,edges,legend=[('flow','Study registration'),('data','Controlled intervention'),('evidence','Valid paired comparison')])
+print("PASS: deterministic SVG diagram rendered; orthogonal routing and node separation validated.")''',
+    ),
+)
+
+RESEARCH_MEASUREMENT_DIAGRAM_CELLS = (
+    (
+        "markdown",
+        """### Measurement pipeline
+
+Raw generated nights and ordered decision traces remain upstream of receipts and derived metrics. Quantitative and qualitative work stay in separate lanes until an explicit mixed-method synthesis reconciles them.""",
+    ),
+    (
+        "code",
+        r'''nodes=[
+ dnode('nights',30,310,170,90,'Generated nights','Declared seeds and model variant','data','document','input'),
+ dnode('traces',230,310,170,90,'Decision traces','Ordered choices, times, and access states','evidence','document','record'),
+ dnode('receipts',430,310,170,90,'Effect receipts','Local, remote, pulse, and afterimage provenance','evidence','document','record'),
+ dnode('metrics',630,310,170,90,'Derived metrics','Paired differences, distributions, transitions','data','rect','derivation'),
+ dnode('quant',850,140,180,90,'Quantitative analysis','Effect distributions, uncertainty, sensitivity','component','rect','analysis lane'),
+ dnode('qual',850,480,180,90,'Qualitative coding','Motivation, affect, relations, narrative continuity','component','rect','analysis lane'),
+ dnode('synth',1090,300,190,120,'Mixed-method synthesis','Convergence, divergence, mechanism cases, model revision','evidence','rect','integration'),
+ dnode('report',1330,315,180,90,'Boundary-aware report','Finite domain, failures, sensitivity, claim limits','evidence','document','output'),
+]
+edges=[
+ dedge('nights','traces',[(200,355),(230,355)],'data'),
+ dedge('traces','receipts',[(400,355),(430,355)],'evidence'),
+ dedge('receipts','metrics',[(600,355),(630,355)],'data'),
+ dedge('metrics','quant',[(800,335),(820,335),(820,185),(850,185)],'data','numeric'),
+ dedge('metrics','qual',[(800,375),(830,375),(830,525),(850,525)],'evidence','cases'),
+ dedge('quant','synth',[(1030,185),(1060,185),(1060,340),(1090,340)],'evidence'),
+ dedge('qual','synth',[(1030,525),(1070,525),(1070,380),(1090,380)],'evidence'),
+ dedge('synth','report',[(1280,360),(1330,360)],'evidence','report'),
+]
+_html = diagram_html('Measurement and analysis pipeline','From generated run to mixed-method finding','The pipeline preserves raw event provenance before deriving metrics, separates quantitative and qualitative analysis, and reunites them only in an explicit mixed-method synthesis with claim boundaries.',1540,680,nodes,edges,legend=[('data','Generated or derived data'),('evidence','Retained provenance / analytic evidence')])
+print("PASS: deterministic SVG diagram rendered; orthogonal routing and node separation validated.")''',
+    ),
+)
+
+RESEARCH_ETHICS_DIAGRAM_CELLS = (
+    (
+        "markdown",
+        """### Ethics and risk controls
+
+Ethical controls are represented as gates rather than a general disclaimer. The final branch distinguishes explanatory and educational research from operational targeting, individual scoring, or coercive prediction.""",
+    ),
+    (
+        "code",
+        r'''nodes=[
+ dnode('content',40,280,190,100,'Fictional content boundary','PG-safe composites; no operational target dossier','boundary','rect','gate 1'),
+ dnode('overclaim',290,280,190,100,'Anti-overclaim controls','Synthetic indices; declared assumptions and limits','boundary','rect','gate 2'),
+ dnode('certainty',540,280,190,100,'Predictive-certainty ban','No diagnosis, trust score, or calibrated forecast','boundary','rect','gate 3'),
+ dnode('use',790,270,190,120,'Use boundary','Is the proposed use explanatory / educational?','decision','diamond','decision gate'),
+ dnode('allowed',1050,100,230,110,'Allowed use','Mechanism study, teaching, design critique, research hypothesis','system','rect','educational / research'),
+ dnode('blocked',1050,470,230,110,'Blocked use','Operational targeting, individual scoring, coercive prediction','risk','rect','prohibited'),
+]
+edges=[
+ dedge('content','overclaim',[(230,330),(290,330)],'boundary','passes'),
+ dedge('overclaim','certainty',[(480,330),(540,330)],'boundary','passes'),
+ dedge('certainty','use',[(730,330),(790,330)],'boundary','review'),
+ dedge('use','allowed',[(980,300),(1010,300),(1010,155),(1050,155)],'flow','yes',(1010,230)),
+ dedge('use','blocked',[(980,360),(1020,360),(1020,525),(1050,525)],'boundary','no',(1020,445)),
+]
+_html = diagram_html('Ethics and misuse-control diagram','Ethics and risk-control gates','A proposed use must pass content, interpretation, and predictive-certainty controls before reaching the educational/research branch. The blocked branch records prohibited uses rather than offering an alternative operational workflow.',1330,660,nodes,edges,legend=[('boundary','Guardrail / prohibition boundary'),('flow','Permitted explanatory use')])
+print("PASS: deterministic SVG diagram rendered; orthogonal routing and node separation validated.")''',
+    ),
+)
+
+VALIDATION_PROVENANCE_DIAGRAM_CELLS = (
+    (
+        "markdown",
+        """### Verification stack
+
+The verification stack is sequential and source-bound: a later build or route pass cannot erase a failure in lint, type checking, simulation evidence, notebook drift, or focused tests.""",
+    ),
+    (
+        "code",
+        r'''labels=[
+ ('source','Source tree','Bound implementation, tests, builders, and lockfile','component'),
+ ('lint','Lint','Static code-quality gate','evidence'),
+ ('types','Typecheck','TypeScript model and interface consistency','evidence'),
+ ('sim','Simulation evidence','4,096 seeds, replay, bounds, causal receipts','evidence'),
+ ('docs','Notebook drift check','Execute four records; verify 16 artifacts','evidence'),
+ ('focused','Focused tests','Night, maturity, save, accessibility, viewport','evidence'),
+ ('build','Production build','vinext client, RSC, SSR, Worker output','evidence'),
+ ('render','Rendered metadata','Product title, description, routes, diagrams','evidence'),
+ ('route','Route check','Application, notebooks, evidence, icons','evidence'),
+ ('verified','Verified working tree','Manifested source and production artifacts','system'),
+]
+nodes=[]; edges=[]
+for i,(nid,title,body,kind) in enumerate(labels):
+ y=35+i*100
+ shape='pill' if i in (0,len(labels)-1) else 'rect'
+ nodes.append(dnode(nid,310,y,480,70,title,body,kind,shape,'gate' if i not in (0,len(labels)-1) else ('input' if i==0 else 'result')))
+ if i:
+  prev=labels[i-1][0]
+  edges.append(dedge(prev,nid,[(550,y-30),(550,y)],'evidence'))
+_html = diagram_html('Validation pipeline diagram','Current working-tree verification stack','Each gate consumes the output of the preceding gate. A later pass cannot erase an earlier failure, and release evidence remains bound to the source tree that produced it.',1100,1035,nodes,edges,groups=[dgroup('static',270,105,560,180,'Static analysis'),dgroup('model',270,305,560,280,'Executable model and documentation'),dgroup('product',270,605,560,280,'Build and rendered product'),dgroup('result',270,905,560,110,'Bound result')],legend=[('evidence','Release-blocking verification dependency')])
+print("PASS: deterministic SVG diagram rendered; orthogonal routing and node separation validated.")''',
+    ),
+    (
+        "markdown",
+        """### Evidence provenance
+
+The provenance pipeline follows claims from the exact source tree through deterministic producers and generated artifacts to checksums, manifests, and public evidence. This prevents prior-source evidence from being relabeled as current execution.""",
+    ),
+    (
+        "code",
+        r'''nodes=[
+ dnode('source-tree',30,210,210,100,'Source tree','Implementation, tests, notebook specs, lockfile','component','document','bound input'),
+ dnode('harness',300,210,210,100,'Deterministic builders and tests','Reducers, seed sweeps, notebook execution, build','component','rect','producer'),
+ dnode('artifacts',570,210,210,100,'Generated artifacts','Runs, HTML, .ipynb, dist, status records','data','document','outputs'),
+ dnode('hashes',840,210,210,100,'Checksums and manifests','Path, bytes, SHA-256, implementation binding','evidence','document','integrity'),
+ dnode('published',1110,210,230,100,'Published evidence','Evidence index, notebook routes, retained records','system','rect','public record'),
+]
+edges=[
+ dedge('source-tree','harness',[(240,260),(300,260)],'data','executes'),
+ dedge('harness','artifacts',[(510,260),(570,260)],'evidence','produces'),
+ dedge('artifacts','hashes',[(780,260),(840,260)],'evidence','binds'),
+ dedge('hashes','published',[(1050,260),(1110,260)],'evidence','publishes'),
+]
+_html = diagram_html('Evidence provenance diagram','Evidence provenance from source to publication','Assurance claims remain traceable from the exact source tree through deterministic producers and generated artifacts to cryptographic bindings and public evidence pages.',1380,520,nodes,edges,legend=[('data','Source or generated data'),('evidence','Assurance and publication binding')])
+print("PASS: deterministic SVG diagram rendered; orthogonal routing and node separation validated.")''',
+    ),
+)
+
+VALIDATION_COVERAGE_DIAGRAM_CELLS = (
+    (
+        "markdown",
+        """### Test coverage map
+
+The matrix identifies the primary and supporting concern owned by each test family. Blank cells remain explicitly unclaimed rather than being treated as implied coverage.""",
+    ),
+    (
+        "code",
+        r'''rows = (
+    "Concurrent-night tests",
+    "Simulation-maturity harness",
+    "Save-model tests",
+    "Accessibility-disclosure tests",
+    "Viewport-contract tests",
+    "Rendered-HTML test",
+    "Notebook drift check",
+    "Status and route checks",
+)
+columns = (
+    "Generation and coherence",
+    "Concurrent state",
+    "Social / epistemic model",
+    "Persistence / hostile input",
+    "Accessibility / disclosure",
+    "Viewport / navigation",
+    "Publication / artifact drift",
+    "Metadata / routes",
+)
+P, S = "P", "S"
+coverage = {
+    (rows[0], columns[0]): P, (rows[0], columns[1]): P, (rows[0], columns[2]): P,
+    (rows[1], columns[0]): S, (rows[1], columns[1]): P, (rows[1], columns[2]): S,
+    (rows[2], columns[1]): S, (rows[2], columns[3]): P,
+    (rows[3], columns[2]): S, (rows[3], columns[4]): P, (rows[3], columns[6]): S,
+    (rows[4], columns[4]): S, (rows[4], columns[5]): P,
+    (rows[5], columns[6]): S, (rows[5], columns[7]): P,
+    (rows[6], columns[6]): P, (rows[6], columns[7]): S,
+    (rows[7], columns[6]): S, (rows[7], columns[7]): P,
+}
+_html = matrix_diagram_html(
+    "Verification coverage matrix",
+    "Test-family coverage by system concern",
+    "Primary and supporting coverage are declared separately so the matrix does not imply that every suite verifies every concern.",
+    rows,
+    columns,
+    coverage,
+    notes=(
+        "Blank cells are intentionally not claimed as coverage.",
+        "The matrix supplements, rather than replaces, executable test names and traceability documentation.",
+    ),
+)
+print("PASS: coverage matrix rendered with explicit primary, supporting, and unclaimed cells.")''',
+    ),
+)
+
 
 
 SYSTEMS_SPEC = NotebookSpec(
@@ -181,6 +1243,7 @@ print(f"Mapped {len(modules)} primary modules; state changes remain concentrated
 _html = table_html("State flow from seed to portable record", ("Order", "Stage", "Contents", "Control"), flow)
 print("State flow verified: presentation does not become a second source of truth.")''',
         ),
+        *SYSTEMS_DIAGRAM_CELLS,
         (
             "markdown",
             """## Concurrent-night geometry
@@ -362,6 +1425,7 @@ _html = table_html("CHORUS claim ladder", ("Claim class", "Status", "Meaning"), 
 assert sum(status.startswith("Not supported") for _, status, _ in claims) == 4
 print("PASS: claim ladder separates internal model evidence from external empirical claims.")''',
         ),
+        *MODEL_CONTEXT_DIAGRAM_CELLS,
         (
             "markdown",
             """## Object of representation
@@ -395,6 +1459,7 @@ print("Mapped seven nested units from actor to reproducible run.")''',
 _html = table_html("Authoritative implementation owners", ("Concern", "Source owner", "Research relevance"), source_owners, row_headers=True)
 print("Source ownership is explicit; this notebook documents rather than replaces those authorities.")''',
         ),
+        *MODEL_STRUCTURE_DIAGRAM_CELLS,
         (
             "markdown",
             """## Construct and variable register
@@ -530,6 +1595,7 @@ _html = table_html("Mechanism from context to afterimage", ("Step", "Stage", "Tr
 assert [row[0] for row in mechanism] == list(range(1, 9))
 print("PASS: eight-stage mechanism preserves a complete causal path from generation to receipt.")''',
         ),
+        *MODEL_DYNAMICS_DIAGRAM_CELLS,
         (
             "markdown",
             """## Coherence evaluation
@@ -697,6 +1763,7 @@ A CHORUS study begins with a bounded question and a declared contrast. It uses d
 _html = checklist_html("Research-design principles", [("REQUIRED", label, note) for label, note in principles])
 print("Seven principles govern every proposed CHORUS study.")''',
         ),
+        *RESEARCH_FOUNDATION_DIAGRAM_CELLS,
         (
             "markdown",
             """## Research-question matrix
@@ -760,6 +1827,7 @@ _html = table_html("Matched-variant protocol", ("Step", "Stage", "Requirement"),
 assert [step for step, _, _ in variant_protocol] == list(range(1, 11))
 print("PASS: ten-step protocol connects controlled comparison to causal and qualitative inspection.")''',
         ),
+        *RESEARCH_COMPARISON_DIAGRAM_CELLS,
         (
             "markdown",
             """## Example factorial scope
@@ -813,6 +1881,7 @@ An outcome must be named at the correct level and interpreted according to its r
 _html = table_html("Outcome register and interpretation boundary", ("Outcome", "Level", "Representation", "Summary", "Do not claim"), outcomes, row_headers=True)
 print("Outcome register defines 11 measures and a misuse boundary for each.")''',
         ),
+        *RESEARCH_MEASUREMENT_DIAGRAM_CELLS,
         (
             "markdown",
             """## Quantitative analysis plan
@@ -981,6 +2050,7 @@ print("Ethics table separates synthetic audit from five increasingly sensitive e
 _html = checklist_html("Data-governance commitments", [("REQUIRED", label, procedure) for label, procedure in governance])
 print("Data governance preserves the product's privacy baseline and forbids covert profiling.")''',
         ),
+        *RESEARCH_ETHICS_DIAGRAM_CELLS,
         (
             "markdown",
             """## Reporting template
@@ -1098,6 +2168,7 @@ assert generator_version > 0 and len(provenance_rows) == len(tracked_sources)
 _html = table_html("Verification provenance", ("Source", "Lines", "SHA-256 (12)", "Evidence role"), provenance_rows, row_headers=True)
 print(f"PASS: read {len(provenance_rows)} implementation and test sources; parsed generator version {generator_version}.")''',
         ),
+        *VALIDATION_PROVENANCE_DIAGRAM_CELLS,
         (
             "markdown",
             """## Retained large-simulation result
@@ -1424,6 +2495,7 @@ Notebook source and static HTML are released together. The source retains execut
 _html = table_html("Notebook publication artifacts", ("Artifact", "Path", "Guarantee"), publication, row_headers=True)
 print("PASS: notebook source, static edition, downloadable copy, and integrity manifest move together.")''',
         ),
+        *VALIDATION_COVERAGE_DIAGRAM_CELLS,
         (
             "markdown",
             """## Release decision
@@ -1447,6 +2519,14 @@ print(f"Release ledger defines {len(rows)} independent evidence gates; none is r
         ),
     ),
 )
+
+
+EXPECTED_DIAGRAM_COUNTS = {
+    SYSTEMS_SPEC.filename: 4,
+    MODEL_SPEC.filename: 5,
+    RESEARCH_SPEC.filename: 5,
+    VALIDATION_SPEC.filename: 3,
+}
 
 
 CSS = r'''
@@ -1634,6 +2714,9 @@ def execute_spec(spec: NotebookSpec) -> tuple[dict[str, Any], list[str]]:
             f'<pre><code>{html.escape(source)}</code></pre></details>{visible_output}</section>'
         )
 
+    diagram_count = sum(cell.count('<figure class="diagram-figure"') for cell in rendered_cells)
+    diagram_types = sorted(set(re.findall(r'data-diagram-type="([^"]+)"', "".join(rendered_cells))))
+
     notebook = {
         "cells": notebook_cells,
         "metadata": {
@@ -1645,6 +2728,9 @@ def execute_spec(spec: NotebookSpec) -> tuple[dict[str, Any], list[str]]:
                 "deterministic": True,
                 "external_runtime_required_for_html": False,
                 "claim_boundary": "synthetic explanatory model; not externally predictive",
+                "diagram_count": diagram_count,
+                "diagram_types": diagram_types,
+                "diagram_routing": "deterministic orthogonal SVG; crossings and node incursions rejected at build time",
             },
             "kernelspec": {
                 "display_name": "Python 3 (standard library)",
@@ -1791,6 +2877,8 @@ python3 scripts/docs/build_notebooks.py --check
 The first command executes every code cell in a clean per-notebook namespace, commits cell outputs, writes the accessible HTML editions, copies downloadable notebook files, and refreshes the integrity manifest. The second command performs the same build in memory and fails if any committed artifact has drifted.
 
 The HTML editions are ordinary long-form documents rather than part of the one-viewport game shell. They provide semantic landmarks, skip links, labelled scrollable tables, visible focus, reduced-motion and forced-color handling, responsive reflow, print treatment, and complete text equivalents for every computed summary.
+
+The four notebooks also publish 17 deterministic SVG diagrams using the diagram type appropriate to the explanatory task: C4 context, component architecture, ERD/domain model, activity flow, causal DAG, controlled research design, validity boundaries, measurement and risk pipelines, artifact/route maps, verification provenance, and a test-coverage matrix. Every connector route is orthogonal; the builder rejects line crossings, node incursions, and node overlaps before publication.
 """
 
 
@@ -1972,6 +3060,15 @@ def validate_artifacts(artifacts: dict[Path, bytes]) -> list[str]:
     for path, data in artifacts.items():
         if path.suffix == ".html":
             errors.extend(validate_html(path, data))
+            if path.parent == PUBLISH_DIR and path.name != "index.html":
+                expected_count = EXPECTED_DIAGRAM_COUNTS.get(next((spec.filename for spec in (SYSTEMS_SPEC, MODEL_SPEC, RESEARCH_SPEC, VALIDATION_SPEC) if f"{spec.slug}.html" == path.name), ""), 0)
+                html_source = data.decode("utf-8")
+                actual_count = html_source.count('<figure class="diagram-figure"')
+                if actual_count != expected_count:
+                    errors.append(f"{path}: expected {expected_count} diagrams, found {actual_count}")
+                for token in ('data-routing="orthogonal-crossing-free"', 'role="img"', '<desc id="', 'Text equivalent'):
+                    if token not in html_source:
+                        errors.append(f"{path}: diagram publication missing {token}")
         if path.suffix == ".ipynb":
             notebook = json.loads(data)
             code_cells = [cell for cell in notebook["cells"] if cell["cell_type"] == "code"]
@@ -1979,6 +3076,14 @@ def validate_artifacts(artifacts: dict[Path, bytes]) -> list[str]:
                 errors.append(f"{path}: code cells are not fully executed")
             if any(not cell["outputs"] for cell in code_cells):
                 errors.append(f"{path}: executed code cell has no committed output")
+            expected_count = EXPECTED_DIAGRAM_COUNTS.get(path.name)
+            if expected_count is not None:
+                actual_count = notebook.get("metadata", {}).get("chorus", {}).get("diagram_count")
+                if actual_count != expected_count:
+                    errors.append(f"{path}: expected metadata diagram_count {expected_count}, found {actual_count}")
+                rich_html = "".join("".join(output.get("data", {}).get("text/html", [])) for cell in code_cells for output in cell.get("outputs", []))
+                if rich_html.count('<figure class="diagram-figure"') != expected_count:
+                    errors.append(f"{path}: committed outputs do not contain {expected_count} diagrams")
     source_pairs = (
         (SOURCE_DIR / SYSTEMS_SPEC.filename, PUBLISH_DIR / SYSTEMS_SPEC.filename),
         (SOURCE_DIR / MODEL_SPEC.filename, PUBLISH_DIR / MODEL_SPEC.filename),

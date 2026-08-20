@@ -2,7 +2,13 @@
   "format": "CHORUS_FINAL_ROUTE_CHECK",
   "schema_version": 1,
   "status": "pass",
-  "captured_at": "2026-08-19T21:45:00-04:00",
+  "captured_at": "2026-08-20T02:23:50+00:00",
+  "environment": {
+    "server": "vinext production server",
+    "host": "127.0.0.1",
+    "port": 4181,
+    "network": "loopback only"
+  },
   "checked": 21,
   "routes": [
     {
@@ -10,7 +16,7 @@
       "status": 200,
       "content_type": "text/html",
       "bytes": 15074,
-      "sha256": "8803cb2c13cfaefcd2ba48de61cbce24c01b859f74b9e056dc2d5d3ca5dbc123"
+      "sha256": "4981206b5cb8476ddfa055c3ff9293c80744f7f9d5ac36345cca9b9e6921f190"
     },
     {
       "route": "/notebooks/index.html",
@@ -23,43 +29,43 @@
       "route": "/notebooks/chorus-systems-atlas.html",
       "status": 200,
       "content_type": "text/html",
-      "bytes": 39896,
-      "sha256": "0042be3267acbc103f239f4c2fad5aa34cefe29cc159ab7682c6e2aefb89af5b"
+      "bytes": 145577,
+      "sha256": "54705e6dcc584ccd2e5aa9a559920cf8be6a4978b2321e84df88ef1c8fd8e6f6"
     },
     {
       "route": "/notebooks/chorus-model-specification.html",
       "status": 200,
       "content_type": "text/html",
-      "bytes": 76007,
-      "sha256": "dff27d1ada566f5a58b8f70a2be1464368b6c9d8f2d40fb1986fb0a30a3f910b"
+      "bytes": 223736,
+      "sha256": "c9a6b47fe9ce7d2f85c180fc528d40a64cde28a7c6f1c694c0fdf1266208647f"
     },
     {
       "route": "/notebooks/chorus-research-design.html",
       "status": 200,
       "content_type": "text/html",
-      "bytes": 75847,
-      "sha256": "58bb80fadcb629ddda615dc2cf210827002302df3d2ed6e2174f5f3d5c90c753"
+      "bytes": 199769,
+      "sha256": "efdd9e47c8c008325abf9c4a49025a7ed551d58b48d2fa383e648d00e3168ae0"
     },
     {
       "route": "/notebooks/chorus-validation-atlas.html",
       "status": 200,
       "content_type": "text/html",
-      "bytes": 65379,
-      "sha256": "0dc299d3c99ea1894992dde522ca37524908ed05e4086b0a6dd9758486c3acd9"
+      "bytes": 159330,
+      "sha256": "5bf4142aa171d21b52aaa08afc495e8277afbfd4980004853931741bbc6dea9f"
     },
     {
       "route": "/notebooks/CHORUS-Model-Specification.ipynb",
       "status": 200,
       "content_type": "application/octet-stream",
-      "bytes": 91774,
-      "sha256": "13ab00c8836a1421e6e7cbaab227d69aa4a04bf91f22e976cd2c1b4dfcf32dd4"
+      "bytes": 260598,
+      "sha256": "81c559024457299b68ff22972b43fa63a5cc83b57aa090a888e980d0373407c8"
     },
     {
       "route": "/notebooks/CHORUS-Research-Design.ipynb",
       "status": 200,
       "content_type": "application/octet-stream",
-      "bytes": 90833,
-      "sha256": "3beb21ea75fe7b9a9e3f6df8b9563f1cd07e5d1cec8a3fc3d6d5ff464e47527f"
+      "bytes": 234358,
+      "sha256": "c5dde01679f1b8d794731e77b1053a3d4e9fe87df7e28d0097b97e456a844141"
     },
     {
       "route": "/evidence/index.html",
@@ -72,15 +78,15 @@
       "route": "/evidence/updated-working-tree-status.html",
       "status": 200,
       "content_type": "text/html",
-      "bytes": 5870,
-      "sha256": "b253c4105a615c295f9ca50b595e56a212cff7aa86847af7b85a512a95a00850"
+      "bytes": 6015,
+      "sha256": "ee65fe9c623f66d988a2f9557578397a1a647f60f4d2cca6aa2f2766079b021d"
     },
     {
       "route": "/evidence/updated-working-tree-status.v1.json",
       "status": 200,
       "content_type": "application/json",
-      "bytes": 7542,
-      "sha256": "595a124c3feebc573caf43fb43e9614a1dd815242866579ad55cc2655c7548ae"
+      "bytes": 7892,
+      "sha256": "fc6e180d8f92a5ce5f48efdb30a6efbc3584b693c30bef37b8802f99f90e9678"
     },
     {
       "route": "/evidence/updated-route-check.v1.json",
@@ -107,36 +113,36 @@
       "route": "/favicon.ico",
       "status": 200,
       "content_type": "image/x-icon",
-      "bytes": 18560,
-      "sha256": "210038b330f3695d22e4813bbb050d57999e9b8e2cd1271ed49ecd7015fc8d24"
+      "bytes": 32038,
+      "sha256": "f808df0c66d3bc3a5f96f3d6d0240a8f8e128fd5d0fb6266b6f0590056dd2bf5"
     },
     {
       "route": "/favicon-16x16.png",
       "status": 200,
       "content_type": "image/png",
       "bytes": 920,
-      "sha256": "27dcbf33327a6160ee508226d5156cd8d58c93f30c7c46d9f9c13ca0e894dde3"
+      "sha256": "6983637e74a63a3bd393a9986e8013012e1c6ae986a569552d922b17ff6edea8"
     },
     {
       "route": "/favicon-32x32.png",
       "status": 200,
       "content_type": "image/png",
-      "bytes": 2601,
-      "sha256": "c8ca1969987ac36d3a29d40ed47a148dc9da33231cfd76e972138befd493d671"
+      "bytes": 2600,
+      "sha256": "fed64cebbdcff52d9941bd3523fc076a71213443f5fc48fb34a033154304790d"
     },
     {
       "route": "/apple-touch-icon.png",
       "status": 200,
       "content_type": "image/png",
-      "bytes": 24670,
-      "sha256": "6c1e32406b7e0073faa2a4e62537e2a0fd6546c2582e8c845d89b54962d1182a"
+      "bytes": 24672,
+      "sha256": "d7486e7c91517d49c96cc238d9cb159336f38ccd078d7a835c8b085a7be4b9b3"
     },
     {
       "route": "/icon-192.png",
       "status": 200,
       "content_type": "image/png",
-      "bytes": 25854,
-      "sha256": "31eebbc5239e232bcecbfc73521ff13c9fbc167481ea6ba0960866c54a8ad32e"
+      "bytes": 25841,
+      "sha256": "d14886b736d81c945ca414fff40dd25be62650256f701f5818584edd407b7e3a"
     },
     {
       "route": "/icon-512.png",
@@ -152,5 +158,10 @@
       "bytes": 528,
       "sha256": "9bf823cc43957c2a096fd9d7a2c3a5ca22246945cd75b12e3fb31fb69586affb"
     }
-  ]
+  ],
+  "summary": {
+    "checked": 21,
+    "passed": 21,
+    "failed": 0
+  }
 }

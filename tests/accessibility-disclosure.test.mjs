@@ -350,10 +350,33 @@ test("scholarly record is executed, public, bounded, and reachable from the Hous
   assert.match(css, /@media\(max-width:680px\)\{[\s\S]*?\.research-record-cards,\.research-record-cards article>div:last-child,\.research-record-links\{grid-template-columns:minmax\(0,1fr\)/);
 
   const paths = [
-    ["CHORUS-Model-Specification.ipynb", "chorus-model-specification.html", "CHORUS Model Specification"],
-    ["CHORUS-Research-Design.ipynb", "chorus-research-design.html", "CHORUS Research Design Atlas"],
+    ["CHORUS-Model-Specification.ipynb", "chorus-model-specification.html", "CHORUS Model Specification", 5, [
+      "C4 system-context diagram",
+      "Component diagram",
+      "ERD / domain model",
+      "UML activity / state-flow diagram",
+      "Directed acyclic causal diagram",
+    ]],
+    ["CHORUS-Research-Design.ipynb", "chorus-research-design.html", "CHORUS Research Design Atlas", 5, [
+      "Research design map",
+      "Controlled comparative design diagram",
+      "Validity / claims-boundary diagram",
+      "Measurement and analysis pipeline",
+      "Ethics and misuse-control diagram",
+    ]],
+    ["CHORUS-Systems-Atlas.ipynb", "chorus-systems-atlas.html", "CHORUS Systems Atlas", 4, [
+      "Layered technical architecture",
+      "Build and publication pipeline",
+      "Artifact publication structure diagram",
+      "Route and document relationship map",
+    ]],
+    ["CHORUS-Validation-Atlas.ipynb", "chorus-validation-atlas.html", "CHORUS Historical Verification Ledger", 3, [
+      "Validation pipeline diagram",
+      "Evidence provenance diagram",
+      "Verification coverage matrix",
+    ]],
   ];
-  for (const [notebookName, htmlName, title] of paths) {
+  for (const [notebookName, htmlName, title, diagramCount, expectedTypes] of paths) {
     const notebook = JSON.parse(await readFile(path.join(root, "notebooks", notebookName), "utf8"));
     const codeCells = notebook.cells.filter((cell) => cell.cell_type === "code");
     assert.ok(notebook.cells.every((cell) => /^[A-Za-z0-9_-]{1,64}$/.test(cell.id)));
@@ -362,11 +385,28 @@ test("scholarly record is executed, public, bounded, and reachable from the Hous
     assert.ok(codeCells.every((cell) => Number.isInteger(cell.execution_count) && cell.execution_count > 0));
     assert.ok(codeCells.every((cell) => Array.isArray(cell.outputs) && cell.outputs.length > 0));
     assert.equal(notebook.metadata.chorus.claim_boundary, "synthetic explanatory model; not externally predictive");
+    assert.equal(notebook.metadata.chorus.diagram_count, diagramCount);
+    assert.deepEqual([...notebook.metadata.chorus.diagram_types].sort(), [...expectedTypes].sort());
+    assert.equal(notebook.metadata.chorus.diagram_routing, "deterministic orthogonal SVG; crossings and node incursions rejected at build time");
+
     const rendered = await readFile(path.join(root, "public/notebooks", htmlName), "utf8");
     assert.match(rendered, new RegExp(`<title>${title}`));
     assert.match(rendered, /<main id="main">/);
     assert.match(rendered, /Download executed notebook/);
     assert.match(rendered, /href="\.\.\/favicon\.ico"/);
+    assert.equal((rendered.match(/<figure class="diagram-figure"/g) ?? []).length, diagramCount);
+    assert.equal((rendered.match(/data-routing="orthogonal-crossing-free"/g) ?? []).length, diagramCount);
+    assert.equal((rendered.match(/class="diagram-svg"[^>]*role="img"/g) ?? []).length, diagramCount);
+    assert.equal((rendered.match(/<desc id="[^"]+">/g) ?? []).length, diagramCount);
+    assert.equal((rendered.match(/<summary>Text equivalent<\/summary>/g) ?? []).length, diagramCount);
+    assert.equal((rendered.match(/class="diagram-assurance">/g) ?? []).length, diagramCount);
+    assert.match(rendered, /0 crossings · 0 node incursions · 0 node overlaps/);
+    if (expectedTypes.includes("Verification coverage matrix")) {
+      assert.match(rendered, /matrix topology · 0 connector lines/);
+    }
+    for (const diagramType of expectedTypes) {
+      assert.match(rendered, new RegExp(`data-diagram-type="${diagramType.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}"`));
+    }
     assert.doesNotMatch(rendered, /<script/i);
   }
 

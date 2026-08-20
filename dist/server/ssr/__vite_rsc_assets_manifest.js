@@ -1,8 +1,8 @@
 export default {
-  "clientEntryUrl": "/_next/static/chunks/index-i1DLBFDz.js",
+  "clientEntryUrl": "/_next/static/chunks/index-DjNv7ROw.js",
   "clientEntryDeps": {
     "js": [
-      "/_next/static/chunks/index-i1DLBFDz.js",
+      "/_next/static/chunks/index-DjNv7ROw.js",
       "/_next/static/chunks/rolldown-runtime-hePW80VL.js",
       "/_next/static/chunks/framework-CgvwdT60.js"
     ],
@@ -14,13 +14,13 @@ export default {
         "/_next/static/chunks/page-BS3dtAU_.js",
         "/_next/static/chunks/rolldown-runtime-hePW80VL.js",
         "/_next/static/chunks/framework-CgvwdT60.js",
-        "/_next/static/chunks/index-i1DLBFDz.js"
+        "/_next/static/chunks/index-DjNv7ROw.js"
       ],
       "css": []
     },
     "9276801271d6": {
       "js": [
-        "/_next/static/chunks/index-i1DLBFDz.js",
+        "/_next/static/chunks/index-DjNv7ROw.js",
         "/_next/static/chunks/rolldown-runtime-hePW80VL.js",
         "/_next/static/chunks/framework-CgvwdT60.js"
       ],
@@ -28,7 +28,7 @@ export default {
     },
     "0b874ad30386": {
       "js": [
-        "/_next/static/chunks/index-i1DLBFDz.js",
+        "/_next/static/chunks/index-DjNv7ROw.js",
         "/_next/static/chunks/rolldown-runtime-hePW80VL.js",
         "/_next/static/chunks/framework-CgvwdT60.js"
       ],
@@ -36,7 +36,7 @@ export default {
     },
     "593f344dc510": {
       "js": [
-        "/_next/static/chunks/index-i1DLBFDz.js",
+        "/_next/static/chunks/index-DjNv7ROw.js",
         "/_next/static/chunks/rolldown-runtime-hePW80VL.js",
         "/_next/static/chunks/framework-CgvwdT60.js"
       ],
@@ -44,7 +44,7 @@ export default {
     },
     "bad85346fc72": {
       "js": [
-        "/_next/static/chunks/index-i1DLBFDz.js",
+        "/_next/static/chunks/index-DjNv7ROw.js",
         "/_next/static/chunks/rolldown-runtime-hePW80VL.js",
         "/_next/static/chunks/framework-CgvwdT60.js"
       ],
@@ -52,16 +52,16 @@ export default {
     },
     "15c18cfaeeff": {
       "js": [
-        "/_next/static/chunks/layout-segment-context-aEE5_qn_.js",
+        "/_next/static/chunks/layout-segment-context-ChrahcVW.js",
         "/_next/static/chunks/rolldown-runtime-hePW80VL.js",
         "/_next/static/chunks/framework-CgvwdT60.js",
-        "/_next/static/chunks/index-i1DLBFDz.js"
+        "/_next/static/chunks/index-DjNv7ROw.js"
       ],
       "css": []
     },
     "8c0f216c4604": {
       "js": [
-        "/_next/static/chunks/index-i1DLBFDz.js",
+        "/_next/static/chunks/index-DjNv7ROw.js",
         "/_next/static/chunks/rolldown-runtime-hePW80VL.js",
         "/_next/static/chunks/framework-CgvwdT60.js"
       ],
@@ -72,7 +72,7 @@ export default {
         "/_next/static/chunks/streamed-icons-DRzS5EuZ.js",
         "/_next/static/chunks/rolldown-runtime-hePW80VL.js",
         "/_next/static/chunks/framework-CgvwdT60.js",
-        "/_next/static/chunks/index-i1DLBFDz.js"
+        "/_next/static/chunks/index-DjNv7ROw.js"
       ],
       "css": []
     }

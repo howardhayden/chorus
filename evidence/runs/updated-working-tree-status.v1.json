@@ -1,7 +1,7 @@
 {
   "format": "CHORUS_UPDATED_WORKING_TREE_STATUS",
   "schema_version": 1,
-  "captured_at": "2026-08-19T21:38:00-04:00",
+  "captured_at": "2026-08-19T21:55:00-04:00",
   "base_repository": "howardhayden/chorus",
   "base_commit": "e331f79b8fddd397be80891d7ddea25fda778d58",
   "application_version": "1.0.0-rc.1",
@@ -11,7 +11,7 @@
   "state_label": "Complete updated working tree; not a promoted replacement release candidate",
   "implementation_binding": {
     "algorithm": "sha256-path-length-content",
-    "digest": "d8bb8701ca63e46f245aa48f11a0a67d796ca71f7cf5c8472e586d718f7573dd",
+    "digest": "4eca1183a19c0c6397cb5907f3c3f078f0c0721aae747c106f58079657d4fb16",
     "file_count": 18,
     "files": [
       {
@@ -66,8 +66,8 @@
       },
       {
         "path": "tests/accessibility-disclosure.test.mjs",
-        "bytes": 23758,
-        "sha256": "9c134a31714fdc4f55ebe629abe101ee7415c1853ed71bb4805f35961f85434e"
+        "bytes": 26007,
+        "sha256": "ab0b79d12511f98ddf4e4dba70dea13720857af66726480072f60ea6184569c0"
       },
       {
         "path": "tests/concurrent-night.test.mjs",
@@ -111,6 +111,7 @@
     "CHORUS Research Design Atlas executed notebook and styled HTML",
     "House Guide and Field Notes in-app scholarly reading alert",
     "Standalone notebook routes and four-record notebook index",
+    "Seventeen deterministic, semantically typed SVG diagrams with build-time crossing, routing, and node-incursion validation",
     "SVG, ICO, 16/32 PNG, Apple touch, and 192/512 web-manifest icon coverage",
     "Current working-tree verification command separated from release promotion"
   ],
@@ -153,7 +154,15 @@
     "notebook_publication": {
       "status": "pass",
       "artifacts": 16,
-      "records": 4
+      "records": 4,
+      "diagrams": 17,
+      "diagram_distribution": {
+        "model_specification": 5,
+        "research_design": 5,
+        "systems_atlas": 4,
+        "validation_atlas": 3
+      },
+      "routing_validation": "pass"
     },
     "lint": "pass",
     "typecheck": "pass",

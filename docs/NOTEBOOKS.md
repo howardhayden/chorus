@@ -100,6 +100,33 @@ The Validation Atlas exposes fixed verification declarations for:
 - disclosure and viewport contracts; and
 - traceability from requirement to automated evidence.
 
+
+## Diagram publication contract
+
+The four notebooks contain 17 deterministic inline-SVG diagrams. Each diagram
+uses the representation appropriate to its explanatory task rather than a
+single generic box-and-arrow style:
+
+| Notebook | Diagram inventory |
+|---|---|
+| Systems Atlas | layered technical architecture; deterministic build/publication pipeline; artifact publication structure; route/document relationship map |
+| Model Specification | C4 system context; component architecture; ERD/domain model; concurrent-night activity/state flow; directed acyclic propagation model |
+| Research Design Atlas | construct-to-output research map; controlled comparative design; validity/claims boundary; measurement and analysis pipeline; ethics and misuse-control gates |
+| Historical Verification Ledger | verification stack; evidence provenance; test-family coverage matrix |
+
+Connector-bearing diagrams use explicit orthogonal routes anchored to source and
+target boundaries. The builder rejects diagonal segments, line crossings,
+collinear route overlaps, traversal through unrelated nodes, node overlap, and
+out-of-bounds geometry. The coverage matrix deliberately uses a matrix topology
+rather than connectors because the represented relationship is many-to-many
+coverage rather than process flow.
+
+Every diagram includes a figure caption, semantic SVG title and description,
+non-color labels, an adjacent text equivalent, a visible legend where multiple
+edge semantics appear, and an execution assurance line. Diagram source remains
+inside the notebook builder so the SVG, notebook output, downloadable source,
+and static HTML edition are regenerated from one versioned declaration.
+
 ## Completed-output requirements
 
 Every published HTML file must:
@@ -137,6 +164,11 @@ to `public/notebooks/`. Release validation checks that:
 
 - all four canonical sources exist;
 - all four completed HTML files exist and are nonempty;
+- the expected 5/5/4/3 diagram distribution is present in the Model,
+  Research, Systems, and Validation publications;
+- every connector diagram passes deterministic orthogonal-routing, crossing,
+  node-incursion, boundary-anchor, and node-overlap validation;
+- every diagram exposes an SVG title/description and adjacent text equivalent;
 - every source download matches its canonical notebook;
 - completed cells and run metadata are present;
 - every code cell has an execution count and committed output;
