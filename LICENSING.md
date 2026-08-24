@@ -1,43 +1,82 @@
-# Repository licensing
+# Licensing
 
-CHORUS combines browser-delivered simulation software, authored scenario and interface content embedded in source, standalone scholarly and educational publications, machine-readable evidence records, source-identifying design, and third-party components. Those categories are licensed separately.
+Copyright (c) 2026 Hayden Howard.
 
-## Software and embedded simulation content — AGPL-3.0-or-later
+This repository is **source-available for noncommercial use**. It is not offered
+as open-source software because the public software license excludes commercial
+purposes.
 
-Unless a file carries a more specific notice, application and Worker source, simulation logic, tests, scripts, package manifests, build configuration, and authored text or data embedded in source files are licensed under the [GNU Affero General Public License, version 3 or later](LICENSE).
+Apply terms in this order:
 
-A modified version made available to users over a network must offer those users its corresponding source under the AGPL. Source for the official deployment is maintained at `https://github.com/howardhayden/chorus`.
+1. an explicit notice in a file;
+2. a third-party or source-specific notice;
+3. this document and `LICENSE-MAP.json`;
+4. the default software license.
 
-A source file that combines executable code with embedded narrative, educational, scenario, or interface content is treated as AGPL-covered software.
+## Original software — PolyForm-Noncommercial-1.0.0
 
-## Standalone scholarly, educational, and creative material — CC BY-NC-SA 4.0
+Unless a narrower category below applies, original source code, stylesheets,
+configuration, tests, scripts, workers, code-defined schemas, code-embedded
+content or data, and generated executable software are licensed under the
+PolyForm Noncommercial License 1.0.0. The root `LICENSE` and
+`LICENSES/PolyForm-Noncommercial-1.0.0.txt` contain the complete terms.
 
-Unless a file carries a more specific notice, original standalone documentation, executed notebooks, rendered notebook publications, diagrams, explanatory evidence narratives, and other non-software creative works are licensed under the [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License](https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode).
+The public license grants no commercial-use permission. See
+`COMMERCIAL-LICENSE.md` for the repository policy summary.
 
-This Creative Commons license does not apply to software. Commercial reuse of this separately licensed material requires separate permission.
+## Project-specific workflow implementation
 
-## Machine-readable artifact manifests — CC0-1.0
+The default software license covers the copyrightable expression and
+implementation of:
 
-`CHECKSUMS.sha256`, `OUTPUT-MANIFEST.json`, `notebooks/artifact-manifest.json`, and `public/notebooks/artifact-manifest.json` are dedicated under [CC0 1.0 Universal](https://creativecommons.org/publicdomain/zero/1.0/legalcode) to support unrestricted verification, mirroring, and interoperability. This dedication does not change the licenses of the works described by those records.
+- the deterministic scenario grammar and coherence gates
+- the concurrent-night clock, event ledger, propagation model, and reducers
+- the separation of ground truth, observation, inference, motive, and unresolved questions
+- fatigue, support, discernment, enactment, consequence, and debrief behavior
+- save, replay, receipt, disclosure, and scholarly-evidence workflows
+- the authored model specifications, diagrams, taxonomies, labels, and test contracts
 
-`OUTPUT-MANIFEST.json` and `CHECKSUMS.sha256` remain the immutable evidence set for the dated August 19, 2026 output they describe. This August 24 licensing metadata is intentionally outside that historical manifest rather than silently rewriting the earlier evidence package.
+This identification does not claim exclusive rights over abstract ideas,
+methods, systems, facts, or functionality that copyright law does not protect.
 
-## Marks and source identity — reserved
+## General-purpose coding functions
 
-The name **CHORUS**, project domains, logos, trade dress, and other source-identifying marks are not licensed as trademarks or service marks. Accurate descriptive and nominative use permitted by law remains unaffected.
+No function inside a covered file becomes permissively licensed merely because
+it could be useful elsewhere. At introduction of this policy, **no original
+source file or function is licensed under MIT**.
+
+A future utility may receive a permissive exception only after extraction into
+a separate file or package, removal of project-specific workflow expression, an
+explicit `SPDX-License-Identifier: MIT` notice, independent tests, and an exact
+entry in `LICENSE-MAP.json`. See `PERMISSIVE-EXCEPTIONS.md`.
+
+## Separable original documentation and media — CC-BY-NC-SA-4.0
+
+Original prose, explanatory diagrams, and non-code figures in the paths listed
+in `LICENSE-MAP.json` are licensed under Creative Commons
+Attribution-NonCommercial-ShareAlike 4.0 International. Software code,
+substantive code excerpts, code-embedded data, and executable definitions in a
+mixed file remain under `PolyForm-Noncommercial-1.0.0`. Third-party material retains its own terms.
+
+## Generated artifacts
+
+Generation does not erase source licenses. Executable bundles remain governed
+by the software terms for covered code; embedded documentation, media, fonts,
+and third-party components retain their source terms.
 
 ## Third-party material
 
-Third-party software, fonts, quotations, images, reference material, and other incorporated works retain their own notices and terms. Their specific notices override this repository-level map. No license is granted to material for which the licensor lacks authority.
+Third-party packages, fonts, algorithms, icons, photographs, audio, datasets,
+and other materials are not relicensed. Their own notices control.
 
-## File-level priority
+## Earlier snapshots
 
-The most specific notice controls. A notice in a file or its containing directory overrides this map. Generated output follows the license of its source unless the output carries a different notice.
+This policy is prospective. It does not withdraw permissions already attached
+to earlier copies distributed under MIT or another license. It governs files as
+offered from the commit introducing this policy forward, subject to ownership,
+file history, and source-specific notices.
 
-## Contributions
+## Names and marks
 
-Unless agreed otherwise in writing, a contribution is offered under the license governing the affected material above. A contributor represents that they have the right to submit the contribution. Third-party material must retain its original notices and terms.
-
-## Effective revision
-
-This map applies to revisions committed on or after **August 24, 2026**. Earlier public revisions that contained no license did not grant general reuse rights merely by being publicly accessible.
+No copyright license grants trademark, likeness, endorsement, or official-status
+rights. See `TRADEMARKS.md`.
