@@ -25,6 +25,25 @@ function cssBlock(selector, source = css) {
   assert.fail(`unterminated CSS block for ${selector}`);
 }
 
+function functionSource(name) {
+  const start = page.indexOf(`function ${name}`);
+  assert.notEqual(start, -1, `missing ${name}`);
+  const remaining = page.slice(start + `function ${name}`.length);
+  const nextFunction = remaining.search(/\nfunction\s+[A-Za-z0-9_]+/);
+  return nextFunction === -1
+    ? page.slice(start)
+    : page.slice(start, start + `function ${name}`.length + nextFunction);
+}
+
+function cssRulesFor(selector) {
+  const rules = [];
+  const rulePattern = /([^{}]+)\{([^{}]*)\}/g;
+  for (const match of css.matchAll(rulePattern)) {
+    if (match[1].split(",").some((candidate) => candidate.trim() === selector)) rules.push(compact(match[2]));
+  }
+  return rules;
+}
+
 async function sourceFiles(directory) {
   const entries = await readdir(directory, { withFileTypes: true });
   const files = await Promise.all(entries.map(async (entry) => {
@@ -60,6 +79,26 @@ test("the application shell owns exactly one dynamic viewport", () => {
   assert.match(workspace, /minmax\(0,1fr\)/);
 });
 
+test("the House Map notice stays intrinsic while the room grid owns the flexible desktop row", () => {
+  const houseMap = functionSource("HouseMap");
+  const headingIndex = houseMap.indexOf('className="stage-heading"');
+  const statsIndex = houseMap.indexOf('className="map-stats"');
+  const limitIndex = houseMap.indexOf('className="model-limit house-limit"');
+  const roomsIndex = houseMap.indexOf('className="room-map-grid"');
+  assert.ok(
+    headingIndex >= 0 && headingIndex < statsIndex && statsIndex < limitIndex && limitIndex < roomsIndex,
+    "House Map source order must remain heading, stats, notice, then rooms",
+  );
+
+  const map = compact(cssBlock(".house-map"));
+  assert.match(map, /grid-template-rows:autoautoautominmax\(350px,1fr\);/);
+  assert.doesNotMatch(
+    map,
+    /grid-template-rows:autoautominmax\(350px,1fr\)auto;/,
+    "the short notice must not receive the flexible room-grid track",
+  );
+});
+
 test("viewport metadata permits safe-area layout without limiting zoom", () => {
   assert.match(layout, /import\s+type\s*\{[^}]*\bViewport\b[^}]*\}\s+from\s+["']next["']/s);
   assert.match(layout, /export\s+const\s+viewport\s*:\s*Viewport\s*=\s*\{/);
@@ -93,10 +132,8 @@ test("overflow is confined to named, accessible internal regions", () => {
     page,
     /<section\s+className=["']stage-view["'][^>]*role=["']region["'][^>]*aria-labelledby=\{stageHeadingId\([^}]+\)\}[^>]*tabIndex=\{0\}[^>]*data-scroll-region=["']primary["']/s,
   );
-  assert.match(
-    page,
-    /<section\s+className=["']debrief-panel pane-scroll["'][^>]*role=["']tabpanel["'][^>]*aria-labelledby=\{["']tab-["']\s*\+\s*tab\}[^>]*tabIndex=\{0\}[^>]*data-scroll-region=["']debrief["']/s,
-  );
+  const debrief = functionSource("NightDebrief");
+  assert.match(debrief, /className=["'][^"']*\bdebrief-ending\b[^"']*["']/);
   assert.match(page, /className=["']scene-panel-content scene-source-panel pane-scroll["'][^>]*role=["']tabpanel["'][^>]*data-scroll-region=["']scene-reading["']/);
   assert.match(page, /className=["']scene-panel-content scene-seat-panel pane-scroll["'][^>]*role=["']tabpanel["'][^>]*data-scroll-region=["']scene-reading["']/);
   assert.match(page, /className=["']scene-panel-content scene-record-panel pane-scroll["'][^>]*role=["']tabpanel["'][^>]*data-scroll-region=["']scene-reading["']/);
@@ -129,6 +166,26 @@ test("mobile and short-landscape layouts preserve a bounded stage", () => {
   assert.match(landscape, /\.signals-button\{display:inline-(?:block|flex)!important/);
   assert.match(landscape, /\.stage-view\{padding:6px\}/);
   assert.match(landscape, /\.room-tabsbutton\{[^}]*min-height:42px;[^}]*\}/);
+
+  const compactCss = compact(css);
+  const compactLandscapeMarker = "@media(max-width:680px)and(max-height:520px)and(orientation:landscape){";
+  const compactLandscapeStart = compactCss.lastIndexOf(compactLandscapeMarker);
+  assert.notEqual(compactLandscapeStart, -1, "missing late narrow short-landscape cascade override");
+  const compactLandscapeEnd = compactCss.indexOf("@media(", compactLandscapeStart + compactLandscapeMarker.length);
+  const narrowLandscape = compactCss.slice(
+    compactLandscapeStart + compactLandscapeMarker.length,
+    compactLandscapeEnd === -1 ? compactCss.length : compactLandscapeEnd,
+  );
+  assert.match(narrowLandscape, /\.house-header\{[^}]*min-height:42px;[^}]*grid-template-columns:34pxminmax\(0,1fr\)/);
+  assert.match(narrowLandscape, /\.header-nav\{[^}]*display:flex;[^}]*overflow-x:auto;[^}]*scrollbar-width:auto/);
+  assert.match(narrowLandscape, /\.house-workspace\{[^}]*grid-template-columns:112pxminmax\(0,1fr\);grid-template-rows:minmax\(0,1fr\)/);
+  assert.match(narrowLandscape, /\.room-rail\{height:auto;min-height:0;[^}]*overflow:hidden/);
+  assert.match(narrowLandscape, /\.room-tabs\{[^}]*grid-template-columns:minmax\(0,1fr\);grid-template-rows:repeat\(6,minmax\(40px,1fr\)\);[^}]*overflow-y:auto/);
+  assert.ok(
+    compactLandscapeStart > compactCss.indexOf("@media(max-height:520px)and(orientation:landscape){")
+      && compactLandscapeStart > compactCss.indexOf("@media(max-width:680px){"),
+    "narrow landscape override loses the mobile or short-landscape cascade",
+  );
 });
 
 test("locked choices remain operable explanations, not disabled dead ends", () => {
@@ -154,30 +211,41 @@ test("locked choices remain operable explanations, not disabled dead ends", () =
   assert.match(choiceButton, /Reason open; activate again to close/);
 });
 
-test("the concluding conversation receipt expands in normal flow", () => {
-  const route = compact(cssBlock(".conversation-routes"));
-  const summary = compact(cssBlock(".conversation-routes>summary"));
-  assert.match(page, /<div className="choice-receipt"><details className="conversation-routes">/);
-  assert.doesNotMatch(route, /position:(?:fixed|absolute|sticky)/);
-  assert.doesNotMatch(route, /overflow:(?:auto|scroll)/);
-  assert.match(summary, /min-height:44px/);
-  assert.match(summary, /grid-template-columns:minmax\(0,1fr\)auto/);
-  assert.match(compact(css), /@media\(max-width:680px\)[\s\S]*\.conversation-routes>summary,\.conversation-route-key,\.conversation-route-list\{grid-template-columns:minmax\(0,1fr\)/);
+test("the conclusion is one normal-flow reading region rather than a tab or disclosure maze", () => {
+  const debrief = functionSource("NightDebrief");
+  const ending = compact(cssBlock(".debrief-ending"));
+  assert.match(ending, /width:min\(100%,[\d.]+(?:px|rem)\)/);
+  assert.match(ending, /display:grid/);
+  assert.doesNotMatch(debrief, /role=["']tablist["']|role=["']tab["']|role=["']tabpanel["']|<details/);
+  assert.doesNotMatch(ending, /position:(?:fixed|absolute|sticky)|overflow:(?:auto|scroll|hidden)/);
+  const summaryIndex = debrief.indexOf("naturalized-summary");
+  const conceptsIndex = debrief.indexOf("plain-concept-receipt");
+  assert.ok(summaryIndex >= 0 && conceptsIndex > summaryIndex);
 });
 
-test("the concluding linguistic receipt and actor disclosures expand in normal flow", () => {
-  const receipt = compact(cssBlock(".language-receipt"));
-  const receiptSummary = compact(cssBlock(".language-receipt>summary"));
-  const actor = compact(cssBlock(".language-profile"));
-  const actorSummary = compact(cssBlock(".language-profile>summary"));
-  assert.match(page, /<details className="language-receipt"><summary><span>Registers and assumptions<\/span>/);
-  assert.doesNotMatch(receipt, /position:(?:fixed|absolute|sticky)/);
-  assert.doesNotMatch(receipt, /overflow:(?:auto|scroll|hidden)/);
-  assert.doesNotMatch(actor, /position:(?:fixed|absolute|sticky)/);
-  assert.doesNotMatch(actor, /overflow:(?:auto|scroll|hidden)/);
-  assert.match(receiptSummary, /min-height:44px/);
-  assert.match(actorSummary, /min-height:54px/);
-  assert.match(receiptSummary, /grid-template-columns:minmax\(0,1fr\)auto/);
-  assert.match(compact(css), /@media\(max-width:680px\)[\s\S]*\.language-receipt>summary,\.language-profile-list,\.language-profile>summary,\.language-profile-body,\.language-model-comparison\{grid-template-columns:minmax\(0,1fr\)/);
-  assert.match(compact(css), /@media\(forced-colors:active\)[\s\S]*\.language-receipt,\.language-profile,\.language-profile-body>section,\.language-model-comparison>article\{border:1pxsolidCanvasText\}/);
+test("the natural story, concept receipt, and model limit reflow inside the one debrief scroller", () => {
+  const debrief = functionSource("NightDebrief");
+  for (const selector of [".naturalized-summary", ".plain-concept-receipt", ".model-limit"]) {
+    const rules = cssRulesFor(selector);
+    assert.ok(rules.length > 0, `missing ${selector} layout rules`);
+    const declarations = rules.join(";");
+    assert.doesNotMatch(declarations, /position:(?:fixed|absolute|sticky)/);
+    assert.doesNotMatch(declarations, /overflow-(?:x|y):(?:auto|scroll|hidden)|overflow:(?:auto|scroll|hidden)/);
+  }
+  assert.match(debrief, /<(?:ul|ol)(?:\s|>)/, "concepts must use wrapping list semantics");
+  const conceptGrid = compact(cssBlock(".plain-concept-receipt ol"));
+  const conceptItem = compact(cssBlock(".plain-concept-receipt li"));
+  assert.match(conceptGrid, /grid-template-columns:repeat\(2,minmax\(0,1fr\)\)/);
+  assert.match(conceptItem, /min-width:0/);
+  assert.match(compact(css), /@media\(max-width:680px\)[\s\S]*\.plain-concept-receiptol\{grid-template-columns:minmax\(0,1fr\)/);
+  assert.match(compact(css), /@media\(forced-colors:active\)[\s\S]*(?:\.naturalized-summary|\.plain-concept-receipt|\.model-limit)/);
+});
+
+test("the seven mobile house tools wrap without a hidden horizontal nav", () => {
+  const mobile = compact(css);
+  assert.match(mobile, /@media\(max-width:680px\)[\s\S]*\.header-nav\{[^}]*overflow:visible;[^}]*display:grid;[^}]*grid-template-columns:repeat\(3,minmax\(0,1fr\)\)/);
+  assert.match(mobile, /@media\(max-width:680px\)[\s\S]*\.header-navbutton\{[^}]*min-width:0;[^}]*min-height:44px;[^}]*white-space:normal;[^}]*overflow-wrap:anywhere/);
+  assert.doesNotMatch(mobile, /@media\(max-width:680px\)[\s\S]*\.header-nav::-webkit-scrollbar\{display:none\}/);
+  const header = functionSource("HouseHeader");
+  assert.equal((header.match(/<button\b/g) ?? []).length, 8, "one Home control plus seven house tools should remain in the DOM");
 });

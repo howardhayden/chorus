@@ -1,0 +1,113 @@
+{
+  "schema": "chorus-correction-red-team-v2",
+  "phase": "post-correction",
+  "captured_at": "2026-09-01T04:20:00Z",
+  "authority": {
+    "source_id": "SRC-U-20260901-CHORUS-CORRECTION",
+    "instruction_sha256": "887dd862b16965033068702857200a8a0fc71101bfd6535ae95a163785245f37",
+    "screenshot_library_id": "libfile_b6d216f97e70819183181d5df274ae1f",
+    "screenshot_viewport": {
+      "width": 2048,
+      "height": 1090
+    }
+  },
+  "source_binding": {
+    "algorithm": "sha256-path-length-content",
+    "implementation_digest": "0267a53f0810314110de25b4521fa2739ca9153ac019ccc0e7269c3972acfbd8",
+    "file_count": 22,
+    "core_files": {
+      "app/debrief-copy.ts": "94704c83d0c22498ac52da0f63de8f40b076ebc2702db7e1b5aa70d69940f9ae",
+      "app/globals.css": "8e25d27cbf61266a800082969c014e17baf1e268a160083406699cf8db01bfa1",
+      "tests/copy-contract.test.mjs": "b1869814ec355757e0ccd796e42c8f8e1b24d0b55342f06b7b3c2f26b4f39010",
+      "tests/viewport-contract.test.mjs": "f37f814463b1985dfbb74424ccee0aa53387962f29a8169508430b14ab8a89d4"
+    }
+  },
+  "pre_record": {
+    "path": "evidence/copy/after-summary-and-map-red-team.pre.v2.json",
+    "sha256": "2a9264dc0b507df74ddf918ec59b756225508519eda8204403a05e77f9d5458e"
+  },
+  "finding_dispositions": [
+    {
+      "id": "COPY-CORR-PRE-001",
+      "status": "corrected",
+      "correction": "The summary renders typed narrative atoms as incident prose and no longer announces records, pressure, questions, or closing evidence as an audit checklist.",
+      "evidence": "The 31-test copy contract rejects the preserved wrappers and the independent editorial corpus recheck found no remaining blocker or high-severity voice issue."
+    },
+    {
+      "id": "COPY-CORR-PRE-002",
+      "status": "corrected",
+      "correction": "The opening derives only from the selected scene's public disclosure records, questions, and unknowns.",
+      "evidence": "Seed 74 contrast opens from its correction record and excludes the stale entry-time reopening question; broad missing-bucket and beat-local provenance attacks pass."
+    },
+    {
+      "id": "COPY-CORR-PRE-003",
+      "status": "corrected",
+      "correction": "A later receiving-room decision is a separately sourced chronological atom and is never called an answer or reply to the route.",
+      "evidence": "The 128-seed chronology sweep and causal-language negative checks pass."
+    },
+    {
+      "id": "COPY-CORR-PRE-004",
+      "status": "corrected",
+      "correction": "Actual scene act, typed route semantics, complete cost structure, and metric-specific residue govern realization; complete semantic atoms and last-resort units stay together.",
+      "evidence": "The current 194-night sweep stays within two to seven paragraphs, sentences at or below 38 words, paragraphs at or below 95 words, and reports zero atom or last-resort unit splits."
+    },
+    {
+      "id": "UI-CORR-PRE-001",
+      "status": "corrected-with-live-browser-gap",
+      "correction": "The House Map now declares four desktop rows in direct-child order: heading, stats, notice, then the flexible room grid.",
+      "evidence": "The exact source-order regression and all 10 viewport contracts pass; read-only geometry review found both room-card rows fit at 2048 x 1090. Live Safari confirmation remains open."
+    }
+  ],
+  "red_team_method": {
+    "performed": [
+      "Replayed the preserved two failing regressions against the corrected source.",
+      "Exercised 194 completed nights across seeds 0 through 95 under both choice policies plus the maximum unsigned seed under both policies.",
+      "Attacked beat-local disclosure provenance, stale entry truth, route causality, audit vocabulary, punctuation, grammatical agency, paragraph bounds, atom integrity, complete last-resort consequences, and situation-conditioned residue.",
+      "Inspected the reported 2048 x 1090 layout against direct-child grid order and reran mobile and short-landscape source contracts.",
+      "Requested independent read-only editorial and CSS rechecks after the final corrections."
+    ],
+    "not_performed": [
+      "A live Safari screenshot of the corrected 2048 x 1090 layout.",
+      "VoiceOver or NVDA reading-order and announcement review.",
+      "Manual 320px, short-landscape, 200% zoom, forced-colors, and reduced-motion review.",
+      "A current-lock dependency advisory run, current-source production-route check, or second neutral clean-room distribution run."
+    ]
+  },
+  "automated_results": {
+    "copy_contract": {
+      "status": "pass",
+      "passed": 31,
+      "failed": 0
+    },
+    "linguistics_contract": {
+      "status": "pass",
+      "passed": 10,
+      "failed": 0
+    },
+    "viewport_contract": {
+      "status": "pass",
+      "passed": 10,
+      "failed": 0
+    },
+    "focused_total": {
+      "status": "pass",
+      "passed": 140,
+      "failed": 0
+    },
+    "working_tree_verification": {
+      "status": "pass",
+      "command": "npm run verify:working-tree",
+      "exit_code": 0,
+      "simulation_assertions": 118668,
+      "focused_tests": 140,
+      "failures": 0
+    }
+  },
+  "decision": {
+    "correction_implementation": "pass",
+    "open_blockers": 0,
+    "open_high_severity_findings": 0,
+    "release": "held",
+    "reason": "The corrected source passes the full automated working-tree gate; live Safari, assistive-technology, manual viewport, current route/dependency, and neutral clean-room promotion boundaries remain open."
+  }
+}

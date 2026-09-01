@@ -14,7 +14,7 @@ Classify a change before editing:
 
 | Class | Examples | Required review |
 |---|---|---|
-| Content | Incident wording, artifact copy, explanation, label. | Incident binding, PG/safety, disclosure, readability, localization assumptions. |
+| Content | Incident wording, artifact copy, explanation, label. | Incident binding, PG-bounded/content-safety rules, disclosure, readability, localization assumptions. |
 | Grammar | Actor, register, choice, route, framework, assignment. | Multi-seed coherence, generator version, safety, repair reachability. |
 | Reducer | Clock, access, effect, fatigue, support, replay. | Determinism, invariants, full runtime and save replay. |
 | Interaction | View, navigation, focus, drawer, graph, responsive layout. | Progressive disclosure, keyboard, screen reader, zoom, mobile, reduced motion. |
@@ -63,8 +63,8 @@ Answer every question before the incident enters the grammar:
 12. Which route remains non-amplifying under extreme fatigue?
 13. Can any copy become an operational manipulation, targeting, harassment, or
     evasion instruction?
-14. Does every phrase remain PG, fictional, and understandable without
-    specialist shorthand?
+14. Does every phrase remain within the authored PG-bounded, fictional grammar
+    and stay understandable without specialist shorthand?
 
 If any answer is missing, the incident is not ready.
 
@@ -125,7 +125,11 @@ Document:
 - the attributable cue after both are entered; and
 - tests across all entered/unentered combinations.
 
-Do not weaken the direct/systemic distinction for narrative convenience.
+Do not weaken the typed content/format/ambient distinction for narrative
+convenience. A direct content link owns a shared-channel carrier, a direct
+format link owns an artifact-format carrier, and an ambient link owns neither.
+Selected carriage additionally requires compatible typed choice delivery and a
+matching realized receipt; labels and narrative phrasing never decide it.
 
 ## Changing interaction or layout
 

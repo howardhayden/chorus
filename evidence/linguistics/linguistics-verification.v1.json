@@ -1,0 +1,318 @@
+{
+  "schema": "chorus.linguistics-verification.v1",
+  "recordId": "linguistics-verification.v1",
+  "captureDate": "2026-09-01",
+  "authority": {
+    "requestId": "SRC-U-20260831-CHORUS-LING",
+    "requestSha256": "6f3045c41a3287dcf82d2c8657034dbc968fa26f8afb9d63b438316423be91d3",
+    "registerId": "CHR-LING-REGISTER",
+    "catalysisCorpusSha256": "566f7c653142b239c098a0a3a0b628f3a3179535b219a99d889fdd48cc9513af",
+    "baselineCommit": "4fffddf11a03a2fc84798a3c5343db00fc3135da"
+  },
+  "sourceBinding": {
+    "algorithm": "sha256-path-length-content",
+    "implementationDigest": "0267a53f0810314110de25b4521fa2739ca9153ac019ccc0e7269c3972acfbd8",
+    "selectedFiles": [
+      {
+        "path": "app/debrief-copy.ts",
+        "bytes": 41552,
+        "sha256": "94704c83d0c22498ac52da0f63de8f40b076ebc2702db7e1b5aa70d69940f9ae"
+      },
+      {
+        "path": "app/globals.css",
+        "bytes": 97027,
+        "sha256": "8e25d27cbf61266a800082969c014e17baf1e268a160083406699cf8db01bfa1"
+      },
+      {
+        "path": "app/layout.tsx",
+        "bytes": 1088,
+        "sha256": "a7703bac2255e0ca42df55de010960b6febc78c25acd658cf4ddb4b593838b19"
+      },
+      {
+        "path": "app/night-engine.ts",
+        "bytes": 55319,
+        "sha256": "fcbc5abf6a0b00c3e1909b9f46b7b271faa21e568fe34f41d959a2e199176d70"
+      },
+      {
+        "path": "app/page.tsx",
+        "bytes": 71894,
+        "sha256": "5de8b79f104635dbd677f7764dc2b465d4a899e8a9ad1154f6ed80426e19eab6"
+      },
+      {
+        "path": "app/privacy-panel.tsx",
+        "bytes": 12567,
+        "sha256": "6d54b600b68ff5c26c3291c4d0fcf2eef6a325bf9690504e686bff44adbf58f9"
+      },
+      {
+        "path": "app/save-model.ts",
+        "bytes": 45744,
+        "sha256": "bd9f017fdace605224d959a04aec210ee29bcf2b153e172919d23dc3c72e3fec"
+      },
+      {
+        "path": "app/scenario-generator.ts",
+        "bytes": 290402,
+        "sha256": "9e0ae6ec25382567d09b32fd08c589fbed709f57a13f9620e41e1c67a96c6668"
+      },
+      {
+        "path": "next.config.ts",
+        "bytes": 104,
+        "sha256": "ab4c61f6ee100ae43610a18512f1ebcec842bb2405431e1009266173f21cf772"
+      },
+      {
+        "path": "postcss.config.mjs",
+        "bytes": 94,
+        "sha256": "dfac7ac2d86d326a0e5adb024e7943c181393ed17a5fcb8f0315b24c7da6ddde"
+      },
+      {
+        "path": "scripts/run-simulation-evidence.mjs",
+        "bytes": 34479,
+        "sha256": "e4b12fa8b30c70ce737de328478ae4f7b49235cd75d30078e81686e7ca06a902"
+      },
+      {
+        "path": "scripts/validate-linguistics-evidence.mjs",
+        "bytes": 26824,
+        "sha256": "17b9a7f230e90993df77dadca6f014b9a436ad0603ae81c9dcfa44b43ebd263d"
+      },
+      {
+        "path": "tests/accessibility-disclosure.test.mjs",
+        "bytes": 30259,
+        "sha256": "a95532b25115652ee2def042a4f4fad9ba919ebd02c33cb90b89ca4b5727559f"
+      },
+      {
+        "path": "tests/concurrent-night.test.mjs",
+        "bytes": 68873,
+        "sha256": "c2cafeb8cdfa356e47ca87d35a580007f8a98874b615229621e3103340c94fa2"
+      },
+      {
+        "path": "tests/copy-contract.test.mjs",
+        "bytes": 85388,
+        "sha256": "b1869814ec355757e0ccd796e42c8f8e1b24d0b55342f06b7b3c2f26b4f39010"
+      },
+      {
+        "path": "tests/linguistics-contract.test.mjs",
+        "bytes": 12442,
+        "sha256": "5ab298161307c57846c66a88c1cb4b74d9754531d5a46a5c198e185936cb1eb6"
+      },
+      {
+        "path": "tests/rendered-html.test.mjs",
+        "bytes": 1454,
+        "sha256": "9c3d2da7f547cf532dc0ce7a398b30f964cf5497fcbd582329781db2f9ae317e"
+      },
+      {
+        "path": "tests/save-model.test.mjs",
+        "bytes": 18485,
+        "sha256": "646db8278f6fb3a6085ea5b524df272f6b23fe730178fb42d869e1f1bfaa7db8"
+      },
+      {
+        "path": "tests/simulation-maturity.test.mjs",
+        "bytes": 4644,
+        "sha256": "6e6a9e5229c9da1f57b629ab09f7237682b2318b76d76ce82bcd39f62066b22d"
+      },
+      {
+        "path": "tests/viewport-contract.test.mjs",
+        "bytes": 14817,
+        "sha256": "f37f814463b1985dfbb74424ccee0aa53387962f29a8169508430b14ab8a89d4"
+      },
+      {
+        "path": "tsconfig.json",
+        "bytes": 706,
+        "sha256": "72ed3722a65e2242200f164aaed26b046901f134660bf81d64464ea73a37b4a8"
+      },
+      {
+        "path": "worker/index.ts",
+        "bytes": 1756,
+        "sha256": "c70393de3e7d55739c1379b1351163966f81aee4d96c8de847096b9f3bd83aa4"
+      }
+    ],
+    "statusRecord": "evidence/runs/updated-working-tree-status.v1.json",
+    "statusBinding": "0267a53f0810314110de25b4521fa2739ca9153ac019ccc0e7269c3972acfbd8"
+  },
+  "runs": [
+    {
+      "id": "RUN-LINT-TYPECHECK-20260901",
+      "command": "npm run lint && npx tsc --noEmit",
+      "result": "pass",
+      "exitCode": 0,
+      "note": "ESLint returned zero errors; informational unused-helper warnings did not fail the configured gate."
+    },
+    {
+      "id": "RUN-SIMULATION-EVIDENCE-20260901",
+      "command": "npm run evidence:simulation",
+      "result": "pass",
+      "exitCode": 0,
+      "assertions": 118668,
+      "failures": 0,
+      "evidenceSha256": "444bdd1b1aa5ec627ec74d8284660dd4e9d409d6a88945d4e1b54a5e090266ca"
+    },
+    {
+      "id": "RUN-NIGHT-20260901",
+      "command": "npm run test:night",
+      "result": "pass",
+      "exitCode": 0,
+      "tests": 39,
+      "failures": 0
+    },
+    {
+      "id": "RUN-SIMULATION-FOCUSED-20260901",
+      "command": "npm run test:simulation",
+      "result": "pass",
+      "exitCode": 0,
+      "tests": 5,
+      "failures": 0
+    },
+    {
+      "id": "RUN-SAVE-20260901",
+      "command": "npm run test:save",
+      "result": "pass",
+      "exitCode": 0,
+      "tests": 18,
+      "failures": 0
+    },
+    {
+      "id": "RUN-COPY-20260901",
+      "command": "npm run test:copy",
+      "result": "pass",
+      "exitCode": 0,
+      "tests": 31,
+      "failures": 0
+    },
+    {
+      "id": "RUN-LINGUISTICS-CONTRACT-20260901",
+      "command": "node --experimental-strip-types --experimental-specifier-resolution=node --test tests/linguistics-contract.test.mjs",
+      "result": "pass",
+      "exitCode": 0,
+      "tests": 10,
+      "failures": 0
+    },
+    {
+      "id": "RUN-A11Y-20260901",
+      "command": "npm run test:a11y",
+      "result": "pass",
+      "exitCode": 0,
+      "tests": 26,
+      "failures": 0
+    },
+    {
+      "id": "RUN-VIEWPORT-20260901",
+      "command": "npm run test:viewport",
+      "result": "pass",
+      "exitCode": 0,
+      "tests": 10,
+      "failures": 0
+    },
+    {
+      "id": "RUN-DOCS-CHECK-20260901",
+      "command": "npm run docs:check:working-tree",
+      "result": "pass",
+      "exitCode": 0,
+      "artifacts": 16
+    },
+    {
+      "id": "RUN-BUILD-RENDERED-20260901",
+      "command": "npm run build && node --test tests/rendered-html.test.mjs",
+      "result": "pass",
+      "exitCode": 0,
+      "tests": 1,
+      "failures": 0
+    },
+    {
+      "id": "RUN-WORKING-TREE-20260901",
+      "command": "npm run verify:working-tree",
+      "result": "pass",
+      "exitCode": 0,
+      "focusedTests": 140,
+      "implementationAssertions": 118668,
+      "failures": 0
+    }
+  ],
+  "adversarialSweeps": [
+    {
+      "id": "SWEEP-SEMANTIC-CAMOUFLAGE",
+      "result": "pass",
+      "evidence": "Typed tests reject factual promotion of message content and selected-carriage promotion of ambient pressure."
+    },
+    {
+      "id": "SWEEP-SUBTEXT-AND-PLAYER-INTERIOR",
+      "result": "pass",
+      "evidence": "A 128-seed scan leaves analytic motive in subtext and assigns authored interior only to fictional seats."
+    },
+    {
+      "id": "SWEEP-DEBRIEF-194",
+      "result": "pass",
+      "evidence": "The copy contract exercised seeds 0..95 under both floor and contrast policies plus 4294967295 under both policies: 194 completed nights with zero scene-disclosure, chronology, provenance, route-truth, atom-integrity, last-resort-integrity, or residue-realization failures.",
+      "sourceHashes": {
+        "app/debrief-copy.ts": "94704c83d0c22498ac52da0f63de8f40b076ebc2702db7e1b5aa70d69940f9ae",
+        "tests/copy-contract.test.mjs": "b1869814ec355757e0ccd796e42c8f8e1b24d0b55342f06b7b3c2f26b4f39010"
+      },
+      "completedNights": 194,
+      "maximumParagraphWords": 95,
+      "maximumSentenceWords": 38,
+      "paragraphRange": "2..7"
+    },
+    {
+      "id": "SWEEP-CAUSAL-CHRONOLOGY-AND-PROVENANCE",
+      "result": "pass",
+      "evidence": "Broad seeded paths require global chronological decision and route provenance and public-only scene-first inquiry sources."
+    },
+    {
+      "id": "SWEEP-CADENCE-VARIANCE",
+      "result": "pass",
+      "evidence": "Actual scene acts select distinct opening location and proposition orders; typed route semantics select truthful carriage clauses; residue metric and direction select the closing image. No path-hash synonym wheel remains."
+    },
+    {
+      "id": "SWEEP-AFTERIMAGE-EQUAL-TIE",
+      "result": "pass",
+      "evidence": "Comparable afterimages and deterministic equal-magnitude ties are covered explicitly."
+    },
+    {
+      "id": "SWEEP-AFTERIMAGE-NO-CHANGE",
+      "result": "pass",
+      "evidence": "A valid completed no-change state emits no invented room-afterimage."
+    },
+    {
+      "id": "SWEEP-RAW-DUPLICATE-JSON-KEYS",
+      "result": "pass",
+      "evidence": "Raw duplicate, escaped duplicate, and shadow payload keys fail before JSON materialization can hide them."
+    },
+    {
+      "id": "SWEEP-LINGUISTIC-SURFACE-INVENTORY",
+      "result": "pass",
+      "evidence": "The executable inventory validates 29 atoms across every declared channel and voice class."
+    }
+  ],
+  "openGaps": [
+    {
+      "id": "GAP-MANUAL-AT-VIEWPORT",
+      "status": "open",
+      "evidence": "VoiceOver and NVDA sessions plus manual 320px, short-landscape, 200% zoom, forced-colors, and reduced-motion inspection were not performed."
+    },
+    {
+      "id": "GAP-BROWSER-COMPLETION",
+      "status": "open",
+      "evidence": "The managed cloud browser blocked navigation to the current local preview, so no current-source complete-night browser run is retained."
+    },
+    {
+      "id": "GAP-DEPENDENCY-CURRENT-LOCK",
+      "status": "open",
+      "evidence": "A current-lock dependency advisory run was not repeated; the prior audit remains historical."
+    },
+    {
+      "id": "GAP-DISTRIBUTION-CLEAN-ROOM",
+      "status": "open",
+      "evidence": "A second neutral clean-room install and distribution run was not performed for this binding."
+    },
+    {
+      "id": "GAP-CURRENT-PRODUCTION-ROUTE",
+      "status": "open",
+      "evidence": "The current-source production route check was not run; retained route evidence belongs to an earlier source."
+    }
+  ],
+  "decision": {
+    "automatedWorkingTree": "pass",
+    "linguisticBlockers": 0,
+    "linguisticHighSeverityOpen": 0,
+    "releaseHold": true,
+    "releaseState": "held",
+    "reason": "Automated implementation and adversarial copy gates pass; browser, assistive-technology, viewport, current-route, dependency, and distribution evidence remain open for promotion."
+  }
+}

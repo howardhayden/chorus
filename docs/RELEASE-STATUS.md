@@ -1,13 +1,30 @@
 # Release status
 
-> **Current updated working tree — held for evidence renewal (19 August 2026).**
-> The Model Specification, Research Design Atlas, in-app scholarly reader, and
-> expanded icon set change the implementation binding. The `1.0.0-rc.1` browser
-> and neutral-distribution records below remain historical evidence for their
-> recorded source and are not relabeled as proof for this later tree. See the
-> [updated working-tree status](../public/evidence/updated-working-tree-status.html).
+> **Current generator-version-14 working tree — automated verification passed;
+> release promotion held (1 September 2026).** The rewritten authored copy and
+> continuous completed-night view pass the current source-bound automated
+> gate. Prior browser, assistive-technology, route, dependency, distribution,
+> and release records are not relabeled as proof for this source.
 
-## Decision
+## Current version-14 hold
+
+The current authored model uses generator version 14 and portable-save schema
+2. The completed-night target is a pure state-derived naturalized summary,
+followed by a visible adjacent model limit and a separate plain concept receipt;
+it is not the historical seven-tab/Heart conclusion. Version-13 saves fail
+closed unless an explicit tested reconstruction path is later added.
+
+Implementation documentation, generated publications, deterministic evidence,
+31 copy tests, 10 linguistic tests, 10 viewport tests, and the 140-test focused
+working-tree gate are current at implementation digest
+`0267a53f0810314110de25b4521fa2739ca9153ac019ccc0e7269c3972acfbd8`.
+Promotion remains held for current-source browser completion, keyboard and
+assistive-technology review, manual mobile/reflow inspection, current-lock
+dependency review, current production-route evidence, and neutral-distribution
+renewal. The bounded result is published in the
+[updated-working-tree status](../public/evidence/updated-working-tree-status.html).
+
+## Historical `1.0.0-rc.1` decision
 
 CHORUS `1.0.0-rc.1` is a **bounded release candidate**, not a claim of
 unqualified production readiness. The candidate boundary is one locally
@@ -25,7 +42,7 @@ at the [release evidence index](../public/evidence/index.html). That record owns
 the exact commands, environments, results, artifact digests, and open manual
 checks for this candidate.
 
-## Included product scope
+## Historical included product scope
 
 - deterministic construction of an uncapped sequence of coherent six-room
   nights from 32-bit seeds;
@@ -66,7 +83,7 @@ failure and not an implied pass.
 
 | Gate | Required evidence | Decision rule |
 |---|---|---|
-| Complete play | A browser run reaches turn 24, closes all rooms, exposes the debrief, and records no uncaught error. | Block if the primary path cannot finish. |
+| Complete play | A current-source browser run reaches turn 24, closes all rooms, exposes the continuous naturalized summary followed by the separate plain concept receipt, and records no uncaught error. | Block if the primary path cannot finish or the historical tabbed/Heart conclusion remains. |
 | Autonomous concurrency | Scheduled events fire once by logical time across multiple visit orders; navigation alone does not mutate time. | Block on duplication, loss, or visit-order dependence. |
 | Cross-room causality | Every accepted action writes one local and five remote effects; later effects preserve close snapshots and update afterimages. | Block on missing, extra, or truth-mutating effects. |
 | Simulation scale | A recorded seed sweep passes pack, state, replay, coverage, and range invariants with zero rejected valid seeds. | Block on any unexplained deterministic failure. |
@@ -103,6 +120,12 @@ interaction, dependency graph, or evidence-generating test invalidates the
 candidate's source binding and requires a new evidence capture. Documentation
 copy that does not alter those contracts still requires link, publication, and
 artifact-drift checks.
+
+The version-14 change crosses several of those boundaries. Consequently, the
+historical 52-step browser completion, manual interaction observations,
+assistive-technology gaps, and neutral-distribution result do not verify the
+current conclusion even where the older record says “current-source” relative
+to its own historical binding.
 
 ## Promotion rule
 

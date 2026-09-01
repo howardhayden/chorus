@@ -1,0 +1,54 @@
+{
+  "schema": "chorus.copy-verification.v1",
+  "recordId": "copy-verification.v1",
+  "captureDate": "2026-09-01",
+  "authority": {
+    "requestSha256": "98dd018a7c43e3013eaaedb8fd77c43bc2639da78cca678217fe9de3003ecf97",
+    "catalysisCorpusSha256": "566f7c653142b239c098a0a3a0b628f3a3179535b219a99d889fdd48cc9513af",
+    "baselineCommit": "4fffddf11a03a2fc84798a3c5343db00fc3135da"
+  },
+  "sourceBinding": {
+    "algorithm": "sha256-path-length-content",
+    "implementationDigest": "0267a53f0810314110de25b4521fa2739ca9153ac019ccc0e7269c3972acfbd8",
+    "statusRecord": "evidence/runs/updated-working-tree-status.v1.json",
+    "postRedTeamRecord": "evidence/copy/copy-red-team.post.v1.json",
+    "correctionRedTeamRecord": "evidence/copy/after-summary-and-map-red-team.post.v2.json"
+  },
+  "automatedResults": {
+    "focusedTestsPassed": 140,
+    "focusedTestsFailed": 0,
+    "copyTestsPassed": 31,
+    "linguisticsTestsPassed": 10,
+    "accessibilityDisclosureTestsPassed": 26,
+    "viewportTestsPassed": 10,
+    "simulationAssertionsPassed": 118668,
+    "simulationAssertionsFailed": 0,
+    "typecheck": "pass",
+    "lint": "pass",
+    "productionBuild": "pass",
+    "notebookPublication": "pass"
+  },
+  "adversarialDisposition": {
+    "openBlockers": 0,
+    "openHighSeverityFindings": 0,
+    "naturalizedEnding": "pass",
+    "plainConceptSeparation": "pass",
+    "semanticCarriageBoundaries": "pass",
+    "completeCausalPropositions": "pass",
+    "chronologyAndProvenance": "pass",
+    "situationConditionedCadence": "pass",
+    "semanticAtomIntegrity": "pass",
+    "houseMapTrackContract": "pass"
+  },
+  "openPromotionGaps": [
+    "Current-source browser completion was blocked by the managed cloud browser.",
+    "VoiceOver and NVDA review was not performed.",
+    "Static viewport contracts pass, including the reported House Map row order; live Safari plus manual 320px, short-landscape, 200% zoom, forced-colors, and reduced-motion inspection was not performed.",
+    "Current-lock dependency, current-source route, and neutral clean-room distribution checks remain open."
+  ],
+  "decision": {
+    "copyAndVoiceImplementation": "pass",
+    "release": "held",
+    "reason": "Automated copy and linguistic gates pass on the bound implementation; the listed interactive and promotion evidence is intentionally not inferred."
+  }
+}

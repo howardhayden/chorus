@@ -58,11 +58,16 @@ export type EffectReceipt = {
   scope: "local" | "cross-room";
   linkId?: string;
   layer?: CrossRoomLink["layer"];
+  semantic?: CrossRoomLink["semantic"];
   mechanism?: CrossRoomLink["mechanism"];
   metrics: Partial<Metrics>;
   backgroundReach: number;
   avoidedReach: number;
   appliedReach: number;
+  /** True only when a selected choice's typed delivery can use this typed carrier. */
+  selectedCarriage: boolean;
+  /** Selected reach on a compatible content or format carrier; background is separate. */
+  selectedCarriageReach: number;
   supportAdded: ConstraintSystem[];
   vagueCue?: string;
   revealedCue?: string;
@@ -348,6 +353,8 @@ export function applyNightChoice(
         backgroundReach: local.backgroundReach,
         avoidedReach: local.avoidedReach,
         appliedReach: local.appliedReach,
+        selectedCarriage: false,
+        selectedCarriageReach: 0,
         supportAdded: [],
       });
       return;
@@ -378,11 +385,14 @@ export function applyNightChoice(
       scope: "cross-room",
       linkId: link.id,
       layer: link.layer,
+      semantic: link.semantic,
       mechanism: link.mechanism,
       metrics: cross.effects,
       backgroundReach: cross.backgroundReach,
       avoidedReach: cross.avoidedReach,
       appliedReach: cross.appliedReach,
+      selectedCarriage: cross.selectedCarriage,
+      selectedCarriageReach: cross.selectedCarriageReach,
       supportAdded,
       vagueCue: link.vagueCue,
       revealedCue: link.revealedCue,
@@ -468,6 +478,8 @@ export function advanceNightTo(
           backgroundReach: 0,
           avoidedReach: local.avoidedReach,
           appliedReach: local.appliedReach,
+          selectedCarriage: false,
+          selectedCarriageReach: 0,
           supportAdded: [],
         });
         return;
@@ -493,11 +505,14 @@ export function advanceNightTo(
         scope: "cross-room",
         linkId: link.id,
         layer: link.layer,
+        semantic: link.semantic,
         mechanism: link.mechanism,
         metrics: remote.effects,
         backgroundReach: 0,
         avoidedReach: remote.avoidedReach,
         appliedReach: remote.appliedReach,
+        selectedCarriage: false,
+        selectedCarriageReach: 0,
         supportAdded: [],
         vagueCue: link.vagueCue,
         revealedCue: link.revealedCue,
@@ -621,12 +636,61 @@ export function visibleCrossingCopy(
   if (!sourceEntered || !targetEntered) return effect.vagueCue ?? "Pressure elsewhere in the house changed this room.";
   const source = scenarios.find((scenario) => scenario.id === event.sourceScenarioId);
   const target = scenarios.find((scenario) => scenario.id === effect.targetScenarioId);
-  if (effect.layer === "direct") {
-    return `${effect.revealedCue} The crossing followed “${event.label}.”`;
+  const sourceTitle = source?.title ?? "Another room";
+  const targetTitle = target?.title ?? "this room";
+  const neutralCue = `A route between ${sourceTitle} and ${targetTitle} is now visible.`;
+  const isChoice = event.kind === "choice";
+  const hasCoherentSelectedCarriage = isChoice
+    && effect.selectedCarriage
+    && effect.selectedCarriageReach >= 0
+    && effect.selectedCarriageReach === effect.appliedReach
+    && (effect.selectedCarriageReach > 0 || (effect.metrics.crossover ?? 0) > 0);
+  const selectedContent = effect.semantic === "content" && hasCoherentSelectedCarriage;
+  const selectedFormat = effect.semantic === "format" && hasCoherentSelectedCarriage;
+  const cue = selectedContent
+    ? effect.revealedCue ?? `A shared channel between ${sourceTitle} and ${targetTitle} is now visible.`
+    : selectedFormat
+      ? effect.revealedCue ?? `A recognizable format links ${sourceTitle} and ${targetTitle}.`
+      : neutralCue;
+
+  let semanticCopy: string;
+  if (!isChoice) {
+    semanticCopy = effect.semantic === "content"
+      ? "Autonomous house activity changed conditions along a content-capable route; no message content crossed."
+      : effect.semantic === "format"
+        ? "Autonomous house activity changed conditions along a format-capable route; no recognizable form or message content crossed."
+        : effect.semantic === "ambient"
+          ? "Autonomous house activity changed carrier-free shared conditions; no message content or format crossed."
+          : "Autonomous house activity changed modeled conditions only; no message content or format crossed.";
+  } else if (selectedContent) {
+    semanticCopy = `The selected move “${event.label}” carried its message content.`;
+  } else if (selectedFormat) {
+    semanticCopy = `The selected move “${event.label}” carried the recognizable form, not its message content.`;
+  } else if (effect.semantic === "content") {
+    semanticCopy = `The selected move “${event.label}” did not carry its message content on this content-capable route.`;
+  } else if (effect.semantic === "format") {
+    semanticCopy = `The selected move “${event.label}” did not carry a recognizable form or its message content on this format-capable route.`;
+  } else if (effect.semantic === "ambient") {
+    semanticCopy = `The selected move “${event.label}” changed carrier-free shared conditions; no message content or format crossed.`;
+  } else {
+    semanticCopy = `The selected move “${event.label}” produced a metric-only change; no message content or format crossed.`;
   }
-  return `${effect.revealedCue} “${event.label}” altered shared conditions; no content transfer is inferred.`
-    .replace(source?.title ?? "", source?.title ?? "another room")
-    .replace(target?.title ?? "", target?.title ?? "this room");
+
+  const reachCopy: string[] = [];
+  if (effect.appliedReach > 0) {
+    reachCopy.push(selectedContent || selectedFormat
+      ? "That selected carrier added reach here."
+      : isChoice
+        ? "The modeled effect added reach here without a selected carrier."
+        : "Autonomous activity added reach here without a selected carrier.");
+  } else if (selectedContent || selectedFormat) {
+    reachCopy.push("The selected carrier changed crossover conditions without adding reach; no background or avoided reach is recorded.");
+  }
+  if (effect.backgroundReach > 0) reachCopy.push("Background circulation continued separately.");
+  if (effect.avoidedReach > 0) reachCopy.push("Some background circulation was avoided; it did not cross.");
+  if (!reachCopy.length) reachCopy.push("No applied, background, or avoided reach is recorded.");
+
+  return `${cue} ${semanticCopy} ${reachCopy.join(" ")}`;
 }
 
 export function validateNightState(pack: GeneratedScenarioPack, state: NightState): string[] {
@@ -684,7 +748,7 @@ function validateNightStateInternal(pack: GeneratedScenarioPack, state: NightSta
       issues.push(`AMBIENT_IDENTITY_MISMATCH:${event.id}`);
     }
     if (event.atMinute > state.elapsedMinutes) issues.push(`AMBIENT_FROM_FUTURE:${event.id}`);
-    validateEffectRouting(pack, event.id, event.sourceScenarioId, event.effects, issues);
+    validateEffectRouting(pack, event.id, event.sourceScenarioId, event.effects, undefined, issues);
   });
 
   const replayedCodes = Object.fromEntries(pack.scenarios.map((scenario) => [
@@ -695,13 +759,13 @@ function validateNightStateInternal(pack: GeneratedScenarioPack, state: NightSta
     if (decision.turn !== index + 1) issues.push(`DECISION_TURN_SEQUENCE:${decision.id}`);
     if (!Number.isSafeInteger(decision.atMinute) || decision.atMinute < 0 || decision.atMinute > state.elapsedMinutes) issues.push(`DECISION_MINUTE_RANGE:${decision.id}`);
     if (index > 0 && decision.atMinute < state.decisions[index - 1].atMinute) issues.push(`DECISION_TIME_ORDER:${decision.id}`);
-    validateEffectRouting(pack, decision.id, decision.sourceScenarioId, decision.effects, issues);
     const sourceScenario = pack.scenarios.find((scenario) => scenario.id === decision.sourceScenarioId);
     const sourceSceneIndex = sourceScenario?.scenes.findIndex((scene) => scene.id === decision.sourceSceneId) ?? -1;
     const sourceChoice = sourceScenario?.scenes[sourceSceneIndex]?.choices.find((choice) => choice.id === decision.choiceId);
     if (!sourceScenario) issues.push(`DECISION_SOURCE_UNKNOWN:${decision.id}`);
     if (sourceSceneIndex < 0) issues.push(`DECISION_SCENE_UNKNOWN:${decision.id}`);
     if (!sourceChoice) issues.push(`DECISION_CHOICE_UNKNOWN:${decision.id}`);
+    validateEffectRouting(pack, decision.id, decision.sourceScenarioId, decision.effects, sourceChoice, issues);
     const arrival = sceneArrivalOffset(pack, decision.sourceScenarioId, sourceSceneIndex);
     if (decision.atMinute < arrival) issues.push(`DECISION_BEFORE_ARTIFACT:${decision.id}`);
     if (sourceScenario?.behaviorCycle.modeled) {
@@ -802,8 +866,13 @@ function hasNightStateValidationShape(value: unknown): value is NightState {
   const effectsValid = (effects: unknown): effects is EffectReceipt[] => Array.isArray(effects)
     && effects.every((effect) => isRecord(effect)
       && typeof effect.targetScenarioId === "string"
-      && typeof effect.scope === "string"
+      && (effect.scope === "local" || effect.scope === "cross-room")
       && isRecord(effect.metrics)
+      && typeof effect.selectedCarriage === "boolean"
+      && typeof effect.selectedCarriageReach === "number"
+      && (effect.scope === "local"
+        ? effect.semantic === undefined && effect.selectedCarriage === false && effect.selectedCarriageReach === 0
+        : effect.semantic === "content" || effect.semantic === "format" || effect.semantic === "ambient")
       && Array.isArray(effect.supportAdded));
   const decisionsValid = value.decisions.every((decision) => isRecord(decision)
     && typeof decision.id === "string"
@@ -870,6 +939,7 @@ function validateEffectRouting(
   eventId: string,
   sourceScenarioId: string,
   effects: EffectReceipt[],
+  sourceChoice: GeneratedChoice | undefined,
   issues: string[],
 ): void {
   const scenarioIds = pack.scenarios.map((scenario) => scenario.id);
@@ -880,13 +950,34 @@ function validateEffectRouting(
   const local = effects.filter((effect) => effect.scope === "local");
   const remote = effects.filter((effect) => effect.scope === "cross-room");
   if (local.length !== 1 || local[0]?.targetScenarioId !== sourceScenarioId) issues.push(`LOCAL_EFFECT_ROUTE:${eventId}`);
+  if (local.some((effect) => effect.semantic !== undefined || effect.selectedCarriage || effect.selectedCarriageReach !== 0)) {
+    issues.push(`LOCAL_CARRIAGE_OVERCLAIM:${eventId}`);
+  }
   if (remote.length !== scenarioIds.length - 1) issues.push(`CROSS_EFFECT_COUNT:${eventId}`);
   remote.forEach((effect) => {
     const link = pack.night.links.find((candidate) =>
       candidate.sourceScenarioId === sourceScenarioId && candidate.targetScenarioId === effect.targetScenarioId,
     );
-    if (!link || effect.linkId !== link.id || effect.layer !== link.layer || effect.mechanism !== link.mechanism) {
+    if (!link
+      || effect.linkId !== link.id
+      || effect.layer !== link.layer
+      || effect.semantic !== link.semantic
+      || effect.mechanism !== link.mechanism) {
       issues.push(`CROSS_EFFECT_ROUTE:${eventId}:${effect.targetScenarioId}`);
+      return;
+    }
+    const selectedCarriage = sourceChoice !== undefined
+      && choiceCanUseCrossRoomCarrier(sourceChoice, link)
+      && (effect.appliedReach > 0 || (effect.metrics.crossover ?? 0) > 0);
+    if (effect.selectedCarriage !== selectedCarriage
+      || effect.selectedCarriageReach !== (selectedCarriage ? effect.appliedReach : 0)) {
+      issues.push(`SELECTED_CARRIAGE_RECEIPT:${eventId}:${effect.targetScenarioId}`);
+    }
+    if (sourceChoice
+      && link.semantic !== "ambient"
+      && !choiceCanUseCrossRoomCarrier(sourceChoice, link)
+      && effect.appliedReach !== 0) {
+      issues.push(`INCOMPATIBLE_CARRIER_REACH:${eventId}:${effect.targetScenarioId}`);
     }
   });
 }
@@ -935,6 +1026,8 @@ type CalculatedReceipt = {
   backgroundReach: number;
   avoidedReach: number;
   appliedReach: number;
+  selectedCarriage: boolean;
+  selectedCarriageReach: number;
 };
 
 function calculateLocalReceipt(
@@ -958,6 +1051,8 @@ function calculateLocalReceipt(
     backgroundReach,
     avoidedReach,
     appliedReach,
+    selectedCarriage: false,
+    selectedCarriageReach: 0,
   };
 }
 
@@ -972,7 +1067,8 @@ function calculateCrossRoomReceipt(
   const rawReach = choice.effects.reach ?? 0;
   const saturation = calculateSaturation(current.reach, audienceCeiling);
   const marginalFactor = clamp(1 - saturation * 0.74, 0.2, 1);
-  const appliedReach = rawReach > 0
+  const carrierCompatible = choiceCanUseCrossRoomCarrier(choice, link);
+  const appliedReach = rawReach > 0 && (link.semantic === "ambient" || carrierCompatible)
     ? Math.max(1, Math.round(rawReach * link.strength * (link.layer === "direct" ? 0.09 : 0.035) * marginalFactor))
     : 0;
   const avoidedReach = rawReach < 0
@@ -985,7 +1081,30 @@ function calculateCrossRoomReceipt(
   const backgroundReach = Math.max(0, Math.round(
     choice.minutes * (3.2 + current.heat * 0.08 + current.crossover * 0.05) * marginalFactor,
   ) - avoidedReach);
-  return { effects, backgroundReach, avoidedReach, appliedReach };
+  const selectedCarriage = carrierCompatible
+    && (appliedReach > 0 || (effects.crossover ?? 0) > 0);
+  return {
+    effects,
+    backgroundReach,
+    avoidedReach,
+    appliedReach,
+    selectedCarriage,
+    selectedCarriageReach: selectedCarriage ? appliedReach : 0,
+  };
+}
+
+function choiceCanUseCrossRoomCarrier(choice: GeneratedChoice, link: CrossRoomLink): boolean {
+  if (choice.delivery.scope === "private" || choice.delivery.scope === "withheld") return false;
+  switch (link.semantic) {
+    case "ambient":
+      return false;
+    case "content":
+      return link.carrier.kind === "shared-channel"
+        && (choice.delivery.carriage === "content" || choice.delivery.carriage === "content-and-format");
+    case "format":
+      return link.carrier.kind === "artifact-format"
+        && (choice.delivery.carriage === "format" || choice.delivery.carriage === "content-and-format");
+  }
 }
 
 function calculatePulseReceipt(
@@ -1005,7 +1124,14 @@ function calculatePulseReceipt(
     if (raw) effects[metric] = raw * scale;
   });
   effects.reach = appliedReach;
-  return { effects, backgroundReach: 0, avoidedReach: 0, appliedReach };
+  return {
+    effects,
+    backgroundReach: 0,
+    avoidedReach: 0,
+    appliedReach,
+    selectedCarriage: false,
+    selectedCarriageReach: 0,
+  };
 }
 
 function calculateAmbientPulseReceipt(
@@ -1024,7 +1150,14 @@ function calculateAmbientPulseReceipt(
     : 0;
   effects.reach = appliedReach;
   if (!Object.entries(effects).some(([metric, value]) => metric !== "reach" && value !== 0)) effects.heat = 0.25;
-  return { effects, backgroundReach: 0, avoidedReach: 0, appliedReach };
+  return {
+    effects,
+    backgroundReach: 0,
+    avoidedReach: 0,
+    appliedReach,
+    selectedCarriage: false,
+    selectedCarriageReach: 0,
+  };
 }
 
 function projectSystemicEffects(

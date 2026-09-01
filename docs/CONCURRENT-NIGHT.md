@@ -218,9 +218,12 @@ Each target-specific receipt records:
 
 - target room;
 - local or cross-room scope;
-- optional link identity, direct/systemic layer, and mechanism;
+- optional link identity, direct/ambient layer, discriminated semantic, and
+  mechanism;
 - metric deltas;
 - background, avoided, and applied reach;
+- whether the selected choice actually used a compatible direct carrier, and
+  how much reach belongs to that selected carriage;
 - transferable support added; and
 - reviewed vague and attributable copy where applicable.
 
@@ -229,18 +232,23 @@ Each target-specific receipt records:
 The local receipt carries the choice's direct effects in its source room and
 may emit incident or transferable support.
 
-### Cross-room systemic effect
+### Cross-room ambient effect
 
 Every other room receives a bounded effect projected through its ordered route.
-Mechanisms project only relevant metrics. A systemic effect may change attention,
-trust, attribution, institution load, ranking, or code friction without
-asserting that the same claim or target crossed.
+Mechanisms project only relevant metrics. A link with semantic `ambient` may
+change attention, trust, attribution, institution load, ranking, or code
+friction without asserting that the same claim, format, or target crossed. It
+has no carrier and never sets `selectedCarriage`.
 
 ### Cross-room direct effect
 
-A direct effect may name content or recognizable form only when the generated
-link has compatible channel or artifact evidence. The direct layer supplements,
-not replaces, the universal systemic consequence.
+A direct effect has semantic `content` with a `shared-channel` carrier or
+semantic `format` with an `artifact-format` carrier. The source choice must be
+shared or public and must permit the matching carriage type. A private or
+withheld choice, a content/format mismatch, or a compatible link with no
+realized selected movement keeps `selectedCarriage` false. Background model
+movement remains possible and separately recorded; it is never rewritten as
+selected content or format carriage.
 
 ## Fatigue enforcement
 
@@ -305,6 +313,10 @@ values or event history. Generic and attributable copy rules are canonical in
 - unique decision, effect, ambient, and pulse identities;
 - exactly six effects per decision and pulse;
 - valid local and cross-room targets;
+- local receipts with no semantic or selected carriage, and cross-room
+  receipts whose semantic matches their generated link;
+- selected carriage and selected-carriage reach exactly matching typed choice
+  delivery, carrier compatibility, and realized movement;
 - current support and event references;
 - no duplicate pulse processing;
 - immutable completion snapshots;
@@ -340,7 +352,10 @@ state. A recomputed checksum cannot bypass this requirement.
 - fatigue lowers discernment;
 - no carryable non-amplification floor exists;
 - unsupported register or pressure transition is accepted;
-- a direct route claims content without carrier evidence;
+- a route or receipt class is inferred from prose instead of typed semantic,
+  carrier, and delivery fields;
+- a direct route claims content or format without its matching carrier, or a
+  private, withheld, or mismatched action records selected carriage;
 - unrevealed copy names a protected endpoint;
 - close snapshot changes after completion;
 - isolated replay is permitted; or

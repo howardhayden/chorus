@@ -1,0 +1,88 @@
+{
+  "recordId": "CHR-COPY-RED-TEAM-POST-V1",
+  "recordedAt": "2026-09-01",
+  "baselineCommit": "4fffddf11a03a2fc84798a3c5343db00fc3135da",
+  "requestSha256": "98dd018a7c43e3013eaaedb8fd77c43bc2639da78cca678217fe9de3003ecf97",
+  "catalysisSha256": "566f7c653142b239c098a0a3a0b628f3a3179535b219a99d889fdd48cc9513af",
+  "implementationBinding": {
+    "digestMethod": "sha256-path-length-content over the 22-file working-tree implementation manifest",
+    "digest": "0267a53f0810314110de25b4521fa2739ca9153ac019ccc0e7269c3972acfbd8",
+    "coreFiles": {
+      "app/scenario-generator.ts": "9e0ae6ec25382567d09b32fd08c589fbed709f57a13f9620e41e1c67a96c6668",
+      "app/night-engine.ts": "fcbc5abf6a0b00c3e1909b9f46b7b271faa21e568fe34f41d959a2e199176d70",
+      "app/debrief-copy.ts": "94704c83d0c22498ac52da0f63de8f40b076ebc2702db7e1b5aa70d69940f9ae",
+      "app/page.tsx": "5de8b79f104635dbd677f7764dc2b465d4a899e8a9ad1154f6ed80426e19eab6",
+      "app/save-model.ts": "bd9f017fdace605224d959a04aec210ee29bcf2b153e172919d23dc3c72e3fec",
+      "tests/copy-contract.test.mjs": "b1869814ec355757e0ccd796e42c8f8e1b24d0b55342f06b7b3c2f26b4f39010",
+      "tests/linguistics-contract.test.mjs": "5ab298161307c57846c66a88c1cb4b74d9754531d5a46a5c198e185936cb1eb6",
+      "tests/viewport-contract.test.mjs": "f37f814463b1985dfbb74424ccee0aa53387962f29a8169508430b14ab8a89d4"
+    }
+  },
+  "method": {
+    "initialFindingsRetested": 23,
+    "postRewriteRounds": 3,
+    "sampledCompletedPaths": [
+      "seed 0 / floor",
+      "seed 0 / contrast",
+      "seed 16 / contrast"
+    ],
+    "adversarialFocus": [
+      "fact, inference, unknown, and authored-interior separation",
+      "selected content, selected format, ambient conditions, background reach, and avoided reach",
+      "encountered, experienced, and played concept provenance",
+      "Catalysis atomization without a fragmented ending",
+      "complete last-resort benefit, harm, and self-cost clauses",
+      "plain utility, privacy, save, accessible-name, and live copy"
+    ]
+  },
+  "initialFindingDisposition": [
+    { "id": "CRT-PRE-001", "status": "corrected", "basis": "Active artifacts now contain only beat-local public records; private analysis remains sealed." },
+    { "id": "CRT-PRE-002", "status": "corrected", "basis": "TruthLedger is fact-only; propagation and analytic ledgers are separate typed records." },
+    { "id": "CRT-PRE-003", "status": "corrected", "basis": "The ending follows selected decisions and typed effects without exposing the deliberate-misrepresentation ledger." },
+    { "id": "CRT-PRE-004", "status": "corrected", "basis": "SceneDisclosure separates records, questions, and unknowns at each beat." },
+    { "id": "CRT-PRE-005", "status": "corrected", "basis": "Generated-pack, completed-path, direct-builder, persistence, and route counterexamples now supplement source contracts." },
+    { "id": "CRT-PRE-006", "status": "corrected", "basis": "Artifact copy is short, form-bounded, and no longer contains a private analytic essay." },
+    { "id": "CRT-PRE-007", "status": "corrected", "basis": "Disclosure is beat-local and the repeated seven-surface conclusion was removed." },
+    { "id": "CRT-PRE-008", "status": "corrected", "basis": "Playable choices retain concrete action and omission while analytic motive returns to subtext." },
+    { "id": "CRT-PRE-009", "status": "corrected", "basis": "The seven-tab debrief is replaced by one normal-flow naturalized summary and a separate concept receipt." },
+    { "id": "CRT-PRE-010", "status": "corrected", "basis": "Accepted-scene concepts are deduplicated and rendered after the summary with typed status and evidence." },
+    { "id": "CRT-PRE-011", "status": "corrected", "basis": "The prescriptive Heart was removed; the ending is state-derived and contains no moral grade." },
+    { "id": "CRT-PRE-012", "status": "corrected", "basis": "Factual resolution, unresolved motive, and bounded model claims remain distinct." },
+    { "id": "CRT-PRE-013", "status": "corrected", "basis": "Internal validation is no longer presented as empirical causal coherence in the conclusion." },
+    { "id": "CRT-PRE-014", "status": "corrected", "basis": "Modeled values are labelled as model output and the adjacent model limit remains visible." },
+    { "id": "CRT-PRE-015", "status": "corrected", "basis": "Typed content, format, and ambient semantics plus selected-carriage receipts govern all route wording." },
+    { "id": "CRT-PRE-016", "status": "corrected", "basis": "Universal and false-fact slogans were removed or narrowed to the modeled night." },
+    { "id": "CRT-PRE-017", "status": "corrected-automated", "basis": "Blocked choices remain operable explanations with one global announcement path; manual screen-reader review remains pending." },
+    { "id": "CRT-PRE-018", "status": "corrected-automated", "basis": "Relationship detail no longer places the entire selected-node panel inside a live region; manual screen-reader review remains pending." },
+    { "id": "CRT-PRE-019", "status": "corrected", "basis": "Reach is exposed as modeled impressions and no logarithmic percentage is presented under the same name." },
+    { "id": "CRT-PRE-020", "status": "corrected-with-manual-follow-up", "basis": "Completed-room, reason-toggle, replay, and focus copy were corrected; final assistive-technology phrasing review remains pending." },
+    { "id": "CRT-PRE-021", "status": "corrected", "basis": "Privacy names the browser-profile boundary, export says text was handed to the browser, and integrity copy does not imply authorship or authentication." },
+    { "id": "CRT-PRE-022", "status": "corrected", "basis": "The fixed lineage is labelled Meme reference and general reference rather than played-path evidence." },
+    { "id": "CRT-PRE-023", "status": "corrected", "basis": "Player copy leads with concrete incidents; technical vocabulary is confined to documentation and labelled model surfaces." }
+  ],
+  "postRewriteFindings": [
+    { "id": "CRT-POST-001", "severity": "blocker", "status": "corrected", "finding": "Direct-link availability was narrated as selected carriage.", "correction": "Event kind, semantic, selectedCarriage, selectedCarriageReach, applied reach, background reach, and avoided reach now select separate clauses." },
+    { "id": "CRT-POST-002", "severity": "blocker", "status": "corrected", "finding": "Generic content was promoted to a factual record.", "correction": "Typed content is now called message content; record language is reserved for factual scenario records." },
+    { "id": "CRT-POST-003", "severity": "blocker", "status": "corrected", "finding": "Encountered concept limits could assert an unrealized authored outcome.", "correction": "Every limit is a conditional evidence boundary and distinguishes selected action from modeled effect." },
+    { "id": "CRT-POST-004", "severity": "high", "status": "corrected", "finding": "Played evidence promised downstream effects were listed when the card rendered none.", "correction": "Played copy now says it records only the selected action and claims no later outcome." },
+    { "id": "CRT-POST-005", "severity": "high", "status": "corrected", "finding": "Ambient summary copy denied content but could imply recognizable-form carriage.", "correction": "Ambient prose denies both message content and recognizable form; format reuse was narrowed to imitation pressure." },
+    { "id": "CRT-POST-006", "severity": "high", "status": "corrected", "finding": "Market and status limits treated selected intent as if an ambient receipt proved it.", "correction": "The limits state action-or-effect alternatives and explicitly deny motive inference from modeled effects." },
+    { "id": "CRT-POST-007", "severity": "high", "status": "corrected", "finding": "Earlier last-resort selections and long costs could be omitted or truncated.", "correction": "Every selected last resort retains complete protected party, benefit, harmed party, harm, and self-cost copy." },
+    { "id": "CRT-POST-008", "severity": "medium", "status": "corrected", "finding": "Background impressions were described as unique people reached.", "correction": "The concept evidence now says modeled impressions." },
+    { "id": "CRT-POST-009", "severity": "medium", "status": "corrected", "finding": "Repeated labels were used as cross-room event identity.", "correction": "Each decision keeps its own identifier and is narrated independently." },
+    { "id": "CRT-POST-010", "severity": "medium", "status": "corrected", "finding": "The exact-rule provenance test ignored event kind and skipped decision-only rules.", "correction": "Test events are tagged as choice or ambient and a decision-only selected-carriage match is required." },
+    { "id": "CRT-POST-011", "severity": "medium", "status": "corrected", "finding": "Full last-resort clauses could end with doubled punctuation or a stiff cost transition.", "correction": "Sentence joining owns punctuation and the transition now says benefits and costs landed in different places." },
+    { "id": "CRT-POST-012", "severity": "high", "status": "corrected", "finding": "A late naturalization pass could call an absent sentence-packing helper and fail the completed summary at runtime.", "correction": "The complete-sentence paragraph packer is implemented, type-checked, and exercised by all completed-summary contract paths." },
+    { "id": "CRT-POST-013", "severity": "medium", "status": "corrected", "finding": "An opening could repeat an inquiry already carried by its artifact and push an otherwise complete paragraph beyond the atomized bound.", "correction": "The opening detects inquiry already present in the artifact, retains the open question without repeating its full clause, and packs only at complete-sentence boundaries." }
+  ],
+  "finalDisposition": {
+    "openBlockers": 0,
+    "openHighSeverityFindings": 0,
+    "independentReadOnlyRecheck": "No blocker or high-severity semantic copy issue remained after the final corrections.",
+    "manualLimitations": [
+      "The cloud browser blocked the local preview, so a current-source interactive browser completion was not recorded.",
+      "VoiceOver and NVDA reading-order and announcement review were not performed.",
+      "Static viewport contracts do not replace manual 320px, short-landscape, 200% zoom, forced-colors, or reduced-motion inspection."
+    ]
+  }
+}

@@ -56,8 +56,13 @@ Owns immutable content and construction:
 - incident, actor, linguistic, and world-model source grammars;
 - four-beat scene and choice construction;
 - communication, deliberate-protection, incentive, and fatigue ledgers;
+- fact-only truth ledgers, separate propagation ledgers, and beat-local typed
+  disclosure atoms;
+- term-discriminated choice `conceptPlays` and conjunctive
+  `SceneLesson.experienceRules`;
 - situational pressure contours and sparse action structures;
-- systemic routes, compatible direct crossings, and ambient pulses;
+- discriminated content/format/ambient links, typed carriers, choice delivery
+  contracts, and ambient pulses;
 - distributed repair paths and non-amplification floors; and
 - scenario, pack, content-safety, and coherence validation.
 
@@ -72,6 +77,8 @@ Owns live concurrent state:
 - shared logical clock and scheduled pulse processing;
 - structural and enactment access checks;
 - accepted decision events and six effect receipts;
+- receipt-level link semantics and selected-carriage evidence kept separate
+  from background, avoided, and applied reach;
 - metric, support, fatigue, linguistic, pressure, and framework transitions;
 - live afterimages after a room closes;
 - disclosure-safe crossing copy; and
@@ -101,16 +108,37 @@ It has no import-time storage side effect. Storage is provided through a small
 Owns application interaction and derived presentation:
 
 - prelude, map, invitations, active rooms, close receipts, relationship view,
-  and whole-night debrief;
+  and the completed-night continuous view;
 - room switching without clock mutation;
 - focus transfer and live announcements;
 - blocked-action expansion and collapse;
 - drawer isolation and focus containment;
-- player-selected film and motion presentation; and
-- aggregation used only for visible house context.
+- player-selected film and motion presentation;
+- aggregation used only for visible house context;
+- rendering the pure naturalized-summary and plain-concept outputs in their
+  fixed conclusion-gated reading order.
 
 It may request an engine transition, but it does not calculate an alternate
-truth, bypass choice access, or write a save automatically.
+truth, bypass choice access, write a save automatically, or mutate `NightState`
+while deriving the conclusion.
+
+### `app/debrief-copy.ts`
+
+Owns pure completed-night copy derivation:
+
+- `buildNaturalizedSummary(pack, state)`, which builds a short chronological
+  decision → route → later-decision chain and folds later resolution plus the
+  strongest normalized afterimage into its final paragraph;
+- typed `NarrativeSource` provenance, including direct-content,
+  direct-format, or ambient class and selected-versus-background carriage;
+- `buildConceptReceipt(pack, state)`, which deduplicates accepted-scene lesson
+  terms and evaluates explicit choice play bindings separately from conjunctive
+  receipt experience rules; and
+- visible `scene`, `effect`, or `action` evidence plus machine-inspectable scene,
+  event, and decision identifiers.
+
+It does not mutate `NightState`, scan display prose to infer semantics, make a
+remote request, or render a user interface.
 
 ### `app/privacy-panel.tsx`
 
@@ -135,7 +163,9 @@ markup and style contracts for disclosure and accessibility regressions.
 | Data | Created by | Mutable during play | Persisted by default | May affect truth |
 |---|---|---:|---:|---:|
 | Generated pack | Scenario grammar | No | No | Defines immutable truth |
-| Truth ledger | Scenario grammar | No | Only inside a chosen save | It is truth; never a propagation coefficient |
+| Truth ledger | Scenario grammar | No | No; reconstructed from saved seed | Exactly `knownFact`, `unresolvedAtEntry`, and `laterResolution`; never a propagation coefficient |
+| Propagation ledger | Scenario grammar | No | No; reconstructed from saved seed | Holds `circulatingFrame`; never promoted into truth by reach or repetition |
+| Scene disclosure | Scenario grammar | No | No; reconstructed from saved seed | Beat-local records, questions, and unknowns; no shared analytic ledger attached to a scene |
 | Room runtime | Night reducer | Yes, by accepted events | No | No |
 | Decision events | Night reducer | Append-only | No | No |
 | Ambient events | Scheduler | Append-only | No | No |
@@ -143,8 +173,20 @@ markup and style contracts for disclosure and accessibility regressions.
 | Current afterimage | Night reducer | Yes after room close | No | No |
 | Interface selection | Interaction layer | Yes | No | No |
 | Blocked explanation state | Interaction layer | Yes | No | No |
+| Naturalized summary | Pure interaction derivation from completed pack/state | No | No; reconstructed | No |
+| Plain concept receipt | Pure interaction derivation from accepted decision scenes | No | No; reconstructed | No |
 | Browser slot | Save model after explicit action | Replaced only by explicit action | Yes | No |
 | Portable text | Save model after explicit action | File controlled by player | Outside application | No |
+
+Naturalized-summary sources translate receipt-level `selectedCarriage` into a
+visible `selectedPathCarriage` provenance field and retain typed route class,
+carrier, selected/background/avoided reach, and raw plus normalized afterimage
+change without modifying runtime state. The plain concept receipt retains scene
+IDs for every entry, exact matched effect-event IDs, and actual decision IDs
+only for accepted choices carrying the term's explicit play binding. Event and
+decision provenance are independent: played status does not manufacture a
+receipt match, and a background receipt match does not manufacture a selected
+play.
 
 ## Determinism boundary
 
@@ -158,7 +200,7 @@ state:
 - keyboard, pointer, touch, or assistive-technology input method;
 - which room is visually selected when no action is accepted;
 - film and motion presentation preferences;
-- drawer, details, tab, or relationship-filter state; and
+- drawer, details, scene-tab, or relationship-filter state; and
 - file location chosen for a portable export.
 
 New-night generation requests an unpredictable browser seed when available and
@@ -206,8 +248,9 @@ the renderer consumes validated application state.
 ## Network boundary
 
 After application assets have loaded, play, generation, reduction, local slots,
-portable input/output, relationship exploration, and debrief require no remote
-request. The application contains no account system, analytics client,
+portable input/output, relationship exploration, naturalized-summary
+derivation, and concept-receipt derivation require no remote request. The
+application contains no account system, analytics client,
 advertising client, remote scenario endpoint, or server-side game-state store.
 
 Deployment mechanics are intentionally outside the game architecture. A source
@@ -226,4 +269,3 @@ archive must run locally without a project identity file or remote binding.
 
 Expected degraded states and recovery behavior are catalogued in
 [Edge cases and failure behavior](EDGE-CASES.md).
-

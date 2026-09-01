@@ -7,7 +7,7 @@ later compatible guidance where it improves keyboard, touch, reflow, motion,
 focus, and cognitive accessibility. Conformance applies to the complete player
 journey: prelude, house map, invitations, active scenes, blocked-action
 expansions, room-close receipts, relationships, drawers, privacy controls,
-portable input, and whole-night debrief.
+portable input, and the continuous completed-night view.
 
 An automated test is evidence for a contract, not a conformance claim by
 itself. Release review includes keyboard, zoom/reflow, reduced motion, forced
@@ -30,8 +30,9 @@ colors, and screen-reader checks.
 
 - The page has one primary application landmark and a stable heading hierarchy.
 - Every stage has a focusable heading used as the navigation destination.
-- Tabs use `role="tablist"`, `role="tab"`, `aria-selected`, and linked tab
-  panels with roving keyboard focus.
+- Scene-information tabs use `role="tablist"`, `role="tab"`, `aria-selected`,
+  and linked tab panels with roving keyboard focus. The completed-night view is
+  not a tabset.
 - Drawers use a labelled modal dialog pattern and make the background inert.
 - Expandable material uses native `details` and `summary` unless activation
   must remain on the existing choice button.
@@ -69,7 +70,9 @@ Focus moves only after a meaningful view transition:
 - closing the explanation restores the original card format and focus;
 - opening a drawer focuses its close control;
 - closing a drawer restores its invoker;
-- accepting a choice focuses the next active stage; and
+- accepting a choice focuses the next active stage;
+- opening the completed-night view focuses its heading before the naturalized
+  summary; and
 - restoring a save focuses the house heading after validation.
 
 Focus movement uses `preventScroll` and explicit scroll-owner adjustment rather
@@ -83,7 +86,8 @@ than smooth-scroll dependence. Reduced motion does not change the destination.
 - At mobile widths, multi-column regions become one column.
 - The page has no horizontal scroll requirement at 320 CSS pixels.
 - The relationship view, room switcher, choice cards, blocked explanations,
-  privacy panel, and debrief remain within the viewport.
+  privacy panel, naturalized summary, model-limit note, and concept receipt
+  remain within the viewport.
 - At 200% browser zoom and text-only enlargement, content remains reachable in
   named scroll regions.
 - At 400% zoom-equivalent narrow reflow, no action requires two-dimensional
@@ -135,7 +139,7 @@ In forced-colors mode:
 
 ## Touch and pointer
 
-- Primary buttons, room-switcher buttons, tabs, relationship filters, drawer
+- Primary buttons, room-switcher buttons, scene tabs, relationship filters, drawer
   controls, and privacy controls provide a minimum 44-by-44 CSS pixel target
   where space permits.
 - Adjacent targets have separation that reduces accidental activation.
@@ -162,14 +166,19 @@ Only scheduled simulation exposure and accepted modeled actions affect fatigue.
 
 - Interpretive taxonomies are sealed until the conclusion.
 - Active scenes separate source, seat, record, and echoes.
-- Record, room reading, and unknowns use stable labels.
+- Beat-local records, questions, and unknowns use stable labels.
 - Blocked explanations are concise, local to the selected action, and
   reversible.
 - Empty future content is not rendered as an explanatory placeholder.
 - Guides provide hints rather than revealing the expected conclusion.
 - Repeated instructions and duplicated destinations are prohibited.
-- The debrief separates causal, interpretive, fatigue, and practice receipts
-  instead of presenting one undifferentiated report.
+- The completed-night view preserves one predictable order: naturalized summary,
+  adjacent labelled model limit, then plain concept receipt.
+- The naturalized summary is continuous prose rather than a tabset, card
+  taxonomy, or visually fragmented sequence.
+- Concept status and model limits use text, not color, position, or badges
+  alone. Each entry renders a plain scene, effect, or action evidence sentence;
+  users are not asked to interpret opaque identifier counts.
 
 ## Screen-reader disclosure boundary
 
@@ -195,7 +204,7 @@ leaked through the accessibility tree.
 | Operable unavailable actions | `tests/viewport-contract.test.mjs` |
 | One dynamic viewport and named scroll owners | `tests/viewport-contract.test.mjs` |
 | Mobile and short-landscape reflow | `tests/viewport-contract.test.mjs` |
-| Normal-flow concluding disclosures | `tests/viewport-contract.test.mjs` |
+| Tab-free naturalized summary and separate plain concept receipt in normal flow | `tests/viewport-contract.test.mjs` and `tests/accessibility-disclosure.test.mjs` |
 | Reading and repeated state inspection do not add fatigue | `tests/concurrent-night.test.mjs` |
 
 ### Manual release checks
@@ -203,7 +212,8 @@ leaked through the accessibility tree.
 Test at minimum:
 
 1. Keyboard-only play from prelude through one complete room, all drawers,
-   relationships, blocked expansion, privacy preview, and debrief.
+   relationships, blocked expansion, privacy preview, and completed-night
+   summary/concept view.
 2. VoiceOver with Safari on macOS and iOS.
 3. NVDA with Firefox or Chromium on Windows when available.
 4. Browser zoom at 200% and narrow reflow equivalent to 400%.
@@ -212,11 +222,12 @@ Test at minimum:
 6. System reduced motion plus in-application Motion and Film controls.
 7. Forced-colors or operating-system high-contrast mode.
 8. Long generated titles, large metric changes, open reasons, invalid save
-   messages, and completed-night receipts.
+   messages, long summary paragraphs, and every concept-status/limit shape.
 
 Record browser, operating system, assistive technology, viewport, result, and
 known limitation in the release evidence. A failed critical path blocks
-release.
+release. These manual browser and assistive-technology checks have not yet been
+renewed for the version-14 copy and conclusion binding.
 
 ## Known limits and reporting
 
@@ -229,4 +240,3 @@ must remain intact.
 Accessibility regressions should include the affected view, input method,
 viewport or assistive technology, expected result, observed result, and whether
 simulation state changed unexpectedly.
-

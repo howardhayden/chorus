@@ -35,9 +35,13 @@ machine-readable evidence record.
 
 - A night contains six rooms and four beats per room. Generation is uncapped
   across nights, but each night uses that fixed geometry.
-- Incidents are PG, low-stakes fictional composites. The system is not a
-  rehearsal for violence, emergency response, legal process, clinical care,
-  abuse assessment, or high-risk workplace intervention.
+- Incidents are low-stakes fictional composites inside an authored,
+  PG-bounded, nonviolent grammar. “PG-bounded” is a design boundary, not an
+  external rating certification, a guarantee of suitability for every reader,
+  or proof that a finite restricted-term validator can anticipate every
+  interpretation. The system is not a rehearsal for violence, emergency
+  response, legal process, clinical care, abuse assessment, or high-risk
+  workplace intervention.
 - Deliberate misrepresentation and diversion are represented at a descriptive
   social-system level. The game intentionally omits operational instructions
   for manipulation, targeting, harassment, or evasion.
@@ -47,6 +51,18 @@ machine-readable evidence record.
 - English is the current interface and scenario language. Register variation
   is represented through readable discourse choices, not accent imitation or
   exhaustive regional vocabulary.
+- The naturalized summary is a deterministic synthesis of the completed
+  modeled night, not a transcript or an exhaustive dump of every internal
+  ledger. Its narrative-source identifiers bound its claims; they do not turn
+  synthesis into empirical inference about a real player.
+- The plain concept receipt includes only deduplicated `SceneLesson` terms from
+  accepted decision scenes. `Encountered`, `experienced`, and `played` are
+  model-local evidence statuses, not an assessment of what a player personally
+  understood, believed, or endorsed. Experience may be supported by an actual
+  background ambient-pulse receipt only when it matches every field in a
+  lesson's typed rule; play requires an accepted choice's explicit term
+  binding. Retained event and decision identifiers are independent model
+  provenance, not empirical evidence about the player.
 
 ## Interaction and accessibility limits
 
@@ -59,6 +75,9 @@ machine-readable evidence record.
 - The one-viewport shell intentionally uses named internal scroll regions.
   Long-form notebook and release evidence pages use ordinary document
   scrolling instead.
+- The completed-night view favors one continuous reading order over a dense
+  analytic dashboard. It does not expose every internal repertoire, framework,
+  coefficient, or receipt field through separate tabs.
 - Film and motion preferences affect presentation only. They do not provide a
   substitute design for browsers that cannot execute the application.
 - Very old browsers without required platform features are outside the

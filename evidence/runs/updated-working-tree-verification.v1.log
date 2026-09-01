@@ -1,76 +1,88 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
 
 > chorus@1.0.0-rc.1 verify:working-tree
-> npm run lint && npx tsc --noEmit && npm run evidence:simulation && npm run docs:check:working-tree && npm run test:night && npm run test:simulation && npm run test:save && npm run test:a11y && npm run test:viewport && npm run build && node --test tests/rendered-html.test.mjs && npm run status:check
+> npm run lint && npx tsc --noEmit && npm run evidence:simulation && npm run docs:check:working-tree && npm run test:night && npm run test:simulation && npm run test:save && npm run test:copy && npm run test:linguistics && npm run test:a11y && npm run test:viewport && npm run build && node --test tests/rendered-html.test.mjs && npm run status:check
 
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
 
 > chorus@1.0.0-rc.1 lint
 > eslint . --ignore-pattern dist --ignore-pattern .next
 
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
 
 > chorus@1.0.0-rc.1 evidence:simulation
 > node --experimental-strip-types --experimental-specifier-resolution=node scripts/run-simulation-evidence.mjs --check
 
-PASS 118680 assertions; 0 failures; ffd9821c8dfd3dc3b4f3a06f2715b3d490c150e7abf65f201474fe6df25fe844
+PASS 118668 assertions; 0 failures; b9b26ed41a2073790d59da469c73803540b6e875f7c95a8b2725e3ad9774cb1e
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
 
 > chorus@1.0.0-rc.1 docs:check:working-tree
 > python3 scripts/docs/build_notebooks.py --check --notebooks-only
 
 Notebook publication verified: 16 artifacts.
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
 
 > chorus@1.0.0-rc.1 test:night
 > node --experimental-strip-types --experimental-specifier-resolution=node --test tests/concurrent-night.test.mjs
 
-✔ 1,000 generated nights satisfy room and night coherence (16926.279925ms)
-✔ all six seats can be entered in any order without advancing the shared clock (18.73394ms)
-✔ serial and reverse runs create one local plus five remote receipts (2857.070286ms)
-✔ interleaved room switching completes 256 whole nights with attributable causal ledgers (7025.483774ms)
-✔ scheduled autonomous pulses fire once and do not depend on repeated clock reads (16.931433ms)
-✔ a completed room keeps a frozen close receipt and a moving afterimage (17.181974ms)
-✔ stale scene IDs and locked choices do not mutate the night (16.14661ms)
-✔ a future artifact cannot be revealed through an early decision (17.567765ms)
-✔ disclosure remains vague in every entered/unentered combination (29.227339ms)
-✔ distributed choices can make a previously blocked crossover ideal reachable (1824.449902ms)
-✔ the same seed and action order replay to the same state (20.998608ms)
-✔ every night contains the six distinct communication dynamics exactly once (4146.271121ms)
-✔ generated actors keep cohesive situated repertoires while code and world model remain independent (6682.980383ms)
-✔ a selected code switch persists bounded load without changing truth or discernment (18.632641ms)
-✔ locked ideals are deterministically shuffled through every choice position (8294.85807ms)
-✔ every night represents deliberate protection of self, friend, family, and a person under authority (4133.59345ms)
-✔ conversation diversion stays sparse, deterministic, and distinct from truth status (8254.703758ms)
-✔ a chosen diversion persists beside its relational move and emits no incident repair support (26.685209ms)
-✔ every communication lesson is bound to its active incident truth and four represented artifacts (4147.186522ms)
-✔ relational crossing mechanisms require compatible represented dynamics (4119.802717ms)
-✔ scapegoat and defensive-rumor ledgers separate event, character, benefit, and reply asymmetry (16.458759ms)
-✔ cross-code conflict preserves one concrete common-ground proposition (1655.883858ms)
-✔ modeled platform exposure lowers prosocial follow-through without lowering discernment (17.572127ms)
-✔ a tired seat still sees the ideal and can always refuse amplification (16.376547ms)
-✔ high-discernment prosocial seats gain one last resort only under extreme modeled fatigue (16.494832ms)
-✔ a last-resort decision persists its asymmetric protection and cost receipt (18.02574ms)
-✔ escalation phases are situational rather than a mandatory seven-step script (3274.303523ms)
-✔ choices can intensify, interrupt, skip crisis, relapse, and reach recovery only after de-escalation (16.815837ms)
-✔ played behavior transitions persist without fabricating phases for instrumental strategy (22.109879ms)
-✔ situated leadership and repair conversation remain sparse and situational (4923.463045ms)
-✔ the internal situated action review remains sparse, ordered, and situational (4940.695611ms)
-✔ academic social-theory lenses represent context-bound problems, ideas, and solutions without operational tactics (4945.260292ms)
-✔ one unnamed classical strategy tradition is reappropriated as social theory per night (4938.371762ms)
-✔ selected framework applications persist on the decision receipt (19.745981ms)
-ℹ tests 34
+✔ 1,000 generated nights satisfy room and night coherence (10341.693334ms)
+✔ cross-room semantic classes and carriers are typed independently of explanatory copy (1019.788867ms)
+✔ private floor choices cannot use shared content or format carriers (27.592054ms)
+✔ typed public delivery—not an ethics tag—can produce selected carriage (13.550765ms)
+✔ all six seats can be entered in any order without advancing the shared clock (10.397635ms)
+✔ serial and reverse runs create one local plus five remote receipts (2005.510774ms)
+✔ interleaved room switching completes 256 whole nights with attributable causal ledgers (4952.010715ms)
+✔ scheduled autonomous pulses fire once and do not depend on repeated clock reads (11.360725ms)
+✔ a completed room keeps a frozen close receipt and a moving afterimage (14.493596ms)
+✔ stale scene IDs and locked choices do not mutate the night (14.018434ms)
+✔ a future artifact cannot be revealed through an early decision (12.166083ms)
+✔ visible crossing copy binds every claim to event kind, semantic, carriage, and reach receipts (1.371753ms)
+✔ generated crossing copy never promotes autonomous or uncarried effects (101.724526ms)
+✔ disclosure remains vague in every entered/unentered combination (24.663625ms)
+✔ distributed choices can make a previously blocked crossover ideal reachable (1165.689197ms)
+✔ the same seed and action order replay to the same state (13.228576ms)
+✔ every night contains the six distinct communication dynamics exactly once (2536.606034ms)
+✔ generated actors keep cohesive situated repertoires while code and world model remain independent (4021.69975ms)
+✔ a selected code switch persists bounded load without changing truth or discernment (11.386724ms)
+✔ locked ideals are deterministically shuffled through every choice position (4922.966691ms)
+✔ every night keeps deliberate-protection ledgers internally bound, private, and available through player agency (2537.82069ms)
+✔ conversation diversion stays sparse, deterministic, and distinct from truth status (5021.111204ms)
+✔ a chosen diversion persists beside its relational move and emits no incident repair support (20.5246ms)
+✔ truth, propagation, beat disclosure, and communication analysis remain separately incident-bound (2472.39554ms)
+✔ relational crossing mechanisms require compatible represented dynamics (2434.741129ms)
+✔ scapegoat and defensive-rumor ledgers separate event, character, benefit, and reply asymmetry (9.693123ms)
+✔ cross-code conflict preserves one concrete common-ground proposition (933.868902ms)
+✔ modeled platform exposure lowers prosocial follow-through without lowering discernment (9.932636ms)
+✔ a tired seat still sees the ideal and can always refuse amplification (9.758049ms)
+✔ high-discernment prosocial seats gain one last resort only under extreme modeled fatigue (9.255419ms)
+✔ a last-resort decision persists its asymmetric protection and cost receipt (9.792991ms)
+✔ escalation phases are situational rather than a mandatory seven-step script (1865.060727ms)
+✔ choices can intensify, interrupt, skip crisis, relapse, and reach recovery only after de-escalation (9.527329ms)
+✔ played behavior transitions persist without fabricating phases for instrumental strategy (14.318289ms)
+✔ situated leadership and repair conversation remain sparse and situational (2879.895982ms)
+✔ the internal situated action review remains sparse, ordered, and situational (2800.795156ms)
+✔ academic social-theory lenses represent context-bound problems, ideas, and solutions without operational tactics (2890.080261ms)
+✔ one unnamed classical strategy tradition is reappropriated as social theory per night (2931.179234ms)
+✔ selected framework applications persist on the decision receipt (18.87335ms)
+ℹ tests 39
 ℹ suites 0
-ℹ pass 34
+ℹ pass 39
 ℹ fail 0
 ℹ cancelled 0
 ℹ skipped 0
 ℹ todo 0
-ℹ duration_ms 93620.493002
+ℹ duration_ms 58270.525011
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
 
 > chorus@1.0.0-rc.1 test:simulation
 > node --experimental-strip-types --experimental-specifier-resolution=node --test tests/simulation-maturity.test.mjs
 
-✔ the maturity harness is deterministic and content-addressed (1403.110049ms)
-✔ unentered rooms evolve only when autonomous scenes become due (26.591489ms)
-✔ randomized interleavings produce exactly-once local and remote causality (0.19644ms)
-✔ invalid-state probes and invalid actions are rejected without corrupting play (0.144815ms)
-✔ large-run bounds preserve cumulative reach and normalized 0–100 domains (0.304451ms)
+✔ the maturity harness is deterministic and content-addressed (1107.884251ms)
+✔ unentered rooms evolve only when autonomous scenes become due (19.616667ms)
+✔ randomized interleavings produce exactly-once local and remote causality (0.234654ms)
+✔ invalid-state probes and invalid actions are rejected without corrupting play (0.216789ms)
+✔ large-run bounds preserve cumulative reach and normalized 0–100 domains (0.314842ms)
 ℹ tests 5
 ℹ suites 0
 ℹ pass 5
@@ -78,21 +90,98 @@ Notebook publication verified: 16 artifacts.
 ℹ cancelled 0
 ℹ skipped 0
 ℹ todo 0
-ℹ duration_ms 3110.163899
+ℹ duration_ms 2494.94098
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
 
 > chorus@1.0.0-rc.1 test:save
 > node --experimental-strip-types --experimental-specifier-resolution=node --test tests/save-model.test.mjs
 
-✔ the save model defaults to memory only and performs no storage I/O (1.942206ms)
-✔ portable text round-trips a reconstructed night and exposes a bounded preview (225.553972ms)
-✔ an earlier scenario model reports a version mismatch before ledger replay (77.906712ms)
-✔ an ordinary text mutation fails the deterministic corruption check (58.756086ms)
-✔ a recomputed checksum cannot make a fabricated state reproducible (113.320376ms)
-✔ an enacted register switch survives replay and rejects active-code or transition tampering (247.626801ms)
-✔ local slots require an explicit slot capability and only touch the selected key (165.855224ms)
-✔ slot inventory reads only when called and isolates corrupt entries (0.348436ms)
-✔ schema 0 uses the migration hook after validating its own checksum (75.098453ms)
-✔ oversized, deep, foreign, and unsupported inputs fail closed (1.18863ms)
+✔ the save model defaults to memory only and performs no storage I/O (1.459111ms)
+✔ a denied slot read is distinguished from corrupt saved text (0.281293ms)
+✔ schema-2 portable text round-trips a partial night and exposes a bounded preview (108.961921ms)
+✔ zero-decision, partial, and completed saves contain only numeric traces and restore exactly (229.994863ms)
+✔ a historical v13 scenario model reports a version mismatch before trace replay (50.083037ms)
+✔ an ordinary trace mutation fails the deterministic corruption check (38.642723ms)
+✔ fresh-digest prose smuggling and unknown fields fail exact-key validation (69.135852ms)
+✔ raw duplicate JSON members cannot hide prose behind a digest-valid trace (36.380433ms)
+✔ recomputed digests cannot make impossible coordinates or incomplete entry sets replay (70.605714ms)
+✔ a fresh digest can describe another valid history and therefore is not authentication (50.626164ms)
+✔ an enacted register switch is reconstructed without persisting its linguistic record (52.249837ms)
+✔ local slots require consent, use the v2 key, and retire a selected legacy slot (72.488417ms)
+✔ legacy slot inventory and load migrate in memory without implicit writes (116.58607ms)
+✔ a corrupt current slot is not hidden by a valid stale legacy slot (19.687161ms)
+✔ schema 1 verifies and replays its full state before in-memory trace migration (95.028104ms)
+✔ schema-1 prose tampering with a fresh checksum still fails canonical legacy replay (57.632976ms)
+✔ schema 0 verifies its checksum and state before migration to schema 2 (61.630843ms)
+✔ oversized, deep, foreign, mismatched-header, and unsupported inputs fail closed (34.034345ms)
+ℹ tests 18
+ℹ suites 0
+ℹ pass 18
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1319.556916
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> chorus@1.0.0-rc.1 test:copy
+> node --experimental-strip-types --experimental-specifier-resolution=node --test tests/copy-contract.test.mjs
+
+✔ active artifacts contain the public event, not the private misrepresentation ledger (2.118308ms)
+✔ TruthLedger remains a factual ledger rather than an interior, incentive, or duty ledger (4.865931ms)
+✔ the completed-night view is one naturalized state-derived summary followed by a separate concept receipt (0.425545ms)
+✔ the naturalized summary changes with the played state without becoming a concept taxonomy (105.661083ms)
+✔ naturalized summaries vary in causal shape instead of filling one hidden template (1833.459257ms)
+✔ plain concept receipt is deduplicated from encountered SceneLessons and carries honest evidence status (29.447421ms)
+✔ encountered, experienced, and played remain reachable evidence states (234.393078ms)
+✔ concept status follows authored bindings and rules, never persuasive-looking prose (362.212864ms)
+✔ played and experienced concept provenance remain independent (80.612093ms)
+✔ a refusal-only path is not classified as a deliberate act the player never chose (36.116063ms)
+✔ typed receipt semantics, not floor labels or explanatory prose, govern narrated carriage (459.438554ms)
+✔ live echoes never turn a direct link or affirmative cue into unselected carriage (20.424636ms)
+✔ ambient summary routes deny both content and recognizable-form carriage (923.316652ms)
+✔ concept effect provenance matches exact authored rules, including decision-only carriage (28.559999ms)
+✔ concept evidence keeps action design, ambient pressure, and net outcome distinct (769.022705ms)
+✔ autonomous correction evidence does not invent a source-bearing update (29.218196ms)
+✔ the afterword follows a chronological causal chain and integrates its residue (361.825623ms)
+✔ summary decision and route provenance remains globally chronological across broad seeded paths (3877.343014ms)
+✔ Catalysis realization follows the narrated situation instead of a path-hash synonym wheel (7416.841524ms)
+✔ the after-summary lets juxtaposed scene evidence carry the inference instead of narrating its audit schema (1796.659965ms)
+✔ after-summary grammar keeps seats as actors and closes authored punctuation once (226.185626ms)
+✔ scene-first inquiry uses only the narrated beat's public disclosure provenance (1935.191741ms)
+✔ repeated last-resort labels do not merge independent events and every cost keeps provenance (29.696687ms)
+✔ every selected last resort keeps its complete split consequence, even before the chosen route chain ends (1690.365289ms)
+✔ strongest afterimages use comparable scales and do not mechanically select reach (437.490274ms)
+✔ equal strongest afterimages use the stable scenario-id tie-break (33.678346ms)
+✔ a valid completed night with no post-close change keeps a conclusion without inventing an afterimage (29.435358ms)
+✔ natural narrative hides mechanism IDs and concept explanations hide metric jargon (291.753477ms)
+✔ the final view keeps its explanatory-model limit visible beside the conclusion (7.243908ms)
+✔ format-only direct routes are not labeled as direct content crossings (1.277832ms)
+✔ generated player copy is atomized, bounded, and does not repeat one room explanation through every beat (10.473233ms)
+ℹ tests 31
+ℹ suites 0
+ℹ pass 31
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 23394.05694
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> chorus@1.0.0-rc.1 test:linguistics
+> node scripts/validate-linguistics-evidence.mjs && node --experimental-strip-types --experimental-specifier-resolution=node --test tests/linguistics-contract.test.mjs
+
+linguistic evidence chain valid: 29 atoms, 13 pre findings, 13 dispositions, 13 post findings, 12 runs, 5 held release gaps
+✔ the dedicated linguistic register binds exact authority without inventing WV identifiers (0.901999ms)
+✔ occupied-seat copy stays with the fictional seat instead of assigning the player an interior (1385.221083ms)
+✔ active choices leave analytic motive in subtext rather than repeating it (1395.329317ms)
+✔ stable safety and repair affordances stay plain while incident-responsive choices carry Catalysis (1304.791338ms)
+✔ spoiler-bearing research records are gated while the operational House Guide remains available (0.524793ms)
+✔ conclusion builders fail closed for an unfinished night (12.006482ms)
+✔ conclusion builders fail closed for malformed completed ledgers (53.295936ms)
+✔ live crossing copy follows event kind, semantic, and realized selected carriage (0.844013ms)
+✔ pre-completion save bytes contain only a replay trace, not sealed linguistic analysis (55.988501ms)
+✔ natural summaries retain complete causal clauses without false cross-room aliases (82.701289ms)
 ℹ tests 10
 ℹ suites 0
 ℹ pass 10
@@ -100,61 +189,70 @@ Notebook publication verified: 16 artifacts.
 ℹ cancelled 0
 ℹ skipped 0
 ℹ todo 0
-ℹ duration_ms 1136.107802
+ℹ duration_ms 4468.670713
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
 
 > chorus@1.0.0-rc.1 test:a11y
 > node --test tests/accessibility-disclosure.test.mjs
 
-✔ prelude offers directional hints without naming the lessons (1.439512ms)
-✔ active play withholds classifications and recognition checklists (0.438119ms)
-✔ play exposes a bounded language surface rather than the analytic repertoire (0.300485ms)
-✔ conversation routing is named only in one collapsed whole-night receipt (0.574941ms)
-✔ linguistic repertoires open only inside the concluding Interpretation receipt (1.667649ms)
-✔ the internal pressure contour is never taught as an in-game taxonomy (0.43276ms)
-✔ practice receipts use CHORUS-native lenses and keep the internal action review sealed (0.307255ms)
-✔ deliberate-protection analysis stays sealed until the final receipt (0.27047ms)
-✔ explicit interpretation remains gated behind whole-night completion (0.20273ms)
-✔ new nights remain available through one regeneration control without a campaign counter (0.593359ms)
-✔ rooms remain switchable while scheduled artifacts retain their clock (0.406402ms)
-✔ relationship plot is filterable, keyboard explorable, and disclosure-bounded (0.31752ms)
-✔ each visible navigation destination has one control per viewport (0.585137ms)
-✔ the CHORUS mark is a three-color faceted serpent C in both header and favicon (0.361115ms)
-✔ modal content isolates the background and restores keyboard focus (0.664684ms)
-✔ meters expose names and values without relying on color (0.176071ms)
-✔ focus, text scaling, and target-size floors are explicit (0.312153ms)
-✔ locked ideals are discoverable without revealing the reason early (0.300205ms)
-✔ The heart defines the represented ideas without instructional imperatives (0.201088ms)
-✔ privacy and saves are one optional, progressively disclosed destination (0.304251ms)
-✔ privacy controls validate before restore and keep failures inside an announced status (0.240636ms)
-✔ scholarly record is executed, public, bounded, and reachable from the House Guide (27.585957ms)
-ℹ tests 22
+✔ prelude offers directional hints without naming the lessons (1.332632ms)
+✔ active play withholds classifications and recognition checklists (0.474428ms)
+✔ play exposes a bounded language surface rather than the analytic repertoire (0.329766ms)
+✔ conversation-route classifications stay out of active play and the ending does not revive their taxonomy (0.45483ms)
+✔ analytic language profiles stay sealed while the ending uses only path-derived plain concepts (0.380881ms)
+✔ the internal pressure contour is never taught as an in-game taxonomy (0.299681ms)
+✔ framework internals remain sealed instead of becoming a concluding practice syllabus (0.246864ms)
+✔ private motive and deliberate-protection ledgers stay sealed from both play and the user-facing ending (0.24474ms)
+✔ explicit interpretation remains gated behind whole-night completion (1.383017ms)
+✔ the precompletion House Guide excludes scholarly records and conclusion claims (0.639672ms)
+✔ the fixed meme lineage is visibly labeled as general reference (0.212984ms)
+✔ new nights remain available through one regeneration control without a campaign counter (0.27182ms)
+✔ rooms remain switchable while scheduled artifacts retain their clock (0.355234ms)
+✔ relationship plot is filterable, keyboard explorable, and disclosure-bounded (0.288775ms)
+✔ each visible navigation destination has one control per viewport (0.562237ms)
+✔ the CHORUS mark is a three-color faceted serpent C in both header and favicon (0.27836ms)
+✔ modal content isolates the background and restores keyboard focus (0.462922ms)
+✔ meters expose names and values without relying on color (0.161768ms)
+✔ focus, text scaling, and target-size floors are explicit (13.15151ms)
+✔ locked ideals are discoverable without revealing the reason early (0.342846ms)
+✔ the final story, plain concepts, and model limit are separate labeled regions in reading order (0.48836ms)
+✔ a malformed completed record reaches a plain recovery boundary before conclusion copy is built (0.178022ms)
+✔ privacy and saves are one optional, progressively disclosed destination (0.270989ms)
+✔ privacy controls validate before restore and keep failures inside an announced status (0.404446ms)
+✔ the Home route focuses and announces the introduction (0.137002ms)
+✔ scholarly record is executed, public, bounded, and available after completion (24.048969ms)
+ℹ tests 26
 ℹ suites 0
-ℹ pass 22
+ℹ pass 26
 ℹ fail 0
 ℹ cancelled 0
 ℹ skipped 0
 ℹ todo 0
-ℹ duration_ms 100.360388
+ℹ duration_ms 133.036634
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
 
 > chorus@1.0.0-rc.1 test:viewport
 > node --test tests/viewport-contract.test.mjs
 
-✔ the application shell owns exactly one dynamic viewport (1.394184ms)
-✔ viewport metadata permits safe-area layout without limiting zoom (0.321867ms)
-✔ navigation changes app state or an internal pane, never the document (9.049422ms)
-✔ overflow is confined to named, accessible internal regions (1.098417ms)
-✔ mobile and short-landscape layouts preserve a bounded stage (1.840285ms)
-✔ locked choices remain operable explanations, not disabled dead ends (1.777272ms)
-✔ the concluding conversation receipt expands in normal flow (0.821787ms)
-✔ the concluding linguistic receipt and actor disclosures expand in normal flow (1.800065ms)
-ℹ tests 8
+✔ the application shell owns exactly one dynamic viewport (1.080352ms)
+✔ the House Map notice stays intrinsic while the room grid owns the flexible desktop row (0.26434ms)
+✔ viewport metadata permits safe-area layout without limiting zoom (0.232553ms)
+✔ navigation changes app state or an internal pane, never the document (8.952983ms)
+✔ overflow is confined to named, accessible internal regions (1.076406ms)
+✔ mobile and short-landscape layouts preserve a bounded stage (3.208858ms)
+✔ locked choices remain operable explanations, not disabled dead ends (1.251724ms)
+✔ the conclusion is one normal-flow reading region rather than a tab or disclosure maze (0.29886ms)
+✔ the natural story, concept receipt, and model limit reflow inside the one debrief scroller (4.877508ms)
+✔ the seven mobile house tools wrap without a hidden horizontal nav (1.345983ms)
+ℹ tests 10
 ℹ suites 0
-ℹ pass 8
+ℹ pass 10
 ℹ fail 0
 ℹ cancelled 0
 ℹ skipped 0
 ℹ todo 0
-ℹ duration_ms 79.270887
+ℹ duration_ms 99.763374
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
 
 > chorus@1.0.0-rc.1 build
 > vinext build
@@ -162,29 +260,32 @@ Notebook publication verified: 16 artifacts.
 
   vinext build  (Vite 8.2.1)
 
-[34m[1/5] analyze client references...[39m
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mProxy environment variables detected. We'll use your proxy for fetch requests.[0m
+
+
+[1/5] analyze client references...
 [2Ktransforming...✓ 233 modules transformed.
 rendering chunks...
-[32m✓ built in 765ms[39m
-[34m[2/5] analyze server references...[39m
-[2Ktransforming...✓ 90 modules transformed.
+✓ built in 773ms
+[2/5] analyze server references...
+[2Ktransforming...✓ 91 modules transformed.
 rendering chunks...
-[32m✓ built in 313ms[39m
-[34m[3/5] build rsc environment...[39m
+✓ built in 356ms
+[3/5] build rsc environment...
 [2Ktransforming...✓ 227 modules transformed.
 rendering chunks...
 computing gzip size...
-[32m✓ built in 559ms[39m
-[34m[4/5] build client environment...[39m
-[2Ktransforming...✓ 130 modules transformed.
+✓ built in 637ms
+[4/5] build client environment...
+[2Ktransforming...✓ 131 modules transformed.
 rendering chunks...
 computing gzip size...
-[32m✓ built in 490ms[39m
-[34m[5/5] build ssr environment...[39m
-[2Ktransforming...✓ 96 modules transformed.
+✓ built in 542ms
+[5/5] build ssr environment...
+[2Ktransforming...✓ 97 modules transformed.
 rendering chunks...
 computing gzip size...
-[32m✓ built in 461ms[39m
+✓ built in 498ms
 [0m
   Route (app)
   ─ ? /
@@ -197,7 +298,7 @@ computing gzip size...
 
   Build complete. Run `vinext start` to start the production server.
 
-✔ renders only product-facing document metadata (158.570344ms)
+✔ renders only product-facing document metadata (107.994463ms)
 ℹ tests 1
 ℹ suites 0
 ℹ pass 1
@@ -205,7 +306,8 @@ computing gzip size...
 ℹ cancelled 0
 ℹ skipped 0
 ℹ todo 0
-ℹ duration_ms 216.619326
+ℹ duration_ms 177.798126
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
 
 > chorus@1.0.0-rc.1 status:check
 > python3 scripts/docs/build_working_tree_status.py --check

@@ -279,7 +279,7 @@ export type ConversationDiversionMode =
 
 export type ConversationDiversion = {
   mode: ConversationDiversionMode;
-  scenePhase: "BRIDGE" | "CROSSOVER" | "CORRECTION";
+  scenePhase: Exclude<SceneAct, "SURFACE">;
   intentionality: "deliberate";
   activeQuestion: string;
   introducedMaterial: string;
@@ -303,21 +303,52 @@ export type ChoiceBarrier = {
   conciseReason: string;
 };
 
-export type CrossRoomLink = {
+export type CrossRoomSemantic = "content" | "format" | "ambient";
+
+export type CrossRoomCarrier =
+  | {
+      kind: "shared-channel";
+      channel: string;
+    }
+  | {
+      kind: "artifact-format";
+      artifact: ArtifactKind;
+    };
+
+type CrossRoomLinkBase = {
   id: string;
   sourceScenarioId: string;
   targetScenarioId: string;
-  layer: "ambient" | "direct";
   mechanism: CrossRoomMechanism;
   strength: number;
   /** Safe to show before either endpoint has been entered. */
   vagueCue: string;
   /** Shown only after both endpoints have been entered. */
   revealedCue: string;
-  compatibilityBasis?: string;
   /** A link can carry only part of a repair path; no one link is sufficient. */
   repairCapacity: ConstraintSystem[];
 };
+
+export type CrossRoomLink = CrossRoomLinkBase & (
+  | {
+      semantic: "ambient";
+      layer: "ambient";
+      carrier?: never;
+      compatibilityBasis?: never;
+    }
+  | {
+      semantic: "content";
+      layer: "direct";
+      carrier: Extract<CrossRoomCarrier, { kind: "shared-channel" }>;
+      compatibilityBasis: string;
+    }
+  | {
+      semantic: "format";
+      layer: "direct";
+      carrier: Extract<CrossRoomCarrier, { kind: "artifact-format" }>;
+      compatibilityBasis: string;
+    }
+);
 
 export type GeneratedNight = {
   id: string;
@@ -360,6 +391,149 @@ export type DistributedRepairPath = {
   unlockHint: string;
 };
 
+/**
+ * A selected action plays a concept only when this authored, typed binding is
+ * present. Display copy and the generic `signal` field are never predicates.
+ * Saturation is intentionally absent: it is experienced through receipts.
+ */
+export type ConceptPlayBinding =
+  | {
+      term: "signaling";
+      basis: "outward-delivery";
+      act: "SURFACE";
+      delivery: {
+        scope: "shared" | "public";
+        carriage: "content" | "format" | "content-and-format";
+      };
+    }
+  | {
+      term: "correction drag";
+      basis: "source-bearing-repair";
+      act: "CORRECTION";
+      actorKind: ProtagonistKind;
+      relationalClassification: "repair" | "bounded-accountability" | "translation";
+      effect: {
+        metric: "verification" | "provenance";
+        direction: "increase";
+      };
+    }
+  | {
+      term: "market value";
+      basis: "attention-value";
+      act: "BRIDGE";
+      actorKind: "marketer" | "abstract_bad_actor";
+      relationalClassification: "blame-transfer" | "rumor-carriage" | "motive-assumption" | "code-collision";
+      effect: {
+        metric: "reach";
+        direction: "increase";
+      };
+    }
+  | {
+      term: "trust capital";
+      basis: "trusted-role-carriage";
+      act: "BRIDGE";
+      actorKind: "caregiver" | "institutional";
+      relationalClassification: Exclude<RelationalMove["classification"], "repair">;
+      effect: {
+        metric: "reach";
+        direction: "increase";
+      };
+    }
+  | {
+      term: "status capital";
+      basis: "visible-standing-carriage";
+      act: "BRIDGE";
+      actorKind: "youth" | "creator" | "political";
+      relationalClassification: Exclude<RelationalMove["classification"], "repair">;
+      effect: {
+        metric: "reach";
+        direction: "increase";
+      };
+    };
+
+/**
+ * Receipt rules are conjunctive. A debrief may mark a concept experienced only
+ * when one receipt exactly matches every authored field in one rule.
+ * `selectedCarriage` means `true`; numeric receipt fields mean greater than
+ * zero; metric directions mean greater than zero or non-zero, respectively.
+ */
+export type ConceptEffectRule =
+  | {
+      term: "signaling";
+      kind: "receipt-field";
+      event: "decision";
+      source: "lesson-scene";
+      scope: "cross-room";
+      field: "selectedCarriage";
+      semantic: "content" | "format";
+    }
+  | {
+      term: "saturation";
+      kind: "receipt-field";
+      event: "any";
+      source: "lesson-scene";
+      scope: "local" | "cross-room";
+      field: "backgroundReach" | "avoidedReach";
+    }
+  | {
+      term: "correction drag";
+      kind: "metric";
+      event: "any";
+      source: "lesson-scene";
+      scope: "local" | "cross-room";
+      metric: "verification" | "provenance";
+      direction: "increase";
+      mechanism?: "institutional-load";
+    }
+  | {
+      term: "market value";
+      kind: "metric";
+      event: "any";
+      source: "lesson-scene";
+      scope: "cross-room";
+      metric: "heat" | "consensus" | "coordination" | "enactment" | "threadFocus";
+      direction: "change";
+      mechanism: "attention-market";
+    }
+  | {
+      term: "trust capital";
+      kind: "receipt-field";
+      event: "decision";
+      source: "lesson-scene";
+      scope: "cross-room";
+      field: "selectedCarriage";
+      mechanism: "trust-carryover";
+    }
+  | {
+      term: "trust capital";
+      kind: "metric";
+      event: "any";
+      source: "lesson-scene";
+      scope: "cross-room";
+      metric: "trust" | "belief" | "consensus" | "blame";
+      direction: "change";
+      mechanism: "trust-carryover";
+    }
+  | {
+      term: "status capital";
+      kind: "receipt-field";
+      event: "any";
+      source: "lesson-scene";
+      scope: "cross-room";
+      field: "backgroundReach";
+      mechanism: "ambient-ranking";
+    }
+  | {
+      term: "status capital";
+      kind: "metric";
+      event: "any";
+      source: "lesson-scene";
+      scope: "cross-room";
+      metric: "consensus" | "blame" | "commonGround" | "heat";
+      direction: "change";
+      mechanism: "attribution-carryover" | "ambient-ranking";
+    };
+
 /** Structurally compatible with the current page Choice, with lock metadata. */
 export type GeneratedChoice = {
   id: string;
@@ -377,6 +551,10 @@ export type GeneratedChoice = {
   repairPath?: DistributedRepairPath;
   ideal?: boolean;
   ethicsTags: string[];
+  /** Typed delivery scope; cross-room carriage never depends on label/detail copy. */
+  delivery: ChoiceDelivery;
+  /** Authored concept predicates; an empty array is a deliberate non-play. */
+  conceptPlays: ConceptPlayBinding[];
   relationalMove: RelationalMove;
   conversationDiversion?: ConversationDiversion;
   codeAction?: ChoiceCodeAction;
@@ -386,6 +564,35 @@ export type GeneratedChoice = {
   lastResort?: LastResortMove;
   behaviorMove: BehaviorMove;
   frameworkMoves?: FrameworkMove[];
+};
+
+export type ChoiceCopyVoiceClass = "catalysis" | "plain-utility";
+
+/**
+ * Stable safety, repair, and locked-ideal affordances repeat so their action
+ * stays learnable across rooms. Their direct copy is utility language; the
+ * incident-responsive remainder carries the experiential Catalysis voice.
+ * Classification depends on typed availability and ethics records, never on
+ * a label string.
+ */
+export function choiceCopyVoiceClass(
+  choice: Pick<GeneratedChoice, "availability" | "ethicsTags">,
+): ChoiceCopyVoiceClass {
+  const tags = new Set(choice.ethicsTags);
+  if (choice.availability.status === "locked" && tags.has("visible-ideal")) return "plain-utility";
+  if (tags.has("distributed-unlock") && tags.has("reachable-repair")) return "plain-utility";
+  if (tags.has("verification") && tags.has("time-cost") && tags.has("non-amplification-floor")) {
+    return "plain-utility";
+  }
+  if (tags.has("partial-repair") && tags.has("trusted-bridge") && tags.has("non-amplification-floor")) {
+    return "plain-utility";
+  }
+  return "catalysis";
+}
+
+export type ChoiceDelivery = {
+  scope: "private" | "shared" | "public" | "withheld";
+  carriage: "none" | "content" | "format" | "content-and-format";
 };
 
 export type FrameworkId =
@@ -470,13 +677,32 @@ export type SceneLesson = {
   definition: string;
   perspective: string;
   observable: string;
+  experienceRules: ConceptEffectRule[];
 };
 
 export type TruthLedger = {
-  knownFact: string;
-  unresolvedAtEntry: string;
-  misleadingFrame: string;
-  laterResolution: string;
+  readonly knownFact: string;
+  readonly unresolvedAtEntry: string;
+  readonly laterResolution: string;
+};
+
+export type PropagationLedger = {
+  readonly circulatingFrame: string;
+};
+
+export type SceneAct = "SURFACE" | "BRIDGE" | "CROSSOVER" | "CORRECTION";
+
+export type RecordAtom = {
+  readonly id: string;
+  readonly access: "public-record" | "seat-private-assignment-brief";
+  readonly label: string;
+  readonly copy: string;
+};
+
+export type SceneDisclosure = {
+  readonly records: readonly RecordAtom[];
+  readonly questions: readonly RecordAtom[];
+  readonly unknowns: readonly RecordAtom[];
 };
 
 export type ProtagonistKind =
@@ -531,7 +757,7 @@ export type ChainStep = {
  */
 export type GeneratedScene = {
   id: string;
-  act: string;
+  act: SceneAct;
   seat: string;
   age?: number;
   motive: string;
@@ -559,7 +785,7 @@ export type GeneratedScene = {
     blindSpot: string;
   };
   lesson: SceneLesson;
-  communication: CommunicationLedger;
+  disclosure: SceneDisclosure;
   platformLoad: Partial<FatigueLoad>;
 };
 
@@ -598,10 +824,11 @@ export type PageScenario = {
 };
 
 export type GeneratedScenario = PageScenario & {
-  generatorVersion: 13;
+  generatorVersion: 14;
   audienceRating: "PG";
   contentNotes: string[];
   truth: TruthLedger;
+  propagation: PropagationLedger;
   protagonistModel: GeneratedProtagonist;
   chainModel: ChainStep[];
   communicationModel: CommunicationLedger;
@@ -627,7 +854,7 @@ export type CoherenceReport = {
 
 export type GeneratedScenarioPack = {
   seed: number;
-  generatorVersion: 13;
+  generatorVersion: 14;
   night: GeneratedNight;
   nightReport: CoherenceReport;
   scenarios: GeneratedScenario[];
@@ -679,7 +906,7 @@ type IncidentTemplate = {
   placeNoun: string;
   knownFact: string;
   unresolved: string;
-  frame: string;
+  circulatingFrame: string;
   resolution: string;
   heading: string;
   neutralBody: string;
@@ -728,7 +955,7 @@ type LinguisticEncounterAssignment = Pick<
 
 type ConversationDiversionAssignment = Pick<ConversationDiversion, "mode" | "scenePhase">;
 
-const GENERATOR_VERSION = 13 as const;
+const GENERATOR_VERSION = 14 as const;
 const NO_SINGLE_ACTOR = "No single actor controls this outcome." as const;
 
 const LINGUISTIC_CODES: Record<LinguisticCodeId, LinguisticCodeDefinition> = {
@@ -1158,7 +1385,7 @@ const INCIDENTS: readonly IncidentTemplate[] = [
     placeNoun: "water notice",
     knownFact: "A genuine clip shows discolored tap water after a storm-related pressure change.",
     unresolved: "At first publication, the source and viewers do not know the cause.",
-    frame: "The crop is treated as proof that officials knowingly concealed contamination.",
+    circulatingFrame: "The crop is treated as proof that officials knowingly concealed contamination.",
     resolution: "A later public log attributes the color to disturbed iron sediment and also documents a delayed notice.",
     heading: "A real observation acquires a conclusion before the evidence arrives.",
     neutralBody: "The original post asks a question. A cropped copy removes that uncertainty while retaining the striking image.",
@@ -1190,7 +1417,7 @@ const INCIDENTS: readonly IncidentTemplate[] = [
     placeNoun: "outage map",
     knownFact: "A genuine utility map shows neighborhoods that lost power during the previous evening.",
     unresolved: "The cropped image does not show its date or whether service has since returned.",
-    frame: "The old map is presented as evidence that a new citywide outage is being hidden.",
+    circulatingFrame: "The old map is presented as evidence that a new citywide outage is being hidden.",
     resolution: "The current utility record shows service restored except for two small repair areas.",
     heading: "An accurate map survives longer than its timestamp.",
     neutralBody: "The screenshot is authentic, legible, and obsolete. Its age disappears as it moves between rooms.",
@@ -1222,7 +1449,7 @@ const INCIDENTS: readonly IncidentTemplate[] = [
     placeNoun: "library photograph",
     knownFact: "A photograph shows books on rolling carts while one library wing receives ventilation repairs.",
     unresolved: "The photograph alone does not explain why those titles were moved.",
-    frame: "The carts are framed as a quiet permanent removal of the photographed subjects.",
+    circulatingFrame: "The carts are framed as a quiet permanent removal of the photographed subjects.",
     resolution: "The repair calendar and catalog show the books returning to the same public shelves.",
     heading: "A temporary move is made to resemble a permanent decision.",
     neutralBody: "The image is real. The repair notice sits outside the crop, leaving a culturally familiar explanation to fill the gap.",
@@ -1254,7 +1481,7 @@ const INCIDENTS: readonly IncidentTemplate[] = [
     placeNoun: "market recall",
     knownFact: "A vendor notice recalls one clearly identified lot of sealed fruit cups.",
     unresolved: "A cropped notice omits the lot number and affected dates.",
-    frame: "The crop is read as a warning that every stall at the weekend market is unsafe.",
+    circulatingFrame: "The crop is read as a warning that every stall at the weekend market is unsafe.",
     resolution: "The complete notice limits the recall to one lot and confirms that other vendors are unaffected.",
     heading: "A narrow precaution expands when its boundary is cropped away.",
     neutralBody: "The warning is legitimate, but the missing lot number changes its practical meaning as trusted people forward it.",
@@ -1286,7 +1513,7 @@ const INCIDENTS: readonly IncidentTemplate[] = [
     placeNoun: "festival notice",
     knownFact: "An event organizer files a routine severe-weather contingency plan.",
     unresolved: "The first screenshot does not include the page labeling it as a contingency.",
-    frame: "The filing is described as confirmation that the youth arts festival has been cancelled.",
+    circulatingFrame: "The filing is described as confirmation that the youth arts festival has been cancelled.",
     resolution: "The organizer later confirms that the festival remains scheduled with an indoor backup location.",
     heading: "A plan for uncertainty is recast as a decision already made.",
     neutralBody: "One administrative page travels faster than the complete packet and becomes socially useful to people awaiting weekend plans.",
@@ -1318,7 +1545,7 @@ const INCIDENTS: readonly IncidentTemplate[] = [
     placeNoun: "transit agenda",
     knownFact: "A public agenda proposes a two-week cashless boarding test on two routes.",
     unresolved: "The clipped agenda does not retain the routes, duration, or word 'test.'",
-    frame: "The proposal is announced as an immediate permanent cash ban across the transit system.",
+    circulatingFrame: "The proposal is announced as an immediate permanent cash ban across the transit system.",
     resolution: "The adopted minutes retain cash service systemwide and schedule a limited accessibility review.",
     heading: "A limited test becomes a permanent systemwide rule in one crop.",
     neutralBody: "The agenda is genuine. Its scope disappears before the people most affected encounter it.",
@@ -1350,7 +1577,7 @@ const INCIDENTS: readonly IncidentTemplate[] = [
     placeNoun: "school schedule",
     knownFact: "A school arts rehearsal moves from the auditorium to the auxiliary hall for one afternoon.",
     unresolved: "A screenshot shows the crossed-out room without the replacement location.",
-    frame: "The crop is treated as proof that the entire showcase has been cancelled.",
+    circulatingFrame: "The crop is treated as proof that the entire showcase has been cancelled.",
     resolution: "The complete schedule shows the new room and the unchanged performance date.",
     heading: "A room change becomes a cancellation inside the peer group.",
     neutralBody: "The schedule fragment answers one question poorly and arrives while classmates are already arranging rides and plans.",
@@ -1382,7 +1609,7 @@ const INCIDENTS: readonly IncidentTemplate[] = [
     placeNoun: "shelter notice",
     knownFact: "An animal shelter lobby closes for one morning of scheduled floor cleaning while animal care continues.",
     unresolved: "A photograph shows only the words 'lobby closed' and no reopening time.",
-    frame: "The sign is circulated as evidence that the shelter has suddenly shut down permanently.",
+    circulatingFrame: "The sign is circulated as evidence that the shelter has suddenly shut down permanently.",
     resolution: "The full sign and volunteer calendar show normal animal care and an afternoon reopening.",
     heading: "A temporary closed sign is asked to explain an entire institution.",
     neutralBody: "The photograph is accurate but incomplete, and concern for familiar animals gives the missing context urgency.",
@@ -1602,11 +1829,11 @@ const ACTORS: Record<ProtagonistKind, ActorTemplate> = {
     seat: "PEER TABLE",
     act: "BELONGING",
     ageRange: [12, 17],
-    mentality: "You are managing timing, belonging, and whether your friends think you are useful; factual certainty is not the only stake.",
+    mentality: "The organizer is holding timing, belonging, and whether friends still see them as useful; factual certainty is not the only stake.",
     motive: "peer timing, usefulness, belonging",
     goalDomain: "social",
     goal: "keep the group informed without being the last person to understand what is happening",
-    connection: (incident) => `The ${incident.placeNoun} affects plans or a cause your peers already discuss.`,
+    connection: (incident) => `The ${incident.placeNoun} affects plans or a cause the organizer's peers already discuss.`,
     channel: "peer group",
     capabilities: ["private messages", "trusted peer relationships", "group status"],
     constraints: ["no institutional authority", "partial context", "fast-moving peer expectations"],
@@ -1618,11 +1845,11 @@ const ACTORS: Record<ProtagonistKind, ActorTemplate> = {
     role: "family-group moderator",
     seat: "FAMILY BOOTH",
     act: "CARE",
-    mentality: "You treat omission as a practical risk because other people depend on you, even when the evidence remains incomplete.",
+    mentality: "The moderator treats omission as a practical risk because several households depend on the warning, even while the evidence remains incomplete.",
     motive: "protective responsibility, trusted relationships",
     goalDomain: "social",
     goal: "help several households make a safe near-term decision",
-    connection: (incident) => `The ${incident.placeNoun} could change plans for people who expect you to warn them.`,
+    connection: (incident) => `The ${incident.placeNoun} could change plans for people who expect the moderator to warn them.`,
     channel: "family group",
     capabilities: ["trusted family ties", "group moderation", "private verification"],
     constraints: ["limited time", "no direct source access", "high cost of missing a real warning"],
@@ -1634,11 +1861,11 @@ const ACTORS: Record<ProtagonistKind, ActorTemplate> = {
     role: "local accountability creator",
     seat: "CREATOR STAGE",
     act: "STANDING",
-    mentality: "Your audience values speed and candor because you have identified real institutional failures before.",
+    mentality: "The creator's audience values speed and candor because earlier work identified real institutional failures.",
     motive: "audience standing, accountability, timing",
     goalDomain: "social",
     goal: "remain the trusted person who explains local ambiguity first",
-    connection: (incident) => `The ${incident.placeNoun} intersects with your established theme of institutional responsiveness.`,
+    connection: (incident) => `The ${incident.placeNoun} intersects with the creator's established theme of institutional responsiveness.`,
     channel: "local livestream",
     capabilities: ["trusted audience", "live explanation", "source-linking"],
     constraints: ["audience expects immediacy", "public corrections are reputationally costly", "evidence arrives slowly"],
@@ -1650,7 +1877,7 @@ const ACTORS: Record<ProtagonistKind, ActorTemplate> = {
     role: "regional brand growth lead",
     seat: "BRAND BACKBAR",
     act: "CONVERSION",
-    mentality: "You are evaluated on relevance and response time, not on resolving the incident itself.",
+    mentality: "The growth lead is evaluated on relevance and response time, not on resolving the incident itself.",
     motive: "campaign relevance, revenue, professional standing",
     goalDomain: "marketing",
     goal: "turn a fast cultural moment into attention for an adjacent campaign",
@@ -1666,7 +1893,7 @@ const ACTORS: Record<ProtagonistKind, ActorTemplate> = {
     role: "civic campaign aide",
     seat: "CAMPAIGN TABLE",
     act: "ISSUE BRIDGE",
-    mentality: "You care less about the object in the image than whether it supports a broader competence argument already familiar to voters.",
+    mentality: "The aide cares less about the object in the image than whether it supports a broader competence argument already familiar to voters.",
     motive: "issue ownership, timing, coalition standing",
     goalDomain: "political",
     goal: "make institutional responsiveness the subject of tomorrow's civic discussion",
@@ -1682,11 +1909,11 @@ const ACTORS: Record<ProtagonistKind, ActorTemplate> = {
     role: "public-information editor",
     seat: "PUBLIC DESK",
     act: "REPAIR",
-    mentality: "You can publish only what is attributable, but every approval minute leaves the incomplete version uncontested.",
+    mentality: "The editor can publish only what is attributable, but every approval minute leaves the incomplete version uncontested.",
     motive: "accuracy, authorization, public trust",
     goalDomain: "institutional",
     goal: "release a useful public explanation without asserting facts the institution cannot yet support",
-    connection: (incident) => `The ${incident.placeNoun} is now creating questions that your office must answer across several rooms.`,
+    connection: (incident) => `The ${incident.placeNoun} is now creating questions the public-information desk must answer across several rooms.`,
     channel: "public-information desk",
     capabilities: ["attributable publishing", "institutional records", "accessible formatting"],
     constraints: ["approval latency", "incomplete record", "fragmented downstream audiences"],
@@ -1698,7 +1925,7 @@ const ACTORS: Record<ProtagonistKind, ActorTemplate> = {
     role: "contracted narrative coordinator",
     seat: "CONTRACT ROOM",
     act: "COORDINATION",
-    mentality: "You are paid to increase the visibility of a general distrust theme; whether this incident is true is secondary to client utility.",
+    mentality: "The coordinator is paid to increase the visibility of a general distrust theme; whether this incident is true is secondary to client utility.",
     motive: "contract completion, client standing, deniability",
     goalDomain: "business",
     goal: "attach an ambiguous civic incident to a client's broad institutional-distrust theme",
@@ -2132,7 +2359,7 @@ function buildCommunicationLedger(
       const factBindings = {
         incidentId: incident.id,
         hookId: hook.id,
-        surface: `The message says “${hook.coolMessage}” ${hook.prosocialEvidence}`,
+        surface: `The message says “${hook.coolMessage}”`,
         bridge: `Readers recast the compressed task-direct wording as proof that the speaker does not care about people affected by the ${incident.placeNoun}.`,
         crossover: `The terse line is screenshotted without its linked evidence, so the audience encounters tone before the reason for the correction.`,
         correction: `${hook.relationalResolution} The linked evidence makes the protective aim inspectable without requiring the audience to infer it from tone.`,
@@ -2162,7 +2389,7 @@ function buildCommunicationLedger(
       const factBindings = {
         incidentId: incident.id,
         hookId: hook.id,
-        surface: `The coordinator says “${hook.warmMessage}” while selecting the unresolved ${incident.placeNoun} for its contract value.`,
+        surface: `The coordinator says “${hook.warmMessage}” beside the unresolved ${incident.placeNoun} post.`,
         bridge: `Readers treat “${hook.warmMessage}” as evidence that the coordinator shares their concern, although the line adds no evidence to the ${incident.placeNoun} record.`,
         crossover: `The affiliative line travels with the compressed frame while the coordinator's success condition remains thematic visibility rather than resolution.`,
         correction: `${hook.relationalResolution} The warm line remains presentation evidence; the source record and disclosed incentive resolve what it cannot.`,
@@ -2176,7 +2403,7 @@ function buildCommunicationLedger(
         interiorOrientation: "instrumental and outcome-detached",
         presentationTemperature: "warm",
         speechCode: "affiliative local concern",
-        observableRecord: [factBindings.surface, `The assignment values the unresolved ${incident.placeNoun}'s thematic visibility rather than its factual resolution.`],
+        observableRecord: [factBindings.surface, `The assignment brief rewards thematic visibility around the ${incident.placeNoun}; it does not require factual resolution.`],
         inferences: [factBindings.bridge, "A socially fluent account must be locally accountable."],
         unknowns: [`Whether recipients know who benefits from this ${incident.placeNoun} framing.`, "Whether the speaker would preserve the relationship after the contract ends."],
         protectedStake: "contract completion, client standing, and deniability",
@@ -2192,7 +2419,7 @@ function buildCommunicationLedger(
       const factBindings = {
         incidentId: incident.id,
         hookId: hook.id,
-        surface: `The public note follows a task-first code: “${hook.taskFirstCode}” The receiving room expects a relationship-first code: “${hook.relationshipFirstCode}”`,
+        surface: `The public note opens with task-first wording. The receiving room asks for relationship-first wording.`,
         bridge: `The receiving room treats the missing relationship ritual as evidence of indifference, while the publishing room treats qualification as responsible care.`,
         crossover: `Literal wording survives, but the two rooms assign different pragmatic commitments to the same ${incident.placeNoun} note.`,
         correction: `${hook.relationalResolution} A dual-code update can preserve “${hook.taskFirstCode}” while adding “${hook.relationshipFirstCode}”`,
@@ -2222,7 +2449,7 @@ function buildCommunicationLedger(
       const factBindings = {
         incidentId: incident.id,
         hookId: hook.id,
-        surface: `One coalition says “${hook.coalitionCodeA}” Another says “${hook.coalitionCodeB}”`,
+        surface: `Two coalitions attach different language to the same proposed ${incident.placeNoun} action.`,
         bridge: `The vocabulary difference is framed as political opposition even though both statements support this action: ${hook.commonGround}.`,
         crossover: `Replies answer coalition markers while the shared ${incident.placeNoun} action remains outside the most visible argument.`,
         correction: `${hook.relationalResolution} Normalizing both statements into concrete verbs exposes their shared commitment: ${hook.commonGround}.`,
@@ -2454,6 +2681,7 @@ function buildConcurrentNight(
         id: `link-${hashText(`${seed}:${source.id}:${target.id}`).toString(36)}`,
         sourceScenarioId: source.id,
         targetScenarioId: target.id,
+        semantic: "ambient",
         layer: "ambient",
         mechanism,
         strength: Number((0.38 + random() * 0.44).toFixed(2)),
@@ -2483,19 +2711,31 @@ function buildConcurrentNight(
       links.find((item) => item.sourceScenarioId === source.id && item.targetScenarioId === candidate.target.id)?.mechanism !== "model-collision",
     ) ?? candidates[0];
     if (!selected) return;
-    const link = links.find((item) => item.sourceScenarioId === source.id && item.targetScenarioId === selected.target.id);
+    const linkIndex = links.findIndex((item) => item.sourceScenarioId === source.id && item.targetScenarioId === selected.target.id);
+    const link = links[linkIndex];
     if (!link) return;
-    link.layer = "direct";
     if (selected.shared[0]) {
       const sharedChannel = selected.shared[0];
-      link.compatibilityBasis = `both generated chains include ${sharedChannel}`;
-      link.vagueCue = "A neighboring channel is beginning to carry a transformed fragment from another unresolved conversation.";
-      link.revealedCue = `${source.title} reached ${selected.target.title} through their shared ${sharedChannel} channel.`;
+      links[linkIndex] = {
+        ...link,
+        semantic: "content",
+        layer: "direct",
+        carrier: { kind: "shared-channel", channel: sharedChannel },
+        compatibilityBasis: `both generated chains include ${sharedChannel}`,
+        vagueCue: "A neighboring channel is beginning to carry a transformed fragment from another unresolved conversation.",
+        revealedCue: `${source.title} reached ${selected.target.title} through their shared ${sharedChannel} channel.`,
+      };
     } else {
       const sharedArtifact = selected.sharedArtifacts[0] ?? "screenshot";
-      link.compatibilityBasis = `both rooms use the ${sharedArtifact} format as a social carrier`;
-      link.vagueCue = "A recognizable format from another unresolved conversation is becoming easier to reuse here.";
-      link.revealedCue = `The ${sharedArtifact} format used in ${source.title} became more legible around ${selected.target.title}; this is format imitation, not a shared factual claim.`;
+      links[linkIndex] = {
+        ...link,
+        semantic: "format",
+        layer: "direct",
+        carrier: { kind: "artifact-format", artifact: sharedArtifact },
+        compatibilityBasis: `both rooms use the ${sharedArtifact} format as a social carrier`,
+        vagueCue: "A recognizable format from another unresolved conversation is becoming easier to reuse here.",
+        revealedCue: `The ${sharedArtifact} format used in ${source.title} became more legible around ${selected.target.title}; this is format imitation, not a shared factual claim.`,
+      };
     }
   });
 
@@ -2531,7 +2771,25 @@ export function validateConcurrentNight(
   add("concurrent-contract", night.roomsRunConcurrently && night.effectRule === "one-local-plus-five-cross-room-effects", "Every choice has one local consequence and one modeled consequence in each of the other five rooms.");
   add("regeneration-without-session-cap", night.generationPolicy === "validated-regeneration-without-session-cap", "Every coherent local seed remains playable without a campaign-night ceiling or generated-night allotment.");
   add("complete-directed-coverage", night.links.length === expectedLinkCount && new Set(directedPairs).size === expectedLinkCount && knownLinks, "Every ordered pair of distinct rooms has exactly one typed influence route.");
-  add("sparse-content-crossings", night.links.some((link) => link.layer === "direct") && night.links.filter((link) => link.layer === "direct").length <= scenarios.length * 2 && night.links.filter((link) => link.layer === "direct").every((link) => Boolean(link.compatibilityBasis)), "Literal content crossings are sparse and require a generated shared-channel basis; all other links remain ambient system effects.");
+  const semanticRoutesCoherent = night.links.every((link) => {
+    switch (link.semantic) {
+      case "ambient":
+        return link.layer === "ambient" && link.carrier === undefined && link.compatibilityBasis === undefined;
+      case "content":
+        return link.layer === "direct"
+          && link.carrier.kind === "shared-channel"
+          && link.carrier.channel.length > 0
+          && link.compatibilityBasis.length > 0;
+      case "format":
+        return link.layer === "direct"
+          && link.carrier.kind === "artifact-format"
+          && link.carrier.artifact.length > 0
+          && link.compatibilityBasis.length > 0;
+    }
+  });
+  const directLinks = night.links.filter((link) => link.semantic !== "ambient");
+  add("semantic-route-contract", semanticRoutesCoherent, "Every route is explicitly ambient, shared-channel content, or artifact-format reuse; prose never determines the class.");
+  add("sparse-content-crossings", directLinks.length > 0 && directLinks.length <= scenarios.length * 2, "Typed content and format crossings are sparse; the remaining routes carry ambient system effects only.");
   add("bounded-cross-effects", night.links.every((link) => link.strength >= 0.38 && link.strength <= 0.82), "Cross-room influence strengths remain inside reviewed bounds.");
   const relationalRoutesCompatible = night.links.every((link) => {
     const source = scenarios.find((scenario) => scenario.id === link.sourceScenarioId);
@@ -2598,7 +2856,10 @@ export function validateGeneratedScenario(scenario: GeneratedScenario): Coherenc
   };
 
   add("audience-rating", scenario.audienceRating === "PG", "Scenario is marked for the PG household-safe set.");
-  add("truth-separation", new Set(Object.values(scenario.truth)).size === 4, "Fact, ambiguity, frame, and resolution remain distinct.");
+  add("truth-propagation-separation", new Set([
+    ...Object.values(scenario.truth),
+    ...Object.values(scenario.propagation),
+  ]).size === 4, "Fact, ambiguity, circulating frame, and resolution remain distinct while the frame stays outside the truth ledger.");
   add("chain-length", scenario.chainModel.length >= 4, "The incident crosses at least four system rooms.");
   add("chain-source", scenario.chainModel[0]?.transform === "original", "The causal chain begins with an attributable source.");
   add("chain-repair", scenario.chainModel.at(-1)?.transform === "correction", "The causal chain includes a repair endpoint.");
@@ -2644,6 +2905,24 @@ export function validateGeneratedScenario(scenario: GeneratedScenario): Coherenc
   const lessonsCompatible = scenario.scenes.every((scene) => isLessonCompatible(scene.lesson.term, scenario.protagonistModel.kind, scene.act));
   add("lesson-compatibility", lessonsCompatible, "Every systems concept is translated through this protagonist's role and the active beat.");
   add("lesson-observable", scenario.scenes.every((scene) => scene.lesson.observable.length >= 30), "Every lesson points to an observable change in the simulation rather than supplying a glossary alone.");
+  const conceptPlayBindingsValid = scenario.scenes.every((scene) => {
+    const bindings = scene.choices.flatMap((choice) => choice.conceptPlays);
+    const expectedPlay = scene.lesson.term !== "saturation";
+    return (!expectedPlay || bindings.length > 0)
+      && (expectedPlay || bindings.length === 0)
+      && scene.choices.every((choice) => choice.conceptPlays.every((binding) =>
+        conceptPlayBindingIsTermCorrect(binding, choice, scene.act, scene.lesson.term, scenario.protagonistModel.kind),
+      ));
+  });
+  add("concept-play-bindings", conceptPlayBindingsValid, "Played concepts are authored from the beat, actor kind, delivery, relational classification, and typed effects; saturation remains experience-only and display copy is never a predicate.");
+  const conceptExperienceRulesValid = scenario.scenes.every((scene) => conceptEffectRulesAreTermCorrect(scene.lesson));
+  add("concept-experience-rules", conceptExperienceRulesValid, "Experienced concepts use the lesson scene as the event source and exact receipt scope, carriage, mechanism, or named metric direction.");
+  const conceptStatusesReachable = scenario.scenes.some((scene) => scene.choices.some((choice) => choice.conceptPlays.length > 0))
+    && scenario.scenes.some((scene) => scene.choices.some((choice) => choice.conceptPlays.length === 0))
+    && scenario.scenes.some((scene) => scene.lesson.term === "saturation"
+      && scene.choices.every((choice) => choice.conceptPlays.length === 0)
+      && scene.lesson.experienceRules.some((rule) => rule.kind === "receipt-field" && rule.field === "backgroundReach"));
+  add("concept-status-reachability", conceptStatusesReachable, "The authored model exposes played, experienced-without-play, and unmatched encountered routes without inferring a status from generic signal copy.");
 
   const communication = scenario.communicationModel;
   add("communication-ledger", Boolean(communication)
@@ -2716,41 +2995,98 @@ export function validateGeneratedScenario(scenario: GeneratedScenario): Coherenc
     && Object.keys(action!.switchLoad).every((kind) => ["attentional", "relational"].includes(kind)))
     && codeActions.some((action) => action?.mode === "switch" || action?.mode === "bridge"),
   "Existing choices carry only repertoire-owned, audience-bound code actions; the engine adds no extra option and code use remains separate from motive and truth.");
-  add("scene-communication-continuity", scenario.scenes.every((scene) => scene.communication.dynamic === communication.dynamic), "Every beat belongs to the same reviewed communication ledger; the relational pattern cannot mutate for drama.");
   const bindings = communication.factBindings;
+  const boundIncident = INCIDENTS.find((incident) => incident.id === bindings.incidentId);
   const bindingMatchesIncident = scenario.id.startsWith(`${bindings.incidentId}-`)
     && bindings.hookId === INCIDENT_COMMUNICATION[bindings.incidentId].id;
-  const truthCarriesBindings = scenario.truth.knownFact.includes(bindings.surface)
-    && scenario.truth.misleadingFrame.includes(bindings.bridge)
-    && scenario.truth.unresolvedAtEntry.includes(bindings.crossover)
-    && scenario.truth.laterResolution.includes(bindings.correction);
-  const artifactsCarryBindings = (scenario.scenes[0]?.artifactCopy ?? "").includes(bindings.surface)
-    && (scenario.scenes[1]?.artifactCopy ?? "").includes(bindings.bridge)
-    && (scenario.scenes[2]?.artifactCopy ?? "").includes(bindings.crossover)
-    && (scenario.scenes[3]?.artifactCopy ?? "").includes(bindings.correction);
+  const truthMatchesIncident = Boolean(boundIncident)
+    && Object.keys(scenario.truth).join("|") === "knownFact|unresolvedAtEntry|laterResolution"
+    && scenario.truth.knownFact === boundIncident?.knownFact
+    && scenario.truth.unresolvedAtEntry === boundIncident?.unresolved
+    && scenario.truth.laterResolution === boundIncident?.resolution;
+  const propagationMatchesIncident = Boolean(boundIncident)
+    && Object.keys(scenario.propagation).join("|") === "circulatingFrame"
+    && scenario.propagation.circulatingFrame === boundIncident?.circulatingFrame;
+  const artifactsCarryPublicArc = Boolean(boundIncident)
+    && scenario.scenes[0]?.artifactCopy === boundIncident?.knownFact
+    && scenario.scenes[1]?.artifactCopy === boundIncident?.circulatingFrame
+    && (scenario.scenes[2]?.artifactCopy ?? "").includes(boundIncident?.unresolved ?? "")
+    && scenario.scenes[3]?.artifactCopy === boundIncident?.resolution;
   const ledgerCarriesBindings = communication.observableRecord.join(" ").includes(bindings.surface)
     && communication.inferences.includes(bindings.bridge)
     && communication.recognitionCues.includes(bindings.crossover)
     && communication.repairMove.includes(bindings.correction);
-  add("communication-incident-binding", bindingMatchesIncident && truthCarriesBindings && artifactsCarryBindings && ledgerCarriesBindings, "The communication record, inference, reply condition, and repair are bound to the active incident's truth ledger and four represented artifacts.");
+  add("communication-incident-binding", bindingMatchesIncident && truthMatchesIncident && propagationMatchesIncident && artifactsCarryPublicArc && ledgerCarriesBindings, "Truth, propagation, public artifacts, and the analytic communication ledger remain distinct while staying bound to the active incident.");
   const misrepresentation = communication.misrepresentation;
+  const assignmentBrief = communication.observableRecord.find((copy) => copy.startsWith("The assignment brief rewards"));
+  const hasPrivateAssignmentBrief = scenario.protagonistModel.kind === "abstract_bad_actor";
+  const disclosureAtoms = scenario.scenes.flatMap((scene) => [
+    ...scene.disclosure.records,
+    ...scene.disclosure.questions,
+    ...scene.disclosure.unknowns,
+  ]);
+  const disclosureShape = scenario.scenes.every((scene) => {
+    const publicRecords = scene.disclosure.records.filter((atom) => atom.access === "public-record");
+    const privateRecords = scene.disclosure.records.filter((atom) => atom.access === "seat-private-assignment-brief");
+    const expectsPrivateBrief = hasPrivateAssignmentBrief && scene.act === "BRIDGE";
+    return !("communication" in scene)
+      && scene.disclosure.records.length === (expectsPrivateBrief ? 2 : 1)
+      && scene.disclosure.questions.length === 1
+      && scene.disclosure.unknowns.length === 1
+      && publicRecords.length === 1
+      && (expectsPrivateBrief
+        ? privateRecords.length === 1
+          && privateRecords[0].label === "PRIVATE ASSIGNMENT BRIEF"
+          && privateRecords[0].copy === assignmentBrief
+        : privateRecords.length === 0)
+      && [...scene.disclosure.questions, ...scene.disclosure.unknowns].every((atom) => atom.access === "public-record")
+      && [
+        ...scene.disclosure.records,
+        ...scene.disclosure.questions,
+        ...scene.disclosure.unknowns,
+      ].every((atom) => atom.id.startsWith(`${scene.id}-`) && atom.label.length > 0 && atom.copy.length > 20);
+  });
+  add("beat-specific-disclosure", disclosureShape
+    && (!hasPrivateAssignmentBrief || Boolean(assignmentBrief))
+    && disclosureAtoms.filter((atom) => atom.access === "seat-private-assignment-brief").length === (hasPrivateAssignmentBrief ? 1 : 0)
+    && new Set(disclosureAtoms.map((atom) => atom.id)).size === disclosureAtoms.length
+    && new Set(scenario.scenes.map((scene) => scene.disclosure.records[0].label)).size === scenario.scenes.length,
+  "Each beat exposes unique labeled public records, questions, and unknowns without attaching the shared analytic ledger; only the contracted seat sees its actual private assignment-brief record.");
   const misrepresentationBindings = misrepresentation.factBindings;
+  const publicTruthAndArtifacts = [
+    ...Object.values(scenario.truth),
+    ...Object.values(scenario.propagation),
+    ...scenario.scenes.map((scene) => scene.artifactCopy ?? ""),
+    ...disclosureAtoms.map((atom) => atom.copy),
+  ].join(" ");
   const misrepresentationBound = misrepresentation.intentionality === "deliberate"
     && misrepresentationBindings.incidentId === bindings.incidentId
-    && scenario.truth.knownFact.includes(misrepresentationBindings.knownRecord)
-    && scenario.truth.misleadingFrame.includes(misrepresentationBindings.alteredAccount)
-    && scenario.truth.unresolvedAtEntry.includes(misrepresentationBindings.audienceCost)
-    && scenario.truth.laterResolution.includes(misrepresentationBindings.correctionDuty)
-    && (scenario.scenes[0]?.artifactCopy ?? "").includes(misrepresentationBindings.knownRecord)
-    && (scenario.scenes[1]?.artifactCopy ?? "").includes(misrepresentationBindings.alteredAccount)
-    && (scenario.scenes[2]?.artifactCopy ?? "").includes(misrepresentationBindings.audienceCost)
-    && (scenario.scenes[3]?.artifactCopy ?? "").includes(misrepresentationBindings.correctionDuty);
-  add("deliberate-misrepresentation-binding", misrepresentationBound, "Private knowledge, the knowingly altered account, its audience cost, and the correction duty stay bound to the same incident across all four beats.");
+    && misrepresentationBindings.knownRecord === misrepresentation.knownRecord
+    && misrepresentationBindings.alteredAccount === misrepresentation.alteredAccount
+    && misrepresentationBindings.audienceCost === misrepresentation.audienceCost
+    && misrepresentationBindings.correctionDuty === misrepresentation.correctionDuty
+    && ![
+      misrepresentationBindings.knownRecord,
+      misrepresentationBindings.alteredAccount,
+      misrepresentationBindings.audienceCost,
+      misrepresentationBindings.correctionDuty,
+    ].some((copy) => publicTruthAndArtifacts.includes(copy));
+  add("deliberate-misrepresentation-binding", misrepresentationBound, "The private misrepresentation ledger stays incident-bound and remains sealed from truth, propagation, public artifacts, and playable disclosure atoms.");
   const deliberateChoices = scenario.scenes.slice(1).map((scene) => scene.choices.find((choice) => choice.relationalMove.misrepresentation.intentionality === "deliberate"));
   add("deliberate-misrepresentation-agency", deliberateChoices.every((choice) => Boolean(choice)
     && choice?.relationalMove.misrepresentation.beneficiary === misrepresentation.beneficiary
     && choice?.relationalMove.misrepresentation.incentiveIntersection === misrepresentation.incentiveIntersection.combinedMotive
     && choice.ethicsTags.includes("deliberate-misrepresentation")), "The player is offered an explicit, knowingly altered protective account after the private record is represented; misunderstanding and deliberate distortion are not merged.");
+  const deliveryContracts = scenario.scenes.flatMap((scene) => scene.choices).every((choice) => {
+    const withheldCoherent = choice.delivery.scope === "withheld"
+      ? choice.delivery.carriage === "none"
+      : choice.delivery.carriage !== "none";
+    const diversionCoherent = !choice.conversationDiversion
+      || choice.conversationDiversion.mode === "adjacent-concern"
+      || choice.delivery.carriage === "format";
+    return withheldCoherent && diversionCoherent;
+  });
+  add("choice-delivery-contract", deliveryContracts, "Every choice declares private, shared, public, or withheld delivery plus content, format, both, or no carriage; copy is not used as a routing predicate.");
   const incentive = misrepresentation.incentiveIntersection;
   add("intersecting-incentives", incentive.advancementDomains.length >= 2
     && incentive.competenceThreat.length >= 45
@@ -2787,7 +3123,7 @@ export function validateGeneratedScenario(scenario: GeneratedScenario): Coherenc
     && diversion.route.responseFit === "adjacent-separate-thread"
     && diversion.route.introducedMaterial === diversionHook.adjacentConcern
     && diversion.route.recordBasis === diversionHook.adjacentConcernBasis
-    && !Object.values(scenario.truth).some((value) => value.includes(diversionHook.adjacentConcernBasis))
+    && ![...Object.values(scenario.truth), ...Object.values(scenario.propagation)].some((value) => value.includes(diversionHook.adjacentConcernBasis))
     && diversion.route.betterRoute.toLowerCase().includes("separate post")
   );
   const nonpropositionalShape = !diversion || diversion.route.mode === "adjacent-concern" || (
@@ -2897,13 +3233,13 @@ function buildScenario(
   const protagonistModel = buildProtagonist(actor, incident, languageProfile);
   const communicationModel = buildCommunicationLedger(actor, incident, languageProfile, linguisticEncounter);
   const behaviorCycle = behaviorCycleFor(actor, communicationModel);
-  const communicationFacts = communicationModel.factBindings;
-  const misrepresentationFacts = communicationModel.misrepresentation.factBindings;
   const truth: TruthLedger = {
-    knownFact: `${incident.knownFact} ${communicationFacts.surface} ${misrepresentationFacts.knownRecord}`,
-    unresolvedAtEntry: `${incident.unresolved} ${communicationFacts.crossover} ${misrepresentationFacts.audienceCost}`,
-    misleadingFrame: `${incident.frame} ${communicationFacts.bridge} ${misrepresentationFacts.alteredAccount}`,
-    laterResolution: `${incident.resolution} ${communicationFacts.correction} ${misrepresentationFacts.correctionDuty}`,
+    knownFact: incident.knownFact,
+    unresolvedAtEntry: incident.unresolved,
+    laterResolution: incident.resolution,
+  };
+  const propagation: PropagationLedger = {
+    circulatingFrame: incident.circulatingFrame,
   };
   // All rooms belong to one night. Their first artifacts arrive within a
   // twelve-minute opening window so the player can interleave them without a
@@ -2937,7 +3273,7 @@ function buildScenario(
     protagonist: `${actor.role} · ${actor.seat.toLowerCase()}`,
     mode: "SINGLE SEAT",
     objective: actor.goal,
-    description: `${incident.neutralBody} ${communicationFacts.surface} ${misrepresentationFacts.knownRecord} ${actor.connection(incident)}`,
+    description: `${incident.neutralBody} ${actor.connection(incident)}`,
     thesis: `${concept} changes what this artifact is worth to the protagonist without changing what the artifact proves.`,
     groundTruth: `${truth.knownFact} ${truth.laterResolution}`,
     contentNote: "PG · fictional composite · civic and reputational tension only",
@@ -2963,6 +3299,7 @@ function buildScenario(
     audienceRating: "PG",
     contentNotes: ["fictional civic ambiguity", "no real people or platforms", "non-operational coordination"],
     truth,
+    propagation,
     protagonistModel,
     chainModel,
     communicationModel,
@@ -3229,14 +3566,168 @@ function withChoiceCodeActions(
   });
 }
 
+function buildSceneDisclosure(
+  sceneId: string,
+  act: SceneAct,
+  incident: IncidentTemplate,
+  actor: ActorTemplate,
+  communication: CommunicationLedger,
+): SceneDisclosure {
+  const hook = INCIDENT_COMMUNICATION[incident.id];
+  const assignmentBrief = actor.kind === "abstract_bad_actor" && act === "BRIDGE"
+    ? communication.observableRecord.find((copy) => copy.startsWith("The assignment brief rewards"))
+    : undefined;
+  const publicRecordByAct: Record<SceneAct, Pick<RecordAtom, "label" | "copy">> = {
+    SURFACE: { label: "PUBLIC RECORD", copy: incident.knownFact },
+    BRIDGE: { label: "CIRCULATING CLAIM", copy: incident.circulatingFrame },
+    CROSSOVER: {
+      label: "PUBLIC REPEAT RECORD",
+      copy: `Several trusted forms now repeat the same unresolved frame about the ${incident.placeNoun}.`,
+    },
+    CORRECTION: { label: "PUBLIC UPDATE", copy: incident.resolution },
+  };
+  const questionByAct: Record<SceneAct, Pick<RecordAtom, "label" | "copy">> = {
+    SURFACE: { label: "OPEN QUESTION", copy: incident.unresolved },
+    BRIDGE: { label: "QUESTION AT HANDOFF", copy: hook.activeQuestion },
+    CROSSOVER: {
+      label: "QUESTION AT SCALE",
+      copy: `Which repeated versions still preserve the source's uncertainty about the ${incident.placeNoun}?`,
+    },
+    CORRECTION: {
+      label: "REPAIR QUESTION",
+      copy: `Which earlier copies have not yet received ${incident.idealEvidence}?`,
+    },
+  };
+  const unknownByAct: Record<SceneAct, Pick<RecordAtom, "label" | "copy">> = {
+    SURFACE: { label: "NOT YET KNOWN", copy: communication.unknowns[0] },
+    BRIDGE: { label: "REPLY ACCESS UNKNOWN", copy: communication.unknowns[1] },
+    CROSSOVER: {
+      label: "AUDIENCE UNKNOWN",
+      copy: `Whether the rooms seeing the repeated ${incident.placeNoun} frame have also seen the source uncertainty.`,
+    },
+    CORRECTION: {
+      label: "CARRIAGE UNKNOWN",
+      copy: `Whether people who carried the earlier ${incident.placeNoun} claim will also carry the attributed update.`,
+    },
+  };
+  const atom = (
+    bucket: "record" | "question" | "unknown",
+    ordinal: number,
+    access: RecordAtom["access"],
+    label: string,
+    copy: string,
+  ): RecordAtom => ({ id: `${sceneId}-${bucket}-${ordinal}`, access, label, copy });
+  const publicRecord = publicRecordByAct[act];
+  const question = questionByAct[act];
+  const unknown = unknownByAct[act];
+  return {
+    records: [
+      atom("record", 1, "public-record", publicRecord.label, publicRecord.copy),
+      ...(assignmentBrief
+        ? [atom("record", 2, "seat-private-assignment-brief", "PRIVATE ASSIGNMENT BRIEF", assignmentBrief)]
+        : []),
+    ],
+    questions: [atom("question", 1, "public-record", question.label, question.copy)],
+    unknowns: [atom("unknown", 1, "public-record", unknown.label, unknown.copy)],
+  };
+}
+
+function outwardConceptDelivery(choice: GeneratedChoice): Extract<ConceptPlayBinding, { term: "signaling" }>["delivery"] | null {
+  const scope = choice.delivery.scope;
+  const carriage = choice.delivery.carriage;
+  if ((scope !== "shared" && scope !== "public") || carriage === "none") return null;
+  return { scope, carriage };
+}
+
+function isDistortiveClassification(
+  classification: RelationalMove["classification"],
+): classification is Extract<ConceptPlayBinding, { term: "market value" }>["relationalClassification"] {
+  return classification === "blame-transfer"
+    || classification === "rumor-carriage"
+    || classification === "motive-assumption"
+    || classification === "code-collision";
+}
+
+function withConceptPlayBindings(
+  choices: GeneratedChoice[],
+  act: SceneAct,
+  actorKind: ProtagonistKind,
+): GeneratedChoice[] {
+  return choices.map((choice) => {
+    const conceptPlays: ConceptPlayBinding[] = [];
+    const outward = outwardConceptDelivery(choice);
+    const classification = choice.relationalMove.classification;
+
+    if (act === "SURFACE" && outward) {
+      conceptPlays.push({
+        term: "signaling",
+        basis: "outward-delivery",
+        act,
+        delivery: outward,
+      });
+    } else if (act === "CORRECTION"
+      && outward
+      && (classification === "repair" || classification === "bounded-accountability" || classification === "translation")) {
+      const metric = (choice.effects.verification ?? 0) > 0
+        ? "verification" as const
+        : (choice.effects.provenance ?? 0) > 0
+          ? "provenance" as const
+          : null;
+      if (metric) {
+        conceptPlays.push({
+          term: "correction drag",
+          basis: "source-bearing-repair",
+          act,
+          actorKind,
+          relationalClassification: classification,
+          effect: { metric, direction: "increase" },
+        });
+      }
+    } else if (act === "BRIDGE" && outward && classification !== "repair" && (choice.effects.reach ?? 0) > 0) {
+      const capitalTerm = capitalTermFor(actorKind);
+      if (capitalTerm === "market value"
+        && (actorKind === "marketer" || actorKind === "abstract_bad_actor")
+        && isDistortiveClassification(classification)
+        && choice.relationalMove.misrepresentation.intentionality === "deliberate") {
+        conceptPlays.push({
+          term: capitalTerm,
+          basis: "attention-value",
+          act,
+          actorKind,
+          relationalClassification: classification,
+          effect: { metric: "reach", direction: "increase" },
+        });
+      } else if (capitalTerm === "trust capital" && (actorKind === "caregiver" || actorKind === "institutional")) {
+        conceptPlays.push({
+          term: capitalTerm,
+          basis: "trusted-role-carriage",
+          act,
+          actorKind,
+          relationalClassification: classification,
+          effect: { metric: "reach", direction: "increase" },
+        });
+      } else if (capitalTerm === "status capital" && (actorKind === "youth" || actorKind === "creator" || actorKind === "political")) {
+        conceptPlays.push({
+          term: capitalTerm,
+          basis: "visible-standing-carriage",
+          act,
+          actorKind,
+          relationalClassification: classification,
+          effect: { metric: "reach", direction: "increase" },
+        });
+      }
+    }
+
+    return { ...choice, conceptPlays };
+  });
+}
+
 function buildFourBeatArc(input: FourBeatInput): GeneratedScene[] {
   const { id, incident, actor, protagonist, age, startTime, chain, communication, conversationDiversion, random } = input;
-  const communicationFacts = communication.factBindings;
-  const misrepresentationFacts = communication.misrepresentation.factBindings;
-  const sourceChoices = shuffle(withChoiceCodeActions(buildChoices(actor, incident, communication, `${id}-source`, random), protagonist.languageProfile, communication), random);
-  const bridgeChoices = shuffle(withChoiceCodeActions(buildMidpointChoices(actor, incident, communication, `${id}-bridge`, "bridge", random, conversationDiversion), protagonist.languageProfile, communication), random);
-  const crossoverChoices = shuffle(withChoiceCodeActions(buildMidpointChoices(actor, incident, communication, `${id}-crossover`, "crossover", random, conversationDiversion), protagonist.languageProfile, communication), random);
-  const correctionChoices = shuffle(withChoiceCodeActions(buildCorrectionChoices(actor, incident, communication, `${id}-correction`, conversationDiversion), protagonist.languageProfile, communication), random);
+  const sourceChoices = shuffle(withConceptPlayBindings(withChoiceCodeActions(buildChoices(actor, incident, communication, `${id}-source`, random), protagonist.languageProfile, communication), "SURFACE", actor.kind), random);
+  const bridgeChoices = shuffle(withConceptPlayBindings(withChoiceCodeActions(buildMidpointChoices(actor, incident, communication, `${id}-bridge`, "bridge", random, conversationDiversion), protagonist.languageProfile, communication), "BRIDGE", actor.kind), random);
+  const crossoverChoices = shuffle(withConceptPlayBindings(withChoiceCodeActions(buildMidpointChoices(actor, incident, communication, `${id}-crossover`, "crossover", random, conversationDiversion), protagonist.languageProfile, communication), "CROSSOVER", actor.kind), random);
+  const correctionChoices = shuffle(withConceptPlayBindings(withChoiceCodeActions(buildCorrectionChoices(actor, incident, communication, `${id}-correction`, conversationDiversion), protagonist.languageProfile, communication), "CORRECTION", actor.kind), random);
   const times = [0, 11, 27, 46].map((offset) => advanceClock(startTime, offset));
   const provenances = [
     Math.max(64, chain[0]?.provenance ?? 86),
@@ -3254,7 +3745,6 @@ function buildFourBeatArc(input: FourBeatInput): GeneratedScene[] {
     seat: actor.seat,
     age,
     motive: actor.motive,
-    reason: incident.sourceReason,
     roleBrief: {
       publicGoal: actor.goal,
       privateNeed: protagonist.whatTheyNeed.join("; "),
@@ -3264,7 +3754,6 @@ function buildFourBeatArc(input: FourBeatInput): GeneratedScene[] {
         ? "client value is being mistaken for public truth"
         : "local usefulness can become systemwide distribution",
     },
-    communication,
   };
 
   return [
@@ -3275,10 +3764,11 @@ function buildFourBeatArc(input: FourBeatInput): GeneratedScene[] {
       time: times[0],
       channel: actor.channel,
       heading: incident.heading,
-      body: `${incident.neutralBody} ${communicationFacts.surface} ${misrepresentationFacts.knownRecord} ${actor.connection(incident)}`,
+      body: `${incident.neutralBody} ${actor.connection(incident)}`,
+      reason: incident.sourceReason,
       artifact: pick(incident.artifactKinds, random),
       artifactTitle: incident.title,
-      artifactCopy: `${incident.knownFact} ${communicationFacts.surface} ${misrepresentationFacts.knownRecord}`,
+      artifactCopy: incident.knownFact,
       artifactTag: "SOURCE CONTEXT PARTIAL",
       bridge: chain[1]?.room,
       provenance: provenances[0],
@@ -3289,6 +3779,7 @@ function buildFourBeatArc(input: FourBeatInput): GeneratedScene[] {
       platformLoad: platformLoadFor(actor, "SURFACE"),
       choices: sourceChoices,
       lesson: lessonForBeat("SURFACE", actor),
+      disclosure: buildSceneDisclosure(`${id}-source`, "SURFACE", incident, actor, communication),
     },
     {
       ...shared,
@@ -3297,10 +3788,11 @@ function buildFourBeatArc(input: FourBeatInput): GeneratedScene[] {
       time: times[1],
       channel: chain[1]?.room ?? actor.channel,
       heading: `The ${incident.placeNoun} enters a room that trusts this seat for another reason.`,
-      body: `${incident.frame} ${communicationFacts.bridge} ${misrepresentationFacts.alteredAccount} The protagonist's immediate concern is still ${actor.goal.toLowerCase()}.`,
+      body: `${incident.circulatingFrame} The immediate concern remains: ${actor.goal.toLowerCase()}.`,
+      reason: `Because this seat's role carries trust in ${chain[1]?.room ?? actor.channel} while the source context remains incomplete.`,
       artifact: pick(incident.artifactKinds, random),
       artifactTitle: "TRUSTED HANDOFF",
-      artifactCopy: `${incident.frame} ${communicationFacts.bridge} ${misrepresentationFacts.alteredAccount}`,
+      artifactCopy: incident.circulatingFrame,
       artifactTag: "CONTEXT COMPRESSED",
       bridge: chain[2]?.room,
       provenance: provenances[1],
@@ -3311,6 +3803,7 @@ function buildFourBeatArc(input: FourBeatInput): GeneratedScene[] {
       platformLoad: platformLoadFor(actor, "BRIDGE"),
       choices: bridgeChoices,
       lesson: lessonForBeat("BRIDGE", actor),
+      disclosure: buildSceneDisclosure(`${id}-bridge`, "BRIDGE", incident, actor, communication),
     },
     {
       ...shared,
@@ -3319,10 +3812,11 @@ function buildFourBeatArc(input: FourBeatInput): GeneratedScene[] {
       time: times[2],
       channel: chain[2]?.room ?? "public comments",
       heading: "Repeated exposure expands faster than unique understanding.",
-      body: `Several versions now point back to one compressed frame. ${incident.unresolved} ${communicationFacts.crossover} ${misrepresentationFacts.audienceCost}`,
+      body: `Several versions now point back to one compressed frame. ${incident.unresolved}`,
+      reason: `Because transformed copies reached ${chain[2]?.room ?? "another public room"} before the original context.`,
       artifact: actor.kind === "abstract_bad_actor" ? "dashboard" : pick(incident.artifactKinds, random),
       artifactTitle: "CROSS-ROOM REPEAT EXPOSURE",
-      artifactCopy: `The same implication is arriving through different trusted forms. ${communicationFacts.crossover} ${misrepresentationFacts.audienceCost}`,
+      artifactCopy: `Several trusted forms now repeat the same unresolved frame. ${incident.unresolved}`,
       artifactTag: "UNIQUE REACH SLOWING · FAMILIARITY RISING",
       bridge: chain[3]?.room,
       provenance: provenances[2],
@@ -3333,6 +3827,7 @@ function buildFourBeatArc(input: FourBeatInput): GeneratedScene[] {
       platformLoad: platformLoadFor(actor, "CROSSOVER"),
       choices: crossoverChoices,
       lesson: lessonForBeat("CROSSOVER", actor),
+      disclosure: buildSceneDisclosure(`${id}-crossover`, "CROSSOVER", incident, actor, communication),
     },
     {
       ...shared,
@@ -3341,10 +3836,11 @@ function buildFourBeatArc(input: FourBeatInput): GeneratedScene[] {
       time: times[3],
       channel: chain.at(-1)?.room ?? "public-information desk",
       heading: "The evidence is reachable. Repair still needs carriers.",
-      body: `${incident.resolution} ${communicationFacts.correction} ${misrepresentationFacts.correctionDuty} The distributed path assembled source context, attributable evidence, and more than one trusted route.`,
+      body: `${incident.resolution} The record is attributable. Earlier copies remain detached from it.`,
+      reason: `Because ${chain.at(-1)?.room ?? "the public-information desk"} now holds an attributable record while earlier copies remain detached.`,
       artifact: "correction",
       artifactTitle: "ATTRIBUTED UPDATE",
-      artifactCopy: `${incident.resolution} ${communicationFacts.correction} ${misrepresentationFacts.correctionDuty}`,
+      artifactCopy: incident.resolution,
       artifactTag: "DISTRIBUTED REPAIR PATH OPEN",
       provenance: provenances[3],
       fluency: fluencies[3],
@@ -3354,13 +3850,14 @@ function buildFourBeatArc(input: FourBeatInput): GeneratedScene[] {
       platformLoad: platformLoadFor(actor, "CORRECTION"),
       choices: correctionChoices,
       lesson: lessonForBeat("CORRECTION", actor),
+      disclosure: buildSceneDisclosure(`${id}-correction`, "CORRECTION", incident, actor, communication),
     },
   ];
 }
 
 function platformLoadFor(
   actor: ActorTemplate,
-  act: "SURFACE" | "BRIDGE" | "CROSSOVER" | "CORRECTION",
+  act: SceneAct,
 ): Partial<FatigueLoad> {
   const multiplier = actor.kind === "abstract_bad_actor" ? 0.45 : 1;
   const load: Record<typeof act, FatigueLoad> = {
@@ -3487,6 +3984,7 @@ function buildChoices(
   const ordinary = profiles.map((profile, index) => ({
     id: `${scenarioId}-choice-${index + 1}`,
     ...profile,
+    conceptPlays: [],
     availability: { status: "available" } as const,
     locked: false,
     relationalMove: relationalMoveFor(communication, index === 0 ? "amplify" : "bounded"),
@@ -3520,6 +4018,8 @@ function buildChoices(
     repairPath,
     ideal: true,
     ethicsTags: ["visible-ideal", "temporarily-disconnected", "source-preservation"],
+    delivery: { scope: "public", carriage: "content-and-format" },
+    conceptPlays: [],
     relationalMove: relationalMoveFor(communication, "repair"),
     fatigueLoad: fatigueFor(actor, "repair"),
     enactmentRequired: actor.kind === "abstract_bad_actor" ? 0 : 64,
@@ -3562,6 +4062,7 @@ function buildMidpointChoices(
           minutes: 5,
           effects: { reach: 90, heat: 2, crossover: 4, verification: 6, provenance: 5, blame: -5, interpretiveGap: -7, commonGround: 8, discernment: 1, enactment: -3 },
           ethicsTags: ["bounded-claim", "partial-repair", "non-amplification-floor"],
+          delivery: { scope: "shared", carriage: "content-and-format" },
         },
       ]
     : [
@@ -3574,11 +4075,13 @@ function buildMidpointChoices(
           minutes: 7,
           effects: { reach: -18, heat: -2, verification: 12, provenance: 7, belief: -4, blame: -6, interpretiveGap: -6, commonGround: 5, discernment: 2, enactment: -5 },
           ethicsTags: ["verification", "time-cost", "non-amplification-floor"],
+          delivery: { scope: "withheld", carriage: "none" },
         },
       ];
   const ordinary: GeneratedChoice[] = available.map((choice, index) => ({
     id: `${scenarioId}-choice-${index + 1}`,
     ...choice,
+    conceptPlays: [],
     availability: { status: "available" },
     locked: false,
     relationalMove: relationalMoveFor(communication, index === 0 ? "deliberate" : "bounded"),
@@ -3617,6 +4120,8 @@ function buildMidpointChoices(
     repairPath,
     ideal: true,
     ethicsTags: ["visible-ideal", "not-yet-reachable", "distributed-repair"],
+    delivery: { scope: "public", carriage: "content-and-format" },
+    conceptPlays: [],
     relationalMove: relationalMoveFor(communication, "repair"),
     fatigueLoad: fatigueFor(actor, "repair"),
     enactmentRequired: actor.kind === "abstract_bad_actor" ? 0 : phase === "crossover" ? 30 : 68,
@@ -3632,21 +4137,20 @@ function relationalPersistenceChoice(
   incident: IncidentTemplate,
   phase: "bridge" | "crossover",
 ): AvailableChoiceSeed {
-  const incentives = communication.misrepresentation.incentiveIntersection;
-  const deliberate = ` This seat knows ${communication.misrepresentation.relationshipLabel} participated in the changed handoff. The comparison has made this seat's standing feel less secure. Choosing the altered account protects ${communication.misrepresentation.protectedInterest} and competes for ${incentives.competitivePrize}.`;
   const common = {
     intent: actor.goal,
     minutes: 3,
     effects: { reach: phase === "bridge" ? 230 : 280, heat: phase === "bridge" ? 8 : 12, crossover: 11, consensus: 8, provenance: -7, blame: 10, interpretiveGap: 11, commonGround: -7, enactment: -2 },
     ethicsTags: ["reactive-amplification", "relational-distortion", "deliberate-misrepresentation", communication.dynamic],
+    delivery: { scope: "shared", carriage: "content-and-format" } as ChoiceDelivery,
   };
   switch (communication.dynamic) {
-    case "defensive-scapegoating": return { ...common, label: "Let one person stand in for the whole failure", detail: `Carry the character explanation while the approval timeline and distributed causes remain out of view.${deliberate}`, signal: "blame transfer · character claim" };
-    case "self-protective-rumor": return { ...common, label: "Preserve the private character explanation", detail: `Keep the incident correction separate from the unsupported story that protects this seat's trusted role.${deliberate}`, signal: "triangulated rumor · reply access unequal" };
-    case "warm-interior-cool-presentation": return { ...common, label: "Shield the relationship with an altered account", detail: `Repeat the accurate ${incident.placeNoun} correction while knowingly denying the protected person's part in the changed handoff.${deliberate}`, signal: "accurate task code · protected record altered" };
-    case "cold-interior-warm-presentation": return { ...common, label: "Keep the caring tone and the protected account", detail: `Use relational warmth to carry the useful frame while knowingly withholding the protected relationship's part in the record.${deliberate}`, signal: "warmth halo · protected record altered" };
-    case "sociocultural-code-mismatch": return { ...common, label: "Translate the words but protect the handoff", detail: `Preserve the literal task commitment while knowingly changing who removed its context.${deliberate}`, signal: "pragmatic mismatch · protected record altered" };
-    case "cross-coalition-code-convergence": return { ...common, label: "Protect the ally while staging disagreement", detail: `Quote the vocabulary collision and knowingly conceal the protected relationship's role in keeping the shared proposal out of view.${deliberate}`, signal: "code collision · protected record altered" };
+    case "defensive-scapegoating": return { ...common, label: "Let one person stand in for the whole failure", detail: "Carry the character explanation. Leave the approval timeline and distributed causes out.", signal: "blame transfer · character claim" };
+    case "self-protective-rumor": return { ...common, label: "Preserve the private character explanation", detail: "Correct the incident. Keep the private story in place and do not name the earlier handoff.", signal: "triangulated rumor · reply access unequal" };
+    case "warm-interior-cool-presentation": return { ...common, label: "Shield the relationship with an altered account", detail: `Repeat the accurate ${incident.placeNoun} correction. Leave the protected person's part in the changed handoff unmentioned.`, signal: "accurate task code · protected record altered" };
+    case "cold-interior-warm-presentation": return { ...common, label: "Keep the caring tone and the protected account", detail: "Use the room's familiar care language. Keep the relationship's part in the handoff out of view.", signal: "warmth halo · protected record altered" };
+    case "sociocultural-code-mismatch": return { ...common, label: "Translate the words but protect the handoff", detail: "Preserve the task commitment. Retell the handoff without naming who removed its context.", signal: "pragmatic mismatch · protected record altered" };
+    case "cross-coalition-code-convergence": return { ...common, label: "Protect the ally while staging disagreement", detail: "Quote the vocabulary collision. Keep the shared proposal and the ally's part in obscuring it separate.", signal: "code collision · protected record altered" };
   }
 }
 
@@ -3669,6 +4173,8 @@ function buildCorrectionChoices(
       availability: { status: "available" },
       locked: false,
       ethicsTags: ["distributed-unlock", "source-preservation", "reachable-repair"],
+      delivery: { scope: "public", carriage: "content-and-format" },
+      conceptPlays: [],
       relationalMove: relationalMoveFor(communication, "repair"),
       fatigueLoad: fatigueFor(actor, "repair"),
       enactmentRequired: 0,
@@ -3685,6 +4191,8 @@ function buildCorrectionChoices(
       availability: { status: "available" },
       locked: false,
       ethicsTags: ["partial-repair", "trusted-bridge", "non-amplification-floor"],
+      delivery: { scope: "shared", carriage: "content-and-format" },
+      conceptPlays: [],
       relationalMove: relationalMoveFor(communication, "bounded"),
       fatigueLoad: fatigueFor(actor, "bounded"),
       enactmentRequired: 0,
@@ -3701,6 +4209,8 @@ function buildCorrectionChoices(
       availability: { status: "available" },
       locked: false,
       ethicsTags: ["belief-perseverance", "goal-defense", "deliberate-misrepresentation"],
+      delivery: { scope: "shared", carriage: "content-and-format" },
+      conceptPlays: [],
       relationalMove: relationalMoveFor(communication, "deliberate"),
       fatigueLoad: fatigueFor(actor, "amplify"),
       enactmentRequired: 0,
@@ -3768,6 +4278,8 @@ function buildLastResortChoice(
     availability: { status: "available" },
     locked: false,
     ethicsTags: ["last-resort", "split-consequence", "nonviolent", "attributed-disclosure"],
+    delivery: { scope: "public", carriage: "content-and-format" },
+    conceptPlays: [],
     relationalMove: relationalMoveFor(communication, "repair"),
     fatigueLoad: { attentional: 9, affective: 14, relational: 18, verification: 8, efficacy: 12 },
     enactmentRequired: 0,
@@ -3795,10 +4307,17 @@ function correctionPersistenceLabel(communication: CommunicationLedger): string 
 }
 
 function correctionPersistenceDetail(communication: CommunicationLedger): string {
-  return `${communication.inferences[0]} Keep that interpretation socially useful even after the attributable record resolves the incident. ${communication.misrepresentation.incentiveIntersection.combinedMotive} You know this preserves an altered account for ${communication.misrepresentation.relationshipLabel}: ${communication.misrepresentation.alteredAccount}`;
+  switch (communication.dynamic) {
+    case "defensive-scapegoating": return "Use the changed record as an update, not as a reason to reopen the approval timeline. Keep the person-story in place.";
+    case "self-protective-rumor": return "Correct what happened. Do not revisit who changed the trusted handoff.";
+    case "warm-interior-cool-presentation": return "Update the event and keep treating the brief reply as a verdict on care.";
+    case "cold-interior-warm-presentation": return "Offer the new record in the same familiar tone. Leave accountability outside the reply.";
+    case "sociocultural-code-mismatch": return "Publish the correction in one register only. Let the room keep using formality as its test of care.";
+    case "cross-coalition-code-convergence": return "Acknowledge the changed record and keep presenting the shared proposal as a coalition concession.";
+  }
 }
 
-type AvailableChoiceSeed = Omit<GeneratedChoice, "id" | "availability" | "locked" | "ideal" | "relationalMove" | "fatigueLoad" | "enactmentRequired" | "blockedAttempt" | "behaviorMove">;
+type AvailableChoiceSeed = Omit<GeneratedChoice, "id" | "availability" | "locked" | "ideal" | "relationalMove" | "fatigueLoad" | "enactmentRequired" | "blockedAttempt" | "behaviorMove" | "conceptPlays">;
 
 function withConversationDiversion<T extends {
   label: string;
@@ -3806,6 +4325,7 @@ function withConversationDiversion<T extends {
   signal: string;
   effects: Partial<GeneratedMetrics>;
   ethicsTags: string[];
+  delivery: ChoiceDelivery;
 }>(
   choice: T,
   assignment: ConversationDiversionAssignment,
@@ -3854,18 +4374,18 @@ function withConversationDiversion<T extends {
   const copy = assignment.mode === "adjacent-concern"
     ? {
         label: "Bring the wider access concern into this thread",
-        detail: `${hook.adjacentConcern} It is documented and related, and this thread is more likely to move it than a separate post. Leave ${communication.misrepresentation.relationshipLabel}'s part in the changed handoff outside the reply.`,
+        detail: `${hook.adjacentConcern} It is documented and related. Put it in this thread even though the active question will remain unanswered.`,
         signal: "wider concern · existing thread gathers momentum",
       }
     : assignment.mode === "meme-deflection"
       ? {
           label: "Reply with the room's running image",
-          detail: `Let a familiar reaction carry the room's mood without another factual claim while ${communication.misrepresentation.relationshipLabel}'s part in the changed handoff stays outside the reply.`,
+          detail: "Use a familiar reaction image to answer the room's mood instead of the unresolved record question.",
           signal: "familiar image · affiliation carries the response",
         }
       : {
           label: "Answer with the impossible version",
-          detail: `Push the disputed account to an exaggerated edge the room can laugh at while ${communication.misrepresentation.relationshipLabel}'s part in the changed handoff stays outside the reply.`,
+          detail: "Push the disputed account to an impossible edge the room can laugh at instead of answering the bounded question.",
           signal: "nonliteral turn · direct replies lose position",
         };
 
@@ -3881,6 +4401,9 @@ function withConversationDiversion<T extends {
     ...copy,
     effects,
     ethicsTags: [...choice.ethicsTags, "conversation-diversion", assignment.mode],
+    delivery: assignment.mode === "adjacent-concern"
+      ? { scope: "shared", carriage: "content-and-format" }
+      : { scope: "shared", carriage: "format" },
     conversationDiversion,
   };
 }
@@ -3894,6 +4417,7 @@ function choiceProfileFor(kind: ProtagonistKind, incident: IncidentTemplate): Av
     minutes: 4,
     effects: { verification: 8, provenance: 3, reach: 4, belief: -2, blame: -3, interpretiveGap: -4, commonGround: 2, discernment: 1, enactment: -3 },
     ethicsTags: ["low-amplification", "partial-repair", "non-amplification-floor"],
+    delivery: { scope: "private", carriage: "content" },
   };
 
   switch (kind) {
@@ -3907,6 +4431,7 @@ function choiceProfileFor(kind: ProtagonistKind, incident: IncidentTemplate): Av
           minutes: 1,
           effects: { reach: 90, heat: 7, consensus: 6, crossover: 4, provenance: -5, blame: 5, interpretiveGap: 6, commonGround: -3, enactment: -1 },
           ethicsTags: ["social-capital", "implicit-transmission"],
+          delivery: { scope: "shared", carriage: "format" },
         },
         commonCaution,
       ];
@@ -3920,6 +4445,7 @@ function choiceProfileFor(kind: ProtagonistKind, incident: IncidentTemplate): Av
           minutes: 2,
           effects: { reach: 210, heat: 8, crossover: 12, consensus: 7, provenance: -9, blame: 8, interpretiveGap: 8, commonGround: -4, enactment: -1 },
           ethicsTags: ["care", "overbroad-warning"],
+          delivery: { scope: "shared", carriage: "content-and-format" },
         },
         commonCaution,
       ];
@@ -3933,6 +4459,7 @@ function choiceProfileFor(kind: ProtagonistKind, incident: IncidentTemplate): Av
           minutes: 4,
           effects: { reach: 410, heat: 14, crossover: 15, consensus: 10, trust: -5, provenance: -6, blame: 9, interpretiveGap: 11, commonGround: -5, enactment: -2 },
           ethicsTags: ["standing", "premature-certainty"],
+          delivery: { scope: "public", carriage: "content-and-format" },
         },
         {
           label: "Critique the information gap only",
@@ -3942,6 +4469,7 @@ function choiceProfileFor(kind: ProtagonistKind, incident: IncidentTemplate): Av
           minutes: 5,
           effects: { reach: 130, heat: 5, verification: 6, provenance: 5, trust: 1, blame: -3, interpretiveGap: -5, commonGround: 3, discernment: 1, enactment: -4 },
           ethicsTags: ["bounded-claim", "partial-repair", "non-amplification-floor"],
+          delivery: { scope: "public", carriage: "content-and-format" },
         },
       ];
     case "marketer":
@@ -3954,6 +4482,7 @@ function choiceProfileFor(kind: ProtagonistKind, incident: IncidentTemplate): Av
           minutes: 3,
           effects: { reach: 360, heat: 10, crossover: 13, consensus: 7, provenance: -7, blame: 10, interpretiveGap: 9, commonGround: -6, enactment: -1 },
           ethicsTags: ["commercial-opportunism", "implicit-transmission"],
+          delivery: { scope: "public", carriage: "format" },
         },
         {
           label: "Keep the campaign generic",
@@ -3963,6 +4492,7 @@ function choiceProfileFor(kind: ProtagonistKind, incident: IncidentTemplate): Av
           minutes: 3,
           effects: { reach: 45, heat: -2, trust: 2, blame: -2, interpretiveGap: -3, commonGround: 2, enactment: -2 },
           ethicsTags: ["goal-cost", "harm-reduction", "non-amplification-floor"],
+          delivery: { scope: "public", carriage: "format" },
         },
       ];
     case "political":
@@ -3975,6 +4505,7 @@ function choiceProfileFor(kind: ProtagonistKind, incident: IncidentTemplate): Av
           minutes: 4,
           effects: { reach: 300, heat: 11, crossover: 14, consensus: 8, trust: -4, provenance: -5, blame: 6, interpretiveGap: 12, commonGround: -10, enactment: -2 },
           ethicsTags: ["political-opportunism", "issue-bridge"],
+          delivery: { scope: "public", carriage: "content-and-format" },
         },
         {
           label: "Discuss process without the artifact",
@@ -3984,6 +4515,7 @@ function choiceProfileFor(kind: ProtagonistKind, incident: IncidentTemplate): Av
           minutes: 5,
           effects: { reach: 80, heat: 3, verification: 5, provenance: 4, trust: 1, blame: -2, interpretiveGap: -6, commonGround: 8, enactment: -4 },
           ethicsTags: ["bounded-claim", "goal-cost", "non-amplification-floor"],
+          delivery: { scope: "public", carriage: "content" },
         },
       ];
     case "institutional":
@@ -3996,6 +4528,7 @@ function choiceProfileFor(kind: ProtagonistKind, incident: IncidentTemplate): Av
           minutes: 3,
           effects: { reach: 95, heat: 2, verification: 7, provenance: 7, trust: 2, blame: -2, interpretiveGap: -4, commonGround: 3, discernment: 1, enactment: -3 },
           ethicsTags: ["partial-repair", "institutional-constraint"],
+          delivery: { scope: "public", carriage: "content" },
         },
         {
           label: "Wait for complete approval",
@@ -4005,6 +4538,7 @@ function choiceProfileFor(kind: ProtagonistKind, incident: IncidentTemplate): Av
           minutes: 8,
           effects: { heat: 5, consensus: 4, trust: -2, interpretiveGap: 2, enactment: -4 },
           ethicsTags: ["delay", "accuracy", "non-amplification-floor"],
+          delivery: { scope: "withheld", carriage: "none" },
         },
       ];
     case "abstract_bad_actor":
@@ -4017,6 +4551,7 @@ function choiceProfileFor(kind: ProtagonistKind, incident: IncidentTemplate): Av
           minutes: 3,
           effects: { reach: 420, heat: 14, coordination: 18, crossover: 15, consensus: 12, provenance: -10, trust: -7, blame: 12, interpretiveGap: 13, commonGround: -9, enactment: -1 },
           ethicsTags: ["deliberate-manipulation", "abstract-only"],
+          delivery: { scope: "public", carriage: "format" },
         },
         {
           label: "Pause the assignment",
@@ -4026,6 +4561,7 @@ function choiceProfileFor(kind: ProtagonistKind, incident: IncidentTemplate): Av
           minutes: 5,
           effects: { reach: -70, heat: -5, coordination: -5, verification: 3, blame: -4, interpretiveGap: -3, commonGround: 2, enactment: -4 },
           ethicsTags: ["refusal", "goal-cost", "harm-reduction", "non-amplification-floor"],
+          delivery: { scope: "withheld", carriage: "none" },
         },
       ];
   }
@@ -4106,29 +4642,71 @@ function distributedRepairPath(
   };
 }
 
-function lessonForBeat(act: "SURFACE" | "BRIDGE" | "CROSSOVER" | "CORRECTION", actor: ActorTemplate): SceneLesson {
+function experienceRulesFor(term: LessonTerm): ConceptEffectRule[] {
+  switch (term) {
+    case "signaling":
+      return [
+        { term, kind: "receipt-field", event: "decision", source: "lesson-scene", scope: "cross-room", field: "selectedCarriage", semantic: "content" },
+        { term, kind: "receipt-field", event: "decision", source: "lesson-scene", scope: "cross-room", field: "selectedCarriage", semantic: "format" },
+      ];
+    case "saturation":
+      return [
+        { term, kind: "receipt-field", event: "any", source: "lesson-scene", scope: "local", field: "backgroundReach" },
+        { term, kind: "receipt-field", event: "any", source: "lesson-scene", scope: "cross-room", field: "backgroundReach" },
+        { term, kind: "receipt-field", event: "any", source: "lesson-scene", scope: "local", field: "avoidedReach" },
+        { term, kind: "receipt-field", event: "any", source: "lesson-scene", scope: "cross-room", field: "avoidedReach" },
+      ];
+    case "correction drag":
+      return [
+        { term, kind: "metric", event: "any", source: "lesson-scene", scope: "local", metric: "verification", direction: "increase" },
+        { term, kind: "metric", event: "any", source: "lesson-scene", scope: "local", metric: "provenance", direction: "increase" },
+        { term, kind: "metric", event: "any", source: "lesson-scene", scope: "cross-room", metric: "verification", direction: "increase" },
+        { term, kind: "metric", event: "any", source: "lesson-scene", scope: "cross-room", metric: "provenance", direction: "increase" },
+      ];
+    case "market value":
+      return [
+        { term, kind: "metric", event: "any", source: "lesson-scene", scope: "cross-room", metric: "heat", direction: "change", mechanism: "attention-market" },
+      ];
+    case "trust capital":
+      return [
+        { term, kind: "receipt-field", event: "decision", source: "lesson-scene", scope: "cross-room", field: "selectedCarriage", mechanism: "trust-carryover" },
+        { term, kind: "metric", event: "any", source: "lesson-scene", scope: "cross-room", metric: "trust", direction: "change", mechanism: "trust-carryover" },
+      ];
+    case "status capital":
+      return [
+        { term, kind: "receipt-field", event: "any", source: "lesson-scene", scope: "cross-room", field: "backgroundReach", mechanism: "ambient-ranking" },
+        { term, kind: "metric", event: "any", source: "lesson-scene", scope: "cross-room", metric: "blame", direction: "change", mechanism: "attribution-carryover" },
+        { term, kind: "metric", event: "any", source: "lesson-scene", scope: "cross-room", metric: "consensus", direction: "change", mechanism: "ambient-ranking" },
+      ];
+  }
+}
+
+function lessonForBeat(act: SceneAct, actor: ActorTemplate): SceneLesson {
   if (act === "SURFACE") {
     return {
       term: "signaling",
-      definition: "An action communicates identity, alignment, or urgency in addition to its literal words.",
-      perspective: `For this ${actor.role}, responding also signals whether they are useful, relevant, loyal, or responsible.`,
-      observable: "Compare the choice's stated intent with the distribution signal and social inference recorded after it.",
+      definition: "An action can show identity, loyalty, or urgency as well as its literal message.",
+      perspective: `For the ${actor.role}, answering now can also show usefulness, loyalty, or responsibility.`,
+      observable: "Evidence here would require either a selected outward action or a modeled result showing that message content or a recognizable form traveled. Audience response alone would not prove the player's belief.",
+      experienceRules: experienceRulesFor("signaling"),
     };
   }
   if (act === "CROSSOVER") {
     return {
       term: "saturation",
-      definition: "Repeated impressions keep adding familiarity even after each new share reaches fewer new people.",
-      perspective: `The ${actor.role} sees continuing activity, but cannot tell how much is unique reach and how much is the same audience seeing another version.`,
-      observable: "Unique reach begins to slow while repeat exposure, fluency, heat, and apparent consensus continue rising.",
+      definition: "Repeated exposure can make a claim feel familiar even when few new people see it.",
+      perspective: `The ${actor.role} sees more activity but cannot tell repeated views from new reach.`,
+      observable: "Evidence here would require modeled exposure added in the background or modeled exposure held back. Familiarity alone would not prove agreement.",
+      experienceRules: experienceRulesFor("saturation"),
     };
   }
   if (act === "CORRECTION") {
     return {
       term: "correction drag",
-      definition: "Accurate information often moves more slowly because it must preserve evidence, scope, authorization, and context.",
-      perspective: `The ${actor.role} finally has a usable record, but repair still competes with faster and more familiar versions.`,
-      observable: "The correction restores provenance and verification, yet its first exposure remains below the compressed frame's accumulated reach.",
+      definition: "A correction often travels more slowly because it carries its source, scope, and limits.",
+      perspective: `The ${actor.role} has a usable record, but earlier versions are already familiar.`,
+      observable: "Evidence here would require either a selected bounded repair or a modeled gain in checking support or source context. Earlier circulation is assessed separately.",
+      experienceRules: experienceRulesFor("correction drag"),
     };
   }
 
@@ -4136,24 +4714,27 @@ function lessonForBeat(act: "SURFACE" | "BRIDGE" | "CROSSOVER" | "CORRECTION", a
   if (capitalTerm === "market value") {
     return {
       term: capitalTerm,
-      definition: "Attention can acquire commercial or contractual value without increasing the underlying claim's truth.",
-      perspective: `The ${actor.role} is rewarded when an adjacent campaign or client objective can use the incident's existing attention.`,
-      observable: "Aesthetic fit and crossover increase the artifact's usefulness to the protagonist even while provenance falls.",
+      definition: "Attention can help a campaign or client even when it adds no evidence to a claim.",
+      perspective: `The ${actor.role} can use the incident's attention for a separate campaign or contract goal.`,
+      observable: "Evidence here would require either a selected action serving a separate campaign or client goal or a modeled change linked to attention pressure. That modeled effect alone would not prove an actor's goal or the message true.",
+      experienceRules: experienceRulesFor(capitalTerm),
     };
   }
   if (capitalTerm === "trust capital") {
     return {
       term: capitalTerm,
-      definition: "A relationship's accumulated credibility can be spent to carry information into a room that would ignore an anonymous source.",
-      perspective: `The ${actor.role} is consequential because familiar people expect care or accuracy from this seat.`,
-      observable: "The same artifact crosses farther after this trusted handoff even though its evidence has not improved.",
+      definition: "A trusted person can carry information into a room that would ignore an unknown source.",
+      perspective: `People expect care or accuracy from the ${actor.role}, so the handoff travels farther.`,
+      observable: "Evidence here would require either a selected trust-linked handoff or a modeled change linked to borrowed trust. Neither would make the message true.",
+      experienceRules: experienceRulesFor(capitalTerm),
     };
   }
   return {
     term: "status capital",
-    definition: "Timely participation can increase standing inside a group even when it contributes little factual clarity.",
-    perspective: `The ${actor.role} can gain or preserve position by recognizing the room's frame at the socially useful moment.`,
-    observable: "A low-evidence action increases reactions, repetition, and apparent belonging more than verification uptake.",
+    definition: "A timely response can protect someone's place in a group without clarifying the facts.",
+    perspective: `The ${actor.role} can preserve standing by recognizing the room's frame at the useful moment.`,
+    observable: "Evidence here would require either a selected response designed to protect standing or modeled background circulation or reaction pressure. That modeled effect alone would not prove anyone's purpose or settle the facts.",
+    experienceRules: experienceRulesFor("status capital"),
   };
 }
 
@@ -4163,7 +4744,7 @@ function capitalTermFor(kind: ProtagonistKind): "market value" | "trust capital"
   return "status capital";
 }
 
-function isLessonCompatible(term: LessonTerm, kind: ProtagonistKind, act: string): boolean {
+function isLessonCompatible(term: LessonTerm, kind: ProtagonistKind, act: SceneAct): boolean {
   if (act === "SURFACE") return term === "signaling";
   if (act === "CROSSOVER") return term === "saturation";
   if (act === "CORRECTION") return term === "correction drag";
@@ -4174,6 +4755,79 @@ function isLessonCompatible(term: LessonTerm, kind: ProtagonistKind, act: string
     "status capital": ["youth", "creator", "political"],
   };
   return term in allowed && allowed[term as keyof typeof allowed].includes(kind);
+}
+
+function conceptPlayBindingIsTermCorrect(
+  binding: ConceptPlayBinding,
+  choice: GeneratedChoice,
+  act: SceneAct,
+  lessonTerm: LessonTerm,
+  actorKind: ProtagonistKind,
+): boolean {
+  if (binding.term !== lessonTerm || binding.act !== act) return false;
+  const outward = outwardConceptDelivery(choice);
+  switch (binding.term) {
+    case "signaling":
+      return act === "SURFACE"
+        && binding.basis === "outward-delivery"
+        && outward !== null
+        && binding.delivery.scope === outward.scope
+        && binding.delivery.carriage === outward.carriage;
+    case "correction drag":
+      return act === "CORRECTION"
+        && binding.basis === "source-bearing-repair"
+        && binding.actorKind === actorKind
+        && outward !== null
+        && binding.relationalClassification === choice.relationalMove.classification
+        && (binding.relationalClassification === "repair"
+          || binding.relationalClassification === "bounded-accountability"
+          || binding.relationalClassification === "translation")
+        && (choice.effects[binding.effect.metric] ?? 0) > 0;
+    case "market value":
+      return act === "BRIDGE"
+        && binding.basis === "attention-value"
+        && binding.actorKind === actorKind
+        && capitalTermFor(actorKind) === binding.term
+        && outward !== null
+        && binding.relationalClassification === choice.relationalMove.classification
+        && isDistortiveClassification(choice.relationalMove.classification)
+        && choice.relationalMove.misrepresentation.intentionality === "deliberate"
+        && (choice.effects[binding.effect.metric] ?? 0) > 0;
+    case "trust capital":
+      return act === "BRIDGE"
+        && binding.basis === "trusted-role-carriage"
+        && binding.actorKind === actorKind
+        && capitalTermFor(actorKind) === binding.term
+        && outward !== null
+        && binding.relationalClassification === choice.relationalMove.classification
+        && (choice.effects[binding.effect.metric] ?? 0) > 0;
+    case "status capital":
+      return act === "BRIDGE"
+        && binding.basis === "visible-standing-carriage"
+        && binding.actorKind === actorKind
+        && capitalTermFor(actorKind) === binding.term
+        && outward !== null
+        && binding.relationalClassification === choice.relationalMove.classification
+        && (choice.effects[binding.effect.metric] ?? 0) > 0;
+  }
+}
+
+function conceptEffectRuleKey(rule: ConceptEffectRule): string {
+  const predicate = rule.kind === "receipt-field"
+    ? `field:${rule.field}`
+    : `metric:${rule.metric}:${rule.direction}`;
+  const semantic = "semantic" in rule ? rule.semantic : "";
+  const mechanism = "mechanism" in rule ? rule.mechanism ?? "" : "";
+  return [rule.term, rule.kind, rule.event, rule.source, rule.scope, predicate, semantic, mechanism].join("|");
+}
+
+function conceptEffectRulesAreTermCorrect(lesson: SceneLesson): boolean {
+  const expected = experienceRulesFor(lesson.term);
+  const expectedKeys = new Set(expected.map(conceptEffectRuleKey));
+  const actualKeys = new Set(lesson.experienceRules.map(conceptEffectRuleKey));
+  return lesson.experienceRules.length === expected.length
+    && actualKeys.size === lesson.experienceRules.length
+    && lesson.experienceRules.every((rule) => rule.term === lesson.term && expectedKeys.has(conceptEffectRuleKey(rule)));
 }
 
 function pressureFor(kind: ProtagonistKind): "LOW" | "MEDIUM" | "HIGH" {

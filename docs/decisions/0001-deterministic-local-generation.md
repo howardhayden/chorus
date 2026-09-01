@@ -6,7 +6,7 @@
 ## Context
 
 CHORUS needs open-ended nights without a fixed campaign, but every scenario must
-remain inspectable, PG-safe, causally bound, replayable, and valid across
+remain inspectable, PG-bounded, causally bound, replayable, and valid across
 communication, repair, linguistic, fatigue, and propagation systems.
 
 ## Decision
@@ -33,4 +33,3 @@ night. A seed and ordered choice history must reproduce the same state.
   portability, and reproducibility.
 
 See [Generation and coherence](../GENERATION-COHERENCE.md).
-
