@@ -4,7 +4,7 @@
 
 **Accepted, implemented, and verified by the current automated working-tree gate; interactive promotion evidence remains open.**
 
-The version-14 source, canonical specifications, focused suites, generated
+The version-15 source, canonical specifications, focused suites, generated
 publications, and automated working-tree evidence are renewed for the current
 implementation binding. This status does not assert current live-browser,
 assistive-technology, production-route, dependency, or neutral-distribution
@@ -142,9 +142,11 @@ No historical run is relabeled as evidence for changed source.
   in narrow view, keyboard traversal, screen-reader order, and the one-viewport
   model.
 - The ending uses completed `NightState` as well as the generated pack.
-- Generator-authored copy changes advanced `GENERATOR_VERSION` from historical
-  13 to current 14; prior save compatibility and retained simulation evidence
-  remain explicit boundaries.
+- The original ending architecture advanced `GENERATOR_VERSION` from 13 to 14.
+  The later in-world Summary refinement changes generated authored copy again
+  and advances the current compatibility boundary to 15. Version-13 and
+  version-14 saves, and their retained evidence, remain historical unless a
+  separately specified reconstruction path is added.
 - Existing interaction documentation, traceability, tests, notebook/source
   bindings, and release evidence will require coordinated renewal when the
   implementation changes.

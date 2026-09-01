@@ -3,7 +3,7 @@
 ## Status and purpose
 
 This document owns the adopted voice architecture for player-visible CHORUS
-copy. The version-14 source implements the target architecture and its focused
+copy. The version-15 source implements the target architecture and its focused
 automated correction gates pass. Live-browser geometry, assistive-technology
 reading order, manual viewport review, and release promotion remain **open**.
 Baseline revision
@@ -362,7 +362,7 @@ to The Heart. These remain accurate descriptions of the baseline and must stay
 in the historical record.
 
 [ADR 0009](decisions/0009-separate-experiential-ending-from-concept-receipt.md)
-accepts the replacement architecture. The version-14 implementation supersedes
+accepts the replacement architecture. The version-15 implementation supersedes
 the old Heart obligation at the implementation level with the continuous
 summary and separate concept surface; it does not erase the old component,
 specification, test, or findings from baseline provenance. Replacement source,

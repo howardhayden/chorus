@@ -90,16 +90,16 @@ const OUTWARD_RELATIONSHIPS: Record<ProtagonistKind, RelationshipProfile[]> = {
 const OPENING_SEED = 0x43484f52;
 const CONCEPT_STATUS_COPY = {
   played: {
-    label: "Selected action",
-    explanation: "You chose an action tied to the concept. This does not mean it produced an effect.",
+    label: "Played",
+    explanation: "Selected action: a chosen move matched the concept. This does not mean its intended effect followed.",
   },
   experienced: {
-    label: "Recorded effect",
-    explanation: "The simulation recorded a related effect without a matching selected action.",
+    label: "Experienced",
+    explanation: "Recorded effect: something moved, changed, or was held back. It does not mean you chose or agreed with it.",
   },
   encountered: {
-    label: "Seen in scene",
-    explanation: "The situation appeared, but no matching action or effect was recorded.",
+    label: "Encountered",
+    explanation: "Seen in scene: the situation appeared, but no matching chosen action or change was recorded in this night.",
   },
 } as const;
 const FATIGUE_COPY: Record<FatigueKind, string> = {
@@ -415,7 +415,7 @@ function HouseHeader(props: {
   onLineage: () => void; onSignals: () => void; onPrivacy: () => void; onRelations: () => void; analysisAvailable: boolean;
 }) {
   return <header className="house-header warm-frame">
-    <button className="wordmark" type="button" onClick={props.onHome} aria-label="Open CHORUS introduction"><ChorusMark /><span><strong>CHORUS</strong><small>social trust simulation</small></span></button>
+    <button className="wordmark" type="button" onClick={props.onHome} aria-label="Open CHORUS introduction"><ChorusMark /><span><strong>CHORUS</strong><small>social trust fiction</small></span></button>
     <div className="house-status"><span className="status-lamp" aria-hidden="true" />HOUSE {props.clock} · TURN {props.turn}/24</div>
     <nav className="header-nav" aria-label="House tools">
       <button id="header-privacy" type="button" onClick={props.onPrivacy}>Privacy</button><button id="header-signals" className="signals-button" type="button" onClick={props.onSignals}>Signals</button><button id="header-relations" className="relations-header-button" type="button" onClick={props.onRelations}>Relations</button><button id="header-lineage" type="button" onClick={props.onLineage}>{props.analysisAvailable ? "Meme reference" : "Trace guide"}</button><button id="header-notes" type="button" onClick={props.onNotes}>{props.analysisAvailable ? "Field notes" : "House guide"}</button>
@@ -706,7 +706,7 @@ function NightDebrief({ pack, state, onReplay, onHouse }: { pack: GeneratedScena
         <section className="naturalized-summary warm-frame" aria-labelledby="debrief-recovery-title">
           <p className="panel-label">RECORD CHECK FAILED</p>
           <h3 id="debrief-recovery-title">The receipt stayed closed.</h3>
-          <p>The completed record did not pass its consistency check. No summary or interpretation was generated.</p>
+          <p>The completed record did not pass its consistency check. The house will not tell a story from a record it cannot verify.</p>
           <p>Start a clean replay to replace this record and try again.</p>
         </section>
       </div>
@@ -715,19 +715,19 @@ function NightDebrief({ pack, state, onReplay, onHouse }: { pack: GeneratedScena
   const summary = buildNaturalizedSummary(pack, state);
   const receipt = buildConceptReceipt(pack, state);
   return <article className="debrief-view">
-    <header className="debrief-header"><div><p className="eyebrow">AFTER THE LAST REPLY · {state.turn} RECORDED DECISIONS</p><h2 id="debrief-title" tabIndex={-1}>What changed across the night.</h2></div><div className="debrief-actions"><button className="rail-fallback-action" type="button" onClick={onHouse}>House map <span aria-hidden="true">→</span></button><button type="button" onClick={onReplay}>Replay from the beginning</button></div></header>
+    <header className="debrief-header"><div><p className="eyebrow">AFTER THE LAST REPLY · {state.turn} RECORDED DECISIONS</p><h2 id="debrief-title" tabIndex={-1}>What the house kept moving.</h2></div><div className="debrief-actions"><button className="rail-fallback-action" type="button" onClick={onHouse}>House map <span aria-hidden="true">→</span></button><button type="button" onClick={onReplay}>Replay whole night ↻</button></div></header>
     <div className="debrief-ending">
       <section className="naturalized-summary warm-frame" aria-labelledby="afterword-title" data-source-count={summary.sources.length}>
-        <p className="panel-label">THE NIGHT YOU PLAYED</p>
-        <h3 id="afterword-title">From the first choice to closing time</h3>
+        <p className="panel-label">THE PLAYED NIGHT</p>
+        <h3 id="afterword-title">By closing time</h3>
         {summary.paragraphs.map((paragraph, index) => <p key={`${index}-${paragraph.slice(0, 24)}`}>{paragraph}</p>)}
       </section>
-      <aside className="model-limit" aria-label="Model limit">{DEBRIEF_MODEL_LIMIT} Its numbers and authored motives belong only to this generated night.</aside>
+      <aside className="model-limit" aria-label="Fiction boundary">{DEBRIEF_MODEL_LIMIT} Any number or motive named here belongs only to this night.</aside>
       <section className="plain-concept-receipt" aria-labelledby="concept-receipt-title">
         <header>
-          <p className="panel-label">CONCEPTS FROM THIS NIGHT</p>
-          <h3 id="concept-receipt-title">What appeared, what changed, and what you selected</h3>
-          <p>These labels describe the simulation record, not your beliefs, motives, or character.</p>
+          <p className="panel-label">CONCEPTS IN THIS NIGHT</p>
+          <h3 id="concept-receipt-title">What appeared, changed, or was chosen</h3>
+          <p>These labels describe what the night recorded, not your beliefs, motives, or character.</p>
           <dl className="concept-status-key">
             {Object.values(CONCEPT_STATUS_COPY).map((status) => <div key={status.label}><dt>{status.label}</dt><dd>{status.explanation}</dd></div>)}
           </dl>
@@ -735,10 +735,10 @@ function NightDebrief({ pack, state, onReplay, onHouse }: { pack: GeneratedScena
         <ol>{receipt.concepts.map((concept) => {
           const status = CONCEPT_STATUS_COPY[concept.status];
           return <li className={`concept-status-${concept.status}`} key={concept.term}>
-            <div><span data-status={concept.status}>{status.label}</span><h4>{concept.term}<small>{concept.gloss}</small></h4></div>
+            <div><span data-status={concept.status}>{status.label}</span><h4>{concept.term}{" "}<small>— {concept.gloss}</small></h4></div>
             <p>{concept.plain}</p>
-            <p className="concept-evidence"><strong>Why this appears</strong>{concept.evidence.copy}</p>
-            <p className="concept-limit"><strong>Keep in mind</strong>{concept.limit}</p>
+            <p className="concept-evidence"><strong>Why this appears:</strong>{" "}{concept.evidence.copy}</p>
+            <p className="concept-limit"><strong>Keep in mind:</strong>{" "}{concept.limit}</p>
           </li>;
         })}</ol>
       </section>

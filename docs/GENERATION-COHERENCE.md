@@ -10,7 +10,7 @@ event rules in the [Concurrent-night runtime](CONCURRENT-NIGHT.md).
 ## Generation contract
 
 `generateScenarioPack(seed)` accepts a finite 32-bit integer under current
-generator version 14 and returns one validated `GeneratedScenarioPack`
+generator version 15 and returns one validated `GeneratedScenarioPack`
 containing:
 
 - a generator version and normalized seed;
@@ -52,7 +52,7 @@ playable-night count.
 The candidate is never shown while validation is incomplete. Regeneration
 keeps the current playable night until a replacement passes the same gates.
 
-Version 14 also binds the rewritten authored-copy templates, each scene's typed
+Version 15 binds the authored-copy templates, each scene's typed
 disclosure and `SceneLesson.experienceRules`, each choice's delivery scope,
 carriage, and `conceptPlays`, and every link's semantic class and carrier into
 the generated pack. Those fields are deterministic authored output, not
@@ -330,11 +330,17 @@ choice identity, event requirement, or reconstruction result. A save created
 with another generator version is rejected unless an explicit, tested
 reconstruction path exists.
 
-The current authored model is generator version 14. Version 14 changes seeded
-authored copy and the source used by the completed-night concept derivation, so
-it intentionally does not promise version-13 pack reconstruction. The retained
-`1.0.0-rc.1` evidence and compatible saves remain historical version-13
-records; schema version 1 alone does not make them version-14 compatible.
+The current authored model is generator version 15. Version 14 changed the
+ending architecture, seeded authored copy, and source used by completed-night
+concept derivation relative to version 13. Version 15 changes generated
+Crossover artifact, reason, question, unknown, and signaling-observable copy
+that the in-world Summary can carry. The same seed therefore no longer
+reconstructs the version-14 pack byte for byte. The retained `1.0.0-rc.1`
+evidence and compatible saves remain historical version-13 records, and the
+preceding Summary evidence remains historical version-14 evidence. Schema
+version alone does not make either model compatible with version 15; version-13
+and version-14 saves fail closed unless an explicit, tested reconstruction path
+is added.
 
 At completion, `buildConceptReceipt(pack, state)` considers only
 `SceneLesson` terms belonging to scenes resolved by actual accepted decisions,

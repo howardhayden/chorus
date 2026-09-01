@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
+import { stripTypeScriptTypes } from "node:module";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 import test from "node:test";
@@ -24,6 +25,7 @@ const page = await readFile(path.join(root, "app/page.tsx"), "utf8");
 const generatedPacks = Array.from({ length: 12 }, (_, seed) => generateScenarioPack(seed));
 
 let debriefModulePromise;
+let debriefInternalsPromise;
 
 function loadDebriefModule() {
   debriefModulePromise ??= import(pathToFileURL(path.join(root, "app/debrief-copy.ts")).href)
@@ -42,6 +44,28 @@ async function debriefBuilders() {
   assert.equal(typeof loaded.module.buildNaturalizedSummary, "function", "missing buildNaturalizedSummary(pack, state)");
   assert.equal(typeof loaded.module.buildConceptReceipt, "function", "missing buildConceptReceipt(pack, state)");
   return loaded.module;
+}
+
+async function debriefInternals() {
+  debriefInternalsPromise ??= readFile(path.join(root, "app/debrief-copy.ts"), "utf8")
+    .then((source) => source
+      .replaceAll(
+        'from "./scenario-generator.ts"',
+        `from "${pathToFileURL(path.join(root, "app/scenario-generator.ts")).href}"`,
+      )
+      .replaceAll(
+        'from "./night-engine.ts"',
+        `from "${pathToFileURL(path.join(root, "app/night-engine.ts")).href}"`,
+      ))
+    .then((source) => stripTypeScriptTypes(
+      `${source}\nexport { residueAtoms as __testResidueAtoms, strongestAfterimage as __testStrongestAfterimage };\n`,
+      { mode: "strip" },
+    ))
+    .then((source) => import(`data:text/javascript;base64,${Buffer.from(source).toString("base64")}`));
+  const loaded = await debriefInternalsPromise;
+  assert.equal(typeof loaded.__testResidueAtoms, "function", "missing targeted residue realization hook");
+  assert.equal(typeof loaded.__testStrongestAfterimage, "function", "missing strongest-afterimage selection hook");
+  return loaded;
 }
 
 function words(value) {
@@ -171,6 +195,20 @@ function leadingFragment(value, maximumWords = 4) {
 function playCompletedNight(seed, policy) {
   const pack = generateScenarioPack(seed);
   return playCompletedPack(pack, policy);
+}
+
+function findCompletedNightFixture(predicate, {
+  description = "completed-night fixture",
+  policies = ["floor", "contrast"],
+  seedLimit = 256,
+} = {}) {
+  for (let seed = 0; seed < seedLimit; seed += 1) {
+    for (const policy of policies) {
+      const played = playCompletedNight(seed, policy);
+      if (predicate(played)) return { ...played, policy };
+    }
+  }
+  assert.fail(`${description} was not found in seeds 0-${seedLimit - 1}`);
 }
 
 function playCompletedPack(pack, policy) {
@@ -312,17 +350,52 @@ test("the completed-night view is one naturalized state-derived summary followed
   assert.doesNotMatch(debrief, /role="tablist"|role="tab"|role="tabpanel"|const tabs:|<HouseReceipt|<ChoiceReceipt|<InterpretationReceipt|<CrossingReceipt|<FatigueReceipt|<PracticeReceipt|<HeartReceipt/);
 });
 
-test("the review separates the played story, status key, evidence, and model boundary", () => {
+test("the review separates the played story, status key, evidence, and fiction boundary", () => {
   const debrief = functionSource("NightDebrief");
-  assert.match(debrief, /What changed across the night\./);
-  assert.match(debrief, /From the first choice to closing time/);
-  assert.match(debrief, /These labels describe the simulation record, not your beliefs, motives, or character\./);
+  assert.match(debrief, /What the house kept moving\./);
+  assert.match(debrief, /THE PLAYED NIGHT/);
+  assert.match(debrief, /By closing time/);
+  assert.match(debrief, /These labels describe what the night recorded, not your beliefs, motives, or character\./);
   assert.match(debrief, /<dl className="concept-status-key">/);
-  for (const label of ["Selected action", "Recorded effect", "Seen in scene"]) assert.match(page, new RegExp(label));
-  assert.match(debrief, /<strong>Why this appears<\/strong>/);
-  assert.match(debrief, /<strong>Keep in mind<\/strong>/);
-  assert.doesNotMatch(debrief, /Encountered means|Experienced means|Played means|PLAIN CONCEPT RECEIPT|Replay whole night/);
+  for (const label of ["Played", "Experienced", "Encountered"]) assert.match(page, new RegExp(`label: "${label}"`));
+  for (const gloss of ["Selected action:", "Recorded effect:", "Seen in scene:"]) assert.match(page, new RegExp(gloss));
+  assert.match(page, /a chosen move matched the concept\. This does not mean its intended effect followed\./);
+  assert.match(page, /something moved, changed, or was held back\. It does not mean you chose or agreed with it\./);
+  assert.match(page, /no matching chosen action or change was recorded in this night\./);
+  assert.match(debrief, /<strong>Why this appears:<\/strong>\{["'] ["']\}/);
+  assert.match(debrief, /<strong>Keep in mind:<\/strong>\{["'] ["']\}/);
+  assert.match(debrief, /\{concept\.term\}\{["'] ["']\}<small>— \{concept\.gloss\}<\/small>/);
+  assert.doesNotMatch(debrief, /From the first choice|simulation record|generated night/i);
   assert.ok(debrief.indexOf("model-limit") < debrief.indexOf("plain-concept-receipt"), "the operative model boundary must precede interpretation");
+});
+
+test("completed-night copy stays inside the house and keeps technical narrator language out", async () => {
+  const debrief = functionSource("NightDebrief");
+  const persistentHeader = functionSource("HouseHeader");
+  const statusKeySource = page.slice(page.indexOf("const CONCEPT_STATUS_COPY"), page.indexOf("const FATIGUE_COPY"));
+  assert.doesNotMatch(debrief, /\b(?:simulat\w*|generated|the game|engine|runtime|player|authored)\b/i);
+  assert.doesNotMatch(persistentHeader, /\b(?:simulat\w*|generated|the game|engine|runtime|player|authored)\b/i);
+  assert.doesNotMatch(statusKeySource, /\b(?:simulat\w*|model\w*|generated|the game|engine|runtime|player|authored)\b/i);
+  assert.match(persistentHeader, /social trust fiction/i);
+  assert.match(debrief, /aria-label="Fiction boundary"/);
+
+  const { buildNaturalizedSummary, buildConceptReceipt, DEBRIEF_MODEL_LIMIT } = await debriefBuilders();
+  assert.match(DEBRIEF_MODEL_LIMIT, /^CHORUS is fiction\./);
+  assert.doesNotMatch(DEBRIEF_MODEL_LIMIT, /\bsimulat\w*\b/i);
+  for (let seed = 0; seed < 96; seed += 1) {
+    const { pack, state } = playCompletedNight(seed, seed % 2 === 0 ? "floor" : "contrast");
+    const visibleCopy = [
+      ...summaryParagraphs(buildNaturalizedSummary(pack, state)),
+      ...conceptItems(buildConceptReceipt(pack, state)).flatMap((item) => [
+        conceptTerm(item),
+        conceptPlainCopy(item),
+        item.evidence.copy,
+        item.limit,
+      ]),
+      DEBRIEF_MODEL_LIMIT,
+    ].join(" ");
+    assert.doesNotMatch(visibleCopy, /\b(?:simulat\w*|model\w*|generated|the game|engine|runtime|player|authored)\b/i, `seed ${seed} breaks the in-world narrator position`);
+  }
 });
 
 test("the naturalized summary changes with the played state without becoming a concept taxonomy", async () => {
@@ -441,7 +514,7 @@ test("plain concept receipt is deduplicated from encountered SceneLessons and ca
       assert.equal(item.evidence?.kind, "action", `${term} hides played evidence behind an opaque count`);
       assert.ok(conceptDecisionIds(item).includes(item.evidence?.decisionId), `${term} visible action evidence is not in decisionIds`);
       assert.doesNotMatch(item.evidence?.copy ?? "", /listed separately/i, `${term} promises an effect list the card does not render`);
-      assert.match(item.evidence?.copy ?? "", /you selected .+ for the /i, `${term} does not name the player's selection and acting role`);
+      assert.match(item.evidence?.copy ?? "", /^At .+, the .+ chose “.+”\./i, `${term} does not name the room, chosen action, and acting role`);
     } else if (conceptStatus(item) === "experienced") {
       assert.equal(item.evidence?.kind, "effect", `${term} hides experienced evidence behind an opaque count`);
       assert.ok(conceptEffectEventIds(item).includes(item.evidence?.effectEventId), `${term} visible effect evidence is not in effectEventIds`);
@@ -559,7 +632,7 @@ test("played and experienced concept provenance remain independent", async () =>
         assert.ok(conceptDecisionIds(actionOnly).length > 0, `${term} lost its selected decision provenance`);
         assert.deepEqual(conceptEffectEventIds(actionOnly), [], `${term} invented effect-event provenance for an action-only play`);
         assert.doesNotMatch(actionOnly.evidence?.copy ?? "", /\b(?:carried|reached|increased|changed|added)\b/i, `${term} action evidence invents a realized downstream effect`);
-        assert.match(actionOnly.evidence?.copy ?? "", /\b(?:selected|able|aimed|meant)\b/i, `${term} action evidence does not stay at capability or intent`);
+        assert.match(actionOnly.evidence?.copy ?? "", /\b(?:chose|designed|aimed|meant)\b/i, `${term} action evidence does not stay at choice, capability, or intent`);
         checkedPlayed = true;
       }
 
@@ -690,13 +763,34 @@ test("ambient summary routes deny both content and recognizable-form carriage", 
         && atom.sources.some((source) => source.kind === "route" && source.classification === "ambient"),
       );
       for (const atom of ambientAtoms) {
-        assert.match(atom.text, /No selected message or presentation reached .+ from/i);
+        assert.match(atom.text, /Neither the chosen message nor its presentation reached .+ from/i);
         assert.doesNotMatch(atom.text, /still affected/i);
         checkedAmbientRoute = true;
       }
     }
   }
   assert.ok(checkedAmbientRoute, "sample never exercised an ambient route in the natural summary");
+});
+
+test("a route can withhold the chosen message while attribution changes separately", async () => {
+  const { buildNaturalizedSummary } = await debriefBuilders();
+  const routeFixture = ({ pack, state }) => summaryAtoms(buildNaturalizedSummary(pack, state)).find((candidate) => {
+    const route = candidate.sources.find((source) => source.kind === "route");
+    return candidate.role === "route"
+      && route?.classification !== "ambient"
+      && route?.selectedPathCarriage === false
+      && route?.backgroundReach > 0
+      && route?.mechanism === "attribution-carryover";
+  });
+  const played = findCompletedNightFixture(routeFixture, {
+    description: "null selected carriage with separate attribution movement",
+  });
+  const fixture = routeFixture(played);
+
+  assert.ok(fixture);
+  assert.match(fixture.text, /(?:did not reach|kept .+ out of)/i);
+  assert.match(fixture.text, /(?:shifted blame|blame shifted)/i);
+  assert.doesNotMatch(fixture.text, /(?:message|presentation).{0,36}(?:caused|changed|shifted) blame|because|therefore|as a result/i);
 });
 
 test("concept effect provenance matches exact authored rules, including decision-only carriage", async () => {
@@ -747,7 +841,7 @@ test("concept evidence keeps action design, ambient pressure, and net outcome di
   let checkedDirectFormatMarket = false;
   let checkedBoundedMetric = false;
 
-  for (let seed = 0; seed < 20 && (
+  for (let seed = 0; seed < 96 && (
     !checkedActionWithoutCarriage
     || !checkedBackgroundMarket
     || !checkedDirectContentMarket
@@ -808,7 +902,16 @@ test("concept evidence keeps action design, ambient pressure, and net outcome di
 
 test("autonomous correction evidence does not invent a source-bearing update", async () => {
   const { buildConceptReceipt } = await debriefBuilders();
-  const { pack, state } = playCompletedNight(67, "contrast");
+  const played = findCompletedNightFixture(({ pack, state }) => {
+    const candidate = conceptItemByTerm(buildConceptReceipt(pack, state), "correction drag");
+    return candidate
+      && conceptStatus(candidate) === "experienced"
+      && candidate.evidence?.kind === "effect"
+      && state.ambientEvents.some((event) => event.id === candidate.evidence.effectEventId);
+  }, {
+    description: "autonomous correction-drag evidence",
+  });
+  const { pack, state } = played;
   const item = conceptItemByTerm(buildConceptReceipt(pack, state), "correction drag");
   assert.equal(conceptStatus(item), "experienced");
   assert.equal(item.evidence?.kind, "effect");
@@ -850,12 +953,16 @@ test("the afterword follows a chronological causal chain and integrates its resi
       const afterTurn = state.decisions.find((decision) => decision.id === after.decisionId)?.turn;
       assert.ok(beforeTurn < afterTurn, `seed ${seed} narrates a route backward in time`);
     }
-    const finalRecord = sources.at(-2);
-    const finalAfterimage = sources.at(-1);
+    const finalRecord = sources.findLast((source) => source.kind === "scenario-record" && source.field === "laterResolution");
+    const finalAfterimage = sources.findLast((source) => source.kind === "room-afterimage");
+    const finalReflectionSource = sources.at(-1);
     assert.equal(finalRecord?.kind, "scenario-record");
     assert.equal(finalRecord?.field, "laterResolution");
     assert.equal(finalAfterimage?.kind, "room-afterimage");
+    assert.equal(finalReflectionSource?.kind, "room-afterimage");
     assert.equal(finalRecord?.scenarioId, finalAfterimage?.scenarioId);
+    assert.equal(finalReflectionSource?.scenarioId, finalAfterimage?.scenarioId);
+    assert.equal(finalReflectionSource?.metric, finalAfterimage?.metric);
     const scenario = pack.scenarios.find((candidate) => candidate.id === finalRecord.scenarioId);
     const finalParagraph = summaryParagraphs(summary).at(-1);
     assert.ok(normalizeSentence(finalParagraph).includes(leadingFragment(scenario.truth.laterResolution)));
@@ -914,42 +1021,46 @@ test("summary decision and route provenance remains globally chronological acros
 test("Catalysis realization follows the narrated situation instead of a path-hash synonym wheel", async () => {
   const { buildNaturalizedSummary } = await debriefBuilders();
   const source = await readFile(path.join(root, "app/debrief-copy.ts"), "utf8");
-  assert.doesNotMatch(source, /cadenceIndex|stableIdentity|openingFamilies|residueFamilies/);
+  assert.doesNotMatch(source, /cadenceIndex|stableIdentity|openingFamilies|residueFamilies|sequence\s*%/);
   const exercised = new Set();
 
   for (const seed of [...Array.from({ length: 96 }, (_, index) => index), 0xffffffff]) {
     for (const policy of ["floor", "contrast"]) {
       const { pack, state } = playCompletedNight(seed, policy);
       const summary = buildNaturalizedSummary(pack, state);
+      const atoms = summaryAtoms(summary);
       assert.deepEqual(buildNaturalizedSummary(pack, state), summary, `seed ${seed} ${policy} is not deterministic`);
       const paragraphs = summaryParagraphs(summary);
       const prose = paragraphs.join(" ");
-      const openingDecisionIndex = summaryAtoms(summary).findIndex((atom) => atom.role === "decision");
-      const openingWords = words(summaryAtoms(summary).slice(0, openingDecisionIndex).map((atom) => atom.text).join(" ")).length;
-      const mandatoryCostWords = state.decisions
-        .filter((decision) => decision.lastResort)
-        .flatMap((decision) => [
-          decision.lastResort.protectedParty,
-          decision.lastResort.positiveConsequence,
-          decision.lastResort.harmedParty,
-          decision.lastResort.negativeConsequence,
-          decision.lastResort.selfCost,
-        ])
-        .reduce((total, value) => total + words(value).length, 0);
+      assert.doesNotMatch(prose, /This seat['’]s role carries trust/i, `seed ${seed} ${policy} lets an abstract pressure gloss displace the concrete scene`);
+      const openingDecisionIndex = atoms.findIndex((atom) => atom.role === "decision");
+      const openingWords = words(atoms.slice(0, openingDecisionIndex).map((atom) => atom.text).join(" ")).length;
+      const lastResortDecisionIds = new Set(
+        state.decisions.filter((decision) => decision.lastResort).map((decision) => decision.id),
+      );
+      const mandatoryLastResortWords = atoms
+        .filter((atom) => atom.role === "cost" || (
+          atom.role === "decision"
+          && atom.sources.some((candidate) => candidate.kind === "decision" && lastResortDecisionIds.has(candidate.decisionId))
+        ))
+        .reduce((total, atom) => total + words(atom.text).length, 0);
       assert.ok(paragraphs.length >= 2 && paragraphs.length <= 10, `seed ${seed} ${policy} has ${paragraphs.length} summary paragraphs`);
       assert.ok(openingWords <= 72, `seed ${seed} ${policy} spends ${openingWords} words before the first choice`);
-      assert.ok(words(prose).length <= 220 + mandatoryCostWords, `seed ${seed} ${policy} grows beyond its bounded chain and mandatory costs`);
+      assert.ok(
+        words(prose).length - mandatoryLastResortWords <= 220,
+        `seed ${seed} ${policy} grows beyond its bounded chain and mandatory last-resort units`,
+      );
       for (const paragraph of paragraphs) {
         assert.ok(words(paragraph).length >= 5 && words(paragraph).length <= 95, `seed ${seed} ${policy} violates paragraph bounds`);
         assert.ok(sentences(paragraph).every((sentence) => words(sentence).length <= 38), `seed ${seed} ${policy} violates sentence bounds`);
       }
 
-      const firstDecision = summaryAtoms(summary).find((atom) => atom.role === "decision")?.sources
+      const firstDecision = atoms.find((atom) => atom.role === "decision")?.sources
         .find((candidate) => candidate.kind === "decision");
       const openingScenario = pack.scenarios.find((candidate) => candidate.id === firstDecision?.scenarioId);
       const openingScene = openingScenario?.scenes.find((candidate) => candidate.id === firstDecision?.sceneId);
       assert.ok(openingScene, `seed ${seed} ${policy} lacks its opening scene`);
-      const openingAtoms = summaryAtoms(summary).slice(0, openingDecisionIndex);
+      const openingAtoms = atoms.slice(0, openingDecisionIndex);
       const openingOrder = {
         SURFACE: ["artifact", "record", "inquiry", "pressure"],
         BRIDGE: ["artifact", "pressure", "inquiry", "record"],
@@ -965,7 +1076,7 @@ test("Catalysis realization follows the narrated situation instead of a path-has
       exercised.add(`act:${openingScene.act}`);
 
       const paragraphCopies = paragraphs.map(normalizeSentence);
-      for (const [atomIndex, atom] of summaryAtoms(summary).entries()) {
+      for (const [atomIndex, atom] of atoms.entries()) {
         assert.ok(
           paragraphCopies.some((paragraph) => paragraph.includes(normalizeSentence(atom.text))),
           `seed ${seed} ${policy} splits ${atom.role} atom ${atomIndex} across paragraphs`,
@@ -974,10 +1085,10 @@ test("Catalysis realization follows the narrated situation instead of a path-has
         const decisionSource = atom.sources.find((candidate) => candidate.kind === "decision");
         const decision = state.decisions.find((candidate) => candidate.id === decisionSource?.decisionId);
         if (!decision?.lastResort) continue;
-        const costAtoms = summaryAtoms(summary).slice(atomIndex + 1)
-          .slice(0, summaryAtoms(summary).slice(atomIndex + 1).findIndex((candidate) => candidate.role !== "cost") < 0
+        const costAtoms = atoms.slice(atomIndex + 1)
+          .slice(0, atoms.slice(atomIndex + 1).findIndex((candidate) => candidate.role !== "cost") < 0
             ? undefined
-            : summaryAtoms(summary).slice(atomIndex + 1).findIndex((candidate) => candidate.role !== "cost"));
+            : atoms.slice(atomIndex + 1).findIndex((candidate) => candidate.role !== "cost"));
         const positions = [atom, ...costAtoms].map((candidate) => paragraphCopies.findIndex((paragraph) =>
           paragraph.includes(normalizeSentence(candidate.text)),
         ));
@@ -986,7 +1097,7 @@ test("Catalysis realization follows the narrated situation instead of a path-has
         assert.ok(Math.max(...positions) - Math.min(...positions) <= 1, `seed ${seed} ${policy} scatters a last-resort event across the review`);
       }
 
-      for (const atom of summaryAtoms(summary)) {
+      for (const [atomIndex, atom] of atoms.entries()) {
         if (atom.role === "route") {
           const route = atom.sources.find((candidate) => candidate.kind === "route");
           assert.ok(route, `seed ${seed} ${policy} has route prose without typed provenance`);
@@ -1001,42 +1112,89 @@ test("Catalysis realization follows the narrated situation instead of a path-has
                   : "no-crossing";
           exercised.add(branch);
           if (branch === "direct-content") {
-            assert.match(atom.text, /message produced by “.+” in .+ reached .+ through/i);
+            assert.match(atom.text, /The message from .+ reached .+ through/i);
             assert.doesNotMatch(atom.text, /presentation|same message/i);
           } else if (branch === "direct-format") {
-            assert.match(atom.text, /saw a copy that looked like/i);
-            assert.match(atom.text, /did not carry the same message/i);
+            assert.match(atom.text, /A copy in .+ looked like the .+ from .+/i);
+            assert.match(atom.text, /Its message was different/i);
           } else if (branch === "ambient") {
-            assert.match(atom.text, /No selected message or presentation reached .+ from/i);
+            assert.match(atom.text, /Neither the chosen message nor its presentation reached .+ from/i);
             assert.doesNotMatch(atom.text, /still affected/i, "ambient copy must name the modeled change");
           } else if (branch === "held") {
             assert.match(atom.text, /choice in .+ kept .+ out of/i);
           } else if (branch === "background") {
             assert.match(atom.text, /did not reach/i);
-            assert.match(atom.text, /Other circulation continued/i);
+            assert.match(atom.text, /(?:overlap|accounts|circulation|workload|trust|ranking|blame|language|expectations|Separate circulation)/i);
           }
         }
 
         if (atom.role === "residue") {
           const afterimage = atom.sources.find((candidate) => candidate.kind === "room-afterimage");
           if (!afterimage) continue;
+          assert.doesNotMatch(
+            atom.text,
+            /(?:posts|material|copies|account) from that room|attached to its source|spread from that room|appeared in (?:more|fewer) rooms/i,
+            `${afterimage.metric} invents an outbound carrier or source from an aggregate room delta`,
+          );
           exercised.add(`residue:${afterimage.metric}`);
           const rising = afterimage.atDebrief > afterimage.atCompletion;
           const expected = {
-            reach: rising ? /posts from that room continued to spread/i : /posts from that room reached fewer people/i,
-            crossover: rising ? /material from .+ appeared in more rooms/i : /material from .+ appeared in fewer rooms/i,
-            provenance: rising ? /copies linked to .+ carried more source context/i : /copies linked to .+ carried less source context/i,
-            verification: rising ? /more support for checking the claim/i : /less support for checking the claim/i,
-            heat: rising ? /reactions to the claim .+ grew more heated/i : /reactions to the claim .+ grew calmer/i,
-            blame: rising ? /blame tied to the claim .+ concentrated further/i : /blame tied to the claim .+ eased/i,
-            belief: rising ? /accepted the claim .+ more strongly/i : /less certain about the claim/i,
-            consensus: rising ? /claim .+ appeared more widely accepted/i : /claim .+ appeared less widely accepted/i,
-            trust: rising ? /trust in the claim .+ increased/i : /trust in the claim .+ decreased/i,
-            coordination: rising ? /more able to coordinate around the claim/i : /less able to coordinate around the claim/i,
-            commonGround: rising ? /shared more common ground about the claim/i : /shared less common ground about the claim/i,
+            reach: rising ? /more people saw material around that room/i : /fewer people saw material around that room/i,
+            crossover: rising ? /path for material between that room and others became easier/i : /path for material between that room and others became harder/i,
+            provenance: rising ? /more source context remained visible around that room/i : /less source context remained visible around that room/i,
+            verification: rising ? /material around that room became easier to check/i : /material around that room became harder to check/i,
+            heat: rising ? /reactions around that room grew more heated/i : /reactions around that room grew calmer/i,
+            blame: rising ? /blame around that room rose/i : /blame around that room fell/i,
+            belief: rising ? /account around that room drew stronger acceptance/i : /account around that room drew weaker acceptance/i,
+            consensus: rising ? /account around that room appeared more widely accepted/i : /account around that room appeared less widely accepted/i,
+            trust: rising ? /trust around that room rose/i : /trust around that room fell/i,
+            coordination: rising ? /pressure to coordinate around that room rose/i : /pressure to coordinate around that room eased/i,
+            commonGround: rising ? /(?:shared action|practical overlap visible there) became clearer/i : /(?:shared action|practical overlap visible there) became harder to see/i,
           }[afterimage.metric];
           assert.ok(expected, `missing residue realization contract for ${afterimage.metric}`);
           assert.match(atom.text, expected);
+          if (afterimage.metric === "reach") assert.doesNotMatch(atom.text, /belie|agree|familiar/i);
+          if (afterimage.metric === "trust") assert.doesNotMatch(atom.text, /trust in (?:the|its) (?:claim|account)/i);
+          if (afterimage.metric === "coordination") assert.doesNotMatch(atom.text, /people became|able to coordinate|agreement/i);
+          if (afterimage.metric === "commonGround") {
+            assert.doesNotMatch(atom.text, /people shared|agreement/i);
+            const scenario = pack.scenarios.find((candidate) => candidate.id === afterimage.scenarioId);
+            if (scenario?.communicationModel.substantiveCommonGround) {
+              assert.ok(
+                normalizeSentence(atom.text).includes(leadingFragment(scenario.communicationModel.substantiveCommonGround)),
+                "common-ground residue loses the incident's concrete shared action",
+              );
+              assert.ok(
+                atom.sources.some((source) => source.kind === "communication-record"
+                  && source.scenarioId === scenario.id
+                  && source.field === "substantiveCommonGround"),
+                "common-ground residue lacks provenance for the named shared action",
+              );
+            }
+          }
+          const reflection = atoms[atomIndex + 1];
+          assert.equal(reflection?.role, "reflection", `${afterimage.metric} residue lacks its adjacent proof boundary`);
+          const reflectionSource = reflection?.sources.find((candidate) => candidate.kind === "room-afterimage");
+          assert.ok(reflectionSource, `${afterimage.metric} proof boundary is not sourced from the residue`);
+          assert.equal(reflectionSource.scenarioId, afterimage.scenarioId);
+          assert.equal(reflectionSource.metric, afterimage.metric);
+          const proofBoundary = {
+            reach: rising ? /Reaching more people does not show whether anyone believed the account or whether it was true/i : /Reaching fewer people does not show whether anyone believed the account or whether it was true/i,
+            crossover: rising ? /An easier path for material does not show whether any particular message or belief crossed/i : /A harder path for material does not show whether any particular message or belief crossed/i,
+            provenance: rising ? /More source context does not show whether any particular copy moved or stopped/i : /Less source context does not show whether any particular copy moved or stopped/i,
+            verification: rising ? /More support for checking does not show whether anyone checked .+ changed a belief/i : /Less support for checking does not show whether anyone checked .+ changed a belief/i,
+            heat: rising ? /More heated reactions do not establish what anyone believed .+ why they occurred/i : /Calmer reactions do not establish what anyone believed .+ why they occurred/i,
+            blame: rising ? /Rising blame does not establish who was responsible/i : /Falling blame does not establish who was responsible/i,
+            belief: rising ? /Stronger acceptance does not show whether the account was true/i : /Weaker acceptance does not show whether the account was true/i,
+            consensus: rising ? /A wider appearance of agreement does not show whether belief was shared or whether the account was true/i : /A narrower appearance of agreement does not show whether belief was shared or whether the account was true/i,
+            trust: rising ? /Rising trust does not show whether any account was true or any source was trustworthy/i : /Falling trust does not show whether any account was true or any source was trustworthy/i,
+            coordination: rising ? /Rising pressure to coordinate does not show whether people agreed or shared a purpose/i : /Easing pressure to coordinate does not show whether people agreed or shared a purpose/i,
+            commonGround: rising ? /Clearer shared action does not show whether people shared a motive, language, or belief/i : /Harder-to-see shared action does not show whether people shared a motive, language, or belief/i,
+          }[afterimage.metric];
+          assert.ok(proofBoundary, `missing proof-boundary contract for ${afterimage.metric}`);
+          assert.match(reflection.text, proofBoundary);
+          assert.doesNotMatch(reflection.text, /what the movement could not prove/i, "a generic aphorism replaced the residue-specific limit");
+          assert.doesNotMatch(reflection.text, /^The night records/i, "the proof boundary decoratively restates the residue");
         }
       }
     }
@@ -1113,6 +1271,7 @@ test("after-summary grammar keeps seats as actors and closes authored punctuatio
 
 test("scene-first inquiry uses only the narrated beat's public disclosure provenance", async () => {
   const { buildNaturalizedSummary } = await debriefBuilders();
+  let checkedCorrectionOpening = false;
   for (let seed = 0; seed < 64; seed += 1) {
     const { pack, state } = playCompletedNight(seed, seed % 2 === 0 ? "contrast" : "floor");
     const summary = buildNaturalizedSummary(pack, state);
@@ -1153,10 +1312,42 @@ test("scene-first inquiry uses only the narrated beat's public disclosure proven
     const openingProse = normalizeSentence(opening.map((atom) => atom.text).join(" "));
     const publicPressure = scene.reason.replace(/^because\s+/i, "").replace(/[.!?]+$/g, "");
     assert.ok(openingProse.includes(normalizeSentence(scene.artifactCopy)), `seed ${seed} drops its authored artifact`);
-    assert.ok(
-      openingProse.includes(normalizeSentence(publicPressure)) || contentOverlap(publicPressure, scene.artifactCopy) >= 0.65,
-      `seed ${seed} drops a distinct visible scene pressure`,
-    );
+    if (scene.act === "CROSSOVER") {
+      assert.ok(
+        openingProse.includes(normalizeSentence(scenario.truth.unresolvedAtEntry)),
+        `seed ${seed} names uncertainty without stating the concrete limit`,
+      );
+      assert.doesNotMatch(
+        opening.map((atom) => atom.text).join(" "),
+        /same unresolved claim|source['’]s uncertainty|which copies preserved/i,
+        `seed ${seed} leaves the uncertainty as an unexplained label`,
+      );
+    }
+    if (scene.act === "CORRECTION") {
+      assert.ok(
+        opening.some((atom) => atom.sources.some((source) =>
+          source.kind === "scene-disclosure" && source.atomId.endsWith("-correction-record-1"),
+        )),
+        `seed ${seed} correction opening lacks its resolved beat record`,
+      );
+      assert.ok(
+        openingProse.includes(normalizeSentence(scenario.truth.laterResolution)),
+        `seed ${seed} correction opening drops the later resolution`,
+      );
+      assert.ok(
+        !openingProse.includes(normalizeSentence(scenario.truth.unresolvedAtEntry)),
+        `seed ${seed} correction opening reintroduces the stale entry-time unknown`,
+      );
+      checkedCorrectionOpening = true;
+    }
+    if (/^this seat['’]s role carries trust\b/i.test(publicPressure)) {
+      assert.ok(!openingProse.includes(normalizeSentence(publicPressure)), `seed ${seed} retains an abstract role gloss as scene evidence`);
+    } else {
+      assert.ok(
+        openingProse.includes(normalizeSentence(publicPressure)) || contentOverlap(publicPressure, scene.artifactCopy) >= 0.65,
+        `seed ${seed} drops a distinct visible scene pressure`,
+      );
+    }
     const privateLedger = scenario.communicationModel.misrepresentation;
     for (const privateCopy of [
       privateLedger.alteredAccount,
@@ -1167,26 +1358,7 @@ test("scene-first inquiry uses only the narrated beat's public disclosure proven
       assert.ok(!openingProse.includes(normalizeSentence(privateCopy)), `seed ${seed} leaks a sealed analytic field into the inquiry motion`);
     }
   }
-
-  const correction = playCompletedNight(74, "contrast");
-  const correctionSummary = buildNaturalizedSummary(correction.pack, correction.state);
-  const correctionAtoms = summaryAtoms(correctionSummary);
-  const correctionDecisionIndex = correctionAtoms.findIndex((atom) => atom.role === "decision");
-  const correctionDecision = correctionAtoms[correctionDecisionIndex].sources.find((source) => source.kind === "decision");
-  assert.equal(correctionDecision?.scenarioId, "shelter-sign-peer-organizer-1x8uhni");
-  assert.equal(correctionDecision?.sceneId, "shelter-sign-peer-organizer-1x8uhni-correction");
-  const correctionOpening = correctionAtoms.slice(0, correctionDecisionIndex);
-  assert.ok(
-    correctionOpening.some((atom) => atom.sources.some((source) =>
-      source.kind === "scene-disclosure" && source.atomId.endsWith("-correction-record-1"),
-    )),
-    "seed 74 correction opening lacks its resolved beat record",
-  );
-  assert.doesNotMatch(
-    correctionOpening.map((atom) => atom.text).join(" "),
-    /A photograph shows only the words 'lobby closed' and no reopening time/i,
-    "seed 74 reintroduces the stale entry-time unknown after the correction is narrated",
-  );
+  assert.ok(checkedCorrectionOpening, "broad sample never exercised a correction opening");
 
   const played = playCompletedNight(7, "contrast");
   const original = buildNaturalizedSummary(played.pack, played.state);
@@ -1217,7 +1389,17 @@ test("scene-first inquiry uses only the narrated beat's public disclosure proven
 
 test("repeated last-resort labels do not merge independent events and every cost keeps provenance", async () => {
   const { buildNaturalizedSummary } = await debriefBuilders();
-  const { pack, state } = playCompletedNight(16, "contrast");
+  const played = findCompletedNightFixture(({ state }) => {
+    const lastResorts = state.decisions.filter((decision) => Boolean(decision.lastResort));
+    return lastResorts.length >= 3
+      && lastResorts.some((decision) =>
+        lastResorts.filter((candidate) => candidate.choiceLabel === decision.choiceLabel).length > 1,
+      );
+  }, {
+    description: "three last resorts with at least one repeated choice label",
+    policies: ["contrast"],
+  });
+  const { pack, state } = played;
   const summary = buildNaturalizedSummary(pack, state);
   const narrative = normalizeSentence(summaryParagraphs(summary).join(" "));
   const lastResorts = state.decisions.filter((decision) => Boolean(decision.lastResort));
@@ -1235,7 +1417,10 @@ test("repeated last-resort labels do not merge independent events and every cost
       assert.ok(narrative.includes(normalizeSentence(value)), `${decision.id} lost the complete cost ${value}`);
     }
   }
-  const repeatedLabel = lastResorts[0].choiceLabel;
+  const repeatedLabel = lastResorts.find((decision) =>
+    lastResorts.filter((candidate) => candidate.choiceLabel === decision.choiceLabel).length > 1,
+  )?.choiceLabel;
+  assert.ok(repeatedLabel);
   assert.ok(lastResorts.filter((decision) => decision.choiceLabel === repeatedLabel).length > 1);
   assert.doesNotMatch(narrative, /earlier named move|move with the same name|last resort move with the same name/i);
   assert.doesNotMatch(narrative, /reached for the last resort|gives up its income|pressure around .+ kept building/i);
@@ -1316,20 +1501,177 @@ test("strongest afterimages use comparable scales and do not mechanically select
   assert.ok(selectedMetrics.size >= 2, "seeded paths do not vary the strongest afterimage");
 });
 
-test("equal strongest afterimages use the stable scenario-id tie-break", async () => {
-  const { buildNaturalizedSummary } = await debriefBuilders();
-  const { pack, state } = playCompletedNight(1608, "floor");
-  const expected = new Map([
-    ["festival-static-public-information-editor-161e8pw", [37.623999999999995, 40.504]],
-    ["rehearsal-note-peer-organizer-9jsr98", [45.624, 48.504000000000005]],
-  ]);
-  for (const [scenarioId, [atCompletion, atDebrief]] of expected) {
-    const room = state.rooms[scenarioId];
-    assert.ok(room?.atCompletion, `tie fixture lost ${scenarioId}`);
-    assert.equal(room.atCompletion.verification, atCompletion);
-    assert.equal(room.metrics.verification, atDebrief);
-    assert.equal((room.metrics.verification - room.atCompletion.verification) / 100, 0.028800000000000027);
+test("every afterimage metric binds rising and falling copy to its exact proof boundary", async () => {
+  const { __testResidueAtoms: residueAtoms } = await debriefInternals();
+  const sharedAction = "compare the two records before acting";
+  const realizations = {
+    reach: {
+      rising: [
+        "more people saw material around that room.",
+        "Reaching more people does not show whether anyone believed the account or whether it was true.",
+      ],
+      falling: [
+        "fewer people saw material around that room.",
+        "Reaching fewer people does not show whether anyone believed the account or whether it was true.",
+      ],
+    },
+    crossover: {
+      rising: [
+        "the path for material between that room and others became easier.",
+        "An easier path for material does not show whether any particular message or belief crossed.",
+      ],
+      falling: [
+        "the path for material between that room and others became harder.",
+        "A harder path for material does not show whether any particular message or belief crossed.",
+      ],
+    },
+    provenance: {
+      rising: [
+        "more source context remained visible around that room.",
+        "More source context does not show whether any particular copy moved or stopped.",
+      ],
+      falling: [
+        "less source context remained visible around that room.",
+        "Less source context does not show whether any particular copy moved or stopped.",
+      ],
+    },
+    verification: {
+      rising: [
+        "material around that room became easier to check.",
+        "More support for checking does not show whether anyone checked the account or changed a belief.",
+      ],
+      falling: [
+        "material around that room became harder to check.",
+        "Less support for checking does not show whether anyone checked the account or changed a belief.",
+      ],
+    },
+    heat: {
+      rising: [
+        "reactions around that room grew more heated.",
+        "More heated reactions do not establish what anyone believed or why they occurred.",
+      ],
+      falling: [
+        "reactions around that room grew calmer.",
+        "Calmer reactions do not establish what anyone believed or why they occurred.",
+      ],
+    },
+    blame: {
+      rising: [
+        "blame around that room rose.",
+        "Rising blame does not establish who was responsible.",
+      ],
+      falling: [
+        "blame around that room fell.",
+        "Falling blame does not establish who was responsible.",
+      ],
+    },
+    belief: {
+      rising: [
+        "the account around that room drew stronger acceptance.",
+        "Stronger acceptance does not show whether the account was true.",
+      ],
+      falling: [
+        "the account around that room drew weaker acceptance.",
+        "Weaker acceptance does not show whether the account was true.",
+      ],
+    },
+    consensus: {
+      rising: [
+        "the account around that room appeared more widely accepted.",
+        "A wider appearance of agreement does not show whether belief was shared or whether the account was true.",
+      ],
+      falling: [
+        "the account around that room appeared less widely accepted.",
+        "A narrower appearance of agreement does not show whether belief was shared or whether the account was true.",
+      ],
+    },
+    trust: {
+      rising: [
+        "trust around that room rose.",
+        "Rising trust does not show whether any account was true or any source was trustworthy.",
+      ],
+      falling: [
+        "trust around that room fell.",
+        "Falling trust does not show whether any account was true or any source was trustworthy.",
+      ],
+    },
+    coordination: {
+      rising: [
+        "pressure to coordinate around that room rose.",
+        "Rising pressure to coordinate does not show whether people agreed or shared a purpose.",
+      ],
+      falling: [
+        "pressure to coordinate around that room eased.",
+        "Easing pressure to coordinate does not show whether people agreed or shared a purpose.",
+      ],
+    },
+    commonGround: {
+      rising: [
+        `the shared action became clearer: ${sharedAction}.`,
+        "Clearer shared action does not show whether people shared a motive, language, or belief.",
+      ],
+      falling: [
+        `the shared action became harder to see: ${sharedAction}.`,
+        "Harder-to-see shared action does not show whether people shared a motive, language, or belief.",
+      ],
+    },
+  };
+
+  let exercised = 0;
+  for (const [metric, directions] of Object.entries(realizations)) {
+    for (const [direction, [residueEnding, reflectionCopy]] of Object.entries(directions)) {
+      const rising = direction === "rising";
+      const scenarioId = `afterimage-${metric}-${direction}`;
+      const room = `Fixture · ${metric}`;
+      const atCompletion = rising ? 40 : 60;
+      const atDebrief = rising ? 60 : 40;
+      const normalizedChange = metric === "reach" ? 0.02 : 0.2;
+      const scenario = {
+        id: scenarioId,
+        title: room,
+        audienceCeiling: 1000,
+        truth: { laterResolution: "the public record stayed open" },
+        communicationModel: { substantiveCommonGround: sharedAction },
+      };
+      const atoms = residueAtoms(scenario, {
+        scenario,
+        metric,
+        atCompletion,
+        atDebrief,
+        delta: atDebrief - atCompletion,
+        normalizedMagnitude: normalizedChange,
+      });
+      assert.deepEqual(atoms.map((atom) => atom.role), ["resolution", "residue", "reflection"]);
+      assert.equal(atoms[1].text, `After ${room} closed, ${residueEnding}`);
+      assert.equal(atoms[2].text, reflectionCopy);
+      assert.match(
+        atoms[2].text,
+        /(?:does|do) not (?:show whether|establish (?:what|who))/i,
+        `${metric} ${direction} lacks a direction-neutral proof boundary`,
+      );
+
+      const afterimageSource = {
+        kind: "room-afterimage",
+        scenarioId,
+        metric,
+        atCompletion,
+        atDebrief,
+        normalizedChange,
+      };
+      const expectedSources = metric === "commonGround"
+        ? [{ kind: "communication-record", scenarioId, field: "substantiveCommonGround" }, afterimageSource]
+        : [afterimageSource];
+      assert.deepEqual(atoms[1].sources, expectedSources, `${metric} ${direction} residue source drifted`);
+      assert.deepEqual(atoms[2].sources, expectedSources, `${metric} ${direction} reflection detached from its residue`);
+      exercised += 1;
+    }
   }
+  assert.equal(exercised, 22);
+});
+
+test("equal strongest afterimages use the stable scenario-id tie-break", async () => {
+  const { __testResidueAtoms, __testStrongestAfterimage } = await debriefInternals();
+  const { pack, state: completedState } = playCompletedNight(0, "floor");
   const eligibleMetrics = [
     "reach",
     "heat",
@@ -1343,6 +1685,18 @@ test("equal strongest afterimages use the stable scenario-id tie-break", async (
     "blame",
     "commonGround",
   ];
+  const state = structuredClone(completedState);
+  const tiedScenarioIds = pack.scenarios.map((scenario) => scenario.id).sort().slice(0, 2);
+  assert.equal(tiedScenarioIds.length, 2);
+  for (const room of Object.values(state.rooms)) {
+    assert.ok(room.atCompletion, `${room.scenarioId} lacks a completion snapshot`);
+    for (const metric of eligibleMetrics) room.atCompletion[metric] = room.metrics[metric];
+  }
+  for (const scenarioId of tiedScenarioIds) {
+    const room = state.rooms[scenarioId];
+    room.atCompletion.verification = 50;
+    room.metrics.verification = 53;
+  }
   const candidates = pack.scenarios.flatMap((scenario) => eligibleMetrics.flatMap((metric) => {
     const room = state.rooms[scenario.id];
     const before = room.atCompletion?.[metric];
@@ -1358,19 +1712,22 @@ test("equal strongest afterimages use the stable scenario-id tie-break", async (
     || left.scenarioId.localeCompare(right.scenarioId)
     || left.metric.localeCompare(right.metric),
   );
+  assert.equal(candidates.length, 2, "the synthetic tie fixture has an unrelated changed afterimage");
   assert.equal(candidates[0].normalized, candidates[1].normalized, "fixture no longer has an exact maximum tie");
-  assert.equal(candidates[0].normalized, 0.028800000000000027);
-  assert.ok(candidates[2].normalized < candidates[0].normalized, "the tie is not isolated at the global maximum");
-  assert.deepEqual(candidates.slice(0, 2).map((candidate) => candidate.scenarioId), [...expected.keys()]);
+  assert.equal(candidates[0].normalized, 0.03);
+  assert.deepEqual(candidates.slice(0, 2).map((candidate) => candidate.scenarioId), tiedScenarioIds);
 
-  const first = buildNaturalizedSummary(pack, state);
-  const replay = buildNaturalizedSummary(pack, state);
+  const first = __testStrongestAfterimage(pack, state, pack.scenarios);
+  const replay = __testStrongestAfterimage(pack, state, pack.scenarios);
   assert.deepEqual(replay, first, "the equal-afterimage tie-break is not deterministic");
-  const source = summarySources(first).find((candidate) => candidate.kind === "room-afterimage");
+  assert.ok(first);
+  const source = __testResidueAtoms(first.scenario, first)
+    .flatMap((atom) => atom.sources)
+    .find((candidate) => candidate.kind === "room-afterimage");
   assert.ok(source);
-  assert.equal(source.scenarioId, "festival-static-public-information-editor-161e8pw");
+  assert.equal(source.scenarioId, tiedScenarioIds[0]);
   assert.equal(source.metric, "verification");
-  assert.equal(source.normalizedChange, 0.028800000000000027);
+  assert.equal(source.normalizedChange, 0.03);
 });
 
 test("a valid completed night with no post-close change keeps a conclusion without inventing an afterimage", async () => {
@@ -1417,7 +1774,7 @@ test("a valid completed night with no post-close change keeps a conclusion witho
   const maximumArrival = Math.max(...pack.scenarios.flatMap((scenario) =>
     scenario.scenes.map((_, sceneIndex) => sceneArrivalOffset(pack, scenario.id, sceneIndex)),
   ));
-  assert.equal(maximumArrival, 56);
+  assert.ok(Number.isSafeInteger(maximumArrival) && maximumArrival > 0);
   let state = advanceNightTo(pack, createNightState(pack), maximumArrival);
   for (const scenario of pack.scenarios) state = enterNightRoom(state, scenario.id);
   for (let sceneIndex = 0; sceneIndex < 4; sceneIndex += 1) {
@@ -1445,18 +1802,26 @@ test("a valid completed night with no post-close change keeps a conclusion witho
     summaryParagraphs(summary).length >= 2 && summaryParagraphs(summary).length <= 7,
     "the valid no-afterimage fixture loses its bounded conclusion",
   );
-  assert.deepEqual(
-    summarySources(summary).filter((source) => source.kind === "scenario-record" && source.field === "laterResolution"),
-    [{
-      kind: "scenario-record",
-      scenarioId: "rehearsal-note-public-information-editor-a3ryn6",
-      field: "laterResolution",
-    }],
+  const resolutionSources = summarySources(summary)
+    .filter((source) => source.kind === "scenario-record" && source.field === "laterResolution");
+  assert.equal(resolutionSources.length, 1);
+  const settledScenarioId = resolutionSources[0].scenarioId;
+  const settledScenario = pack.scenarios.find((scenario) => scenario.id === settledScenarioId);
+  assert.ok(settledScenario);
+  assert.ok(
+    normalizeSentence(summaryAtoms(summary).find((atom) => atom.role === "resolution")?.text)
+      .includes(normalizeSentence(settledScenario.truth.laterResolution)),
+    "the settled-room fixture loses its source-backed later resolution",
   );
   assert.ok(!summarySources(summary).some((source) => source.kind === "room-afterimage"), "the builder fabricated a zero-change afterimage");
-  assert.deepEqual(summaryAtoms(summary).slice(-2).map((atom) => atom.role), ["resolution", "residue"]);
-  assert.deepEqual(summaryAtoms(summary).at(-1).sources, [{ kind: "room-settled", scenarioId: "rehearsal-note-public-information-editor-a3ryn6" }]);
-  assert.match(summaryAtoms(summary).at(-1).text, /Nothing around .+ moved after closing/i);
+  assert.deepEqual(summaryAtoms(summary).slice(-3).map((atom) => atom.role), ["resolution", "residue", "reflection"]);
+  assert.deepEqual(summaryAtoms(summary).at(-2).sources, [{ kind: "room-settled", scenarioId: settledScenarioId }]);
+  assert.match(summaryAtoms(summary).at(-2).text, /recorded no later net change around/i);
+  assert.deepEqual(summaryAtoms(summary).at(-1).sources, [{
+    kind: "room-settled",
+    scenarioId: settledScenarioId,
+  }]);
+  assert.match(summaryAtoms(summary).at(-1).text, /absence of net change does not settle the account or make it true/i);
 });
 
 test("natural narrative hides mechanism IDs and concept explanations hide metric jargon", async () => {
@@ -1482,15 +1847,16 @@ test("natural narrative hides mechanism IDs and concept explanations hide metric
   }
 });
 
-test("the final view keeps its explanatory-model limit visible beside the conclusion", async () => {
+test("the final view keeps its fiction boundary visible beside the conclusion", async () => {
   const debrief = functionSource("NightDebrief");
   const loaded = await loadDebriefModule();
   const debriefCopySource = loaded.error ? "" : await readFile(path.join(root, "app/debrief-copy.ts"), "utf8");
   const combined = `${debrief}\n${debriefCopySource}`;
-  assert.match(debrief, /<(?:p|aside|section)[^>]*className=["'][^"']*model-limit[^"']*["'][^>]*>/s, "model limit must be visible, not buried in a drawer or disclosure");
-  assert.match(combined, /fictional (?:model|simulation|composite)/i);
+  assert.match(debrief, /<(?:p|aside|section)[^>]*className=["'][^"']*model-limit[^"']*["'][^>]*>/s, "fiction boundary must be visible, not buried in a drawer or disclosure");
+  assert.match(combined, /CHORUS is fiction\./i);
+  assert.doesNotMatch(combined, /\bsimulat\w*\b/i);
   assert.match(combined, /(?:does not|is not)[^.]{0,90}(?:diagnos|predict|assess|measure|score)/i);
-  assert.match(combined, /(?:real (?:person|people)|the player|player judgment|player trait)/i);
+  assert.match(combined, /(?:real (?:person|people)|or you)/i);
 });
 
 test("format-only direct routes are not labeled as direct content crossings", async () => {

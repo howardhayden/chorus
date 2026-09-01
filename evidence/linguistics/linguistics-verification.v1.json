@@ -11,12 +11,12 @@
   },
   "sourceBinding": {
     "algorithm": "sha256-path-length-content",
-    "implementationDigest": "09f21cfa04ee52fc8d33cd04f268b951e5667d6db6222ec239b9763b6c999021",
+    "implementationDigest": "65a23bf8126bac896b0217cf0623b029b26e4b9931f10b2927327237933adc84",
     "selectedFiles": [
       {
         "path": "app/debrief-copy.ts",
-        "bytes": 43157,
-        "sha256": "db7ea3d6bbb905fd0dd4d9a16db69f4eb292dd8193cc56e15d31b8496cdc1e49"
+        "bytes": 46095,
+        "sha256": "ab50eddaf8f1a52ea26ba74ca961cc6a67fd20f0252d764343694f481388cc48"
       },
       {
         "path": "app/globals.css",
@@ -35,8 +35,8 @@
       },
       {
         "path": "app/page.tsx",
-        "bytes": 72630,
-        "sha256": "51f3a2278a2681bbbefc46a6d747c921f038d6db1ed5e357e20050fcc6567196"
+        "bytes": 72687,
+        "sha256": "05bc526fb8391482814a352a9bbff1f267bfeb34b927b4474f497f3ffeebc178"
       },
       {
         "path": "app/privacy-panel.tsx",
@@ -50,8 +50,8 @@
       },
       {
         "path": "app/scenario-generator.ts",
-        "bytes": 290350,
-        "sha256": "3f594f938f35a043fcbe5fee7bf4c2a605e4522d2b1e32d5b2aff48ddfe29d08"
+        "bytes": 290332,
+        "sha256": "7e7850dab054823f7bcd539bceb155c26f4ffb6545d32a3dd23874ed5e041375"
       },
       {
         "path": "next.config.ts",
@@ -66,7 +66,7 @@
       {
         "path": "scripts/run-simulation-evidence.mjs",
         "bytes": 34479,
-        "sha256": "e4b12fa8b30c70ce737de328478ae4f7b49235cd75d30078e81686e7ca06a902"
+        "sha256": "41b27f934a4bb1f354be309b1986d42ea83d662f81fbd03183e79d5be12b18de"
       },
       {
         "path": "scripts/validate-linguistics-evidence.mjs",
@@ -75,18 +75,18 @@
       },
       {
         "path": "tests/accessibility-disclosure.test.mjs",
-        "bytes": 30259,
-        "sha256": "a95532b25115652ee2def042a4f4fad9ba919ebd02c33cb90b89ca4b5727559f"
+        "bytes": 30279,
+        "sha256": "e729fda068b639c8354e63dc5e9f6f5a379e96d77fc2dbbe5db0a909ebd3b099"
       },
       {
         "path": "tests/concurrent-night.test.mjs",
-        "bytes": 69168,
-        "sha256": "5cdcfd00325d803a940226b8dccaa61460a392e77d0a0d86f5d30947f5998d6b"
+        "bytes": 69655,
+        "sha256": "345e08e3a3aef35f9f559b698b807040d9840c45abeb9ce7023b41e727dae2fb"
       },
       {
         "path": "tests/copy-contract.test.mjs",
-        "bytes": 90656,
-        "sha256": "86ed22b5627cdca451fc232293c094ac7a626abefa65516f4c573372b5986cd8"
+        "bytes": 109834,
+        "sha256": "97ea98d1438dd03a16db2f9358c37bed63762126544cc3677a310418cd9374e9"
       },
       {
         "path": "tests/linguistics-contract.test.mjs",
@@ -100,8 +100,8 @@
       },
       {
         "path": "tests/save-model.test.mjs",
-        "bytes": 18485,
-        "sha256": "646db8278f6fb3a6085ea5b524df272f6b23fe730178fb42d869e1f1bfaa7db8"
+        "bytes": 18560,
+        "sha256": "0ec2d2c177dbe12354f8bf3301a56770848ad71b8e75f55d5729a4427f194ad0"
       },
       {
         "path": "tests/simulation-maturity.test.mjs",
@@ -125,7 +125,7 @@
       }
     ],
     "statusRecord": "evidence/runs/updated-working-tree-status.v1.json",
-    "statusBinding": "09f21cfa04ee52fc8d33cd04f268b951e5667d6db6222ec239b9763b6c999021"
+    "statusBinding": "65a23bf8126bac896b0217cf0623b029b26e4b9931f10b2927327237933adc84"
   },
   "runs": [
     {
@@ -140,9 +140,9 @@
       "command": "npm run evidence:simulation",
       "result": "pass",
       "exitCode": 0,
-      "assertions": 118668,
+      "assertions": 118626,
       "failures": 0,
-      "evidenceSha256": "01b164b060c9fbefed98e59ec18f21a79864d34c6da348c3bcfb7ea9238fe2d4"
+      "evidenceSha256": "2e0baade3151a9d215b13b96bc95824a715546eabe8403a0fa1e546079195788"
     },
     {
       "id": "RUN-NIGHT-20260901",
@@ -173,7 +173,7 @@
       "command": "npm run test:copy",
       "result": "pass",
       "exitCode": 0,
-      "tests": 34,
+      "tests": 37,
       "failures": 0
     },
     {
@@ -220,8 +220,8 @@
       "command": "npm run verify:working-tree",
       "result": "pass",
       "exitCode": 0,
-      "focusedTests": 143,
-      "implementationAssertions": 118668,
+      "focusedTests": 146,
+      "implementationAssertions": 118626,
       "failures": 0
     }
   ],
@@ -241,8 +241,8 @@
       "result": "pass",
       "evidence": "The copy contract exercised seeds 0..95 under both floor and contrast policies plus 4294967295 under both policies: 194 completed nights with zero scene-disclosure, chronology, provenance, route-truth, atom-integrity, last-resort-integrity, or residue-realization failures.",
       "sourceHashes": {
-        "app/debrief-copy.ts": "db7ea3d6bbb905fd0dd4d9a16db69f4eb292dd8193cc56e15d31b8496cdc1e49",
-        "tests/copy-contract.test.mjs": "86ed22b5627cdca451fc232293c094ac7a626abefa65516f4c573372b5986cd8"
+        "app/debrief-copy.ts": "ab50eddaf8f1a52ea26ba74ca961cc6a67fd20f0252d764343694f481388cc48",
+        "tests/copy-contract.test.mjs": "97ea98d1438dd03a16db2f9358c37bed63762126544cc3677a310418cd9374e9"
       },
       "completedNights": 194,
       "maximumParagraphWords": 95,

@@ -1,6 +1,6 @@
 # CHORUS
 
-> **Current source status:** generator version 14 and the 1 September
+> **Current source status:** generator version 15 and the 1 September
 > after-summary/House Map correction pass the current automated working-tree
 > gates. Deterministic evidence and the four generated notebook publications
 > are current for this implementation binding. Promotion remains held for
@@ -17,8 +17,8 @@ bounded consequence in every other room.
 
 The simulation is generated in the browser from a deterministic, constrained
 grammar. Within one generator version, a normalized seed and ordered scene and
-choice identities reproduce the same authored pack and night state. Version 14
-does not claim byte-identical reconstruction of version 13 authored copy. The
+choice identities reproduce the same authored pack and night state. Version 15
+does not claim byte-identical reconstruction of version 13 or 14 authored copy. The
 scenario model, event reducer, validation gates, saves, state-derived
 naturalized summary, and plain concept receipt all run locally. No account,
 remote content service, telemetry, or network write is required to play.

@@ -11,7 +11,7 @@
     "baselineCommit": "4fffddf11a03a2fc84798a3c5343db00fc3135da"
   },
   "sourceBinding": {
-    "implementationDigest": "09f21cfa04ee52fc8d33cd04f268b951e5667d6db6222ec239b9763b6c999021",
+    "implementationDigest": "65a23bf8126bac896b0217cf0623b029b26e4b9931f10b2927327237933adc84",
     "verificationPath": "evidence/linguistics/linguistics-verification.v1.json",
     "preRecord": {
       "path": "evidence/linguistics/linguistics-red-team.pre.v1.json",
@@ -24,7 +24,7 @@
       "Exercised generated, visual, nonvisual, persisted, publication, malformed-state, choice, route, concept, and conclusion channels.",
       "Ran Catalysis-specific attacks for semantic camouflage, fake subtext, cadence monopoly, repeated inference, scene delay, purple ambiguity, causal truncation, and analeptic repair.",
       "Ran 194 completed-night current-source debrief probes across both choice policies plus exact correction-beat, route, equal-afterimage, and no-change boundaries.",
-      "Ran the focused project suites, deterministic 118,668-assertion simulation evidence, typecheck, lint, notebook drift check, production build, and rendered metadata test."
+      "Ran the focused project suites, deterministic 118,626-assertion simulation evidence, typecheck, lint, notebook drift check, production build, and rendered metadata test."
     ],
     "notPerformed": [
       "Current-source browser completion and keyboard interaction.",
@@ -42,7 +42,7 @@
         "LING-POST-001",
         "app/save-model.ts"
       ],
-      "residualRisk": "Generator-13 saves intentionally fail closed, and current/legacy local-slot key updates are not transactional."
+      "residualRisk": "Generator-13 and generator-14 saves intentionally fail closed, and current/legacy local-slot key updates are not transactional."
     },
     {
       "id": "LING-PRE-002",
@@ -164,7 +164,7 @@
     {
       "id": "LING-PRE-013",
       "status": "corrected-with-accepted-limitation",
-      "correction": "Generator-14 publications and working-tree status now use the final implementation binding and mechanically checked focused-test and simulation counts.",
+      "correction": "Generator-15 publications and working-tree status now use the final implementation binding and mechanically checked focused-test and simulation counts.",
       "evidenceRefs": [
         "RUN-DOCS-CHECK-20260901",
         "evidence/runs/updated-working-tree-status.v1.json",
@@ -342,6 +342,20 @@
         "evidence/linguistics/debrief-understandability-red-team.post.v1.json",
         "RUN-COPY-20260901",
         "CHR-DEBRIEF-UNDERSTANDABILITY"
+      ]
+    },
+    {
+      "id": "LING-POST-015",
+      "severity": "release-blocking",
+      "status": "corrected",
+      "title": "In-world Summary copy changed generated pack bytes under version 14",
+      "issue": "The first pre-commit state changed Crossover and signaling-observable authored output while retaining generator version 14, which would silently reconstruct historical version-14 saves through different bytes and invalidated version-salted fixtures.",
+      "correction": "Advance the authored model to generator version 15, reject both historical versions 13 and 14 before trace replay, regenerate version-salted fixtures and evidence, and preserve the earlier version-14 records as historical.",
+      "evidenceRefs": [
+        "CHR-SUM-IW-021",
+        "CHR-COPY-COMPAT-002",
+        "RUN-SAVE-20260901",
+        "RUN-COPY-20260901"
       ]
     }
   ],

@@ -227,7 +227,7 @@ Test at minimum:
 Record browser, operating system, assistive technology, viewport, result, and
 known limitation in the release evidence. A failed critical path blocks
 release. These manual browser and assistive-technology checks have not yet been
-renewed for the version-14 copy and conclusion binding.
+renewed for the version-15 copy and conclusion binding.
 
 ## Known limits and reporting
 

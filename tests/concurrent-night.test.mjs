@@ -60,6 +60,13 @@ function applyOpeningChoice(pack, scenario, choice) {
   return { state, decision };
 }
 
+function openingChoiceIsAvailable(pack, scenario, choice) {
+  let state = createNightState(pack);
+  state = enterNightRoom(state, scenario.id);
+  state = advanceNightTo(pack, state, sceneArrivalOffset(pack, scenario.id, 0));
+  return !choiceAccess(choice, state.rooms[scenario.id]).locked;
+}
+
 function deliverySupportsLink(choice, link) {
   if (["private", "withheld"].includes(choice.delivery.scope)) return false;
   if (link.semantic === "content") return ["content", "content-and-format"].includes(choice.delivery.carriage);
@@ -150,7 +157,11 @@ test("typed public delivery—not an ethics tag—can produce selected carriage"
       );
       if (!link) continue;
       for (const choice of scenario.scenes[0].choices) {
-        if ((choice.effects.reach ?? 0) <= 0 || !deliverySupportsLink(choice, link)) continue;
+        if (
+          (choice.effects.reach ?? 0) <= 0
+          || !deliverySupportsLink(choice, link)
+          || !openingChoiceIsAvailable(pack, scenario, choice)
+        ) continue;
         const fixture = { pack, scenario, choice, link };
         if (choice.ethicsTags.includes("non-amplification-floor")) floorFixture ??= fixture;
         else contrastFixture ??= fixture;
@@ -593,7 +604,7 @@ test("generated actors keep cohesive situated repertoires while code and world m
   const primaryByKind = new Map();
   for (let seed = 0; seed < 400; seed += 1) {
     const pack = generateScenarioPack(seed);
-    assert.equal(pack.generatorVersion, 14);
+    assert.equal(pack.generatorVersion, 15);
     assert.equal(pack.night.generationPolicy, "validated-regeneration-without-session-cap");
     const sharedDivergent = pack.scenarios.filter((scenario) => {
       const encounter = scenario.communicationModel.linguisticEncounter;
@@ -884,10 +895,11 @@ test("truth, propagation, beat disclosure, and communication analysis remain sep
       assert.deepEqual(Object.keys(scenario.propagation), ["circulatingFrame"]);
       assert.equal(scenario.scenes[0].artifactCopy, scenario.truth.knownFact);
       assert.equal(scenario.scenes[1].artifactCopy, scenario.propagation.circulatingFrame);
-      assert.match(scenario.scenes[2].artifactCopy, /^Multiple trusted accounts now repeat the same unresolved claim about the .+\.$/);
+      assert.match(scenario.scenes[2].artifactCopy, /^Multiple trusted accounts now repeat the claim about the .+\./);
+      assert.ok(scenario.scenes[2].artifactCopy.includes(scenario.truth.unresolvedAtEntry));
       assert.ok(
-        scenario.scenes[2].disclosure.questions.some((atom) => /record did not show.+source's uncertainty/i.test(atom.copy)),
-        "the shorter public repeat record must keep uncertainty explicit in the adjacent question",
+        scenario.scenes[2].disclosure.questions.some((atom) => /which repeated copies still keep those limits visible/i.test(atom.copy)),
+        "the public repeat record must make its concrete limits available before asking which copies kept them",
       );
       assert.equal(scenario.scenes[3].artifactCopy, scenario.truth.laterResolution);
       const publicTruthAndArtifacts = [
