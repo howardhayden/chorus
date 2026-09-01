@@ -9,15 +9,15 @@
   },
   "sourceBinding": {
     "algorithm": "sha256-path-length-content",
-    "implementationDigest": "0267a53f0810314110de25b4521fa2739ca9153ac019ccc0e7269c3972acfbd8",
+    "implementationDigest": "09f21cfa04ee52fc8d33cd04f268b951e5667d6db6222ec239b9763b6c999021",
     "statusRecord": "evidence/runs/updated-working-tree-status.v1.json",
     "postRedTeamRecord": "evidence/copy/copy-red-team.post.v1.json",
-    "correctionRedTeamRecord": "evidence/copy/after-summary-and-map-red-team.post.v2.json"
+    "correctionRedTeamRecord": "evidence/linguistics/debrief-understandability-red-team.post.v1.json"
   },
   "automatedResults": {
-    "focusedTestsPassed": 140,
+    "focusedTestsPassed": 143,
     "focusedTestsFailed": 0,
-    "copyTestsPassed": 31,
+    "copyTestsPassed": 34,
     "linguisticsTestsPassed": 10,
     "accessibilityDisclosureTestsPassed": 26,
     "viewportTestsPassed": 10,
@@ -38,6 +38,7 @@
     "chronologyAndProvenance": "pass",
     "situationConditionedCadence": "pass",
     "semanticAtomIntegrity": "pass",
+    "debriefUnderstandability": "pass",
     "houseMapTrackContract": "pass"
   },
   "openPromotionGaps": [

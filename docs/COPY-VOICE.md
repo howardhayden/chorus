@@ -261,6 +261,37 @@ Both the concept surface and the natural ending remain sealed until all 24
 decisions are complete. Visually collapsed content may not leak through hidden
 DOM, accessible names, live announcements, or relationship labels.
 
+### Debrief understandability correction
+
+The completed-night review uses three deliberately different registers:
+
+1. The played-night region is experiential. It opens on a sourced scene,
+   follows one governing route, names each actor and room, and closes on the
+   supported resolution and residue.
+2. The concept region is interpretive. Each card retains the canonical term but
+   adds a short plain subtitle, a familiar definition, one exact reason for
+   appearing, and one concept-specific boundary.
+3. The status key and model limit are operative. They use direct language and
+   state their boundaries once rather than repeating an evidence preamble on
+   every card.
+
+The UI presents the canonical statuses through direct labels: `Selected
+action`, `Recorded effect`, and `Seen in scene`. Typed `played`, `experienced`,
+and `encountered` values remain the model and provenance vocabulary, including
+in `data-status`; they are not imposed as the reader's primary glossary.
+
+Route prose must name the source room, target room, and what traveled, did not
+travel, or changed. Last-resort prose separates the selected action, benefit,
+protected party, cost bearer, negative consequence, and self-cost into sourced
+sentences. This atomization is for causal recovery, not staccato styling.
+
+The governing correction register is
+[`CHR-DEBRIEF-UNDERSTANDABILITY`](requirements/DEBRIEF-UNDERSTANDABILITY-REGISTER.md).
+It maps the direct counterexample to the pinned `howardhayden/lattice`
+relational-systems profile. Lattice freeform lint remains advisory; no formal
+Lattice-conformance claim follows from prose similarity or a clean advisory
+run.
+
 ## Required change sequence
 
 The sequence is fail-closed:

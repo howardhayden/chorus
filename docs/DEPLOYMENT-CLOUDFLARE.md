@@ -57,7 +57,8 @@ The workflow:
 
 1. checks out the exact commit;
 2. installs only the locked dependency graph with `npm ci`;
-3. runs the complete retained release verification;
+3. runs the current-source working-tree verification through
+   `npm run verify:deploy`;
 4. deploys the already-verified `dist/server/wrangler.json` with the repository's
    pinned Wrangler version; and
 5. confirms that the application, notebook index, and evidence index respond
@@ -71,12 +72,18 @@ analytics service, or application secret is required by CHORUS.
 ## Failure behavior
 
 - Missing or invalid secrets stop before deployment.
-- A failed release check prevents deployment.
+- A failed current-source verification check prevents deployment.
 - A failed Worker upload leaves the previous deployment active.
 - A failed public-route check marks the workflow failed and requires inspection;
   it does not delete the previous Worker version.
 - DNS or certificate propagation can take time on the first deployment. The
   smoke test retries each canonical route for up to two minutes.
+
+Production deployment and release promotion are separate decisions. The
+deployment gate verifies the exact working tree being published. It does not
+rewrite or reuse the historical `1.0.0-rc.1` evidence record, and a successful
+deployment does not fill the current browser, assistive-technology, dependency,
+or distribution evidence gaps listed in `RELEASE-STATUS.md`.
 
 ## Rollback
 

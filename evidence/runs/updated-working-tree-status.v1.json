@@ -11,18 +11,18 @@
   "state_label": "Version-14 copy and linguistic working tree verified automatically; held for current browser, assistive-technology, and distribution renewal",
   "implementation_binding": {
     "algorithm": "sha256-path-length-content",
-    "digest": "0267a53f0810314110de25b4521fa2739ca9153ac019ccc0e7269c3972acfbd8",
+    "digest": "09f21cfa04ee52fc8d33cd04f268b951e5667d6db6222ec239b9763b6c999021",
     "file_count": 22,
     "files": [
       {
         "path": "app/debrief-copy.ts",
-        "bytes": 41552,
-        "sha256": "94704c83d0c22498ac52da0f63de8f40b076ebc2702db7e1b5aa70d69940f9ae"
+        "bytes": 43157,
+        "sha256": "db7ea3d6bbb905fd0dd4d9a16db69f4eb292dd8193cc56e15d31b8496cdc1e49"
       },
       {
         "path": "app/globals.css",
-        "bytes": 97027,
-        "sha256": "8e25d27cbf61266a800082969c014e17baf1e268a160083406699cf8db01bfa1"
+        "bytes": 97806,
+        "sha256": "315118a1fca23f16f545a8d37b2a8642117efcbdfaf7f1b1f471ce372734d50b"
       },
       {
         "path": "app/layout.tsx",
@@ -36,8 +36,8 @@
       },
       {
         "path": "app/page.tsx",
-        "bytes": 71894,
-        "sha256": "5de8b79f104635dbd677f7764dc2b465d4a899e8a9ad1154f6ed80426e19eab6"
+        "bytes": 72630,
+        "sha256": "51f3a2278a2681bbbefc46a6d747c921f038d6db1ed5e357e20050fcc6567196"
       },
       {
         "path": "app/privacy-panel.tsx",
@@ -51,8 +51,8 @@
       },
       {
         "path": "app/scenario-generator.ts",
-        "bytes": 290402,
-        "sha256": "9e0ae6ec25382567d09b32fd08c589fbed709f57a13f9620e41e1c67a96c6668"
+        "bytes": 290350,
+        "sha256": "3f594f938f35a043fcbe5fee7bf4c2a605e4522d2b1e32d5b2aff48ddfe29d08"
       },
       {
         "path": "next.config.ts",
@@ -81,13 +81,13 @@
       },
       {
         "path": "tests/concurrent-night.test.mjs",
-        "bytes": 68873,
-        "sha256": "c2cafeb8cdfa356e47ca87d35a580007f8a98874b615229621e3103340c94fa2"
+        "bytes": 69168,
+        "sha256": "5cdcfd00325d803a940226b8dccaa61460a392e77d0a0d86f5d30947f5998d6b"
       },
       {
         "path": "tests/copy-contract.test.mjs",
-        "bytes": 85388,
-        "sha256": "b1869814ec355757e0ccd796e42c8f8e1b24d0b55342f06b7b3c2f26b4f39010"
+        "bytes": 90656,
+        "sha256": "86ed22b5627cdca451fc232293c094ac7a626abefa65516f4c573372b5986cd8"
       },
       {
         "path": "tests/linguistics-contract.test.mjs",
@@ -128,6 +128,7 @@
   },
   "included_update": [
     "Atomized Catalysis voice across generated scenes while keeping utility and concept copy plain",
+    "First-read debrief correction with one governing route, direct status labels, plain concept subtitles, and a pinned Lattice advisory red-team",
     "Continuous completed-night summary followed by a separate encountered, experienced, and played concept receipt",
     "Typed content, format, ambient, selected-carriage, background, and avoided-effect language",
     "Fact-only truth ledger, beat-local disclosure, minimal replay-trace saves, and conclusion-gated publications",
@@ -146,7 +147,7 @@
     "implementation_assertions": 118668,
     "implementation_failures": 0,
     "focused_tests": {
-      "passed": 140,
+      "passed": 143,
       "failed": 0,
       "groups": [
         {
@@ -163,7 +164,7 @@
         },
         {
           "name": "copy contract",
-          "passed": 31
+          "passed": 34
         },
         {
           "name": "linguistics contract",
@@ -205,7 +206,7 @@
       "played_count": 512,
       "assertions": 118668,
       "failures": 0,
-      "evidence_sha256": "444bdd1b1aa5ec627ec74d8284660dd4e9d409d6a88945d4e1b54a5e090266ca"
+      "evidence_sha256": "b4c10ae61de32ae5df90951919a96626ec15c974ac3325d29e55d86764765fcf"
     },
     "verification_record_path": "evidence/linguistics/linguistics-verification.v1.json",
     "log_path": "evidence/runs/updated-working-tree-verification.v1.log"

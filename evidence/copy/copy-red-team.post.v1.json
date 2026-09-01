@@ -6,14 +6,14 @@
   "catalysisSha256": "566f7c653142b239c098a0a3a0b628f3a3179535b219a99d889fdd48cc9513af",
   "implementationBinding": {
     "digestMethod": "sha256-path-length-content over the 22-file working-tree implementation manifest",
-    "digest": "0267a53f0810314110de25b4521fa2739ca9153ac019ccc0e7269c3972acfbd8",
+    "digest": "09f21cfa04ee52fc8d33cd04f268b951e5667d6db6222ec239b9763b6c999021",
     "coreFiles": {
-      "app/scenario-generator.ts": "9e0ae6ec25382567d09b32fd08c589fbed709f57a13f9620e41e1c67a96c6668",
+      "app/scenario-generator.ts": "3f594f938f35a043fcbe5fee7bf4c2a605e4522d2b1e32d5b2aff48ddfe29d08",
       "app/night-engine.ts": "fcbc5abf6a0b00c3e1909b9f46b7b271faa21e568fe34f41d959a2e199176d70",
-      "app/debrief-copy.ts": "94704c83d0c22498ac52da0f63de8f40b076ebc2702db7e1b5aa70d69940f9ae",
-      "app/page.tsx": "5de8b79f104635dbd677f7764dc2b465d4a899e8a9ad1154f6ed80426e19eab6",
+      "app/debrief-copy.ts": "db7ea3d6bbb905fd0dd4d9a16db69f4eb292dd8193cc56e15d31b8496cdc1e49",
+      "app/page.tsx": "51f3a2278a2681bbbefc46a6d747c921f038d6db1ed5e357e20050fcc6567196",
       "app/save-model.ts": "bd9f017fdace605224d959a04aec210ee29bcf2b153e172919d23dc3c72e3fec",
-      "tests/copy-contract.test.mjs": "b1869814ec355757e0ccd796e42c8f8e1b24d0b55342f06b7b3c2f26b4f39010",
+      "tests/copy-contract.test.mjs": "86ed22b5627cdca451fc232293c094ac7a626abefa65516f4c573372b5986cd8",
       "tests/linguistics-contract.test.mjs": "5ab298161307c57846c66a88c1cb4b74d9754531d5a46a5c198e185936cb1eb6",
       "tests/viewport-contract.test.mjs": "f37f814463b1985dfbb74424ccee0aa53387962f29a8169508430b14ab8a89d4"
     }
@@ -63,17 +63,18 @@
   "postRewriteFindings": [
     { "id": "CRT-POST-001", "severity": "blocker", "status": "corrected", "finding": "Direct-link availability was narrated as selected carriage.", "correction": "Event kind, semantic, selectedCarriage, selectedCarriageReach, applied reach, background reach, and avoided reach now select separate clauses." },
     { "id": "CRT-POST-002", "severity": "blocker", "status": "corrected", "finding": "Generic content was promoted to a factual record.", "correction": "Typed content is now called message content; record language is reserved for factual scenario records." },
-    { "id": "CRT-POST-003", "severity": "blocker", "status": "corrected", "finding": "Encountered concept limits could assert an unrealized authored outcome.", "correction": "Every limit is a conditional evidence boundary and distinguishes selected action from modeled effect." },
-    { "id": "CRT-POST-004", "severity": "high", "status": "corrected", "finding": "Played evidence promised downstream effects were listed when the card rendered none.", "correction": "Played copy now says it records only the selected action and claims no later outcome." },
+    { "id": "CRT-POST-003", "severity": "blocker", "status": "corrected", "finding": "Encountered concept limits could assert an unrealized authored outcome.", "correction": "Each card now separates direct status, exact typed evidence, and one concept-specific epistemic boundary." },
+    { "id": "CRT-POST-004", "severity": "high", "status": "corrected", "finding": "Played evidence promised downstream effects were listed when the card rendered none.", "correction": "Played evidence names the exact selection and what the action was designed to do; the once-only status key states that selection does not imply an effect." },
     { "id": "CRT-POST-005", "severity": "high", "status": "corrected", "finding": "Ambient summary copy denied content but could imply recognizable-form carriage.", "correction": "Ambient prose denies both message content and recognizable form; format reuse was narrowed to imitation pressure." },
-    { "id": "CRT-POST-006", "severity": "high", "status": "corrected", "finding": "Market and status limits treated selected intent as if an ambient receipt proved it.", "correction": "The limits state action-or-effect alternatives and explicitly deny motive inference from modeled effects." },
+    { "id": "CRT-POST-006", "severity": "high", "status": "corrected", "finding": "Market and status limits treated selected intent as if an ambient receipt proved it.", "correction": "Typed evidence distinguishes selected design from recorded effect, while each limit directly denies unsupported motive or truth inference." },
     { "id": "CRT-POST-007", "severity": "high", "status": "corrected", "finding": "Earlier last-resort selections and long costs could be omitted or truncated.", "correction": "Every selected last resort retains complete protected party, benefit, harmed party, harm, and self-cost copy." },
-    { "id": "CRT-POST-008", "severity": "medium", "status": "corrected", "finding": "Background impressions were described as unique people reached.", "correction": "The concept evidence now says modeled impressions." },
+    { "id": "CRT-POST-008", "severity": "medium", "status": "corrected", "finding": "Background impressions were described as unique people reached.", "correction": "The concept evidence now says the simulation recorded background exposure and does not convert it to unique people." },
     { "id": "CRT-POST-009", "severity": "medium", "status": "corrected", "finding": "Repeated labels were used as cross-room event identity.", "correction": "Each decision keeps its own identifier and is narrated independently." },
     { "id": "CRT-POST-010", "severity": "medium", "status": "corrected", "finding": "The exact-rule provenance test ignored event kind and skipped decision-only rules.", "correction": "Test events are tagged as choice or ambient and a decision-only selected-carriage match is required." },
-    { "id": "CRT-POST-011", "severity": "medium", "status": "corrected", "finding": "Full last-resort clauses could end with doubled punctuation or a stiff cost transition.", "correction": "Sentence joining owns punctuation and the transition now says benefits and costs landed in different places." },
+    { "id": "CRT-POST-011", "severity": "medium", "status": "corrected", "finding": "Full last-resort clauses could end with doubled punctuation or a stiff cost transition.", "correction": "Sentence joining owns punctuation; separate sourced sentences name the benefit, protected party, cost bearer, harm, and self-cost." },
     { "id": "CRT-POST-012", "severity": "high", "status": "corrected", "finding": "A late naturalization pass could call an absent sentence-packing helper and fail the completed summary at runtime.", "correction": "The complete-sentence paragraph packer is implemented, type-checked, and exercised by all completed-summary contract paths." },
-    { "id": "CRT-POST-013", "severity": "medium", "status": "corrected", "finding": "An opening could repeat an inquiry already carried by its artifact and push an otherwise complete paragraph beyond the atomized bound.", "correction": "The opening detects inquiry already present in the artifact, retains the open question without repeating its full clause, and packs only at complete-sentence boundaries." }
+    { "id": "CRT-POST-013", "severity": "medium", "status": "corrected", "finding": "An opening could repeat an inquiry already carried by its artifact and push an otherwise complete paragraph beyond the atomized bound.", "correction": "The opening selects at most three non-repeating sourced scene atoms and packs only at complete-sentence boundaries." },
+    { "id": "CRT-POST-014", "severity": "high", "status": "corrected", "finding": "The played-night story and plain concept receipt both used evidence-register prose, leaving route referents, actuality, status labels, and specialist concepts hard to recover on a first read.", "correction": "The story follows one explicit source-to-target route; costs are atomized; status is explained once in direct labels; and every concept adds a short gloss, exact event, and unique limit. The pinned Lattice advisory found no remaining major or minor understandability defect." }
   ],
   "finalDisposition": {
     "openBlockers": 0,

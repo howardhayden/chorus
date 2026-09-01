@@ -182,7 +182,7 @@ and promotion evidence remain open.
 | `evidence/copy/copy-red-team.pre.v1.json` | First adversarial findings and coverage. | Captured with failed findings preserved; not target verification. |
 | `evidence/copy/copy-red-team.post.v1.json` | Rewritten-copy retest, new Catalysis attacks, and correction state. | Captured on the current implementation binding; no blocker or high-severity finding remains open |
 | `evidence/copy/copy-verification.v1.json` | Final commands, environments, source binding, manual matrix, and limitations. | Captured; automated pass with explicit release hold |
-| `tests/copy-contract.test.mjs` | Deterministic semantic, concept-status, voice-scope, beat-local ending, and atom/block integrity contracts. | Current source-bound run passed 31/31 |
+| `tests/copy-contract.test.mjs` | Deterministic semantic, concept-status, understandability, voice-scope, beat-local ending, and atom/block integrity contracts. | Current source-bound run passed 34/34 |
 
 Public or generated copies of evidence must be built from their canonical
 sources and never edited by hand.

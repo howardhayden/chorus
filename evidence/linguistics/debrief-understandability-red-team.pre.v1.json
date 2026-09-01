@@ -1,0 +1,116 @@
+{
+  "schema": "chorus.debrief-understandability-red-team.v1",
+  "recordId": "debrief-understandability-red-team.pre.v1",
+  "phase": "pre-correction",
+  "captureDate": "2026-09-01",
+  "authority": {
+    "sourceId": "SRC-U-20260901-CHORUS-DEBRIEF-UNDERSTANDABILITY",
+    "sourceDescription": "Direct user-supplied completed-night review beginning 'What the house kept moving.'",
+    "latticeRepository": "howardhayden/lattice",
+    "latticeCommit": "d6cc85b275e3f14163a5a547f626832fd21b27b0",
+    "latticeProfile": "profiles/relational-systems.profile.json",
+    "latticeProfileSha256": "1868a428c0f3ffd55671cf8de5d1b549ffd309a920aaf01ff1db24e93536a996"
+  },
+  "assessment": {
+    "decision": "not-reliably-understandable-on-first-read",
+    "scope": "played-night narrative and plain concept receipt",
+    "centralFinding": "Both surfaces use evidence-register prose, so the reader must decode the simulation while also reconstructing the night.",
+    "formalLatticeConformanceClaim": false
+  },
+  "findings": [
+    {
+      "id": "DEBRIEF-UND-PRE-001",
+      "severity": "high",
+      "status": "open",
+      "issue": "Source, target, and object referents are unstable across route transitions.",
+      "observed": "Phrases such as 'The message reached', 'it', 'there', and 'borrowed blame shifted there anyway' require antecedent reconstruction.",
+      "requirements": ["CHR-DEBRIEF-UND-003", "CHR-DEBRIEF-UND-004"]
+    },
+    {
+      "id": "DEBRIEF-UND-PRE-002",
+      "severity": "high",
+      "status": "open",
+      "issue": "Internal abstractions are stacked where concrete events should carry the meaning.",
+      "observed": "The review uses 'trusted forms', 'unresolved frame', 'recognizable form', and 'protected handoff' without a plain operational verb.",
+      "requirements": ["CHR-DEBRIEF-UND-010", "CHR-DEBRIEF-UND-011"]
+    },
+    {
+      "id": "DEBRIEF-UND-PRE-003",
+      "severity": "high",
+      "status": "open",
+      "issue": "Selected actions, modeled consequences, and possible risks do not have a stable grammatical boundary.",
+      "observed": "Last-resort paragraphs move from what the actor selected to protection, harm, and risk without consistently naming the affected party or actuality class.",
+      "requirements": ["CHR-DEBRIEF-UND-005", "CHR-DEBRIEF-UND-009"]
+    },
+    {
+      "id": "DEBRIEF-UND-PRE-004",
+      "severity": "high",
+      "status": "open",
+      "issue": "The narrative gives several route transitions and cost ledgers equal weight.",
+      "observed": "Repeated 'Later' transitions make the reader rebuild chronology and find the governing change inside the audit trail.",
+      "requirements": ["CHR-DEBRIEF-UND-002", "CHR-DEBRIEF-UND-003"]
+    },
+    {
+      "id": "DEBRIEF-UND-PRE-005",
+      "severity": "high",
+      "status": "open",
+      "issue": "The plain concept receipt repeats proof-register boilerplate on every card.",
+      "observed": "'Evidence here would require' and 'This records the selected action only' recur without adding card-specific information.",
+      "requirements": ["CHR-DEBRIEF-UND-006", "CHR-DEBRIEF-UND-008"]
+    },
+    {
+      "id": "DEBRIEF-UND-PRE-006",
+      "severity": "medium",
+      "status": "open",
+      "issue": "Canonical status words require the reader to memorize a dense legend.",
+      "observed": "PLAYED, EXPERIENCED, and ENCOUNTERED appear on every card without an adjacent direct gloss.",
+      "requirements": ["CHR-DEBRIEF-UND-006"]
+    },
+    {
+      "id": "DEBRIEF-UND-PRE-007",
+      "severity": "medium",
+      "status": "open",
+      "issue": "Specialist concept headings lack glanceable bridges.",
+      "observed": "Market Value, Trust Capital, and Status Capital require decoding before the reader reaches their definitions.",
+      "requirements": ["CHR-DEBRIEF-UND-007"]
+    },
+    {
+      "id": "DEBRIEF-UND-PRE-008",
+      "severity": "medium",
+      "status": "open",
+      "issue": "Story, interpretation, and model-limit registers are not sufficiently differentiated.",
+      "observed": "The played-night story and plain receipt share the same qualification-heavy cadence.",
+      "requirements": ["CHR-DEBRIEF-UND-001", "CHR-DEBRIEF-UND-012"]
+    }
+  ],
+  "latticeBasis": [
+    "RSR-CORE-001",
+    "RSR-CORE-002",
+    "RSR-FLOW-004",
+    "RSR-FLOW-005",
+    "RSR-FLOW-006",
+    "RSR-SUB-002",
+    "RSR-EXP-002",
+    "RSR-EXP-003",
+    "RSR-EXP-005",
+    "RSR-DEP-001",
+    "RSR-DEP-002",
+    "RSR-DEP-003",
+    "RSR-DEP-004",
+    "RSR-DEP-005",
+    "RSR-LEX-001",
+    "RSR-LEX-002",
+    "RSR-LEX-003",
+    "RSR-ETH-001",
+    "RSR-ETH-004",
+    "RSR-ETH-005",
+    "RSR-TEC-001",
+    "RSR-TEC-003",
+    "RSR-SCN-001",
+    "RSR-SCN-002",
+    "RSR-SCN-003",
+    "RSR-SCN-004",
+    "RSR-EXC-003",
+    "RSR-EXC-004"
+  ]
+}

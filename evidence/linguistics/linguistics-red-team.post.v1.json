@@ -11,7 +11,7 @@
     "baselineCommit": "4fffddf11a03a2fc84798a3c5343db00fc3135da"
   },
   "sourceBinding": {
-    "implementationDigest": "0267a53f0810314110de25b4521fa2739ca9153ac019ccc0e7269c3972acfbd8",
+    "implementationDigest": "09f21cfa04ee52fc8d33cd04f268b951e5667d6db6222ec239b9763b6c999021",
     "verificationPath": "evidence/linguistics/linguistics-verification.v1.json",
     "preRecord": {
       "path": "evidence/linguistics/linguistics-red-team.pre.v1.json",
@@ -329,6 +329,19 @@
         "evidence/copy/after-summary-and-map-red-team.post.v2.json",
         "SWEEP-DEBRIEF-194",
         "RUN-COPY-20260901"
+      ]
+    },
+    {
+      "id": "LING-POST-014",
+      "severity": "high",
+      "status": "corrected",
+      "title": "The completed review remained hard to understand despite grammatical prose",
+      "issue": "The played-night story and plain concept receipt both used evidence-register diction, with ambiguous route referents, stacked abstractions, repeated proof boilerplate, and status labels that required a memorized legend.",
+      "correction": "Use separate experiential, interpretive, and operative registers; select one governing route; name source, target, action, effect, and affected parties; explain status once in direct labels; and give every canonical concept a plain subtitle, exact event, and unique limit.",
+      "evidenceRefs": [
+        "evidence/linguistics/debrief-understandability-red-team.post.v1.json",
+        "RUN-COPY-20260901",
+        "CHR-DEBRIEF-UNDERSTANDABILITY"
       ]
     }
   ],

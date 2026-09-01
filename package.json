@@ -26,6 +26,7 @@
     "docs:build:working-tree": "python3 scripts/docs/build_notebooks.py --notebooks-only",
     "docs:check:working-tree": "python3 scripts/docs/build_notebooks.py --check --notebooks-only",
     "verify:working-tree": "npm run lint && npx tsc --noEmit && npm run evidence:simulation && npm run docs:check:working-tree && npm run test:night && npm run test:simulation && npm run test:save && npm run test:copy && npm run test:linguistics && npm run test:a11y && npm run test:viewport && npm run build && node --test tests/rendered-html.test.mjs && npm run status:check",
+    "verify:deploy": "npm run verify:working-tree",
     "status:build": "python3 scripts/docs/build_working_tree_status.py",
     "status:check": "python3 scripts/docs/build_working_tree_status.py --check"
   },

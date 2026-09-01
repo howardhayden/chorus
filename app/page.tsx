@@ -88,6 +88,20 @@ const OUTWARD_RELATIONSHIPS: Record<ProtagonistKind, RelationshipProfile[]> = {
 };
 
 const OPENING_SEED = 0x43484f52;
+const CONCEPT_STATUS_COPY = {
+  played: {
+    label: "Selected action",
+    explanation: "You chose an action tied to the concept. This does not mean it produced an effect.",
+  },
+  experienced: {
+    label: "Recorded effect",
+    explanation: "The simulation recorded a related effect without a matching selected action.",
+  },
+  encountered: {
+    label: "Seen in scene",
+    explanation: "The situation appeared, but no matching action or effect was recorded.",
+  },
+} as const;
 const FATIGUE_COPY: Record<FatigueKind, string> = {
   attentional: "too many competing artifacts and context switches",
   affective: "repeated urgency, outrage, and anticipatory threat",
@@ -701,22 +715,30 @@ function NightDebrief({ pack, state, onReplay, onHouse }: { pack: GeneratedScena
   const summary = buildNaturalizedSummary(pack, state);
   const receipt = buildConceptReceipt(pack, state);
   return <article className="debrief-view">
-    <header className="debrief-header"><div><p className="eyebrow">AFTER THE LAST REPLY · {state.turn} RECORDED DECISIONS</p><h2 id="debrief-title" tabIndex={-1}>What the house kept moving.</h2></div><div className="debrief-actions"><button className="rail-fallback-action" type="button" onClick={onHouse}>House map <span aria-hidden="true">→</span></button><button type="button" onClick={onReplay}>Replay whole night ↻</button></div></header>
+    <header className="debrief-header"><div><p className="eyebrow">AFTER THE LAST REPLY · {state.turn} RECORDED DECISIONS</p><h2 id="debrief-title" tabIndex={-1}>What changed across the night.</h2></div><div className="debrief-actions"><button className="rail-fallback-action" type="button" onClick={onHouse}>House map <span aria-hidden="true">→</span></button><button type="button" onClick={onReplay}>Replay from the beginning</button></div></header>
     <div className="debrief-ending">
       <section className="naturalized-summary warm-frame" aria-labelledby="afterword-title" data-source-count={summary.sources.length}>
-        <p className="panel-label">THE PLAYED NIGHT</p>
-        <h3 id="afterword-title">By closing time</h3>
+        <p className="panel-label">THE NIGHT YOU PLAYED</p>
+        <h3 id="afterword-title">From the first choice to closing time</h3>
         {summary.paragraphs.map((paragraph, index) => <p key={`${index}-${paragraph.slice(0, 24)}`}>{paragraph}</p>)}
       </section>
       <aside className="model-limit" aria-label="Model limit">{DEBRIEF_MODEL_LIMIT} Its numbers and authored motives belong only to this generated night.</aside>
       <section className="plain-concept-receipt" aria-labelledby="concept-receipt-title">
-        <header><p className="panel-label">PLAIN CONCEPT RECEIPT</p><h3 id="concept-receipt-title">What appeared, changed, or was selected</h3><p>Encountered means a played scene contained this situation. Experienced means a matching effect was recorded—either something moved or a possible movement was held back. Played means a selected action itself matched the concept, whether or not a downstream effect followed. None of these labels describes your beliefs or character.</p></header>
+        <header>
+          <p className="panel-label">CONCEPTS FROM THIS NIGHT</p>
+          <h3 id="concept-receipt-title">What appeared, what changed, and what you selected</h3>
+          <p>These labels describe the simulation record, not your beliefs, motives, or character.</p>
+          <dl className="concept-status-key">
+            {Object.values(CONCEPT_STATUS_COPY).map((status) => <div key={status.label}><dt>{status.label}</dt><dd>{status.explanation}</dd></div>)}
+          </dl>
+        </header>
         <ol>{receipt.concepts.map((concept) => {
+          const status = CONCEPT_STATUS_COPY[concept.status];
           return <li className={`concept-status-${concept.status}`} key={concept.term}>
-            <div><span>{concept.status}</span><h4>{concept.term}</h4></div>
+            <div><span data-status={concept.status}>{status.label}</span><h4>{concept.term}<small>{concept.gloss}</small></h4></div>
             <p>{concept.plain}</p>
-            <p className="concept-limit">{concept.limit}</p>
-            <small>{concept.evidence.copy}</small>
+            <p className="concept-evidence"><strong>Why this appears</strong>{concept.evidence.copy}</p>
+            <p className="concept-limit"><strong>Keep in mind</strong>{concept.limit}</p>
           </li>;
         })}</ol>
       </section>

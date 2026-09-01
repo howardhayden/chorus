@@ -19,8 +19,8 @@
       },
       {
         "path": "app/scenario-generator.ts",
-        "sha256": "9e0ae6ec25382567d09b32fd08c589fbed709f57a13f9620e41e1c67a96c6668",
-        "bytes": 290402
+        "sha256": "3f594f938f35a043fcbe5fee7bf4c2a605e4522d2b1e32d5b2aff48ddfe29d08",
+        "bytes": 290350
       },
       {
         "path": "scripts/run-simulation-evidence.mjs",
@@ -33,7 +33,7 @@
         "bytes": 4644
       }
     ],
-    "sha256": "81510041844115aa67dc9984eb0e2f65b143f7a2df1448daad48f395c1ee141d"
+    "sha256": "596d1f18d52a45b1b6f10cc3e9a8c8aed7227eda8d9af37fb90034879cfc58e7"
   },
   "seedDomain": {
     "startInclusive": 0,
@@ -179,7 +179,7 @@
     },
     "digests": {
       "generatedPackSignaturesSha256": "9b270778f76ba66787542ea1e25bbb92e5e8f3beb9f34ee157064ba4971c747d",
-      "completedStatesSha256": "fe3d7b1ce09b4f8ffdc498ad6d15a880e89cb7c0ff1c3b5cb2db09c56590da30",
+      "completedStatesSha256": "c21cbe5f00f238bd5208931b1d1b260797f2a0b355140603f05765a481de0804",
       "actionOrdersSha256": "2ad4f9f987e6af18446e8f040bce18268d812c0048201c220b7e5757b575af41"
     },
     "failures": []
@@ -190,5 +190,5 @@
     "Normalized state metrics and fatigue are bounded to 0–100; reach is a non-negative safe integer because it is a cumulative audience count.",
     "The harness exercises four deterministic choice policies, not the combinatorial total of every possible 24-choice path."
   ],
-  "evidenceSha256": "b9b26ed41a2073790d59da469c73803540b6e875f7c95a8b2725e3ad9774cb1e"
+  "evidenceSha256": "cd55a3fa8a8f76104828cb844f7e265f26caf0161ef944ceb59201d9bf3d9d3e"
 }
