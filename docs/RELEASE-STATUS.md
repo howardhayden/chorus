@@ -15,14 +15,19 @@ it is not the historical seven-tab/Heart conclusion. Version-13 saves fail
 closed unless an explicit tested reconstruction path is later added.
 
 Implementation documentation, generated publications, deterministic evidence,
-31 copy tests, 10 linguistic tests, 10 viewport tests, and the 140-test focused
+34 copy tests, 10 linguistic tests, 10 viewport tests, and the 143-test focused
 working-tree gate are current at implementation digest
-`0267a53f0810314110de25b4521fa2739ca9153ac019ccc0e7269c3972acfbd8`.
+`09f21cfa04ee52fc8d33cd04f268b951e5667d6db6222ec239b9763b6c999021`.
 Promotion remains held for current-source browser completion, keyboard and
 assistive-technology review, manual mobile/reflow inspection, current-lock
 dependency review, current production-route evidence, and neutral-distribution
 renewal. The bounded result is published in the
 [updated-working-tree status](../public/evidence/updated-working-tree-status.html).
+
+The production workflow uses `npm run verify:deploy`, an explicit alias for the
+current-source working-tree gate. This prevents deployment from depending on
+the immutable historical `1.0.0-rc.1` record. Publishing a verified working
+tree does not, by itself, promote that tree to a new release candidate.
 
 ## Historical `1.0.0-rc.1` decision
 

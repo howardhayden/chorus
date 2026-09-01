@@ -5,15 +5,15 @@
 | Field | Value |
 |---|---|
 | Register ID | `CHR-LING-REGISTER` |
-| Version | `1.1.0` |
+| Version | `1.2.0` |
 | Created | 31 August 2026 |
 | Updated | 1 September 2026 |
 | Baseline commit | `4fffddf11a03a2fc84798a3c5343db00fc3135da` |
 | Scope | Generated language, situated repertoires, player-visible narrative and choice copy, live crossing copy, disclosure, persistence, conclusion synthesis, and linguistic claim boundaries |
 | Implementation status at registration | **Partially implemented; adversarial failures open** |
 | Verification status at registration | **Failed / pending correction** |
-| Current implementation status | **Catalysis correction pass implemented; preserved initial failures remain historical evidence** |
-| Current verification status | **Automated working-tree pass on digest `0267a53f…fbd8`; browser, assistive-technology, manual viewport, current route/dependency, and distribution evidence remain open** |
+| Current implementation status | **Catalysis and debrief-understandability correction pass implemented; preserved initial failures remain historical evidence** |
+| Current verification status | **Automated working-tree pass on digest `09f21cfa…99021`; browser, assistive-technology, manual viewport, current route/dependency, and distribution evidence remain open** |
 | Related register | [`CHR-COPY-REGISTER`](COPY-VOICE-REGISTER.md) |
 
 This register is the operative atomization for CHORUS linguistics. It does not
@@ -57,6 +57,23 @@ interpretation used by this register: concrete pressure, situated inquiry,
 relationship or structure, asymmetry or cost; high-variance cadence; genuine
 subtext; scene-first context; no redundant inference; and no polished
 mini-essay that suspends the present action.
+
+### `SRC-LATTICE-RSR-D6CC85B`
+
+| Field | Value |
+|---|---|
+| Repository | `howardhayden/lattice` |
+| Commit | `d6cc85b275e3f14163a5a547f626832fd21b27b0` |
+| Profile | `profiles/relational-systems.profile.json` |
+| Profile SHA-256 | `1868a428c0f3ffd55671cf8de5d1b549ffd309a920aaf01ff1db24e93536a996` |
+| Role | Advisory relational-systems register for the 1 September debrief-understandability correction |
+
+The pinned profile supplies stable atoms for layer conditioning, redundancy,
+causal depth, operational vocabulary, epistemic limits, affected parties, and
+scene closure. Freeform `lintText` output is advisory and declares no semantic
+guarantee. CHORUS therefore claims no formal Lattice conformance without typed
+candidates, dependencies, and a complete mapping. The local operative mapping
+is [`CHR-DEBRIEF-UNDERSTANDABILITY`](DEBRIEF-UNDERSTANDABILITY-REGISTER.md).
 
 ### `SRC-CHORUS-4FFFDDf-LING`
 
@@ -125,7 +142,7 @@ their implementation and focused verification separately.
 | `CHR-LING-VOICE-008` | Keep plain-concept copy familiar, bounded, and nonliterary. | Direct request; `VOICE-001` | `buildConceptReceipt`, renderer | It says what the term means here, what this night supports, and where the claim stops. | Jargon substitution, Catalysis ornament, encyclopedia history, or prose used as evidence predicate. | **Implemented; verification pending** through `CHR-COPY-CONCEPT-*`. |
 | `CHR-LING-VOICE-009` | Keep utility, error, privacy, accessible-name, and live-announcement copy direct. | Accessibility and privacy; `VOICE-001` | UI and save owners | Copy names action, state, result, limit, and recovery without subtext. | Poetic error; ambiguous destructive action; live region repeats or leaks hidden analysis. | **Implemented; verification pending** |
 | `CHR-LING-VOICE-010` | Preserve complete causal propositions when bounding length. | Catalysis and semantic integrity; `VOICE-002–007` | `app/debrief-copy.ts`, generated copy | Bounded prose omits optional detail by selection, never by mid-proposition ellipsis of protected party, benefit, harmed party, harm, or self-cost. | Long last-resort fields, long choice labels, narrow viewport, and screen-reader linearization. | **Failed**: last-resort summary truncates causal clauses into incomplete ellipses. |
-| `CHR-LING-VOICE-011` | Derive choice voice from typed affordance records: stable safety, repair, and locked-ideal actions use `plain-utility`; the incident-responsive remainder uses `catalysis`. | Direct request and Catalysis; `VOICE-001`, `VOICE-005`, `VOICE-009`, `DISC-008` | `app/scenario-generator.ts::choiceCopyVoiceClass` | Across generated choices, availability plus ethics tags identify the repeated utility affordances, while all other choices remain incident-responsive Catalysis; label text is never a predicate. | Rename a stable label, duplicate its words on an incident-specific choice, remove one governing tag, or classify from prose rather than typed fields. | **Added in v1.1.0; verified automatically on implementation digest `0267a53f…fbd8`; release hold retained.** |
+| `CHR-LING-VOICE-011` | Derive choice voice from typed affordance records: stable safety, repair, and locked-ideal actions use `plain-utility`; the incident-responsive remainder uses `catalysis`. | Direct request and Catalysis; `VOICE-001`, `VOICE-005`, `VOICE-009`, `DISC-008` | `app/scenario-generator.ts::choiceCopyVoiceClass` | Across generated choices, availability plus ethics tags identify the repeated utility affordances, while all other choices remain incident-responsive Catalysis; label text is never a predicate. | Rename a stable label, duplicate its words on an incident-specific choice, remove one governing tag, or classify from prose rather than typed fields. | **Added in v1.1.0; verified automatically on implementation digest `09f21cfa…99021`; release hold retained.** |
 
 ### Situated repertoires and linguistic inference
 
@@ -187,7 +204,7 @@ their implementation and focused verification separately.
 | `CHR-LING-END-001` | Open the completed linguistic synthesis only after all 24 accepted decisions. | Interaction; `DISC-002` | `NightDebrief` and all channels | Turn 23 returns no debrief, concept, repertoire, motive, or technical-publication analysis; turn 24 opens the ordered region. | Hidden DOM, save bytes, notes link, live region, or stale `debriefOpen` bypass. | **Failed** outside the JSX debrief gate. |
 | `CHR-LING-END-002` | Keep the ending natural and state-derived rather than a linguistic taxonomy. | Direct request and Catalysis; `VOICE-*`, `END-001` | `buildNaturalizedSummary` | Continuous paragraphs synthesize only supported selected actions, routes, and residue; no repertoire tab or mini-essay grid. | One card per code, glossary disguised as lyric fragments, generic ending across paths. | **Implemented; verification pending** through `CHR-COPY-END-*`. |
 | `CHR-LING-END-003` | Keep plain encountered/experienced/played concepts separate from the narrative voice. | Direct request; `END-001` | `buildConceptReceipt` | Typed predicates and independent IDs determine status; plain evidence explains the model limit. | Offered equals played; prose/tags imply status; literary receipt; saturation promoted to played. | **Implemented; verification pending** through `CHR-COPY-CONCEPT-*`. |
-| `CHR-LING-END-004` | Keep all narrated decision-bearing ending blocks globally chronological by accepted turn. | Catalysis and causal integrity; `VOICE-007`, `VOICE-010`, `END-002` | `app/debrief-copy.ts::NarrativeBlock`, `buildNaturalizedSummary` | Decision sources are nondecreasing by turn; each route remains between its earlier origin and later receiving decision; last-resort costs stay attached to their decision block rather than returning in an analeptic tail. | Reverse a route, sort by narrative salience instead of turn, append an earlier last resort after a later decision, duplicate a decision source, or repair order with “Earlier in the night.” | **Added in v1.1.0; verified automatically on implementation digest `0267a53f…fbd8`; release hold retained.** |
+| `CHR-LING-END-004` | Keep all narrated decision-bearing ending blocks globally chronological by accepted turn. | Catalysis and causal integrity; `VOICE-007`, `VOICE-010`, `END-002` | `app/debrief-copy.ts::NarrativeBlock`, `buildNaturalizedSummary` | Decision sources are nondecreasing by turn; each route remains between its earlier origin and later receiving decision; last-resort costs stay attached to their decision block rather than returning in an analeptic tail. | Reverse a route, sort by narrative salience instead of turn, append an earlier last resort after a later decision, duplicate a decision source, or repair order with “Earlier in the night.” | **Added in v1.1.0; verified automatically on implementation digest `09f21cfa…99021`; release hold retained.** |
 | `CHR-LING-END-005` | Begin supported ending motion with the first narrated decision's public beat: visible artifact, beat-local public record, present pressure where it adds distinct information, and one public question or unknown before the accepted action and supported consequence. | Catalysis scene-first motion; `VOICE-002`, `VOICE-006`, `VOICE-007`, `DISC-001`, `DISC-005`, `END-002` | `app/debrief-copy.ts::sceneFirstOpening`, `buildNaturalizedSummary` | Every disclosure source resolves to the narrated scene's public `RecordAtom`; scenario-entry `knownFact` and `unresolvedAtEntry` are not substituted for a later beat; substantially repeated clauses are omitted; missing fields produce no invented source. | Lead with history or theory, pair a CORRECTION artifact with the entry-time unknown, import a private ledger, repeat the artifact as pressure, fabricate an inquiry, or place the decision before the scene. | **Corrected after the 1 September direct-user counterexample; focused automated verification passed, release hold retained.** |
 
 ### Red-team and release evidence
@@ -224,6 +241,7 @@ boundary only; it is not a release or browser/assistive-technology claim.
 | `CHR-LING-CORR-END-ORDER-001` | `LING-PRE-008` exposed false event identity; `LING-PRE-011` exposed mechanical summary transitions and tail structure. | `END-004` | Build typed `NarrativeBlock`s, attach route and cost provenance to the represented decisions, then sort blocks by accepted turn in `buildNaturalizedSummary`. | `tests/copy-contract.test.mjs`: “summary decision and route provenance remains globally chronological across broad seeded paths.” | **Corrected; current binding verified automatically.** |
 | `CHR-LING-CORR-END-SCENE-001` | `LING-PRE-011` and the Catalysis scene-delay attack showed that a causal summary could remain generic even when its claims were sourced. | `END-005` | `sceneFirstOpening` now admits the narrated beat's authored artifact, public `SceneDisclosure` records/questions/unknowns, and distinct visible pressure; it never reuses scenario-entry truth for a later beat. | `tests/copy-contract.test.mjs`: “scene-first inquiry uses only the narrated beat's public disclosure provenance,” including seed 74 CORRECTION and missing-disclosure boundaries. | **Corrected; current binding verified automatically.** |
 | `CHR-LING-CORR-END-ATOM-002` | The first correction still exposed audit wrappers, hash-selected synonym families, false response causality, split route clauses, and repetitive last-resort mini-ledgers. | `VOICE-002–004`, `VOICE-007`, `VOICE-010`, `END-004–005` | `NarrativeAtom` carries clause-level source and chronological relation; route realization follows typed carriage; `NarrativeBlock` packing keeps route atoms and complete last-resort events together; residue uses plain metric-specific motion with typed no-change support. | `tests/copy-contract.test.mjs`: audit-scaffold rejection, situation-conditioned route/residue branches, 194-night bounds, atom/block integrity, grammar, seed 74, and split-cost completeness. | **Corrected; focused automated verification passed; live browser and assistive-technology review remain open.** |
+| `CHR-LING-CORR-DEBRIEF-001` | The direct 1 September review counterexample showed that grammatical Catalysis prose could remain hard to understand when story and concept layers shared proof-register diction. | `VOICE-001–010`, `END-001–005`; `CHR-DEBRIEF-UND-001–014` | `buildNaturalizedSummary` now selects one governing route and names source, target, and movement; last-resort costs remain separate sourced sentences; the renderer explains status once and pairs canonical concepts with plain subtitles, exact evidence, and unique limits. | `tests/copy-contract.test.mjs` 34/34; 194-night bounds; pinned Lattice advisory before/after run; `debrief-understandability-red-team.post.v1.json`. | **Corrected on digest `09f21cfa…99021`; no automated or advisory understandability blocker remains; manual browser/AT review remains open.** |
 
 ## Planned evidence
 
@@ -233,5 +251,6 @@ boundary only; it is not a release or browser/assistive-technology claim.
 | `evidence/linguistics/linguistics-red-team.post.v1.json` | Full retest plus Catalysis-specific attacks | Captured on the current implementation binding; no blocker or high-severity finding remains open |
 | `evidence/linguistics/linguistics-verification.v1.json` | Final commands, counts, source digest, browser/manual scope, and limitations | Captured; validated automated pass with five held promotion gaps |
 | `evidence/linguistics/linguistic-surface-inventory.v1.json` | Stable channel, phase, owner-symbol, proposition, and voice-class bindings | Implemented at v1.1.0; targeted schema/owner validation passed with 29 atoms, five channels, and four voice classes |
+| `evidence/linguistics/debrief-understandability-red-team.pre.v1.json` and `.post.v1.json` | Preserve the direct counterexample, Lattice mapping, correction, final advisory result, and current automated boundary | Captured; freeform Lattice output is explicitly advisory rather than a conformance claim |
 | `tests/linguistics-contract.test.mjs` | Repertoire, disclosure, live-crossing, persisted-byte, and voice-boundary contracts | Implemented and wired into `npm test` and both release gates; focused current-tree run passed 10/10 |
-| `tests/copy-contract.test.mjs` | Catalysis motion, beat-local disclosure, global chronology, causal provenance, semantic-atom integrity, proposition, and concept contracts | Implemented; focused current-tree run passed 31/31 |
+| `tests/copy-contract.test.mjs` | Catalysis motion, beat-local disclosure, global chronology, understandability, causal provenance, semantic-atom integrity, proposition, and concept contracts | Implemented; focused current-tree run passed 34/34 |

@@ -1,0 +1,195 @@
+{
+  "schema": "chorus.debrief-understandability-red-team.v1",
+  "recordId": "debrief-understandability-red-team.post.v1",
+  "phase": "post-correction",
+  "captureDate": "2026-09-01",
+  "authority": {
+    "sourceId": "SRC-U-20260901-CHORUS-DEBRIEF-UNDERSTANDABILITY",
+    "sourceDescription": "Direct user-supplied completed-night review beginning 'What the house kept moving.'",
+    "latticeRepository": "howardhayden/lattice",
+    "latticeCommit": "d6cc85b275e3f14163a5a547f626832fd21b27b0",
+    "latticeProfile": "profiles/relational-systems.profile.json",
+    "latticeProfileSha256": "1868a428c0f3ffd55671cf8de5d1b549ffd309a920aaf01ff1db24e93536a996"
+  },
+  "sourceBinding": {
+    "algorithm": "sha256-path-length-content",
+    "implementationDigest": "09f21cfa04ee52fc8d33cd04f268b951e5667d6db6222ec239b9763b6c999021",
+    "fileCount": 22,
+    "coreFiles": {
+      "app/debrief-copy.ts": "db7ea3d6bbb905fd0dd4d9a16db69f4eb292dd8193cc56e15d31b8496cdc1e49",
+      "app/globals.css": "315118a1fca23f16f545a8d37b2a8642117efcbdfaf7f1b1f471ce372734d50b",
+      "app/page.tsx": "51f3a2278a2681bbbefc46a6d747c921f038d6db1ed5e357e20050fcc6567196",
+      "app/scenario-generator.ts": "3f594f938f35a043fcbe5fee7bf4c2a605e4522d2b1e32d5b2aff48ddfe29d08",
+      "tests/concurrent-night.test.mjs": "5cdcfd00325d803a940226b8dccaa61460a392e77d0a0d86f5d30947f5998d6b",
+      "tests/copy-contract.test.mjs": "86ed22b5627cdca451fc232293c094ac7a626abefa65516f4c573372b5986cd8"
+    },
+    "preRecord": {
+      "path": "evidence/linguistics/debrief-understandability-red-team.pre.v1.json",
+      "sha256": "c1144b8630667f49e3a3bd87569d8c6f247d19864214af1b216f820e1ae15ca8"
+    },
+    "verificationLog": {
+      "path": "evidence/runs/updated-working-tree-verification.v1.log",
+      "sha256": "eb4133334213f378b2cc3dd39e0f7cc3f19b29bbcbd77bfbc0695ea99bae1ef4"
+    }
+  },
+  "findingDispositions": [
+    {
+      "id": "DEBRIEF-UND-PRE-001",
+      "status": "corrected",
+      "correction": "Every narrated route names the source room, target room, and whether a selected message, presentation, or neither reached the target."
+    },
+    {
+      "id": "DEBRIEF-UND-PRE-002",
+      "status": "corrected",
+      "correction": "Opaque clusters were replaced by concrete nouns and operational verbs; broad seeded copy rejects the preserved terms."
+    },
+    {
+      "id": "DEBRIEF-UND-PRE-003",
+      "status": "corrected",
+      "correction": "Selected action, benefit, protected party, cost bearer, harm, self-cost, and stated risk are separate sourced sentences."
+    },
+    {
+      "id": "DEBRIEF-UND-PRE-004",
+      "status": "corrected",
+      "correction": "The summary selects one governing route and retains every selected last-resort event without stacking a second route chain."
+    },
+    {
+      "id": "DEBRIEF-UND-PRE-005",
+      "status": "corrected",
+      "correction": "The repeated evidence preamble and selected-action disclaimer were removed; every card now has one exact reason and one distinct limit."
+    },
+    {
+      "id": "DEBRIEF-UND-PRE-006",
+      "status": "corrected",
+      "correction": "A once-only key explains Selected action, Recorded effect, and Seen in scene while the typed model statuses remain intact."
+    },
+    {
+      "id": "DEBRIEF-UND-PRE-007",
+      "status": "corrected",
+      "correction": "Each canonical concept term now carries a nonempty plain subtitle of no more than six words."
+    },
+    {
+      "id": "DEBRIEF-UND-PRE-008",
+      "status": "corrected",
+      "correction": "The story, model limit and status key, and concept cards now use experiential, operative, and interpretive registers in separate semantic regions."
+    }
+  ],
+  "latticeAdvisory": {
+    "api": "lintText",
+    "profileIds": ["relational-systems"],
+    "representativePath": {
+      "seed": 1128812370,
+      "seedHex": "0x43484f52",
+      "policy": "floor",
+      "decisions": 24
+    },
+    "before": {
+      "narrative": {
+        "words": 310,
+        "sentences": 18,
+        "medianSentenceWords": 17,
+        "maximumSentenceWords": 31
+      },
+      "concepts": {
+        "words": 518,
+        "sentences": 33,
+        "medianSentenceWords": 16,
+        "maximumSentenceWords": 25,
+        "repeatedEvidenceBoilerplate": 11
+      },
+      "manualResult": "The experiential and interpretive layers shared proof-register diction; causal depth and affected parties were present but obscured by abstraction and repeated qualification."
+    },
+    "after": {
+      "narrative": {
+        "words": 121,
+        "sentences": 9,
+        "medianSentenceWords": 13,
+        "maximumSentenceWords": 17,
+        "passes": 19,
+        "failures": 0,
+        "warnings": ["RSR-RHY-001", "RSR-RHY-002"]
+      },
+      "concepts": {
+        "words": 468,
+        "sentences": 41,
+        "medianSentenceWords": 12,
+        "maximumSentenceWords": 24,
+        "passes": 19,
+        "failures": 0,
+        "warnings": [],
+        "repeatedEvidenceBoilerplate": 0
+      },
+      "manualResult": "No blocker-, high-, or medium-severity understandability defect remained in the final representative narrative or concept receipt."
+    },
+    "adversarialPath": {
+      "seed": 16,
+      "policy": "contrast",
+      "decisions": 24,
+      "selectedLastResorts": 3,
+      "narrative": {
+        "words": 431,
+        "sentences": 33,
+        "medianSentenceWords": 12,
+        "maximumSentenceWords": 22,
+        "warnings": [],
+        "failures": 0
+      },
+      "concepts": {
+        "words": 480,
+        "sentences": 41,
+        "medianSentenceWords": 12,
+        "maximumSentenceWords": 24,
+        "warnings": [],
+        "failures": 0,
+        "repeatedEvidenceBoilerplate": 0
+      },
+      "manualResult": "No blocker-, high-, or medium-severity clarity defect remained after correcting action actuality, chronology, route content, affected-party wording, undefined handoff language, modeled exposure jargon, and the closing referent."
+    },
+    "acceptedNotice": "RSR-RHY-001 and RSR-RHY-002 are duplicate cadence applications for uniformly brief narrative sentences. They are not a clarity defect and were not optimized mechanically.",
+    "advisoryOnly": true,
+    "semanticGuarantee": false,
+    "formalConformanceClaim": false
+  },
+  "redTeamCoverage": {
+    "completedNightProbes": 194,
+    "seedPolicies": "Seeds 0 through 95 under floor and contrast, plus 4294967295 under both policies.",
+    "boundaries": [
+      "all route semantic and carriage branches",
+      "repeated and intervening last-resort decisions",
+      "complete protected-party and cost propositions",
+      "encountered, experienced, and played provenance",
+      "malformed and unfinished state",
+      "equal and zero-change afterimages",
+      "mobile reflow and forced-colors source contracts"
+    ]
+  },
+  "automatedResults": {
+    "command": "npm run verify:working-tree",
+    "status": "pass",
+    "exitCode": 0,
+    "simulationAssertions": 118668,
+    "simulationFailures": 0,
+    "focusedTests": 143,
+    "focusedFailures": 0,
+    "groups": {
+      "concurrentNight": 39,
+      "simulationMaturity": 5,
+      "saveModel": 18,
+      "copyContract": 34,
+      "linguisticsContract": 10,
+      "accessibilityDisclosure": 26,
+      "viewportContract": 10,
+      "renderedHtml": 1
+    },
+    "productionBuild": "pass",
+    "notebookPublication": "pass",
+    "sourceBindingCheck": "pass"
+  },
+  "decision": {
+    "understandabilityImplementation": "pass",
+    "openBlockers": 0,
+    "openHighSeverityFindings": 0,
+    "release": "held",
+    "reason": "The source-bound automated and advisory correction gates pass. Current-source browser completion, assistive-technology review, manual viewport inspection, dependency audit, production-route observation, and neutral distribution renewal remain separate promotion evidence."
+  }
+}

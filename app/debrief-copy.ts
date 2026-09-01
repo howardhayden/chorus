@@ -128,6 +128,7 @@ export type ConceptEvidence =
 
 export type ConceptReceiptItem = {
   term: string;
+  gloss: string;
   plain: string;
   limit: string;
   status: ConceptStatus;
@@ -205,16 +206,25 @@ const METRIC_LABELS: Partial<Record<MetricName, string>> = {
 
 const AFTERIMAGE_METRICS = Object.keys(METRIC_LABELS) as MetricName[];
 
-const MECHANISM_COPY: Record<NonNullable<EffectReceipt["mechanism"]>, string> = {
-  "shared-audience": "audience overlap",
-  "format-imitation": "imitation pressure",
-  "attention-market": "attention pressure",
-  "institutional-load": "institutional workload",
-  "trust-carryover": "borrowed trust",
-  "ambient-ranking": "ranking pressure",
-  "attribution-carryover": "borrowed blame",
-  "code-collision": "language mismatch",
-  "model-collision": "expectation mismatch",
+const AMBIENT_EFFECT_COPY: Record<NonNullable<EffectReceipt["mechanism"]>, (target: string) => string> = {
+  "shared-audience": (target) => `Audience overlap still changed what people saw in ${target}.`,
+  "format-imitation": (target) => `Other accounts still copied presentation styles in ${target}.`,
+  "attention-market": (target) => `Other circulation still drew attention in ${target}.`,
+  "institutional-load": (target) => `Institutional workload still slowed the response in ${target}.`,
+  "trust-carryover": (target) => `Trust borrowed elsewhere still shaped reception in ${target}.`,
+  "ambient-ranking": (target) => `Ranking systems still changed what people saw in ${target}.`,
+  "attribution-carryover": (target) => `Activity elsewhere still shifted blame in ${target}.`,
+  "code-collision": (target) => `A language mismatch still complicated the exchange in ${target}.`,
+  "model-collision": (target) => `Different expectations still complicated the exchange in ${target}.`,
+};
+
+const CONCEPT_GLOSSES: Record<LessonTerm, string> = {
+  signaling: "What an action communicates",
+  saturation: "Familiarity through repetition",
+  "correction drag": "Why corrections travel slowly",
+  "market value": "Attention serving another goal",
+  "trust capital": "Borrowing trust",
+  "status capital": "Protecting standing",
 };
 
 export function buildNaturalizedSummary(
@@ -286,10 +296,15 @@ export function buildNaturalizedSummary(
   if (firstBlock && first) {
     const opening = sceneFirstOpening(first);
     if (opening.length > 0) {
-      const firstDecision = firstBlock.atoms.find((atom) => atom.role === "decision");
-      if (firstDecision) firstDecision.text = decisionSentence(first, "opening");
       firstBlock.atoms.unshift(...opening);
     }
+  }
+
+  for (const [index, block] of blocks.entries()) {
+    const decision = block.atoms.find((atom) => atom.role === "decision");
+    if (!decision) continue;
+    decision.text = decisionSentence(block.item, index === 0 ? "opening" : "later", index);
+    if (index > 0) decision.relationToPrevious = "chronological-after";
   }
 
   const narrativeAtoms = blocks.flatMap((block) => block.atoms);
@@ -349,6 +364,7 @@ export function buildConceptReceipt(
       const effectEventIds = status === "encountered" ? [] : experienced.map((match) => match.eventId);
       return {
         term,
+        gloss: CONCEPT_GLOSSES[term],
         plain: normalizedCopy(canonicalLesson.definition),
         limit: normalizedCopy(canonicalLesson.observable),
         status,
@@ -424,14 +440,7 @@ function narrativeChain(
     || (left.nextIndex - left.originIndex) - (right.nextIndex - right.originIndex)
     || left.route.receipt.linkId!.localeCompare(right.route.receipt.linkId!),
   )[0];
-  const predecessor = [...chronologicalEdges]
-    .filter((edge) => edge.next.decision.id === primary.route.accepted.decision.id)
-    .sort((left, right) =>
-      routeNarrativeRank(right.route) - routeNarrativeRank(left.route)
-      || right.originIndex - left.originIndex
-      || left.route.receipt.linkId!.localeCompare(right.route.receipt.linkId!),
-    )[0];
-  return predecessor ? [predecessor, primary] : [primary];
+  return [primary];
 }
 
 function routeHasNarrativeEvidence(route: ClassifiedRoute): boolean {
@@ -519,13 +528,32 @@ function sceneFirstOpening(item: AcceptedDecision): NarrativeAtom[] {
     });
   }
 
-  const ordered = orderOpeningAtoms(item.scene.act, atoms);
+  const ordered = selectOpeningAtoms(orderOpeningAtoms(item.scene.act, atoms));
   if (ordered.length === 0) return [];
   const location = item.scene.act === "BRIDGE" ? "Inside" : item.scene.act === "CROSSOVER" ? "In" : "At";
   return [
     { ...ordered[0], text: `${location} ${room}, ${lowercaseFirst(ordered[0].text)}` },
     ...ordered.slice(1),
   ];
+}
+
+function selectOpeningAtoms(ordered: NarrativeAtom[]): NarrativeAtom[] {
+  if (ordered.length <= 3) return ordered;
+  const selected = new Set<NarrativeAtom>();
+  const anchor = ordered[0];
+  if (anchor) selected.add(anchor);
+
+  const disclosure = ordered.find((atom) => atom.sources.some((source) => source.kind === "scene-disclosure"));
+  if (disclosure) selected.add(disclosure);
+
+  const pressure = ordered.find((atom) => atom.role === "pressure");
+  if (pressure) selected.add(pressure);
+
+  for (const atom of ordered) {
+    if (selected.size >= 3) break;
+    selected.add(atom);
+  }
+  return ordered.filter((atom) => selected.has(atom));
 }
 
 function orderOpeningAtoms(act: GeneratedScene["act"], atoms: NarrativeAtom[]): NarrativeAtom[] {
@@ -599,36 +627,40 @@ function routeAtom(route: ClassifiedRoute, next: AcceptedDecision): NarrativeAto
 }
 
 function routeNarration(route: ClassifiedRoute, next: AcceptedDecision): string[] {
+  const source = completeFragment(route.accepted.scenario.title);
   const target = completeFragment(next.scenario.title);
   if (route.classification === "direct-content" && route.receipt.selectedCarriage) {
     const carrier = completeFragment(
       route.carrier?.kind === "shared-channel" ? route.carrier.channel : "a shared channel",
     );
     const channel = naturalCarrierPhrase(carrier);
-    return [`The message reached ${target} through ${channel}.`];
+    return [`The message produced by ${decisionLabel(route.accepted)} in ${source} reached ${target} through ${channel}.`];
   }
   if (route.classification === "direct-format" && route.receipt.selectedCarriage) {
     const format = completeFragment(route.carrier?.kind === "artifact-format" ? route.carrier.artifact : "recognizable");
     return [
-      `A recognizable form of ${format} reached ${target}.`,
-      "Its message did not.",
+      `People in ${target} saw a copy that looked like the ${format} from ${source}.`,
+      "It did not carry the same message.",
     ];
   }
   if (route.classification !== "ambient") {
     const object = route.receipt.semantic === "content"
-      ? "the chosen message"
+      ? "the selected message"
       : route.receipt.semantic === "format"
-        ? "its recognizable form"
-        : "the chosen message or its recognizable form";
+        ? "the selected presentation style"
+        : "the selected message or presentation style";
     const held = route.receipt.avoidedReach > 0
-      ? `The choice kept ${object} out of ${target}.`
-      : `${sentenceCase(object)} did not reach ${target}.`;
+      ? `The choice in ${source} kept ${object} out of ${target}.`
+      : `${sentenceCase(object)} did not reach ${target} from ${source}.`;
     if (route.receipt.backgroundReach <= 0) return [held];
-    return [held, "Background circulation kept moving around the room."];
+    return [held, `Other circulation continued in ${target}.`];
   }
-  const condition = route.receipt.mechanism ? MECHANISM_COPY[route.receipt.mechanism] : "nearby pressure";
+  const ambientEffect = route.receipt.mechanism
+    ? AMBIENT_EFFECT_COPY[route.receipt.mechanism](target)
+    : `Nearby activity still changed the pressure in ${target}.`;
   return [
-    `Neither the chosen message nor its recognizable form reached ${target}; ${condition} shifted there anyway.`,
+    `No selected message or presentation reached ${target} from ${source}.`,
+    ambientEffect,
   ];
 }
 
@@ -647,17 +679,25 @@ function decisionAtom(
 function decisionSentence(
   item: AcceptedDecision,
   placement: "opening" | "later" | "standalone",
+  sequence = 1,
 ): string {
   const room = completeFragment(item.scenario.title);
   const actor = roleSubject(item);
+  const transition = sequence <= 1
+    ? "Later"
+    : sequence % 3 === 2
+      ? "After that"
+      : sequence % 3 === 0
+        ? "Later still"
+        : "Afterward";
   if (item.decision.lastResort) {
     const move = lastResortDecisionReference(item);
-    if (placement === "opening") return `${sentenceCase(actor)} reached for ${move}.`;
-    if (placement === "later") return `Later, ${actor} at ${room} reached for ${move}.`;
-    return `At ${room}, ${actor} reached for ${move}.`;
+    if (placement === "opening") return `${sentenceCase(actor)} chose ${move}.`;
+    if (placement === "later") return `${transition}, ${actor} at ${room} chose ${move}.`;
+    return `At ${room}, ${actor} chose ${move}.`;
   }
   if (placement === "opening") return `${sentenceCase(actor)} chose ${decisionLabel(item)}.`;
-  if (placement === "later") return `Later, ${actor} at ${room} chose ${decisionLabel(item)}.`;
+  if (placement === "later") return `${transition}, ${actor} at ${room} chose ${decisionLabel(item)}.`;
   return `At ${room}, ${actor} chose ${decisionLabel(item)}.`;
 }
 
@@ -666,23 +706,17 @@ function decisionLabel(item: AcceptedDecision): string {
 }
 
 function lastResortDecisionReference(item: AcceptedDecision): string {
-  return `the last-resort move “${completeFragment(item.decision.choiceLabel)}”`;
+  return `the last resort “${completeFragment(item.decision.choiceLabel)}”`;
 }
 
 function lastResortCostAtoms(item: AcceptedDecision): NarrativeAtom[] {
   const move = item.decision.lastResort;
   if (!move) return [];
   return [
-    costAtom(
-      item,
-      ["positiveConsequence", "protectedParty"],
-      sentenceFrom(`${consequenceClause(move.positiveConsequence)}, protecting ${normalizedCopy(move.protectedParty)}`),
-    ),
-    costAtom(
-      item,
-      ["negativeConsequence", "harmedParty"],
-      sentenceFrom(`For ${normalizedCopy(move.harmedParty)}, ${lowercaseFirst(consequenceClause(move.negativeConsequence))}`),
-    ),
+    costAtom(item, ["positiveConsequence"], sentenceFrom(move.positiveConsequence)),
+    costAtom(item, ["protectedParty"], sentenceFrom(`This protects ${normalizedCopy(move.protectedParty)}`)),
+    costAtom(item, ["harmedParty"], sentenceFrom(`${sentenceCase(normalizedCopy(move.harmedParty))} bears the cost`)),
+    costAtom(item, ["negativeConsequence"], sentenceFrom(move.negativeConsequence)),
     costAtom(item, ["selfCost"], sentenceFrom(`${sentenceCase(roleSubject(item))} ${seatAction(move.selfCost)}`)),
   ];
 }
@@ -714,7 +748,7 @@ function residueAtoms(
   return [
     {
       role: "resolution",
-      text: sentenceFrom(scenario.truth.laterResolution),
+      text: sentenceFrom(`In ${room}, ${lowercaseFirst(scenario.truth.laterResolution)}`),
       sources: [{ kind: "scenario-record", scenarioId: scenario.id, field: "laterResolution" }],
     },
     {
@@ -736,29 +770,31 @@ function afterimageSentence(room: string, residue: string, afterimage: Afterimag
   const rising = afterimage.delta > 0;
   switch (afterimage.metric) {
     case "reach":
-      return `After ${room} closed, circulation kept ${rising ? "gathering" : "thinning"} around it.`;
+      return `After ${room} closed, posts from that room ${rising ? "continued to spread" : "reached fewer people"}.`;
     case "crossover":
-      return `After ${room} closed, movement between rooms kept ${rising ? "widening" : "narrowing"}.`;
+      return `After ${room} closed, material from that room appeared in ${rising ? "more" : "fewer"} rooms.`;
     case "provenance":
-      return `Even with ${room} closed, source context kept ${rising ? "accumulating" : "falling away"}.`;
+      return `After ${room} closed, copies linked to that room carried ${rising ? "more" : "less"} source context.`;
     case "verification":
-      return `${room} had closed. Checking around it kept ${rising ? "deepening" : "thinning"}.`;
+      return `After ${room} closed, people had ${rising ? "more" : "less"} support for checking the claim discussed in that room.`;
     case "heat":
-      return `Pressure around ${room} kept ${rising ? "building" : "easing"} after it closed.`;
+      return `After ${room} closed, reactions to the claim discussed in that room grew ${rising ? "more heated" : "calmer"}.`;
     case "blame":
-      return `Blame kept ${rising ? "gathering" : "easing"} around ${room} after it closed.`;
+      return `After ${room} closed, blame tied to the claim discussed in that room ${rising ? "concentrated further" : "eased"}.`;
     case "belief":
-      return `After ${room} closed, acceptance kept ${rising ? "hardening" : "easing"} around it.`;
+      return rising
+        ? `After ${room} closed, people accepted the claim discussed in that room more strongly.`
+        : `After ${room} closed, people became less certain about the claim discussed in that room.`;
     case "consensus":
-      return `${room} closed while apparent agreement kept ${rising ? "building" : "fraying"}.`;
+      return `After ${room} closed, the claim discussed in that room appeared ${rising ? "more widely accepted" : "less widely accepted"}.`;
     case "trust":
-      return `Trust around ${room} kept ${rising ? "building" : "easing"} after closing.`;
+      return `After ${room} closed, trust in the claim discussed in that room ${rising ? "increased" : "decreased"}.`;
     case "coordination":
-      return `After ${room} closed, coordination kept ${rising ? "building" : "slipping"}.`;
+      return `After ${room} closed, people became ${rising ? "more" : "less"} able to coordinate around the claim discussed in that room.`;
     case "commonGround":
-      return `${room} was closed; shared ground kept ${rising ? "forming" : "eroding"}.`;
+      return `After ${room} closed, people shared ${rising ? "more" : "less"} common ground about the claim discussed in that room.`;
     default:
-      return `After ${room} closed, ${residue} kept ${rising ? "building" : "easing"}.`;
+      return `After ${room} closed, ${residue} in that room ${rising ? "increased" : "decreased"}.`;
   }
 }
 
@@ -767,7 +803,7 @@ function settledResidueAtoms(scenario: GeneratedScenario): NarrativeAtom[] {
   return [
     {
       role: "resolution",
-      text: sentenceFrom(scenario.truth.laterResolution),
+      text: sentenceFrom(`In ${room}, ${lowercaseFirst(scenario.truth.laterResolution)}`),
       sources: [{ kind: "scenario-record", scenarioId: scenario.id, field: "laterResolution" }],
     },
     {
@@ -882,30 +918,30 @@ function conceptEvidence(
 }
 
 function encounteredEvidenceCopy(item: AcceptedDecision): string {
-  return `The ${itemAct(item)} scene at ${completeFragment(item.scenario.title)} introduced this idea. No selected action or matching modeled effect was recorded for it in this scene.`;
+  return `This concept appeared in a scene at ${completeFragment(item.scenario.title)}. No matching action or effect was recorded there.`;
 }
 
 function playedEvidenceCopy(binding: ConceptPlayBinding, item: AcceptedDecision): string {
   const label = completeFragment(item.decision.choiceLabel);
   const room = completeFragment(item.scenario.title);
+  const selection = `In ${room}, you selected “${label}” for ${roleSubject(item)}.`;
   switch (binding.term) {
     case "signaling": {
-      const sharing = binding.delivery.scope === "public" ? "a public move" : "a shared move";
       const capability = binding.delivery.carriage === "content"
-        ? "designed to make its message content portable beyond the room"
+        ? "The action was designed to share its wording beyond the room."
         : binding.delivery.carriage === "format"
-          ? "designed to make a recognizable form portable without asserting carriage of its message content"
-          : "designed to make both its message content and recognizable form portable";
-      return `At ${room}, “${label}” selected ${sharing} ${capability}. This records the selected action only; it does not claim what happened afterward.`;
+          ? "The action reused the original post's appearance for a different message."
+          : "The action was designed to share both its wording and presentation.";
+      return `${selection} ${capability}`;
     }
     case "correction drag":
-      return `At ${room}, “${label}” selected a bounded repair meant to add ${binding.effect.metric === "verification" ? "checking support" : "source context"}. This records the selected action only; it does not claim what happened afterward.`;
+      return `${selection} ${binding.effect.metric === "verification" ? "The action was designed to make the claim easier to check." : "The action was designed to show where the claim came from."}`;
     case "market value":
-      return `At ${room}, “${label}” selected a move that used attention for a separate campaign or client goal. This records the selected action only; it does not claim what happened afterward.`;
+      return `${selection} The action used attention to support a separate campaign or client goal.`;
     case "trust capital":
-      return `At ${room}, “${label}” selected a handoff through a role the room already trusted. This records the selected action only; it does not claim what happened afterward.`;
+      return `${selection} The action relied on a person or role the room already trusted.`;
     case "status capital":
-      return `At ${room}, “${label}” selected a response whose visibility could protect standing in the group. This records the selected action only; it does not claim what happened afterward.`;
+      return `${selection} The action used public visibility to protect someone's standing in the group.`;
   }
 }
 
@@ -913,44 +949,49 @@ function experiencedEvidenceCopy(
   match: ConceptExperienceMatch,
   target: GeneratedScenario | undefined,
 ): string {
-  const { item, receipt, rule } = match;
+  const { item, eventKind, receipt, rule } = match;
   const source = completeFragment(item.scenario.title);
   const destination = completeFragment(target?.title ?? "another room");
   if (rule.kind === "receipt-field") {
     if (rule.field === "selectedCarriage") {
-      const carried = receipt.semantic === "format" ? "a recognizable form, without its message content" : "message content";
-      return `A selected route from ${source} carried ${carried} into ${destination}.`;
+      return receipt.semantic === "format"
+        ? `A selected action carried the presentation from ${source} into ${destination}, but not the same message.`
+        : `A selected action carried the message from ${source} into ${destination}.`;
     }
     if (rule.field === "backgroundReach") {
-      return `Background circulation from ${source} added modeled impressions around ${destination}.`;
+      if (eventKind === "ambient") {
+        return source === destination
+          ? `People in ${source} saw more material as other circulation continued there.`
+          : `People in ${destination} saw more material as other circulation continued from ${source}.`;
+      }
+      return source === destination
+        ? `People in ${source} saw more material circulating separately from the selected message.`
+        : `People in ${destination} saw more material from ${source}, but not the message selected there.`;
     }
-    return `A move from ${source} held back some new circulation around ${destination}.`;
+    return `A choice in ${source} prevented some new exposure in ${destination}.`;
   }
 
   switch (rule.term) {
     case "correction drag": {
       const movement = match.eventKind === "ambient"
-        ? `At ${source}, activity that arrived before a seat chose was recorded toward ${rule.metric === "verification" ? "checking support" : "source context"} around ${destination}.`
-        : `A source-bearing update from ${source} was recorded toward ${rule.metric === "verification" ? "checking support" : "source context"} around ${destination}.`;
-      return `${movement} The model does not establish a net change after the room's bounds.`;
+        ? `Before a choice was made in ${source}, the simulation recorded ${rule.metric === "verification" ? "more support for checking the claim" : "more information about its source"} in ${destination}.`
+        : `After a choice in ${source}, the simulation recorded ${rule.metric === "verification" ? "more support for checking the claim" : "more information about its source"} in ${destination}.`;
+      return movement;
     }
     case "market value":
       if (receipt.selectedCarriage) {
         const movement = receipt.semantic === "format"
-          ? `A selected route from ${source} carried a recognizable form into ${destination} without carrying its message content.`
-          : `A selected route from ${source} carried message content into ${destination}.`;
-        return `${movement} There it met modeled attention pressure. The model assigns neither an actor motive nor a net change after the room's bounds.`;
+          ? `A selected action carried the presentation from ${source} into ${destination}, but not the same message.`
+          : `A selected action carried the message from ${source} into ${destination}.`;
+        return `${movement} Attention in ${destination} also changed.`;
       }
-      return `${match.eventKind === "ambient" ? "Ambient" : "Background"} attention pressure connected ${source} with conditions around ${destination}. No selected message content or recognizable form is attributed to that movement, and the model assigns neither an actor motive nor a net change after the room's bounds.`;
+      return `Activity linked to ${source} changed how much attention ${destination} received. The selected message and presentation did not cause that change.`;
     case "trust capital":
-      return `A borrowed-trust event from ${source} was recorded around reception in ${destination}. The model does not establish a net change after the room's bounds.`;
+      return `The simulation recorded trust from ${source} affecting how people received information in ${destination}.`;
     case "status capital":
-      return `A standing-related event from ${source} was recorded around visible reaction in ${destination}. The model does not establish a net change after the room's bounds.`;
+      if (rule.metric === "blame") return `Blame linked to ${source} changed in ${destination}.`;
+      return `The appearance of agreement linked to ${source} changed in ${destination}.`;
   }
-}
-
-function itemAct(item: AcceptedDecision): string {
-  return item.scene.act.toLocaleLowerCase().replaceAll("_", " ");
 }
 
 function effectMatchesRule(
@@ -1043,10 +1084,6 @@ function seatAction(value: string): string {
 function roleSubject(item: AcceptedDecision): string {
   const role = normalizedCopy(item.scenario.protagonistModel.role).replaceAll("-", " ");
   return /^(?:a|an|the)\b/i.test(role) ? role : `the ${role}`;
-}
-
-function consequenceClause(value: string): string {
-  return normalizedCopy(value).replace(/[.!?]+$/g, "");
 }
 
 function wordCount(value: string): number {

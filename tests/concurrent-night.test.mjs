@@ -884,7 +884,11 @@ test("truth, propagation, beat disclosure, and communication analysis remain sep
       assert.deepEqual(Object.keys(scenario.propagation), ["circulatingFrame"]);
       assert.equal(scenario.scenes[0].artifactCopy, scenario.truth.knownFact);
       assert.equal(scenario.scenes[1].artifactCopy, scenario.propagation.circulatingFrame);
-      assert.ok(scenario.scenes[2].artifactCopy.includes(scenario.truth.unresolvedAtEntry));
+      assert.match(scenario.scenes[2].artifactCopy, /^Multiple trusted accounts now repeat the same unresolved claim about the .+\.$/);
+      assert.ok(
+        scenario.scenes[2].disclosure.questions.some((atom) => /record did not show.+source's uncertainty/i.test(atom.copy)),
+        "the shorter public repeat record must keep uncertainty explicit in the adjacent question",
+      );
       assert.equal(scenario.scenes[3].artifactCopy, scenario.truth.laterResolution);
       const publicTruthAndArtifacts = [
         ...Object.values(scenario.truth),

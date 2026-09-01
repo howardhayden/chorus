@@ -1389,7 +1389,7 @@ const INCIDENTS: readonly IncidentTemplate[] = [
     resolution: "A later public log attributes the color to disturbed iron sediment and also documents a delayed notice.",
     heading: "A real observation acquires a conclusion before the evidence arrives.",
     neutralBody: "The original post asks a question. A cropped copy removes that uncertainty while retaining the striking image.",
-    sourceReason: "Because local storm coverage and neighborhood discussion overlap with this seat's existing interests.",
+    sourceReason: "Because storm coverage put the clip before people already discussing local infrastructure problems.",
     artifactKinds: ["clip", "meme", "comments", "screenshot"],
     youthFit: false,
     badActorFit: true,
@@ -1421,7 +1421,7 @@ const INCIDENTS: readonly IncidentTemplate[] = [
     resolution: "The current utility record shows service restored except for two small repair areas.",
     heading: "An accurate map survives longer than its timestamp.",
     neutralBody: "The screenshot is authentic, legible, and obsolete. Its age disappears as it moves between rooms.",
-    sourceReason: "Because weather alerts, preparedness content, and civic-performance discussion share an audience.",
+    sourceReason: "Because preparedness accounts shared the old map with readers already watching for failures in city services.",
     artifactKinds: ["screenshot", "comments", "live"],
     youthFit: false,
     badActorFit: true,
@@ -1453,7 +1453,7 @@ const INCIDENTS: readonly IncidentTemplate[] = [
     resolution: "The repair calendar and catalog show the books returning to the same public shelves.",
     heading: "A temporary move is made to resemble a permanent decision.",
     neutralBody: "The image is real. The repair notice sits outside the crop, leaving a culturally familiar explanation to fill the gap.",
-    sourceReason: "Because reading, education, and public-institution conversations overlap even when their immediate goals differ.",
+    sourceReason: "Because the cropped photograph moved from reading groups into public debate as apparent proof of permanent book removal.",
     artifactKinds: ["screenshot", "meme", "comments"],
     youthFit: true,
     badActorFit: true,
@@ -1485,7 +1485,7 @@ const INCIDENTS: readonly IncidentTemplate[] = [
     resolution: "The complete notice limits the recall to one lot and confirms that other vendors are unaffected.",
     heading: "A narrow precaution expands when its boundary is cropped away.",
     neutralBody: "The warning is legitimate, but the missing lot number changes its practical meaning as trusted people forward it.",
-    sourceReason: "Because household planning, wellness content, and local-business promotion converge before the weekend.",
+    sourceReason: "Because families shared the cropped notice before weekend shopping and business accounts amplified the broader warning.",
     artifactKinds: ["screenshot", "comments", "live"],
     youthFit: false,
     badActorFit: true,
@@ -1517,7 +1517,7 @@ const INCIDENTS: readonly IncidentTemplate[] = [
     resolution: "The organizer later confirms that the festival remains scheduled with an indoor backup location.",
     heading: "A plan for uncertainty is recast as a decision already made.",
     neutralBody: "One administrative page travels faster than the complete packet and becomes socially useful to people awaiting weekend plans.",
-    sourceReason: "Because event planning, fan discussion, and sponsor promotion all reward early certainty.",
+    sourceReason: "Because people planning rides, fan posts, and sponsor promotions wanted an answer before the organizer confirmed the schedule.",
     artifactKinds: ["screenshot", "status", "meme"],
     youthFit: true,
     badActorFit: false,
@@ -1549,7 +1549,7 @@ const INCIDENTS: readonly IncidentTemplate[] = [
     resolution: "The adopted minutes retain cash service systemwide and schedule a limited accessibility review.",
     heading: "A limited test becomes a permanent systemwide rule in one crop.",
     neutralBody: "The agenda is genuine. Its scope disappears before the people most affected encounter it.",
-    sourceReason: "Because commuter advocacy, payment marketing, and council accountability share the same document.",
+    sourceReason: "Because commuter groups, payment companies, and council watchers all circulated the same clipped agenda.",
     artifactKinds: ["screenshot", "comments", "live"],
     youthFit: true,
     badActorFit: true,
@@ -1581,7 +1581,7 @@ const INCIDENTS: readonly IncidentTemplate[] = [
     resolution: "The complete schedule shows the new room and the unchanged performance date.",
     heading: "A room change becomes a cancellation inside the peer group.",
     neutralBody: "The schedule fragment answers one question poorly and arrives while classmates are already arranging rides and plans.",
-    sourceReason: "Because participation, transportation, humor, and peer timing all converge in the same chat.",
+    sourceReason: "Because students used the same chat to plan rides, trade jokes, and decide whether to attend.",
     artifactKinds: ["status", "screenshot", "meme"],
     youthFit: true,
     badActorFit: false,
@@ -1613,7 +1613,7 @@ const INCIDENTS: readonly IncidentTemplate[] = [
     resolution: "The full sign and volunteer calendar show normal animal care and an afternoon reopening.",
     heading: "A temporary closed sign is asked to explain an entire institution.",
     neutralBody: "The photograph is accurate but incomplete, and concern for familiar animals gives the missing context urgency.",
-    sourceReason: "Because volunteer, neighborhood, donation, and local-accountability networks overlap.",
+    sourceReason: "Because volunteers, neighbors, donors, and local reporters all shared the incomplete sign.",
     artifactKinds: ["clip", "screenshot", "comments"],
     youthFit: true,
     badActorFit: true,
@@ -3010,7 +3010,7 @@ export function validateGeneratedScenario(scenario: GeneratedScenario): Coherenc
   const artifactsCarryPublicArc = Boolean(boundIncident)
     && scenario.scenes[0]?.artifactCopy === boundIncident?.knownFact
     && scenario.scenes[1]?.artifactCopy === boundIncident?.circulatingFrame
-    && (scenario.scenes[2]?.artifactCopy ?? "").includes(boundIncident?.unresolved ?? "")
+    && scenario.scenes[2]?.artifactCopy === `Multiple trusted accounts now repeat the same unresolved claim about the ${boundIncident?.placeNoun}.`
     && scenario.scenes[3]?.artifactCopy === boundIncident?.resolution;
   const ledgerCarriesBindings = communication.observableRecord.join(" ").includes(bindings.surface)
     && communication.inferences.includes(bindings.bridge)
@@ -3582,7 +3582,7 @@ function buildSceneDisclosure(
     BRIDGE: { label: "CIRCULATING CLAIM", copy: incident.circulatingFrame },
     CROSSOVER: {
       label: "PUBLIC REPEAT RECORD",
-      copy: `Several trusted forms now repeat the same unresolved frame about the ${incident.placeNoun}.`,
+      copy: `Multiple trusted accounts now repeat the same unresolved claim about the ${incident.placeNoun}.`,
     },
     CORRECTION: { label: "PUBLIC UPDATE", copy: incident.resolution },
   };
@@ -3591,7 +3591,7 @@ function buildSceneDisclosure(
     BRIDGE: { label: "QUESTION AT HANDOFF", copy: hook.activeQuestion },
     CROSSOVER: {
       label: "QUESTION AT SCALE",
-      copy: `Which repeated versions still preserve the source's uncertainty about the ${incident.placeNoun}?`,
+      copy: "The record did not show which copies preserved the source's uncertainty.",
     },
     CORRECTION: {
       label: "REPAIR QUESTION",
@@ -3603,7 +3603,7 @@ function buildSceneDisclosure(
     BRIDGE: { label: "REPLY ACCESS UNKNOWN", copy: communication.unknowns[1] },
     CROSSOVER: {
       label: "AUDIENCE UNKNOWN",
-      copy: `Whether the rooms seeing the repeated ${incident.placeNoun} frame have also seen the source uncertainty.`,
+      copy: `It is not known whether people seeing the repeated ${incident.placeNoun} claim also saw the source's uncertainty.`,
     },
     CORRECTION: {
       label: "CARRIAGE UNKNOWN",
@@ -3811,12 +3811,12 @@ function buildFourBeatArc(input: FourBeatInput): GeneratedScene[] {
       act: "CROSSOVER",
       time: times[2],
       channel: chain[2]?.room ?? "public comments",
-      heading: "Repeated exposure expands faster than unique understanding.",
-      body: `Several versions now point back to one compressed frame. ${incident.unresolved}`,
-      reason: `Because transformed copies reached ${chain[2]?.room ?? "another public room"} before the original context.`,
+      heading: "Repeated exposure grows faster than shared understanding.",
+      body: `One compressed claim now appears in several versions. ${incident.unresolved}`,
+      reason: `Because altered copies reached ${definitePhrase(chain[2]?.room ?? "another public room")} before any copy that included the source's uncertainty.`,
       artifact: actor.kind === "abstract_bad_actor" ? "dashboard" : pick(incident.artifactKinds, random),
       artifactTitle: "CROSS-ROOM REPEAT EXPOSURE",
-      artifactCopy: `Several trusted forms now repeat the same unresolved frame. ${incident.unresolved}`,
+      artifactCopy: `Multiple trusted accounts now repeat the same unresolved claim about the ${incident.placeNoun}.`,
       artifactTag: "UNIQUE REACH SLOWING · FAMILIARITY RISING",
       bridge: chain[3]?.room,
       provenance: provenances[2],
@@ -4146,11 +4146,11 @@ function relationalPersistenceChoice(
   };
   switch (communication.dynamic) {
     case "defensive-scapegoating": return { ...common, label: "Let one person stand in for the whole failure", detail: "Carry the character explanation. Leave the approval timeline and distributed causes out.", signal: "blame transfer · character claim" };
-    case "self-protective-rumor": return { ...common, label: "Preserve the private character explanation", detail: "Correct the incident. Keep the private story in place and do not name the earlier handoff.", signal: "triangulated rumor · reply access unequal" };
-    case "warm-interior-cool-presentation": return { ...common, label: "Shield the relationship with an altered account", detail: `Repeat the accurate ${incident.placeNoun} correction. Leave the protected person's part in the changed handoff unmentioned.`, signal: "accurate task code · protected record altered" };
-    case "cold-interior-warm-presentation": return { ...common, label: "Keep the caring tone and the protected account", detail: "Use the room's familiar care language. Keep the relationship's part in the handoff out of view.", signal: "warmth halo · protected record altered" };
-    case "sociocultural-code-mismatch": return { ...common, label: "Translate the words but protect the handoff", detail: "Preserve the task commitment. Retell the handoff without naming who removed its context.", signal: "pragmatic mismatch · protected record altered" };
-    case "cross-coalition-code-convergence": return { ...common, label: "Protect the ally while staging disagreement", detail: "Quote the vocabulary collision. Keep the shared proposal and the ally's part in obscuring it separate.", signal: "code collision · protected record altered" };
+    case "self-protective-rumor": return { ...common, label: "Correct the incident but keep the private blame story", detail: "Correct the incident. Keep the private story in place and do not name who passed it on earlier.", signal: "triangulated rumor · reply access unequal" };
+    case "warm-interior-cool-presentation": return { ...common, label: "Correct the incident but hide who changed the message", detail: `Repeat the accurate ${incident.placeNoun} correction. Do not name the protected person who changed the message.`, signal: "accurate task code · protected record altered" };
+    case "cold-interior-warm-presentation": return { ...common, label: "Use caring language but hide who changed the message", detail: `Use the room's familiar care language. Do not disclose how ${communication.misrepresentation.relationshipLabel} helped change the message.`, signal: "warmth halo · protected record altered" };
+    case "sociocultural-code-mismatch": return { ...common, label: "Translate the message but hide who removed its context", detail: "Preserve the task commitment. Retell the message without naming who removed its context.", signal: "pragmatic mismatch · protected record altered" };
+    case "cross-coalition-code-convergence": return { ...common, label: "Disagree in public but hide the ally's role", detail: "Quote the vocabulary collision. Keep the shared proposal and the ally's part in obscuring it separate.", signal: "code collision · protected record altered" };
   }
 }
 
@@ -4233,35 +4233,35 @@ function buildLastResortChoice(
   if (["marketer", "political", "abstract_bad_actor"].includes(actor.kind)) return null;
   const consequences: Record<"youth" | "caregiver" | "creator" | "institutional", Omit<LastResortMove, "eligibility" | "minimumDiscernment" | "maximumEnactment" | "minimumCompositeFatigue" | "minimumDominantFatigue">> = {
     youth: {
-      protectedParty: "the peer with less reply access and the young people relying on the complete record",
-      positiveConsequence: "The personal label loses its cover and the targeted peer can re-enter on event facts.",
-      harmedParty: "the close friend whose changed handoff becomes attributable",
-      negativeConsequence: "That friendship may fracture publicly, and the friend may lose a trusted group role.",
-      selfCost: "The protagonist leaves the organizing role and risks the belonging they were trying to keep.",
+      protectedParty: "the peer with less ability to reply publicly and the young people relying on the complete record",
+      positiveConsequence: "The accusation becomes traceable. The targeted peer can answer with the full event record.",
+      harmedParty: "the close friend whose altered message is now traceable",
+      negativeConsequence: "The friendship may break in public. The friend may also lose a trusted role in the group.",
+      selfCost: "The protagonist leaves the organizing role. They may also lose their place in the group.",
       ordinaryBoundary: "This seat would ordinarily correct privately and preserve the group relationship.",
     },
     caregiver: {
-      protectedParty: "the person carrying concentrated blame and the households relying on an accurate handoff",
-      positiveConsequence: "The complete chronology interrupts the character story and restores practical access.",
-      harmedParty: "the family member whose omission the protagonist had been shielding",
-      negativeConsequence: "The family member loses protected standing and may experience the disclosure as betrayal.",
-      selfCost: "The protagonist relinquishes the trusted coordinator role and accepts a serious family rupture.",
+      protectedParty: "the person blamed for the missing information and the households relying on accurate instructions",
+      positiveConsequence: "Publishing the full timeline stops the blame story from guiding the response and restores the missing facts.",
+      harmedParty: `the family member whose omission the ${actor.role.replaceAll("-", " ")} had kept private`,
+      negativeConsequence: "The family member loses the moderator's protection inside the group. They may experience the disclosure as betrayal.",
+      selfCost: "The protagonist gives up the trusted coordinator role. The disclosure may cause a serious family rupture.",
       ordinaryBoundary: "This seat would ordinarily repair the record without exposing a family relationship in public.",
     },
     creator: {
-      protectedParty: "the person framed by the circulating account and the audience owed the source record",
-      positiveConsequence: "Mirrors receive the attributable correction and the personal insinuation loses distribution.",
-      harmedParty: "the close collaborator who helped carry the profitable frame",
-      negativeConsequence: "The collaborator loses the project and may absorb a visible professional setback.",
-      selfCost: "The protagonist pulls the collaboration, forfeits its income, and stakes their own credibility on the correction.",
+      protectedParty: "the person targeted by the circulating accusation and the audience owed the original source",
+      positiveConsequence: "The sourced correction appears beside copied posts. Those copies stop spreading the personal accusation.",
+      harmedParty: "the close collaborator who helped circulate the accusation for profit",
+      negativeConsequence: "The collaborator loses the project. They may also face a visible professional setback.",
+      selfCost: "The protagonist ends the collaboration and gives up the income from that collaboration. Their own credibility now depends on the correction.",
       ordinaryBoundary: "This seat would ordinarily negotiate a correction without destroying a valued collaboration.",
     },
     institutional: {
-      protectedParty: "the lower-access target and the public depending on an attributable institutional record",
-      positiveConsequence: "An emergency hold stops the distorted account from governing the next decision.",
-      harmedParty: "the colleague under this seat's authority whose protected omission enters review",
-      negativeConsequence: "The colleague loses delegated authority and a cared-for working relationship may not recover.",
-      selfCost: "The protagonist invokes the hold under their own name and risks removal from the decision seat.",
+      protectedParty: "the person with less ability to reply publicly and the public relying on a complete institutional record",
+      positiveConsequence: "An emergency hold stops the distorted account from shaping the next decision.",
+      harmedParty: "the colleague whose hidden omission now enters formal review",
+      negativeConsequence: "The colleague loses delegated authority. The working relationship may not recover.",
+      selfCost: "The protagonist invokes the hold under their own name. They may be removed from the role overseeing the decision.",
       ordinaryBoundary: "This seat would ordinarily preserve due process and the supervised colleague's confidence.",
     },
   };
@@ -4269,7 +4269,7 @@ function buildLastResortChoice(
   if (!consequence) return null;
   return {
     id: `${scenarioId}-choice-last-resort`,
-    label: actor.kind === "institutional" ? "Freeze the decision and release the full chronology" : "Break the protected handoff in public",
+    label: actor.kind === "institutional" ? "Freeze the decision and release the full timeline" : "Reveal who changed the message in public",
     detail: `${consequence.positiveConsequence} ${consequence.negativeConsequence} ${consequence.selfCost}`,
     intent: "last-resort protection with accepted split harm",
     signal: `extraordinary attributed disclosure · ${incident.placeNoun} process interrupted`,
@@ -4309,7 +4309,7 @@ function correctionPersistenceLabel(communication: CommunicationLedger): string 
 function correctionPersistenceDetail(communication: CommunicationLedger): string {
   switch (communication.dynamic) {
     case "defensive-scapegoating": return "Use the changed record as an update, not as a reason to reopen the approval timeline. Keep the person-story in place.";
-    case "self-protective-rumor": return "Correct what happened. Do not revisit who changed the trusted handoff.";
+    case "self-protective-rumor": return "Correct what happened. Do not revisit who changed the trusted message.";
     case "warm-interior-cool-presentation": return "Update the event and keep treating the brief reply as a verdict on care.";
     case "cold-interior-warm-presentation": return "Offer the new record in the same familiar tone. Leave accountability outside the reply.";
     case "sociocultural-code-mismatch": return "Publish the correction in one register only. Let the room keep using formality as its test of care.";
@@ -4687,7 +4687,7 @@ function lessonForBeat(act: SceneAct, actor: ActorTemplate): SceneLesson {
       term: "signaling",
       definition: "An action can show identity, loyalty, or urgency as well as its literal message.",
       perspective: `For the ${actor.role}, answering now can also show usefulness, loyalty, or responsibility.`,
-      observable: "Evidence here would require either a selected outward action or a modeled result showing that message content or a recognizable form traveled. Audience response alone would not prove the player's belief.",
+      observable: "An audience response would not, by itself, show what the player believed.",
       experienceRules: experienceRulesFor("signaling"),
     };
   }
@@ -4696,7 +4696,7 @@ function lessonForBeat(act: SceneAct, actor: ActorTemplate): SceneLesson {
       term: "saturation",
       definition: "Repeated exposure can make a claim feel familiar even when few new people see it.",
       perspective: `The ${actor.role} sees more activity but cannot tell repeated views from new reach.`,
-      observable: "Evidence here would require modeled exposure added in the background or modeled exposure held back. Familiarity alone would not prove agreement.",
+      observable: "Familiarity does not mean agreement, and it does not make the claim true.",
       experienceRules: experienceRulesFor("saturation"),
     };
   }
@@ -4705,7 +4705,7 @@ function lessonForBeat(act: SceneAct, actor: ActorTemplate): SceneLesson {
       term: "correction drag",
       definition: "A correction often travels more slowly because it carries its source, scope, and limits.",
       perspective: `The ${actor.role} has a usable record, but earlier versions are already familiar.`,
-      observable: "Evidence here would require either a selected bounded repair or a modeled gain in checking support or source context. Earlier circulation is assessed separately.",
+      observable: "More source detail can help people check a claim without undoing its earlier spread.",
       experienceRules: experienceRulesFor("correction drag"),
     };
   }
@@ -4716,7 +4716,7 @@ function lessonForBeat(act: SceneAct, actor: ActorTemplate): SceneLesson {
       term: capitalTerm,
       definition: "Attention can help a campaign or client even when it adds no evidence to a claim.",
       perspective: `The ${actor.role} can use the incident's attention for a separate campaign or contract goal.`,
-      observable: "Evidence here would require either a selected action serving a separate campaign or client goal or a modeled change linked to attention pressure. That modeled effect alone would not prove an actor's goal or the message true.",
+      observable: "Attention can serve another goal without making a claim true or proving anyone's motive.",
       experienceRules: experienceRulesFor(capitalTerm),
     };
   }
@@ -4725,7 +4725,7 @@ function lessonForBeat(act: SceneAct, actor: ActorTemplate): SceneLesson {
       term: capitalTerm,
       definition: "A trusted person can carry information into a room that would ignore an unknown source.",
       perspective: `People expect care or accuracy from the ${actor.role}, so the handoff travels farther.`,
-      observable: "Evidence here would require either a selected trust-linked handoff or a modeled change linked to borrowed trust. Neither would make the message true.",
+      observable: "Borrowed trust can help a message enter a room. It does not make the message true.",
       experienceRules: experienceRulesFor(capitalTerm),
     };
   }
@@ -4733,7 +4733,7 @@ function lessonForBeat(act: SceneAct, actor: ActorTemplate): SceneLesson {
     term: "status capital",
     definition: "A timely response can protect someone's place in a group without clarifying the facts.",
     perspective: `The ${actor.role} can preserve standing by recognizing the room's frame at the useful moment.`,
-    observable: "Evidence here would require either a selected response designed to protect standing or modeled background circulation or reaction pressure. That modeled effect alone would not prove anyone's purpose or settle the facts.",
+    observable: "Visible support can protect standing without proving anyone's motive or settling the facts.",
     experienceRules: experienceRulesFor("status capital"),
   };
 }
@@ -4872,6 +4872,10 @@ function valueLensFor(kind: ProtagonistKind): PageScenario["valueLens"] {
 
 function titleCase(value: string): string {
   return value.split("-").map((word) => `${word.charAt(0).toUpperCase()}${word.slice(1)}`).join(" ");
+}
+
+function definitePhrase(value: string): string {
+  return /^(?:a|an|the|this|that|their|its|our)\b/i.test(value) ? value : `the ${value}`;
 }
 
 function advanceClock(start: string, addMinutes: number): string {

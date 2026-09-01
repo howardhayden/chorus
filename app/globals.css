@@ -1113,6 +1113,20 @@ button:focus-visible,a:focus-visible,summary:focus-visible,[tabindex]:focus-visi
   font:400 clamp(1.8rem,4vw,3.2rem)/1 var(--display);
 }
 .plain-concept-receipt>header>p:not(.panel-label){margin:12px 0 0;color:var(--muted);font-size:.875rem;line-height:1.6}
+.concept-status-key{
+  margin:16px 0 0;
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:8px;
+}
+.concept-status-key>div{
+  min-width:0;
+  padding:10px 11px;
+  border-left:2px solid rgba(127,201,155,.42);
+  background:rgba(8,37,21,.46);
+}
+.concept-status-key dt{color:var(--cream);font:650 .7rem/1.3 var(--mono);text-transform:uppercase}
+.concept-status-key dd{margin:5px 0 0;color:var(--muted);font-size:.78rem;line-height:1.5}
 .plain-concept-receipt ol{
   margin:18px 0 0;
   padding:0;
@@ -1138,17 +1152,20 @@ button:focus-visible,a:focus-visible,summary:focus-visible,[tabindex]:focus-visi
   text-transform:uppercase;
 }
 .plain-concept-receipt h4{margin:0;color:var(--cream);font:400 1.35rem/1.1 var(--display);text-transform:capitalize}
+.plain-concept-receipt h4 small{display:block;margin-top:3px;color:var(--muted);font:.72rem/1.35 var(--sans);text-transform:none}
 .plain-concept-receipt li>p{margin:10px 0 0;color:#c8b59d;font-size:.875rem;line-height:1.55}
+.plain-concept-receipt li>p strong{display:block;margin-bottom:3px;color:var(--mint);font:650 .66rem/1.35 var(--mono);text-transform:uppercase;letter-spacing:.04em}
+.plain-concept-receipt .concept-evidence{color:#d4c1a7}
 .plain-concept-receipt .concept-limit{color:var(--muted);font-size:.78rem}
-.plain-concept-receipt small{display:block;margin-top:11px;color:var(--mint);font:.7rem/1.5 var(--mono)}
 
 @media(max-width:680px){
   .debrief-ending{padding-bottom:16px}
   .naturalized-summary{padding:20px}
   .naturalized-summary h3{font-size:clamp(2.5rem,16vw,4rem)}
+  .concept-status-key{grid-template-columns:minmax(0,1fr)}
   .plain-concept-receipt ol{grid-template-columns:minmax(0,1fr)}
 }
 
 @media(forced-colors:active){
-  .naturalized-summary,.model-limit,.plain-concept-receipt,.plain-concept-receipt li,.plain-concept-receipt li span{border:1px solid CanvasText}
+  .naturalized-summary,.model-limit,.plain-concept-receipt,.plain-concept-receipt li,.plain-concept-receipt li span,.concept-status-key>div{border:1px solid CanvasText}
 }
