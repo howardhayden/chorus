@@ -9,14 +9,15 @@ event rules in the [Concurrent-night runtime](CONCURRENT-NIGHT.md).
 
 ## Generation contract
 
-`generateScenarioPack(seed)` accepts a finite 32-bit integer and returns one
-validated `GeneratedScenarioPack` containing:
+`generateScenarioPack(seed)` accepts a finite 32-bit integer under current
+generator version 14 and returns one validated `GeneratedScenarioPack`
+containing:
 
 - a generator version and normalized seed;
 - six unique generated scenarios;
 - one shared night clock;
 - six sparse compatible direct links;
-- 30 bounded ordered systemic routes;
+- 30 bounded ordered cross-room routes;
 - scheduled ambient pulses;
 - distributed repair paths;
 - rejected-draft metadata when applicable; and
@@ -33,22 +34,30 @@ playable-night count.
 
 1. Normalize the incoming seed and create the deterministic random stream.
 2. Select six incident templates and assign unique room identities.
-3. Bind protagonist roles, goals, knowledge, pressure, stakes, and immutable
-   truth ledgers.
+3. Bind protagonist roles, goals, knowledge, pressure, and stakes; create one
+   fact-only `TruthLedger` and separate `PropagationLedger` per incident.
 4. Build a cohesive linguistic repertoire for every protagonist.
 5. Assign the six reviewed communication dynamics exactly once.
 6. Bind deliberate-protection beneficiaries and incentive intersections.
 7. Assign sparse conversation-routing moves to compatible rooms.
-8. Construct four causal scenes and shuffled choice sets per room.
+8. Construct four causal scenes, beat-local typed disclosures, and shuffled
+   choice sets with typed delivery contracts per room.
 9. Apply situational pressure contours and sparse action structures.
-10. Build one preferred compatible direct route from each room.
-11. Build a bounded systemic route for every other ordered room pair.
+10. Build one preferred typed content or format route from each room.
+11. Build a bounded typed cross-room route for every other ordered room pair.
 12. Create scheduled ambient pulses and distributed repair paths.
 13. Validate every scenario, then validate the pack as one ecology.
 14. Return the pack only if every release-blocking invariant passes.
 
 The candidate is never shown while validation is incomplete. Regeneration
 keeps the current playable night until a replacement passes the same gates.
+
+Version 14 also binds the rewritten authored-copy templates, each scene's typed
+disclosure and `SceneLesson.experienceRules`, each choice's delivery scope,
+carriage, and `conceptPlays`, and every link's semantic class and carrier into
+the generated pack. Those fields are deterministic authored output, not
+presentation guesses that may be reclassified from labels, tags, detail text,
+intent prose, or generic signal copy.
 
 ## Four-beat causal structure
 
@@ -67,9 +76,25 @@ absent for an instrumental role.
 
 ## Incident-bound truth
 
-Each room owns an immutable `TruthLedger` and a reviewed communication hook.
-Surface, Bridge, Crossover, and Correction each have a fact binding that must
-appear in both the relevant artifact and the same incident's ledger.
+Each room owns an immutable, fact-only `TruthLedger` with exactly
+`knownFact`, `unresolvedAtEntry`, and `laterResolution`. A separate
+`PropagationLedger` holds only `circulatingFrame`. The frame is something the
+modeled system circulates; placing it outside truth prevents repetition from
+quietly promoting it into fact.
+
+Each generated scene also owns a `SceneDisclosure` with typed `records`,
+`questions`, and `unknowns`. Surface exposes the known public record, Bridge
+the circulating claim, Crossover a public repeat record, and Correction the
+attributed update. Every beat gets its own question and unknown rather than
+re-rendering one room-wide ledger. The contracted instrumental seat alone may
+receive one `seat-private-assignment-brief` record in Bridge, copied from the
+actual observable assignment brief. Other atoms are `public-record`.
+
+The communication ledger retains analytic fact bindings for validation, but
+those strings do not become extra truth-ledger fields or a shared playable
+record. Validation instead checks truth, propagation, public artifacts,
+beat-local disclosure, and the analytic ledger as distinct incident-bound
+structures.
 
 This prevents a communication lesson from being pasted onto unrelated story
 material. Source or evidence from one incident cannot satisfy another
@@ -197,21 +222,57 @@ non-propositional meme response, and a non-propositional absurdist response.
 These moves retain their underlying relational record but provide no evidence
 or repair support for the active incident.
 
+## Typed concept bindings
+
+Concept status is authored structurally rather than recovered from prose.
+Every choice has `conceptPlays`, including an explicit empty array when the
+choice plays no term. Every lesson has one or more conjunctive
+`experienceRules`.
+
+| Term | Explicit play binding | Authored experience receipt rules |
+|---|---|---|
+| Signaling | Surface action with shared or public outward delivery and content, format, or both carriage. | Decision from that lesson scene; cross-room `selectedCarriage` with semantic content or format. |
+| Saturation | None; saturation is experience-only. | Decision or pulse from that lesson scene; local or cross-room `backgroundReach > 0` or `avoidedReach > 0`. |
+| Correction drag | Correction action recorded as source-bearing repair, bounded accountability, or translation with positive verification or provenance. | Decision or pulse from that lesson scene; local or cross-room verification or provenance increase. |
+| Market value | Bridge action for the marketer or instrumental coordinator, with a deliberately distortive relational move and positive reach. | Decision or pulse from that lesson scene; cross-room heat change through `attention-market`. |
+| Trust capital | Bridge action for the caregiver or institutional seat, with a non-repair move and positive reach. | Decision-only selected carriage or any trust change from that lesson scene, through `trust-carryover`. |
+| Status capital | Bridge action for the youth, creator, or political seat, with a non-repair move and positive reach. | From that lesson scene: ambient-ranking background reach or consensus change, or attribution-carryover blame change. |
+
+Rules match one receipt conjunctively. `event: any` admits decisions and ambient
+pulses; `event: decision` does not. `selectedCarriage` means true,
+`backgroundReach` and `avoidedReach` mean greater than zero, metric `increase`
+means greater than zero, and metric `change` means nonzero. The event source
+must be the exact lesson scene, and scope, semantic, and mechanism must match
+when declared. A nonzero unrelated metric cannot satisfy a rule.
+
 ## Cross-room construction
 
-### Systemic routes
+### Typed routes
 
 Every ordered pair of distinct rooms receives one route chosen from bounded
 mechanisms such as shared audience, format imitation, attention market,
 institutional load, trust carryover, ambient ranking, attribution carryover,
-or code collision. A route projects only the metrics relevant to its mechanism.
+or code collision. Its discriminated semantic is authored independently of
+copy:
+
+- `content` is direct and owns a `shared-channel` carrier;
+- `format` is direct and owns an `artifact-format` carrier; and
+- `ambient` has no carrier or compatibility basis.
+
+A route projects only metrics relevant to its mechanism. `revealedCue` and
+`compatibilityBasis` explain a route after it is classified; neither field is
+searched to decide the class.
 
 ### Direct routes
 
 Each source room may have at most one preferred direct route. Direct content or
-recognizable form can cross only when the generated rooms share a represented
-channel or artifact format. A common register, political position, or broad
-theme is not sufficient.
+recognizable form can cross only when the generated rooms share the typed
+channel or artifact-format carrier. A choice separately declares delivery
+scope (`private`, `shared`, `public`, or `withheld`) and carriage (`none`,
+`content`, `format`, or both). Private and withheld actions cannot use a direct
+carrier. Shared or public actions can use only the carrier their carriage type
+permits. A common register, political position, broad theme, or suggestive
+choice label is not sufficient.
 
 The generator creates vague copy for unrevealed endpoints and attributable
 copy for a state in which both rooms have been entered. Validation rejects
@@ -233,7 +294,7 @@ indispensable actor, and delay may not erase every legal route.
 
 A candidate fails if any of the following is false:
 
-- six unique scenarios and 30 unique ordered systemic routes exist;
+- six unique scenarios and 30 unique ordered typed cross-room routes exist;
 - all six communication dynamics appear exactly once;
 - each communication fact is bound to the active incident and all four beats;
 - deliberate protection covers every required beneficiary and has prior private
@@ -241,12 +302,21 @@ A candidate fails if any of the following is false:
 - actor repertoires, scene selections, switches, and continuity anchors cohere;
 - same-register and different-register mental-model cases remain distinct;
 - observed, inferred, and unknown ledger entries remain separate;
+- every truth ledger has exactly the three fact fields, while the circulating
+  frame remains in the one-field propagation ledger;
+- every beat exposes unique typed records, questions, and unknowns; only the
+  contracted Bridge may expose one actual private assignment brief;
+- every concept play binding and experience rule matches its declared lesson
+  term and canonical structural shape, with encountered, experienced, and
+  played states structurally reachable without display-prose inference;
 - person-directed claims are low-stakes and keep conduct separate from trait;
 - each beat retains distortion and bounded action plus a non-amplification
   floor;
 - every ideal has an intelligible barrier and a viable repair path;
 - fatigue is typed, finite, bounded, and incapable of lowering discernment;
-- direct routes have carrier evidence and vague copy has no protected endpoint
+- every route has a coherent typed semantic/carrier shape, every choice has a
+  coherent typed delivery shape, incompatible or private delivery cannot
+  create selected direct carriage, and vague copy has no protected endpoint
   detail;
 - scheduled pulses are unique and bounded;
 - no real platform name or operational manipulation grammar appears; and
@@ -259,6 +329,31 @@ Increase it when the same seed could produce a materially different pack,
 choice identity, event requirement, or reconstruction result. A save created
 with another generator version is rejected unless an explicit, tested
 reconstruction path exists.
+
+The current authored model is generator version 14. Version 14 changes seeded
+authored copy and the source used by the completed-night concept derivation, so
+it intentionally does not promise version-13 pack reconstruction. The retained
+`1.0.0-rc.1` evidence and compatible saves remain historical version-13
+records; schema version 1 alone does not make them version-14 compatible.
+
+At completion, `buildConceptReceipt(pack, state)` considers only
+`SceneLesson` terms belonging to scenes resolved by actual accepted decisions,
+then deduplicates by term. The generator supplies the term, definition,
+perspective, observable, and conjunctive `experienceRules`; each choice
+supplies zero or more explicit term-discriminated `conceptPlays`. Runtime state
+supplies whether the strongest supported status is `played`, `experienced`, or
+`encountered`:
+
+- played requires an accepted choice carrying that exact term binding;
+- experienced requires an actual decision or ambient-pulse receipt to match
+  every field in one of the lesson's exact rules; and
+- encountered requires only that an accepted decision resolved the lesson
+  scene.
+
+Precedence is played over experienced over encountered. Saturation deliberately
+has no play binding. Played decision IDs and matched effect-event IDs are
+derived independently, so a played entry may have no matching effect-event ID.
+Presentation never infers a concept by scanning prose.
 
 Schema changes to the portable envelope are versioned separately. See
 [Portable save format](SAVE-FORMAT.md) and

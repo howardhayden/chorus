@@ -45,9 +45,24 @@ These pairings are scenario roles, not claims about caregivers, young people, in
 
 ## The communication ledger
 
-Each generated scenario contains one `CommunicationLedger`; every one of its four scenes references the same ledger. The dynamic cannot change mid-room merely to make the plot more dramatic.
+Each generated scenario contains one `CommunicationLedger`, but its four
+playable scenes do not reference or expose that analytic object. Generation
+uses the shared scenario ledger to keep the dynamic coherent, while each scene
+receives its own narrower `SceneDisclosure`. The dynamic cannot change
+mid-room merely to make the plot more dramatic.
 
-The ledger also carries reviewed `factBindings` for Surface, Bridge, Crossover, and Correction. Those strings come from the active incident's communication hook and must appear in that incident's immutable truth ledger and matching playable artifact. A room cannot teach a person-story, code collision, or repair that belongs to a parallel unseen event.
+The ledger also carries reviewed analytic `factBindings` for Surface, Bridge,
+Crossover, and Correction. Those strings come from the active incident's
+communication hook and remain inside the analytic ledger for validation. They
+do not become four fields in playable truth.
+
+The incident instead owns two narrower immutable records: a fact-only
+`TruthLedger` (`knownFact`, `unresolvedAtEntry`, `laterResolution`) and a
+separate `PropagationLedger` (`circulatingFrame`). Each scene owns a typed,
+beat-local `SceneDisclosure` of records, questions, and unknowns. Validation
+checks all of these structures and the matching artifact against the same
+incident without merging them. A room cannot teach a person-story, code
+collision, or repair that belongs to a parallel unseen event.
 
 ### Mental models
 
@@ -69,13 +84,25 @@ Each repertoire records:
 
 A scene may retain the default register or select another register already present in the repertoire. A switch is valid only when the audience and situation make it plausible and the generated wording preserves the actor's continuity anchors. Register changes may alter formality, compression, acknowledgment order, evidentiary framing, shared references, or turn-taking. They may not randomly replace the actor's knowledge, goal, interior orientation, or semantic commitments. Cohesion is a generation invariant: an incoherent draft is rejected rather than labeled “unstable” or repaired with a visible character score.
 
-Active play renders only the neutral `publicSurfaceCue` and bounded pre-conclusion `playInferenceHints`. It does not expose the repertoire inventory, contextual anchors, switch rationale, internal code identifiers, or same-register classification. The complete repertoire and played switch history become available only in the collapsed **Registers and assumptions** section of the concluding Interpretation receipt.
+Active play renders only the neutral `publicSurfaceCue` and bounded
+pre-conclusion `playInferenceHints`. It does not expose the repertoire
+inventory, contextual anchors, switch rationale, internal code identifiers, or
+same-register classification. After completion, the naturalized summary may
+name a register action or assumption mismatch only when an accepted decision
+and its typed source support that synthesis. CHORUS no longer expands the full
+profile into a concluding repertoire taxonomy.
 
 ### Shared code, different world model
 
 Linguistic compatibility and mental-model compatibility are independent. Two actors may share the same register, vocabulary, and interactional rhythm while disagreeing about what counts as evidence, what authority owes, whether a post coordinates action or performs belonging, how risk should be distributed, or what a familiar political term commits anyone to doing.
 
-CHORUS can therefore model a same-register friction without inventing a code mismatch. The final receipt must identify the genuinely shared surface and then separately name each represented conversational model, the resulting misunderstanding, and an accountable translation route. Shared language is not treated as shared ideology, class position, motive, truth, relationship, or common ground; those require their own evidence.
+CHORUS can therefore model a same-register friction without inventing a code
+mismatch. When the completed summary includes that friction, its retained
+narrative sources must identify the genuinely shared surface and separately
+support the represented conversational difference, resulting
+misunderstanding, and accountable translation route. Shared language is not
+treated as shared ideology, class position, motive, truth, relationship, or
+common ground; those require their own evidence.
 
 ### Observed, inferred, unknown
 
@@ -87,7 +114,12 @@ Every ledger must provide at least two observations, one inference, and one unkn
 | Inferences | What the modeled audience concludes about care, competence, loyalty, intent, or coalition position | Proven interior state |
 | Unknowns | Missing access, purpose, instruction, incentive, or interpretation | Evidence for whichever narrative is most emotionally useful |
 
-The interface exposes this split in each artifact strip, the room-close receipt, and the whole-night Interpretation tab.
+The active Record panel exposes the current scene's typed disclosure: one
+public record, one question, and one unknown, with a second seat-private record
+only for the contracted instrumental Bridge. The room-close receipt holds the
+record in place without repeating the atoms or adding a motive judgment. After
+completion, the continuous summary may synthesize the accepted path from its
+typed sources; there is no whole-night Interpretation tab.
 
 ### Authored interior
 
@@ -137,7 +169,13 @@ Each room binds that comparison pressure to at least two advancement domains: a 
 
 The protected group story is always tested against a contrary mixed record. No family, class, coalition, profession, cultural code, or formal rank is assigned inherent competence. A room may show actors using such an essentialized story because it is socially or competitively useful; the generator may not endorse that story as truth or use identity as an effect coefficient.
 
-The final receipt discloses seven distinct parts: competence threat, feared inference, material counter-record, protected group/class story, advancement domains, competitive prize, and the combined motive. Before completion, play shows only the concrete comparison, the known record, what the seat risks losing, and the available action. It does not supply the analytic classification in advance.
+The typed model retains seven distinct parts: competence threat, feared
+inference, material counter-record, protected group/class story, advancement
+domains, competitive prize, and the combined motive. Before completion, play
+shows only the concrete comparison, the known record, what the seat risks
+losing, and the available action. After completion, the naturalized summary may
+name only the parts supported and needed by its state-derived synthesis; it
+does not dump all seven parts as a taxonomic receipt.
 
 ## Presentation-temperature mismatches
 
@@ -243,7 +281,14 @@ Only modeled platform activity changes this state. The application does not meas
 
 A strongly prosocial seat with baseline discernment at least 84 may receive one extraordinary final-beat move. It stays absent until all four authored conditions hold: discernment remains at least 80, enactment is at most 58, total five-channel fatigue is at least 150, and one fatigue channel is at least 32. These are modeled-state thresholds, not judgments about a real player.
 
-The move is PG and nonviolent but intentionally severe in social, professional, economic, or institutional terms. Its typed receipt must name a cared-for party protected, a different cared-for party who bears a serious cost, and the protagonist's own sacrifice. It may interrupt distribution or expose an attributable omission, but it may not erase previous copies, suspend the non-amplification floor, lower discernment, or describe fatigue as innocence. The move is an unusual boundary crossing by someone who still understands the ordinary boundary.
+The move remains inside the authored PG-bounded, nonviolent grammar but is
+intentionally severe in social, professional, economic, or institutional
+terms. Its typed receipt must name a cared-for party protected, a different
+cared-for party who bears a serious cost, and the protagonist's own sacrifice.
+It may interrupt distribution or expose an attributable omission, but it may
+not erase previous copies, suspend the non-amplification floor, lower
+discernment, or describe fatigue as innocence. The move is an unusual boundary
+crossing by someone who still understands the ordinary boundary.
 
 ## Situational pressure contour
 
@@ -284,13 +329,23 @@ Each night selects exactly two distinct, context-compatible academic lenses. The
 | Impression management and affect heuristics | Warmth, distance, persona, or aesthetic fluency carrying unsupported implication. | Attention and projection can create persuasive effect without truth. | Test provenance, incentive, preparation asymmetry, and audience cost independently of the surface. |
 | Threat-rigidity and self-presentation | Fear of perceived incompetence producing defensive fiction. | Fear distorts perception when image protection outranks reality contact. | Name the feared loss and choose from the verified condition rather than the defensive story. |
 
-The Practice receipt discloses the represented condition, critical reading, accountable move, applicability condition, offered choice, and whether the player selected it. It does not display source names or inherited instructional labels. Active play never names the framework.
+Framework records remain internal analytic and research data. Selected decision
+receipts preserve them for audit, but the current naturalized summary does not
+consume or name framework moves. Its narrower source record follows represented
+facts, selected decisions, typed routes, and one post-close afterimage. Active
+play never names the framework, and there is no separate Practice receipt.
 
 ### Unnamed classical social-strategy lenses
 
-Each night also receives exactly one context-compatible lens reappropriated from classical political-strategy traditions. CHORUS withholds source identities, maxims, and doctrine labels. It preserves only the level used by the Practice receipt: represented condition, governing idea, accountable solution, applicability, and whether the associated choice was selected.
+Each night also receives exactly one context-compatible lens reappropriated
+from classical political-strategy traditions. CHORUS withholds source
+identities, maxims, and doctrine labels. It preserves only represented
+condition, governing idea, accountable solution, applicability, and whether
+the associated choice was selected. These fields remain available to research
+and validation; the current player-facing naturalized summary does not consume
+them.
 
-| Receipt lens | Social-theory reappropriation | Accountable use |
+| Concluding lens | Social-theory reappropriation | Accountable use |
 |---|---|---|
 | Conflict, reputation, and institutional form | Personal virtue and reputation cannot substitute for institutions that expose interests and constrain opportunism. | Move disputes onto attributable records and distribute reply, review, and correction power. |
 | Interdependent seats, resources, and welfare | Social power arises from connected roles, material capacity, counsel, public welfare, and feedback rather than one dominant personality. | Map dependencies, verify through independent routes, and repair the material condition alongside its story. |
@@ -333,7 +388,12 @@ Two systemic mechanisms carry the relational model between otherwise distinct in
 - **Attribution carryover:** repeated person-labels can raise blame concentration and interpretive gap or lower the evidence threshold for adjacent character claims.
 - **Code collision:** familiar coalition or communication-code conflict can widen interpretive gap and conceal common ground elsewhere.
 
-These are ambient conditions unless a link independently satisfies the direct-crossing compatibility rule. An ambient route never means the same rumor, target, claim, culture, or political position crossed rooms.
+These are ambient conditions only when the link's authored semantic is
+`ambient`. An ambient link has no carrier and never means the same rumor,
+target, claim, culture, or political position crossed rooms. Direct `content`
+and `format` links are separate discriminated variants with `shared-channel`
+and `artifact-format` carriers respectively; prose does not promote one class
+into another.
 
 Special routes are compatibility-gated: attribution carryover must originate in a represented scapegoat or defensive-rumor person-label, and code collision connects only the two represented communication-code rooms. Other room pairs use generic systemic mechanisms.
 
@@ -347,21 +407,38 @@ A response can be accurate without answering the active question. CHORUS therefo
 
 The model classifies the authored function, timing, and still-unanswered question—not a style, joke, image, or unusual tone by itself. The adjacent concern never enters the active incident's truth ledger, and none of these moves supplies evidence or source support for repairing that incident. A selected route persists alongside its existing blame, rumor, code, or misrepresentation receipt, allowing intersections without pretending the mechanisms are identical.
 
-Playable choice copy remains natural and unlabelled. Only the collapsed Conversation routes section in the whole-night Choices receipt names the three patterns and shows the question left, introduced material, represented function, and better placement.
+Playable choice copy remains natural and unlabelled. After completion, a
+selected action may appear in the naturalized summary through its ordinary
+decision label, but the current `NarrativeSource` does not expose the analytic
+conversation-routing fields, active question, or better-placement proposal.
+There is no collapsed whole-night Choices receipt, and an offered route is
+never reported as played.
+Direct-route compatibility alone also does not prove carriage by the selected
+path. Every choice declares typed delivery scope and carriage. Private or
+withheld delivery cannot traverse a direct link, and content delivery cannot
+use a format carrier or vice versa. The effect receipt records
+`selectedCarriage` and `selectedCarriageReach`; background and avoided reach
+remain separate model activity.
 
-## Interface and receipt architecture
+## Interface and concluding architecture
 
 The communication model is distributed through progressive disclosure rather
 than appended as one lecture. During play, surfaces may show the concrete
 record, bounded room reading, unknowns, public register cue, reply conditions,
-and local pressure. Complete relational labels, repertoire history,
-misrepresentation analysis, and mental-model comparison are concluding
-material.
+and local pressure. After all 24 decisions, a continuous state-derived summary
+synthesizes one supported chain from factual scenario records, selected
+decisions, typed route receipts, and one room afterimage. It is followed by a
+separate plain receipt containing deduplicated `SceneLesson` concepts from
+accepted decision scenes. Its experienced statuses come only from conjunctive
+lesson receipt rules, and its played statuses come only from explicit selected-
+choice term bindings; display prose is never a predicate. The conclusion does
+not restore the former seven-tab receipt system or expose complete internal
+taxonomies merely because the night ended.
 
 The outward-relationships plot remains a public relationship map. Sharing a
 register does not create an edge because it establishes no alliance, agreement,
 trust, or shared mental model. The exact view, drawer, reason-toggle, graph, and
-debrief contracts are specified once in
+completed-night contracts are specified once in
 [Interaction and progressive disclosure](INTERACTION-DISCLOSURE.md).
 
 ### Deliberate protective misrepresentation
@@ -375,7 +452,16 @@ Each room also carries one typed deliberate-misrepresentation ledger. This is no
 
 Every six-room night covers protection of self, a friend, family, and a person under the protagonist's authority. The remaining rooms cover an ally and a client. The authority case separately records the evaluator/dependent asymmetry: the protagonist can shape an official account while the protected person depends on their evaluation and the person absorbing the cost has less access to reply.
 
-The distinction from motivated reconstruction is release-critical. A protagonist may sincerely reach a self-protective interpretation without knowingly lying; that remains an inference problem. A choice is marked deliberate only when the authored private record precedes the represented departure from it. The final receipt discloses beneficiary, known record, altered account, power condition, and correction duty. Before the conclusion, the player sees only the concrete occupied-seat knowledge and action—not the lesson label.
+The distinction from motivated reconstruction is release-critical. A
+protagonist may sincerely reach a self-protective interpretation without
+knowingly lying; that remains an inference problem. A choice is marked
+deliberate only when the authored private record precedes the represented
+departure from it. The current completed summary does not name beneficiary,
+altered account, power condition, correction duty, or other fields from this
+analytic ledger. It follows factual scenario records, selected decisions,
+typed route receipts, and one room afterimage. Before the conclusion, the
+player sees only the concrete occupied-seat record and action—not the lesson
+label.
 
 All of this remains inside the one-viewport application shell. Named panes and drawers own overflow so adding explanatory depth does not recreate a page-length form.
 
@@ -411,13 +497,13 @@ All of this remains inside the one-viewport application shell. Named panes and d
 | Ledger continuity | Every scene's dynamic must equal its scenario ledger |
 | Observed/inferred/unknown separation | Minimum ledger cardinality and visible receipt structure |
 | Presentation is not motive | Interior differs from presentation and unresolved motive questions remain explicit |
-| Low-stakes person claims | Typed severity plus PG and restricted-term validation |
+| Low-stakes person claims | Typed severity plus PG-bounded and restricted-term validation |
 | Behavior is not character | Bounded behavior and trait generalization must differ |
 | Common ground survives code difference | Cross-coalition ledger requires a concrete shared proposition |
 | Repertoires remain character-coherent | Every selected register belongs to the actor; contextual acquisition, scene fit, switch pressure, and continuity anchors pass generation validation |
 | Context does not become identity destiny | Regional, socioeconomic, social-group, institutional, professional, political, and platform anchors are individual fictional history, never effect coefficients or protected-class inference |
 | Shared register does not imply shared model | Same-register friction preserves a genuinely shared surface while separately binding both represented conversational models and their translation route |
-| Progressive linguistic disclosure | Active surfaces use only `publicSurfaceCue` and `playInferenceHints`; full profiles and switch histories appear only in the collapsed concluding receipt |
+| Progressive linguistic disclosure | Active surfaces use only `publicSurfaceCue` and `playInferenceHints`; the completed summary names only state-supported played register actions or assumption frictions and does not expose a full profile taxonomy |
 | Distortion and repair both exist | Every beat must contain harmful/persistence and bounded/translation/repair moves |
 | Non-amplification remains possible | Every beat requires an available floor choice |
 | Discernment survives fatigue | Runtime preserves discernment and rejects modeled collapse |

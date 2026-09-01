@@ -30,12 +30,14 @@ import {
   roomIncomingEvents,
   roomStartOffset,
   sceneArrivalOffset,
+  validateNightState,
   visibleCrossingCopy,
   type ChoiceAccess,
   type EffectReceipt,
   type NightState,
   type RoomRuntime,
 } from "./night-engine";
+import { buildConceptReceipt, buildNaturalizedSummary, DEBRIEF_MODEL_LIMIT } from "./debrief-copy";
 import { PrivacyPanel } from "./privacy-panel";
 
 type Scenario = GeneratedScenario;
@@ -43,7 +45,6 @@ type Choice = GeneratedChoice;
 type Drawer = "notes" | "lineage" | "signals" | "privacy" | null;
 type BlockedAttempt = { choice: Choice; access: ChoiceAccess } | null;
 type ScenePanel = "source" | "seat" | "record" | "echoes";
-type DebriefTab = "house" | "choices" | "interpretation" | "crossings" | "fatigue" | "practice" | "heart";
 type RelationshipKind = "authority" | "care" | "peer" | "professional" | "political" | "market" | "audience" | "house-effect";
 type RelationshipStatus = "trusted" | "accountable" | "dependent" | "contested" | "competitive" | "responsible" | "peripheral" | "active";
 type RelationshipProfile = { target: string; label: string; kind: RelationshipKind; status: RelationshipStatus };
@@ -181,7 +182,11 @@ export default function Home() {
     }
     setSelectedId(id);
     setBlockedAttempt(null);
-    setAnnouncement(room.entered ? scenario.title + " resumed without resetting the house." : scenario.title + " selected. Earlier crossings remain vague until entry.");
+    setAnnouncement(room.completed
+      ? scenario.title + " is complete. Its later house effects remain visible."
+      : room.entered
+        ? scenario.title + " resumed without resetting the house."
+        : scenario.title + " selected. Earlier crossings remain vague until entry.");
     focusStage(room.entered ? (room.completed ? "closed-title" : "scene-title") : "invitation-title");
   }
 
@@ -270,12 +275,10 @@ export default function Home() {
     if (access.locked) {
       if (blockedAttempt?.choice.id === choice.id) {
         setBlockedAttempt(null);
-        setAnnouncement("Unavailable action reason concealed.");
         focusInsideActivePane("choice-" + choice.id);
         return;
       }
       setBlockedAttempt({ choice, access });
-      setAnnouncement(blockedReason(choice, access, activeRoom));
       focusInsideActivePane("blocked-choice-receipt-" + choice.id, "choice-" + choice.id);
       return;
     }
@@ -319,7 +322,16 @@ export default function Home() {
         filmOn={filmOn}
         motionOn={motionOn}
         motionAvailable={systemMotionOn}
-        onHome={() => { setIntroOpen(true); setSelectedId(null); setDebriefOpen(false); setRelationsOpen(false); setDrawer(null); }}
+        onHome={() => {
+          setIntroOpen(true);
+          setSelectedId(null);
+          setDebriefOpen(false);
+          setRelationsOpen(false);
+          setBlockedAttempt(null);
+          setDrawer(null);
+          setAnnouncement("CHORUS introduction opened. The current fictional night remains unchanged.");
+          focusStage("prelude-title");
+        }}
         onFilm={() => setFilmOn((current) => !current)}
         onMotion={() => setMotionOverride((current) => !current)}
         onNotes={() => openDrawer("notes", "header-notes")}
@@ -330,11 +342,11 @@ export default function Home() {
         analysisAvailable={nightComplete}
       />
       <div className={"house-workspace" + (introOpen ? " is-intro" : "")}>
-        {!introOpen && <RoomRail pack={pack} state={state} activeId={selectedId} relationsOpen={relationsOpen} onSelect={selectScenario} onHouse={returnToHouse} onRelations={openRelations} onDebrief={() => { setDebriefOpen(true); setRelationsOpen(false); setSelectedId(null); focusStage("debrief-title"); }} onAdvance={advanceClock} onRegenerate={regenerate} />}
+        {!introOpen && <RoomRail pack={pack} state={state} activeId={selectedId} relationsOpen={relationsOpen} onSelect={selectScenario} onHouse={returnToHouse} onRelations={openRelations} onDebrief={() => { if (!nightComplete) return; setDebriefOpen(true); setRelationsOpen(false); setSelectedId(null); focusStage("debrief-title"); }} onAdvance={advanceClock} onRegenerate={regenerate} />}
         <section className="stage-view" ref={stageRef} role="region" aria-labelledby={stageHeadingId(introOpen, debriefOpen, relationsOpen, activeRoom)} tabIndex={0} data-scroll-region="primary">
           {introOpen ? (
             <Prelude onEnter={enterHouse} />
-          ) : debriefOpen ? (
+          ) : debriefOpen && nightComplete ? (
             <NightDebrief pack={pack} state={state} onReplay={replay} onHouse={returnToHouse} />
           ) : relationsOpen ? (
             <RelationshipPlot pack={pack} state={state} activeId={selectedId} />
@@ -343,7 +355,7 @@ export default function Home() {
           ) : !activeRoom.entered ? (
             <Invitation scenario={activeScenario} room={activeRoom} state={state} pack={pack} onBegin={beginIncident} />
           ) : activeRoom.completed ? (
-            <RoomClosed scenario={activeScenario} room={activeRoom} state={state} pack={pack} onHouse={returnToHouse} onDebrief={() => { setDebriefOpen(true); setSelectedId(null); }} />
+            <RoomClosed scenario={activeScenario} room={activeRoom} state={state} pack={pack} onHouse={returnToHouse} onDebrief={() => { if (!nightComplete) return; setDebriefOpen(true); setSelectedId(null); focusStage("debrief-title"); }} />
           ) : (
             <SimulationRoom key={`${activeScenario.id}-${activeRoom.sceneIndex}`} scenario={activeScenario} room={activeRoom} state={state} pack={pack} blockedAttempt={blockedAttempt} choicesLocked={transitioning} onChoice={attemptChoice} />
           )}
@@ -392,7 +404,7 @@ function HouseHeader(props: {
     <button className="wordmark" type="button" onClick={props.onHome} aria-label="Open CHORUS introduction"><ChorusMark /><span><strong>CHORUS</strong><small>social trust simulation</small></span></button>
     <div className="house-status"><span className="status-lamp" aria-hidden="true" />HOUSE {props.clock} · TURN {props.turn}/24</div>
     <nav className="header-nav" aria-label="House tools">
-      <button id="header-privacy" type="button" onClick={props.onPrivacy}>Privacy</button><button id="header-signals" className="signals-button" type="button" onClick={props.onSignals}>Signals</button><button id="header-relations" className="relations-header-button" type="button" onClick={props.onRelations}>Relations</button><button id="header-lineage" type="button" onClick={props.onLineage}>{props.analysisAvailable ? "Meme trace" : "Trace guide"}</button><button id="header-notes" type="button" onClick={props.onNotes}>{props.analysisAvailable ? "Field notes" : "House guide"}</button>
+      <button id="header-privacy" type="button" onClick={props.onPrivacy}>Privacy</button><button id="header-signals" className="signals-button" type="button" onClick={props.onSignals}>Signals</button><button id="header-relations" className="relations-header-button" type="button" onClick={props.onRelations}>Relations</button><button id="header-lineage" type="button" onClick={props.onLineage}>{props.analysisAvailable ? "Meme reference" : "Trace guide"}</button><button id="header-notes" type="button" onClick={props.onNotes}>{props.analysisAvailable ? "Field notes" : "House guide"}</button>
       <button type="button" aria-pressed={props.filmOn} onClick={props.onFilm}>Film {props.filmOn ? "on" : "off"}</button>
       <button type="button" aria-pressed={props.motionOn} disabled={!props.motionAvailable} onClick={props.onMotion}>Motion {props.motionOn ? "on" : "off"}</button>
     </nav>
@@ -409,7 +421,7 @@ function Prelude({ onEnter }: { onEnter: () => void }) {
     ["06", "LOAD", "A clear path can become harder to carry as the house keeps moving."],
   ];
   return <article className="prelude">
-    <div className="prelude-copy"><p className="eyebrow">ONE HOUSE · SIX CONCURRENT ROOMS · TWENTY-FOUR DECISIONS</p><h1 id="prelude-title" tabIndex={-1}>Every feed has a <em>back room.</em></h1><p className="prelude-lede">Enter six fictional seats sharing one clock. Follow the record, notice what each room can and cannot know, and decide what to carry forward.</p><blockquote>The house will not tell you what to conclude. It will keep the receipts.</blockquote><div className="prelude-actions"><button className="primary-action" type="button" onClick={onEnter}>Enter the concurrent night <span>↘</span></button></div></div>
+    <div className="prelude-copy"><p className="eyebrow">ONE HOUSE · SIX FICTIONAL ROOMS · TWENTY-FOUR DECISIONS</p><h1 id="prelude-title" tabIndex={-1}>Six records enter a <em>moving house.</em></h1><p className="prelude-lede">Take each fictional seat in turn. Notice what the room can verify, what it supplies for itself, and what your selected action carries onward.</p><blockquote>The interpretation stays sealed. The record does not.</blockquote><p className="model-limit prelude-limit">CHORUS is a fictional explanatory model. It does not measure, score, diagnose, or predict a real person.</p><div className="prelude-actions"><button className="primary-action" type="button" onClick={onEnter}>Enter the concurrent night <span>↘</span></button></div></div>
     <div className="prelude-board warm-frame"><header><span>HOUSE LISTENING BOARD</span><strong>FOLLOW THE RECORD</strong></header><div className="prelude-orb" aria-hidden="true"><i /><i /><b /></div><div className="dynamic-grid">{dynamics.map(([number, label, copy]) => <article key={number}><span>{number}</span><strong>{label}</strong><p>{copy}</p></article>)}</div></div>
   </article>;
 }
@@ -442,8 +454,9 @@ function nextHouseArrival(pack: GeneratedScenarioPack, state: NightState): numbe
 function HouseMap({ pack, state }: { pack: GeneratedScenarioPack; state: NightState }) {
   const impressions = Object.values(state.rooms).reduce((sum, room) => sum + room.metrics.reach, 0);
   return <article className="house-map">
-    <header className="stage-heading"><div><p className="eyebrow">HOUSE SWITCHBOARD · {formatNightClock(pack.night.startTime, state.elapsedMinutes)}</p><h2 id="house-title" tabIndex={-1}>Six facts. One social atmosphere.</h2></div><div className="stage-summary"><strong>{formatNumber(impressions)}</strong><span>modeled overlapping impressions</span><small>Every decision leaves one local and five remote receipts.</small></div></header>
-    <div className="map-stats"><span><b>{state.turn}/24</b> decisions</span><span><b>{completedRoomCount(state)}/6</b> rooms closed</span><span><b>{Math.round(averageMetric(state, "interpretiveGap"))}%</b> mean interpretation gap</span><span><b>{pack.nightReport.score}%</b> causal coherence</span></div>
+    <header className="stage-heading"><div><p className="eyebrow">HOUSE SWITCHBOARD · {formatNightClock(pack.night.startTime, state.elapsedMinutes)}</p><h2 id="house-title" tabIndex={-1}>Six records. One changing atmosphere.</h2></div><div className="stage-summary"><strong>{formatNumber(impressions)}</strong><span>modeled overlapping impressions</span><small>Every decision leaves one local and five remote model effects.</small></div></header>
+    <div className="map-stats"><span><b>{state.turn}/24</b> decisions</span><span><b>{completedRoomCount(state)}/6</b> rooms closed</span><span><b>{Math.round(averageMetric(state, "interpretiveGap"))}%</b> mean interpretation gap</span><span><b>{pack.nightReport.score}%</b> model checks passed</span></div>
+    <p className="model-limit house-limit">These are fictional model values. They are not measurements, probabilities, diagnoses, or predictions.</p>
     <div className="room-map-grid">{pack.scenarios.map((scenario, index) => { const room = state.rooms[scenario.id]; const firstArrival = roomStartOffset(pack, scenario.id); const incoming = roomIncomingEvents(state, scenario.id); return <article className={"room-map-card warm-frame " + (room.entered ? "is-entered " : "") + (room.completed ? "is-complete" : "")} key={scenario.id}><header><span>ROOM {String(index + 1).padStart(2, "0")}</span><strong>{room.completed ? "AFTERIMAGE LIVE" : firstArrival <= state.elapsedMinutes ? "ARTIFACT PRESENT" : "SEAT OPEN · +" + (firstArrival - state.elapsedMinutes) + "M"}</strong></header><h3>{scenario.title.split(" · ").at(-1)}</h3><p>{scenario.protagonistModel.role}</p><div className="pattern-chip">{roomSignal(index)}</div><small>{incoming.length ? incoming.length + " vague or attributable house effects have reached this room." : "No recorded house crossing yet."}</small></article>; })}</div>
   </article>;
 }
@@ -529,7 +542,7 @@ function RelationshipPlot({ pack, state, activeId }: { pack: GeneratedScenarioPa
         <g className="graph-edges" aria-hidden="true">{visibleEdges.map((edge) => { const source = positions.get(edge.source)!; const target = positions.get(edge.targetId)!; return <line key={edge.id} x1={source.x} y1={source.y} x2={target.x} y2={target.y} data-kind={edge.kind} />; })}</g>
         <g className="graph-nodes">{nodes.map((node) => <g key={node.id} className={"graph-node " + (selectedNode?.id === node.id ? "is-selected" : "")} role="button" tabIndex={0} aria-label={`${node.label}. ${node.status}`} onClick={() => selectNode(node)} onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); selectNode(node); } }} transform={`translate(${node.x} ${node.y})`}><circle r={node.actorId ? 27 : 21} /><text y={node.actorId ? 43 : 36} textAnchor="middle">{node.label.length > 25 ? node.label.slice(0, 24) + "…" : node.label}</text></g>)}</g>
       </svg> : <p className="empty-plot">No relationship matches these filters.</p>}</section>
-      <aside className="relations-detail warm-frame" aria-live="polite"><span className="panel-label">SELECTED NODE</span>{selectedNode ? <><h3>{selectedNode.label}</h3><p>{selectedNode.sublabel}</p><strong>{selectedNode.status}</strong><ul>{selectedEdges.map((edge) => <li key={edge.id}><b>{edge.source === selectedNode.id ? "OUTWARD" : "INBOUND"}</b><span>{edge.label}</span><small>{edge.kind.replace("-", " ")} · {edge.status}</small></li>)}</ul></> : <p>Select a node or broaden the filters.</p>}</aside>
+      <aside className="relations-detail warm-frame"><span className="panel-label">SELECTED NODE</span>{selectedNode ? <><h3>{selectedNode.label}</h3><p>{selectedNode.sublabel}</p><strong>{selectedNode.status}</strong><ul>{selectedEdges.map((edge) => <li key={edge.id}><b>{edge.source === selectedNode.id ? "OUTWARD" : "INBOUND"}</b><span>{edge.label}</span><small>{edge.kind.replace("-", " ")} · {edge.status}</small></li>)}</ul></> : <p>Select a node or broaden the filters.</p>}</aside>
     </div>
     <section className="relationship-list" aria-labelledby="relationship-list-title"><h3 id="relationship-list-title">Relationship list</h3><p>Text equivalent of every currently visible edge.</p><div className="relationship-table" role="list">{visibleEdges.map((edge) => <article key={edge.id} role="listitem"><span>{edge.sourceLabel}</span><i aria-hidden="true">→</i><span>{positions.get(edge.targetId)?.label ?? edge.target.replaceAll("-", " ")}</span><small>{edge.kind.replace("-", " ")} · {edge.status} · {edge.label}</small></article>)}</div></section>
   </article>;
@@ -590,9 +603,9 @@ function SimulationRoom(props: {
             {props.room.behaviorPhase && <div className="play-hint pressure-hint"><span>SEAT PRESSURE</span><p>{behaviorPressureCue(props.room.behaviorPhase)}</p></div>}
         </div>
         <div className="scene-panel-content scene-record-panel pane-scroll" id="scene-panel-record" role="tabpanel" aria-labelledby="scene-tab-record" tabIndex={panel === "record" ? 0 : -1} hidden={panel !== "record"} data-scroll-region="scene-reading" data-scene-panel="record">
-            <article><span>IN THE RECORD</span>{scene.communication.observableRecord.map((item) => <p key={item}>{item}</p>)}</article>
-            <article><span>ROOM READING</span>{scene.communication.playInferenceHints.map((item) => <p key={item}>{item}</p>)}</article>
-            <article><span>NOT YET KNOWN</span>{scene.communication.unknowns.map((item) => <p key={item}>{item}</p>)}</article>
+            <article><span>KNOWN TO THIS SEAT</span>{scene.disclosure.records.map((atom) => <p key={atom.id}><b>{atom.label}</b> {atom.copy}</p>)}</article>
+            <article><span>QUESTIONS IN THIS ROOM</span>{scene.disclosure.questions.map((atom) => <p key={atom.id}><b>{atom.label}</b> {atom.copy}</p>)}</article>
+            <article><span>NOT YET KNOWN</span>{scene.disclosure.unknowns.map((atom) => <p key={atom.id}><b>{atom.label}</b> {atom.copy}</p>)}</article>
         </div>
         <div className="scene-panel-content scene-echoes-panel pane-scroll" id="scene-panel-echoes" role="tabpanel" aria-labelledby="scene-tab-echoes" tabIndex={panel === "echoes" ? 0 : -1} hidden={panel !== "echoes"} data-scroll-region="scene-reading" data-scene-panel="echoes"><InboundEchoes incoming={incoming} state={props.state} pack={props.pack} variant="panel" /></div>
       </section>
@@ -603,7 +616,7 @@ function SimulationRoom(props: {
           const expanded = Boolean(access.locked && props.blockedAttempt?.choice.id === choice.id);
           const receiptId = `blocked-choice-receipt-${choice.id}`;
           return <article key={choice.id} className={`choice-shell choice-row${expanded ? " is-expanded" : ""}`} data-choice-id={choice.id}>
-            <button id={`choice-${choice.id}`} type="button" className={"choice " + (access.locked ? "is-locked " : "") + (access.assembledElsewhere ? "is-assembled " : "") + (choice.lastResort ? "is-last-resort " : "") + (choice.ethicsTags.includes("non-amplification-floor") ? "is-floor" : "")} disabled={props.choicesLocked} aria-disabled={props.choicesLocked} aria-label={access.locked ? choice.label + (expanded ? ". Reason open; activate again to close." : ". Currently unavailable; activate for the reason.") : undefined} aria-expanded={access.locked ? expanded : undefined} aria-controls={access.locked ? receiptId : undefined} aria-describedby={expanded ? `${receiptId}-copy` : undefined} onClick={() => props.onChoice(choice)}><span className="choice-index">{String(index + 1).padStart(2, "0")}</span><span className="choice-copy">{choice.lastResort && <em>EXTREME LOAD · LAST RESORT</em>}<strong>{choice.label}</strong><small>{choice.detail}</small><i>{choice.lastResort ? "Clarity intact · split protection and harm" : `${choice.minutes} modeled min`}</i></span><span className="choice-state">{access.locked ? (expanded ? "REASON OPEN ↑" : "WHY UNAVAILABLE →") : access.assembledElsewhere ? "PATH BUILT →" : "CHOOSE →"}</span></button>
+            <button id={`choice-${choice.id}`} type="button" className={"choice " + (access.locked ? "is-locked " : "") + (access.assembledElsewhere ? "is-assembled " : "") + (choice.lastResort ? "is-last-resort " : "") + (choice.ethicsTags.includes("non-amplification-floor") ? "is-floor" : "")} disabled={props.choicesLocked} aria-disabled={props.choicesLocked} aria-label={access.locked ? choice.label + (expanded ? ". Reason open; activate again to close." : ". Currently unavailable; activate for the reason.") : undefined} aria-expanded={access.locked ? expanded : undefined} aria-controls={access.locked ? receiptId : undefined} onClick={() => props.onChoice(choice)}><span className="choice-index">{String(index + 1).padStart(2, "0")}</span><span className="choice-copy">{choice.lastResort && <em>EXTREME LOAD · LAST RESORT</em>}<strong>{choice.label}</strong><small>{choice.detail}</small><i>{choice.lastResort ? "Clarity intact · split protection and harm" : `${choice.minutes} modeled min`}</i></span><span className="choice-state">{access.locked ? (expanded ? "REASON OPEN ↑" : "WHY UNAVAILABLE →") : access.assembledElsewhere ? "PATH BUILT →" : "CHOOSE →"}</span></button>
             {expanded && props.blockedAttempt && <BlockedReceipt id={receiptId} attempt={props.blockedAttempt} room={props.room} />}
           </article>;
         })}</div>
@@ -642,18 +655,21 @@ function ContextRail({ state, scenario, room }: { pack: GeneratedScenarioPack; s
   const liveRoom = scenario && room ? room : null;
   const metrics = liveRoom ?? aggregateRoom(state);
   const fatigue = liveRoom?.fatigue ?? aggregateFatigue(state);
+  const activeUnknown = scenario && liveRoom && !liveRoom.completed
+    ? scenario.scenes[liveRoom.sceneIndex]?.disclosure.unknowns[0]
+    : undefined;
   return <aside className="context-rail live-signals-glass" aria-label="Live house signals">
     <header><span className="status-lamp" />{liveRoom ? "SEAT SIGNAL" : "HOUSE SIGNAL"}</header>
-    <Metric label="Reach" value={Math.min(100, Math.log10(metrics.metrics.reach + 1) * 24)} display={formatNumber(metrics.metrics.reach)} /><Metric label="Pressure transfer" value={metrics.metrics.blame} display={Math.round(metrics.metrics.blame) + "%"} /><Metric label="Reading gap" value={metrics.metrics.interpretiveGap} display={Math.round(metrics.metrics.interpretiveGap) + "%"} /><Metric label="Overlap visible" value={metrics.metrics.commonGround} display={Math.round(metrics.metrics.commonGround) + "%"} tone="mint" />
+    <Metric label="Modeled reach" value={Math.min(100, Math.log10(metrics.metrics.reach + 1) * 24)} display={formatNumber(metrics.metrics.reach)} valueText={`${formatNumber(metrics.metrics.reach)} modeled impressions; bar shown on a logarithmic scale`} /><Metric label="Pressure transfer" value={metrics.metrics.blame} display={Math.round(metrics.metrics.blame) + "%"} /><Metric label="Reading gap" value={metrics.metrics.interpretiveGap} display={Math.round(metrics.metrics.interpretiveGap) + "%"} /><Metric label="Overlap visible" value={metrics.metrics.commonGround} display={Math.round(metrics.metrics.commonGround) + "%"} tone="mint" />
     <div className="capacity-ledger"><span>CLARITY / CARRYING POWER</span><div role="progressbar" aria-label="Clarity" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(metrics.metrics.discernment)}><b aria-hidden="true" style={{ width: metrics.metrics.discernment + "%" }} /><strong>{Math.round(metrics.metrics.discernment)}</strong></div><div role="progressbar" aria-label="Carrying power" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(metrics.metrics.enactment)}><b aria-hidden="true" style={{ width: metrics.metrics.enactment + "%" }} /><strong>{Math.round(metrics.metrics.enactment)}</strong></div><small>Only modeled house time changes these values. Reading speed and assistive technology do not.</small></div>
     <div className="fatigue-ledger"><span>SEAT LOAD</span>{(Object.keys(FATIGUE_COPY) as FatigueKind[]).map((kind) => <div key={kind}><label>{fatigueHint(kind)}</label><i role="progressbar" aria-label={fatigueHint(kind) + " load"} aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(fatigue[kind])}><b aria-hidden="true" style={{ width: fatigue[kind] + "%" }} /></i><strong>{Math.round(fatigue[kind])}</strong></div>)}</div>
-    {scenario && <div className="context-pattern"><span>HOUSE HINT</span><strong>Keep the layers separate.</strong><p>{scenario.communicationModel.unknowns[0]}</p></div>}
+    {activeUnknown && <div className="context-pattern"><span>{activeUnknown.label}</span><strong>Keep the layers separate.</strong><p>{activeUnknown.copy}</p></div>}
     <small className="surface-note">A polished or terse surface can guide attention. It cannot settle the record.</small>
   </aside>;
 }
 
-function Metric({ label, value, display, tone = "amber" }: { label: string; value: number; display: string; tone?: "amber" | "mint" }) {
-  return <div className="metric"><div><span>{label}</span><strong>{display}</strong></div><i role="progressbar" aria-label={label} aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(clamp(value, 0, 100))}><b aria-hidden="true" className={tone} style={{ width: clamp(value, 1, 100) + "%" }} /></i></div>;
+function Metric({ label, value, display, valueText, tone = "amber" }: { label: string; value: number; display: string; valueText?: string; tone?: "amber" | "mint" }) {
+  return <div className="metric"><div><span>{label}</span><strong>{display}</strong></div><i role="progressbar" aria-label={label} aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(clamp(value, 0, 100))} aria-valuetext={valueText ?? display}><b aria-hidden="true" className={tone} style={{ width: clamp(value, 1, 100) + "%" }} /></i></div>;
 }
 
 function RoomClosed({ scenario, room, state, pack, onHouse, onDebrief }: { scenario: Scenario; room: RoomRuntime; state: NightState; pack: GeneratedScenarioPack; onHouse: () => void; onDebrief: () => void }) {
@@ -662,62 +678,50 @@ function RoomClosed({ scenario, room, state, pack, onHouse, onDebrief }: { scena
   return <article className="closed-view">
     <header className="stage-heading"><div><p className="eyebrow">INTERIM RECEIPT · {scenario.code}</p><h2 id="closed-title" tabIndex={-1}>This seat is finished. The room is not.</h2></div><div className="debrief-actions"><button className="rail-fallback-action" type="button" onClick={onHouse}>House map <span aria-hidden="true">→</span></button>{isNightComplete(state) && <button className="rail-fallback-action" type="button" onClick={onDebrief}>Whole-night receipt <span aria-hidden="true">↘</span></button>}</div></header>
     <div className="closed-grid"><article><span>AT CLOSE</span><strong>{formatNumber(snapshot.reach)}</strong><small>modeled impressions</small></article><article><span>AFTERIMAGE</span><strong>+{formatNumber(Math.max(0, room.metrics.reach - snapshot.reach))}</strong><small>later impressions</small></article><article><span>BLAME</span><strong>{Math.round(room.metrics.blame)}%</strong><small>concentration</small></article><article><span>FOLLOW-THROUGH</span><strong>{Math.round(room.metrics.enactment)}</strong><small>discernment remains {Math.round(room.metrics.discernment)}</small></article></div>
-    <section className="closed-interpretation warm-frame"><span className="panel-label">ROOM RECEIPT · INTERPRETATION WITHHELD</span><h3>What did this room know, assume, and leave unresolved?</h3><div><p><b>In the record</b>{scenario.communicationModel.observableRecord.join(" ")}</p><p><b>Room reading</b>{scenario.communicationModel.playInferenceHints.join(" ")}</p><p><b>Not resolved</b>{scenario.communicationModel.unknowns.join(" ")}</p></div><small>The whole-night receipt will name the pattern after every seat is complete.</small></section>
+    <section className="closed-interpretation warm-frame"><span className="panel-label">ROOM RECEIPT · INTERPRETATION WITHHELD</span><h3>This room&apos;s record is held in place.</h3><p>The whole-night ending will follow one supported path through selected moves and what kept moving afterward; it is not a recap of every seat. No motive or character judgment is added here.</p></section>
     <InboundEchoes incoming={incoming} state={state} pack={pack} />
   </article>;
 }
 
 function NightDebrief({ pack, state, onReplay, onHouse }: { pack: GeneratedScenarioPack; state: NightState; onReplay: () => void; onHouse: () => void }) {
-  const [tab, setTab] = useState<DebriefTab>("house");
-  const tabs: Array<[DebriefTab, string]> = [["house", "House"], ["choices", "Choices"], ["interpretation", "Interpretation"], ["crossings", "Crossings"], ["fatigue", "Fatigue"], ["practice", "Practice"], ["heart", "The heart"]];
+  if (!isNightComplete(state)) return null;
+  if (validateNightState(pack, state).length > 0) {
+    return <article className="debrief-view">
+      <header className="debrief-header"><div><p className="eyebrow">WHOLE-NIGHT RECEIPT UNAVAILABLE</p><h2 id="debrief-title" tabIndex={-1}>This night&apos;s record could not be verified.</h2></div><div className="debrief-actions"><button className="rail-fallback-action" type="button" onClick={onHouse}>House map <span aria-hidden="true">→</span></button><button type="button" onClick={onReplay}>Start clean replay ↻</button></div></header>
+      <div className="debrief-ending">
+        <section className="naturalized-summary warm-frame" aria-labelledby="debrief-recovery-title">
+          <p className="panel-label">RECORD CHECK FAILED</p>
+          <h3 id="debrief-recovery-title">The receipt stayed closed.</h3>
+          <p>The completed record did not pass its consistency check. No summary or interpretation was generated.</p>
+          <p>Start a clean replay to replace this record and try again.</p>
+        </section>
+      </div>
+    </article>;
+  }
+  const summary = buildNaturalizedSummary(pack, state);
+  const receipt = buildConceptReceipt(pack, state);
   return <article className="debrief-view">
-    <header className="debrief-header"><div><p className="eyebrow">WHOLE-NIGHT CAUSAL RECEIPT · {state.turn} DECISIONS</p><h2 id="debrief-title" tabIndex={-1}>The chorus was never six separate stories.</h2></div><div className="debrief-actions"><button className="rail-fallback-action" type="button" onClick={onHouse}>House map <span aria-hidden="true">→</span></button><button type="button" onClick={onReplay}>Replay whole night ↻</button></div></header>
-    <div className="debrief-tabs" role="tablist" aria-label="Whole-night receipt">{tabs.map(([id, label], index) => <button key={id} type="button" role="tab" id={"tab-" + id} aria-controls={"panel-" + id} aria-selected={tab === id} tabIndex={tab === id ? 0 : -1} onClick={() => setTab(id)} onKeyDown={(event) => { if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return; event.preventDefault(); const nextIndex = event.key === "Home" ? 0 : event.key === "End" ? tabs.length - 1 : (index + (event.key === "ArrowRight" ? 1 : -1) + tabs.length) % tabs.length; setTab(tabs[nextIndex][0]); requestAnimationFrame(() => document.getElementById("tab-" + tabs[nextIndex][0])?.focus()); }}>{label}</button>)}</div>
-    <section className="debrief-panel pane-scroll" role="tabpanel" id={"panel-" + tab} aria-labelledby={"tab-" + tab} tabIndex={0} data-scroll-region="debrief">{tab === "house" && <HouseReceipt pack={pack} state={state} />}{tab === "choices" && <ChoiceReceipt pack={pack} state={state} />}{tab === "interpretation" && <InterpretationReceipt pack={pack} state={state} />}{tab === "crossings" && <CrossingReceipt pack={pack} state={state} />}{tab === "fatigue" && <FatigueReceipt pack={pack} state={state} />}{tab === "practice" && <PracticeReceipt pack={pack} state={state} />}{tab === "heart" && <HeartReceipt pack={pack} />}</section>
+    <header className="debrief-header"><div><p className="eyebrow">AFTER THE LAST REPLY · {state.turn} RECORDED DECISIONS</p><h2 id="debrief-title" tabIndex={-1}>What the house kept moving.</h2></div><div className="debrief-actions"><button className="rail-fallback-action" type="button" onClick={onHouse}>House map <span aria-hidden="true">→</span></button><button type="button" onClick={onReplay}>Replay whole night ↻</button></div></header>
+    <div className="debrief-ending">
+      <section className="naturalized-summary warm-frame" aria-labelledby="afterword-title" data-source-count={summary.sources.length}>
+        <p className="panel-label">THE PLAYED NIGHT</p>
+        <h3 id="afterword-title">By closing time</h3>
+        {summary.paragraphs.map((paragraph, index) => <p key={`${index}-${paragraph.slice(0, 24)}`}>{paragraph}</p>)}
+      </section>
+      <aside className="model-limit" aria-label="Model limit">{DEBRIEF_MODEL_LIMIT} Its numbers and authored motives belong only to this generated night.</aside>
+      <section className="plain-concept-receipt" aria-labelledby="concept-receipt-title">
+        <header><p className="panel-label">PLAIN CONCEPT RECEIPT</p><h3 id="concept-receipt-title">What appeared, changed, or was selected</h3><p>Encountered means a played scene contained this situation. Experienced means a matching effect was recorded—either something moved or a possible movement was held back. Played means a selected action itself matched the concept, whether or not a downstream effect followed. None of these labels describes your beliefs or character.</p></header>
+        <ol>{receipt.concepts.map((concept) => {
+          return <li className={`concept-status-${concept.status}`} key={concept.term}>
+            <div><span>{concept.status}</span><h4>{concept.term}</h4></div>
+            <p>{concept.plain}</p>
+            <p className="concept-limit">{concept.limit}</p>
+            <small>{concept.evidence.copy}</small>
+          </li>;
+        })}</ol>
+      </section>
+    </div>
   </article>;
-}
-
-function HouseReceipt({ pack, state }: { pack: GeneratedScenarioPack; state: NightState }) {
-  const impressions = Object.values(state.rooms).reduce((sum, room) => sum + room.metrics.reach, 0);
-  return <div className="receipt-layout"><div className="receipt-hero warm-frame"><span>MODELED OVERLAPPING IMPRESSIONS</span><strong>{formatNumber(impressions)}</strong><p>{state.decisions.length * 5} cross-room decision receipts plus {state.ambientEvents.length} once-only scheduled pulses.</p></div><div className="receipt-metrics">{["blame", "interpretiveGap", "commonGround", "threadFocus", "discernment", "enactment"].map((metric) => <article key={metric}><span>{metricDisplay(metric)}</span><strong>{Math.round(averageMetric(state, metric as keyof RoomRuntime["metrics"]))}%</strong></article>)}</div><div className="truth-ledgers">{pack.scenarios.map((scenario) => <article key={scenario.id}><span>{scenario.code}</span><strong>{scenario.groundTruth}</strong><small>Seat objective: {scenario.objective}</small></article>)}</div></div>;
-}
-
-function ChoiceReceipt({ pack, state }: { pack: GeneratedScenarioPack; state: NightState }) {
-  const offered = pack.scenarios.flatMap((scenario) => scenario.scenes.flatMap((scene) => scene.choices.filter((choice) => choice.conversationDiversion)));
-  const taken = state.decisions.filter((event) => event.conversationDiversion);
-  return <div className="choice-receipt"><details className="conversation-routes"><summary><span>Conversation routes</span><strong>{taken.length} taken · {offered.length} offered</strong></summary><div className="conversation-routes-body"><p>A moved question is not automatically a lie. Classification here follows the represented function, timing, and still-unanswered question—not style alone.</p><div className="conversation-route-key"><article><span>VALID CONCERN · SEPARATE THREAD</span><p>The concern remained supported and related. Used as the reply, it replaced rather than answered the bounded question.</p></article><article><span>MEME · ANSWER-SHAPED DEFLECTION</span><p>The image supplied affiliation and reaction without adding a proposition or answering the record question.</p></article><article><span>ABSURDISM · QUESTION DISPLACED</span><p>The exaggeration made direct engagement socially costly. Absurdism itself is not evidence of evasion.</p></article></div>{taken.length > 0 && <ol className="conversation-route-list">{taken.map((event) => { const route = event.conversationDiversion!; const scenario = pack.scenarios.find((item) => item.id === event.sourceScenarioId); return <li key={event.id}><span>{formatNightClock(pack.night.startTime, event.atMinute)} · {scenario?.code}</span><strong>{route.mode.replaceAll("-", " ")}</strong><p><b>QUESTION LEFT</b>{route.activeQuestion}</p><p><b>WHAT ENTERED</b>{route.introducedMaterial}</p><p><b>FUNCTION</b>{route.displacementEffect}</p><p><b>BETTER ROUTE</b>{route.betterRoute}</p></li>; })}</ol>}</div></details><header><span>TIME / SEAT</span><span>CHOICE</span><span>RELATIONAL MOVE</span><span>SYSTEM READ</span></header>{state.decisions.map((event) => { const scenario = pack.scenarios.find((item) => item.id === event.sourceScenarioId); const deliberate = event.relationalMove.misrepresentation.intentionality === "deliberate"; return <article key={event.id}><span><small>{formatNightClock(pack.night.startTime, event.atMinute)}</small><strong>{scenario?.code}</strong></span><span>{event.choiceLabel}{event.lastResort && <em>LAST RESORT · CLARITY INTACT</em>}</span><span><b>{event.relationalMove.classification.replaceAll("-", " ")}</b>{deliberate && <em>DELIBERATE · FOR {event.relationalMove.misrepresentation.beneficiary?.replaceAll("-", " ").toUpperCase()}</em>}{event.lastResort ? `Protected: ${event.lastResort.protectedParty}. Cost borne by: ${event.lastResort.harmedParty}.` : event.relationalMove.audienceInference}</span><span>{event.lastResort ? `${event.lastResort.positiveConsequence} ${event.lastResort.negativeConsequence} ${event.lastResort.selfCost}` : event.signal}</span></article>; })}</div>;
-}
-
-function InterpretationReceipt({ pack, state }: { pack: GeneratedScenarioPack; state: NightState }) {
-  return <div className="interpretation-receipt"><p className="receipt-intro">You know each protagonist&apos;s authored interior because you occupied that seat. Outside the simulation, motive remains unknown until evidence resolves it. Compare timing, incentives, records, reply access, and correction behavior. A deliberate departure requires represented private knowledge; it is not inferred from warmth, reserve, loyalty, or a wrong conclusion alone.</p><LanguageReceipt pack={pack} state={state} />{pack.scenarios.map((scenario) => { const ledger = scenario.communicationModel; const room = state.rooms[scenario.id]; const misrepresentation = ledger.misrepresentation; const incentive = misrepresentation.incentiveIntersection; return <article className="warm-frame" key={scenario.id}><header><span>{scenario.code}</span><strong>{ledger.label}</strong></header><div><p><b>EVENT RECORD</b>{ledger.observableRecord.join(" ")}</p><p><b>CHARACTER / MOTIVE LEAP</b>{ledger.inferences.join(" ")}</p><p><b>UNKNOWN</b>{ledger.unknowns.join(" ")}</p><p><b>WHAT ACCEPTANCE PROTECTS</b>{ledger.protectedStake}</p></div><section className="misrepresentation-receipt" aria-label="Deliberate misrepresentation receipt"><span>DELIBERATE MISREPRESENTATION · FOR {misrepresentation.beneficiary.replaceAll("-", " ")}</span><p><b>KNOWN RECORD</b>{misrepresentation.knownRecord}</p><p><b>ALTERED ACCOUNT</b>{misrepresentation.alteredAccount}</p><p><b>POWER / RELATIONSHIP</b>{misrepresentation.authorityCondition}</p><p><b>CORRECTION DUTY</b>{misrepresentation.correctionDuty}</p></section><section className="incentive-intersection" aria-label="Intersecting incentive receipt"><span>WHY THE SIMPLIFICATION REMAINED USEFUL</span><p><b>COMPETENCE THREAT</b>{incentive.competenceThreat}</p><p><b>FEARED INFERENCE</b>{incentive.fearedInference}</p><p><b>MATERIAL COUNTER-RECORD</b>{incentive.materialCounterrecord}</p><p><b>GROUP / CLASS STORY PROTECTED</b>{incentive.protectedGroupStory}</p><p><b>ADVANCEMENT</b>{incentive.advancementDomains.map((domain) => domain.replaceAll("-", " ")).join(" · ")}</p><p><b>COMPETITIVE PRIZE</b>{incentive.competitivePrize}</p><blockquote>{incentive.combinedMotive}</blockquote></section>{ledger.claim && <dl><div><dt>Bounded behavior</dt><dd>{ledger.claim.boundedBehavior}</dd></div><div><dt>Trait generalization</dt><dd>{ledger.claim.traitGeneralization}</dd></div><div><dt>Initiator exposure</dt><dd>{ledger.claim.initiatorExposure}</dd></div><div><dt>Evidence</dt><dd>{ledger.claim.evidenceStatus}</dd></div></dl>}<footer><span>BLAME {Math.round(room.metrics.blame)}%</span><span>INTERPRETATION GAP {Math.round(room.metrics.interpretiveGap)}%</span><p>{ledger.repairMove}</p></footer></article>; })}</div>;
-}
-
-function LanguageReceipt({ pack, state }: { pack: GeneratedScenarioPack; state: NightState }) {
-  const transitionEvents = state.decisions.filter((event) => event.codeTransition);
-  const playedSwitches = transitionEvents.filter((event) => event.codeTransition!.fromCodeId !== event.codeTransition!.toCodeId);
-  const sharedCodeFrictions = pack.scenarios.filter((scenario) => {
-    const encounter = scenario.communicationModel.linguisticEncounter;
-    return encounter.codeRelation === "shared" && encounter.worldModelRelation === "divergent";
-  });
-
-  return <details className="language-receipt"><summary><span>Registers and assumptions</span><strong>{playedSwitches.length} played shifts · {sharedCodeFrictions.length} shared-code frictions</strong></summary><div className="language-receipt-body"><p className="language-guardrail">These are fictional repertoires learned through particular places, resource settings, groups, institutions, and platforms. A shared register does not establish shared belief, motive, truth, class position, competence, or care. Switching registers does not prove deceit.</p><div className="language-profile-list">{pack.scenarios.map((scenario) => {
-    const profile = scenario.protagonistModel.languageProfile;
-    const encounter = scenario.communicationModel.linguisticEncounter;
-    const decisions = transitionEvents.filter((event) => event.sourceScenarioId === scenario.id);
-    const usedIds = new Set([profile.primaryCodeId, ...decisions.flatMap((event) => [event.codeTransition!.fromCodeId, event.codeTransition!.toCodeId])]);
-    const usedCodes = profile.repertoire.filter((access) => usedIds.has(access.codeId));
-    const switches = decisions.filter((event) => event.codeTransition!.fromCodeId !== event.codeTransition!.toCodeId);
-    const codeLabel = (codeId: string) => profile.repertoire.find((access) => access.codeId === codeId)?.label ?? codeId.replaceAll("-", " ");
-    return <details className="language-profile" key={scenario.id}><summary><span>{scenario.code}</span><strong>{scenario.protagonistModel.role}</strong><small>Used tonight: {usedCodes.map((access) => access.label).join(" · ")}</small></summary><div className="language-profile-body"><section aria-labelledby={`${scenario.id}-registers`}><h3 id={`${scenario.id}-registers`}>Registers at disposal</h3><ul className="language-register-list">{profile.repertoire.map((access) => { const acquisition = profile.socialContexts.filter((context) => access.acquisitionFacetIds.includes(context.id)); return <li key={access.codeId}><strong>{access.label}</strong><span>{access.fluency}</span><p>{access.functions.join(" · ")}</p>{acquisition.length > 0 && <small>Learned through {acquisition.map((context) => context.description).join(" · ")}</small>}</li>; })}</ul></section><section aria-labelledby={`${scenario.id}-contexts`}><h3 id={`${scenario.id}-contexts`}>Context history</h3><ul className="language-context-list">{profile.socialContexts.map((context) => <li key={context.id}><span>{context.axis.replaceAll("-", " ")} · {context.relation}</span><p>{context.description}</p></li>)}</ul></section><section aria-labelledby={`${scenario.id}-continuity`}><h3 id={`${scenario.id}-continuity`}>What stayed constant</h3><ul className="language-continuity-list">{profile.stableCommitments.map((commitment) => <li key={commitment}>{commitment}</li>)}</ul></section><section aria-labelledby={`${scenario.id}-switches`}><h3 id={`${scenario.id}-switches`}>Played register actions</h3>{decisions.length ? <ol className="language-switch-list">{decisions.map((event) => { const transition = event.codeTransition!; return <li key={event.id}><span>{transition.mode.replaceAll("-", " ")} · {codeLabel(transition.fromCodeId)} → {codeLabel(transition.toCodeId)}</span><p>{transition.switchReason}</p><small>{transition.audienceContext} · {transition.intendedFunction}</small></li>; })}</ol> : <p className="language-empty">This path used the entry register without a represented register action.</p>}{decisions.length > 0 && switches.length === 0 && <p className="language-empty">This path maintained or bridged the active register without switching it.</p>}</section><section className="language-encounter" aria-labelledby={`${scenario.id}-encounter`}><h3 id={`${scenario.id}-encounter`}>{encounter.codeRelation === "shared" ? "Shared surface" : "Different surfaces"} · {encounter.worldModelRelation === "divergent" ? "different assumptions" : "aligned assumptions"}</h3><p><b>SURFACE</b>{encounter.surface}</p><p><b>REGISTER RELATION</b>{codeLabel(encounter.speakerCodeId)} · {encounter.codeRelation} with {codeLabel(encounter.audienceCodeId)}</p><p><b>AUDIENCE CONTEXT</b>{encounter.audienceContext}</p><div className="language-model-comparison"><article><h4>This seat&apos;s model</h4><dl><div><dt>Care</dt><dd>{encounter.speakerWorldModel.careMeans}</dd></div><div><dt>Evidence</dt><dd>{encounter.speakerWorldModel.evidenceMeans}</dd></div><div><dt>Authority</dt><dd>{encounter.speakerWorldModel.authorityMeans}</dd></div><div><dt>Disagreement</dt><dd>{encounter.speakerWorldModel.disagreementMeans}</dd></div><div><dt>Responsibility</dt><dd>{encounter.speakerWorldModel.responsibilityUnit}</dd></div></dl></article><article><h4>Receiving model</h4><dl><div><dt>Care</dt><dd>{encounter.audienceWorldModel.careMeans}</dd></div><div><dt>Evidence</dt><dd>{encounter.audienceWorldModel.evidenceMeans}</dd></div><div><dt>Authority</dt><dd>{encounter.audienceWorldModel.authorityMeans}</dd></div><div><dt>Disagreement</dt><dd>{encounter.audienceWorldModel.disagreementMeans}</dd></div><div><dt>Responsibility</dt><dd>{encounter.audienceWorldModel.responsibilityUnit}</dd></div></dl></article></div><p><b>FRICTION</b>{encounter.friction}</p><p><b>UNRESOLVED</b>{encounter.unresolvedQuestion}</p><p><b>TRANSLATION ROUTE</b>{encounter.repairMove}</p></section></div></details>;
-  })}</div></div></details>;
-}
-
-function CrossingReceipt({ pack, state }: { pack: GeneratedScenarioPack; state: NightState }) {
-  return <div className="crossing-receipt"><p className="receipt-intro">Only compatible routes claim a direct content crossing. Every other receipt describes a shared social condition—not a shared rumor, target, or truth.</p>{state.decisions.map((event) => { const source = pack.scenarios.find((item) => item.id === event.sourceScenarioId); return <details key={event.id}><summary><span>{formatNightClock(pack.night.startTime, event.atMinute)} · {source?.code}</span><strong>{event.choiceLabel}</strong></summary><ul>{event.effects.filter((effect) => effect.scope === "cross-room").map((effect) => <li key={effect.targetScenarioId}><span>{effect.layer === "direct" ? "DIRECT CROSSING" : "AMBIENT SYSTEM EFFECT"}</span><p>{visibleCrossingCopy({ id: event.id, atMinute: event.atMinute, sourceScenarioId: event.sourceScenarioId, label: event.choiceLabel, signal: event.signal, kind: "choice", effects: event.effects }, effect, state, pack.scenarios)}</p><small>{effectSummary(effect)}</small></li>)}</ul></details>; })}</div>;
-}
-
-function FatigueReceipt({ pack, state }: { pack: GeneratedScenarioPack; state: NightState }) {
-  return <div className="fatigue-receipt"><p className="receipt-intro">Discernment is not spent. Modeled platform exposure can reduce a prosocial seat&apos;s follow-through through five different loads. Wall-clock reading time, assistive technology, and hesitation never change this state. Under extreme combined load, a high-discernment seat may make one extraordinary, costly attempt; fatigue explains its availability, not its innocence.</p><div className="fatigue-definition">{(Object.keys(FATIGUE_COPY) as FatigueKind[]).map((kind) => <article key={kind}><span>{kind}</span><p>{FATIGUE_COPY[kind]}</p></article>)}</div>{pack.scenarios.map((scenario) => { const room = state.rooms[scenario.id]; const lastResort = state.decisions.find((event) => event.sourceScenarioId === scenario.id && event.lastResort)?.lastResort; return <article className="fatigue-room warm-frame" key={scenario.id}><header><span>{scenario.code}</span><strong>{scenario.protagonistModel.prosocialOrientation}</strong></header><div className="judgment-split"><p><span>DISCERNMENT</span><b>{Math.round(room.metrics.discernment)}</b><small>baseline {scenario.protagonistModel.discernmentBaseline}</small></p><p><span>FOLLOW-THROUGH</span><b>{Math.round(room.metrics.enactment)}</b><small>baseline {scenario.protagonistModel.enactmentBaseline}</small></p></div><div className="fatigue-bars">{(Object.keys(FATIGUE_COPY) as FatigueKind[]).map((kind) => <div key={kind}><span>{kind}</span><i><b style={{ width: room.fatigue[kind] + "%" }} /></i><strong>{Math.round(room.fatigue[kind])}</strong></div>)}</div><p>{dominantFatigue(room).label} fatigue dominated this seat. That explains a capacity barrier; it does not make harmful action inevitable or innocent.</p>{lastResort && <aside className="last-resort-receipt"><span>LAST RESORT TAKEN</span><p><b>Protected</b>{lastResort.protectedParty}: {lastResort.positiveConsequence}</p><p><b>Cost shifted</b>{lastResort.harmedParty}: {lastResort.negativeConsequence}</p><p><b>Self cost</b>{lastResort.selfCost}</p></aside>}</article>; })}</div>;
 }
 
 function behaviorPressureCue(phase: BehaviorPhase): string {
@@ -731,18 +735,6 @@ function behaviorPressureCue(phase: BehaviorPhase): string {
     recovery: "Ordinary range is returning; consequences still require repair.",
   };
   return cues[phase];
-}
-
-function PracticeReceipt({ pack, state }: { pack: GeneratedScenarioPack; state: NightState }) {
-  const frameworks = pack.scenarios.flatMap((scenario) => scenario.frameworks
-    .filter((framework) => framework.id !== "situated-action-review")
-    .map((framework) => ({ scenario, framework })));
-  const sparseIds = new Set(frameworks.map(({ framework }) => framework.id));
-  return <div className="practice-receipt"><p className="receipt-intro">These critical lenses appear only where the generated role, evidence, power relation, and available action make them coherent. They diagnose no real person and supply no tactics against one. The receipt shows what the played night made relevant without exposing the simulation&apos;s internal action-review scaffold.</p><div className="practice-absence"><span>SPARSE BY DESIGN</span><p>{sparseIds.has("situated-leadership") ? "One room carried a situated-leadership thread." : "No room in this night carried a situated-leadership thread."}</p><p>{sparseIds.has("repair-conversation") ? "One conflict supported an accountable repair conversation." : "No conflict in this night supported the complete repair conversation."}</p></div><div className="practice-grid">{frameworks.map(({ scenario, framework }) => { const offered = scenario.scenes.flatMap((scene) => scene.choices.flatMap((choice) => choice.frameworkMoves ?? [])).filter((move) => move.frameworkId === framework.id); const played = state.decisions.flatMap((event) => event.frameworkMoves.map((move) => ({ event, move }))).filter(({ move }) => move.frameworkId === framework.id); return <article className="warm-frame" key={`${scenario.id}-${framework.id}`}><header><span>{scenario.code}</span><strong>{framework.label}</strong></header><div className="problem-idea-solution"><p><b>CONDITION</b>{framework.problem}</p><p><b>READING</b>{framework.idea}</p><p><b>ACCOUNTABLE MOVE</b>{framework.solution}</p></div><ol>{offered.map((move) => { const chosen = played.find(({ move: playedMove }) => playedMove.stepId === move.stepId || (!move.stepId && playedMove.frameworkId === move.frameworkId)); return <li key={move.stepId ?? move.frameworkId} className={chosen ? "was-played" : "was-available"}><span>{move.stepId?.replaceAll("-", " ") ?? "critical lens"}</span><p>{move.applicability}</p><small>{chosen ? `PLAYED THROUGH “${chosen.event.choiceLabel}”` : "AVAILABLE IN THE PLAYED ROOM · NOT SELECTED"}</small></li>; })}</ol></article>; })}</div></div>;
-}
-
-function HeartReceipt({ pack }: { pack: GeneratedScenarioPack }) {
-  return <div className="heart-receipt warm-frame"><p className="panel-label">FACT WITHOUT CRUELTY · COMPASSION WITHOUT SURRENDER</p><h3>Will you understand every seat without pretending every choice was innocent?</h3><p>Self-protection can explain why a rumor began. It does not prove the rumor false; the event record does. Motive and truth remain separate.</p><div><article><span>SCAPEGOATING</span><p>Scapegoating concentrates a distributed failure on a lower-power target, often while shifting the burden of explanation, warmth, and repair toward that target.</p></article><article><span>DELIBERATE PROTECTION</span><p>Deliberate protection is a knowingly altered account used to shield self, friend, family, ally, client, or someone under authority. Power shapes who can impose the account and who must live inside it.</p></article><article><span>STATUS THREAT</span><p>Status threat is fear that another person&apos;s competence will expose one&apos;s own weakness. An oversimplified group story can protect status; the material record remains the test of that story.</p></article><article><span>ADVANCEMENT / COMPETITION</span><p>Intersecting incentives occur when class reassurance, cultural belonging, professional authority, political ownership, and market advantage reward the same distortion at once.</p></article><article><span>COMMUNICATION</span><p>Warmth and reserve are presentation signals, not proof of care or contempt. Meaning emerges from their relation to record, incentive, context, and correction behavior.</p></article><article><span>COMMON GROUND</span><p>Cross-code agreement is a shared concrete action expressed through different coalition vocabularies; surface conflict can coexist with material agreement.</p></article></div><blockquote>Understanding a protective motive does not move responsibility onto the person made to absorb its cost.</blockquote><small>{pack.scenarios.map((scenario) => scenario.valueLens.label).join(" · ")}</small></div>;
 }
 
 function HouseDrawer({ kind, pack, state, scenario, room, analysisAvailable, onRestore, onAnnounce, onClose }: { kind: Exclude<Drawer, null>; pack: GeneratedScenarioPack; state: NightState; scenario: Scenario | null; room: RoomRuntime | null; analysisAvailable: boolean; onRestore: (state: NightState) => void; onAnnounce: (message: string) => void; onClose: () => void }) {
@@ -774,7 +766,10 @@ function HouseDrawer({ kind, pack, state, scenario, room, analysisAvailable, onR
       if (!controls.length) return;
       const first = controls[0];
       const last = controls.at(-1)!;
-      if (event.shiftKey && document.activeElement === first) {
+      if (!panelRef.current.contains(document.activeElement)) {
+        event.preventDefault();
+        (event.shiftKey ? last : first).focus();
+      } else if (event.shiftKey && document.activeElement === first) {
         event.preventDefault();
         last.focus();
       } else if (!event.shiftKey && document.activeElement === last) {
@@ -789,8 +784,8 @@ function HouseDrawer({ kind, pack, state, scenario, room, analysisAvailable, onR
     };
   }, []);
 
-  const title = kind === "notes" ? (analysisAvailable ? "Field notes" : "House guide") : kind === "lineage" ? (analysisAvailable ? "Meme trace" : "Trace guide") : kind === "signals" ? "Live signals" : "Privacy & saves";
-  return <div className="drawer-scrim" role="presentation" onMouseDown={(event) => { if (event.currentTarget === event.target) onClose(); }}><aside ref={panelRef} className={`house-drawer warm-frame${kind === "privacy" ? " is-privacy" : ""}`} role="dialog" aria-modal="true" aria-labelledby="drawer-title"><header><div><span>CHORUS HOUSE FILE</span><h2 id="drawer-title">{title}</h2></div><button ref={closeRef} type="button" onClick={onClose} aria-label="Close house file">×</button></header><div className="drawer-body pane-scroll" role="region" aria-labelledby="drawer-title" tabIndex={0} data-scroll-region="drawer">{kind === "notes" && <>{analysisAvailable ? <FieldNotes /> : <HouseGuide />}<ResearchRecordLinks /></>}{kind === "lineage" && (analysisAvailable ? <MemeLineage /> : <TraceGuide />)}{kind === "signals" && <ContextRail pack={pack} state={state} scenario={scenario} room={room} />}{kind === "privacy" && <PrivacyPanel state={state} onRestore={onRestore} onAnnounce={onAnnounce} />}</div></aside></div>;
+  const title = kind === "notes" ? (analysisAvailable ? "Field notes" : "House guide") : kind === "lineage" ? (analysisAvailable ? "Meme reference" : "Trace guide") : kind === "signals" ? "Live signals" : "Privacy & saves";
+  return <div className="drawer-scrim" role="presentation" onMouseDown={(event) => { if (event.currentTarget === event.target) onClose(); }}><aside ref={panelRef} className={`house-drawer warm-frame${kind === "privacy" ? " is-privacy" : ""}`} role="dialog" aria-modal="true" aria-labelledby="drawer-title"><header><div><span>CHORUS HOUSE FILE</span><h2 id="drawer-title">{title}</h2></div><button ref={closeRef} type="button" onClick={onClose} aria-label="Close house file">×</button></header><div className="drawer-body pane-scroll" role="region" aria-labelledby="drawer-title" tabIndex={0} data-scroll-region="drawer">{kind === "notes" && (analysisAvailable ? <><FieldNotes /><ResearchRecordLinks /></> : <HouseGuide />)}{kind === "lineage" && (analysisAvailable ? <MemeLineage /> : <TraceGuide />)}{kind === "signals" && <ContextRail pack={pack} state={state} scenario={scenario} room={room} />}{kind === "privacy" && <PrivacyPanel state={state} onRestore={onRestore} onAnnounce={onAnnounce} />}</div></aside></div>;
 }
 
 function ResearchRecordLinks() {
@@ -802,11 +797,11 @@ function ResearchRecordLinks() {
 }
 
 function HouseGuide() {
-  return <div className="field-notes"><p>The interpretation stays sealed until the whole night is complete. These controls help you inspect the simulation without pointing to a preferred conclusion.</p><article><span>01</span><h3>Follow the record</h3><p>Keep what appeared in the artifact separate from the room&apos;s reading and what remains unknown.</p></article><article><span>02</span><h3>Use any pace</h3><p>Reading speed, pausing, keyboard navigation, and assistive technology never increase modeled load or change outcomes.</p></article><article><span>03</span><h3>Try a marked path</h3><p>If an action is visible but unavailable, activate it. The seat will name its immediate motive, emotional pressure, and capacity barrier.</p></article><article><span>04</span><h3>Keep your own hypothesis</h3><p>The final receipt will reveal the authored interior and compare it with the record. You do not need to guess a diagnosis.</p></article></div>;
+  return <div className="field-notes"><p>The interpretation stays sealed until the whole night is complete. These controls help you inspect the simulation without pointing to a preferred conclusion.</p><article><span>01</span><h3>Follow the record</h3><p>Keep what appeared in the artifact separate from the room&apos;s reading and what remains unknown.</p></article><article><span>02</span><h3>Use any pace</h3><p>Reading speed, pausing, keyboard navigation, and assistive technology never increase modeled load or change outcomes.</p></article><article><span>03</span><h3>Try a marked path</h3><p>If an action is visible but unavailable, activate it. The seat will name its immediate motive, emotional pressure, and capacity barrier.</p></article><article><span>04</span><h3>Keep your own hypothesis</h3><p>The conclusion will follow the visible record, selected actions, and modeled effects. It will not tell you what you believed or learned.</p></article></div>;
 }
 
 function TraceGuide() {
-  return <div className="field-notes"><p>Two visible measures describe circulation conditions, not truth.</p><article><span>01</span><h3>Trace</h3><p>How much source, time, boundary, and context remain attached to an artifact.</p></article><article><span>02</span><h3>Fit</h3><p>How readily an artifact feels native to the room receiving it.</p></article><article><span>03</span><h3>Crossings</h3><p>Some effects carry content; others only change the surrounding atmosphere. The final receipt distinguishes them.</p></article></div>;
+  return <div className="field-notes"><p>Two visible measures describe circulation conditions, not truth.</p><article><span>01</span><h3>Trace</h3><p>How much source, time, boundary, and context remain attached to an artifact.</p></article><article><span>02</span><h3>Fit</h3><p>How readily an artifact feels native to the room receiving it.</p></article><article><span>03</span><h3>Crossings</h3><p>Some effects carry content; others only change the surrounding atmosphere. Live echoes distinguish each effect they show; the ending follows one supported path.</p></article></div>;
 }
 
 function FieldNotes() {
@@ -823,7 +818,7 @@ function FieldNotes() {
 
 function MemeLineage() {
   const steps = [["ORIGINAL", "A question retains source, time, uncertainty, and visual context.", "TRACE 88 · FIT 24"], ["CROP", "The striking image remains. The boundary and timestamp disappear.", "TRACE 52 · FIT 61"], ["MEME", "A familiar joke supplies feeling, belonging, and deniability.", "TRACE 27 · FIT 86"], ["PERSON-LABEL", "A character story explains the ambiguity more quickly than chronology.", "TRACE 16 · FIT 91"], ["CORRECTION", "Evidence returns, but no longer travels inside every trusted relationship.", "TRACE 94 · FIT 43"]];
-  return <div className="meme-lineage"><p>Aesthetic fluency is a transmission condition. It can preserve uncertainty, disguise incentive, or make an unsupported social interpretation feel locally native.</p><ol>{steps.map(([label, copy, metric], index) => <li key={label}><span>{String(index + 1).padStart(2, "0")}</span><strong>{label}</strong><p>{copy}</p><small>{metric}</small>{index < steps.length - 1 && <i aria-hidden="true">→</i>}</li>)}</ol><blockquote>The source outline becomes incomplete as social fit warms—until repair restores the record without pretending the earlier audience can be fully recovered.</blockquote></div>;
+  return <div className="meme-lineage"><p><strong>GENERAL REFERENCE · NOT A PLAYED TRACE</strong> This fixed sequence illustrates one possible change in circulation. It is not a trace of the night you played.</p><p>Aesthetic fluency is a transmission condition. It can preserve uncertainty, disguise incentive, or make an unsupported social interpretation feel locally native.</p><ol>{steps.map(([label, copy, metric], index) => <li key={label}><span>{String(index + 1).padStart(2, "0")}</span><strong>{label}</strong><p>{copy}</p><small>{metric}</small>{index < steps.length - 1 && <i aria-hidden="true">→</i>}</li>)}</ol><blockquote>The source outline becomes incomplete as social fit warms—until repair restores the record without pretending the earlier audience can be fully recovered.</blockquote></div>;
 }
 
 function aggregateRoom(state: NightState): Pick<RoomRuntime, "metrics"> {
@@ -849,12 +844,6 @@ function dominantFatigue(room: RoomRuntime): { kind: FatigueKind; label: string;
   return { kind, label: kind.charAt(0).toUpperCase() + kind.slice(1), value };
 }
 
-function blockedReason(choice: Choice, access: ChoiceAccess, room: RoomRuntime) {
-  const barrier = choice.blockedAttempt?.conciseReason ?? choice.lockReason ?? "The path is not connected.";
-  const fatigue = dominantFatigue(room);
-  return barrier + " " + fatigue.label + " fatigue is highest. " + (access.willDepleted ? "Follow-through is below the action's modeled requirement." : "Required systems remain disconnected.");
-}
-
 function stageHeadingId(intro: boolean, debrief: boolean, relations: boolean, room: RoomRuntime | null) {
   if (intro) return "prelude-title";
   if (debrief) return "debrief-title";
@@ -875,8 +864,16 @@ function fatigueHint(kind: FatigueKind) {
 
 function effectSummary(effect: EffectReceipt) {
   const deltas = Object.entries(effect.metrics).filter(([metric, value]) => metric !== "reach" && value && Math.abs(value) >= 0.1).slice(0, 3).map(([metric, value]) => metricDisplay(metric) + " " + (Number(value) > 0 ? "+" : "") + (Math.round(Number(value) * 10) / 10));
-  const reach = effect.appliedReach > 0 ? "reach +" + formatNumber(effect.appliedReach + effect.backgroundReach) : effect.avoidedReach > 0 ? formatNumber(effect.avoidedReach) + " future impressions avoided" : formatNumber(effect.backgroundReach) + " ambient impressions";
-  return [reach, ...deltas].join(" · ");
+  const movement: string[] = [];
+  if (effect.selectedCarriageReach > 0) {
+    movement.push(`selected ${effect.semantic === "format" ? "format" : "content"} impressions +${formatNumber(effect.selectedCarriageReach)}`);
+  } else if (effect.appliedReach > 0) {
+    movement.push(`indirect modeled impressions +${formatNumber(effect.appliedReach)}`);
+  }
+  if (effect.backgroundReach > 0) movement.push(`background impressions +${formatNumber(effect.backgroundReach)}`);
+  if (effect.avoidedReach > 0) movement.push(`${formatNumber(effect.avoidedReach)} future impressions avoided`);
+  if (movement.length === 0) movement.push("no new modeled impressions");
+  return [...movement, ...deltas].join(" · ");
 }
 
 function metricDisplay(metric: string) {

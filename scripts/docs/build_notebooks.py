@@ -1194,6 +1194,7 @@ tracked_sources = [
     ("app/scenario-generator.ts", "Validated night grammar and coherence gates"),
     ("app/night-engine.ts", "Shared-clock event reducer and receipt validation"),
     ("app/page.tsx", "One-viewport disclosure and interaction shell"),
+    ("app/debrief-copy.ts", "Pure played-path summary and concept derivation"),
     ("app/save-model.ts", "Portable-state and local-slot validation"),
     ("app/privacy-panel.tsx", "Player-directed persistence controls"),
 ]
@@ -1224,9 +1225,10 @@ The runtime is intentionally narrow: generation establishes a validated world, t
             r'''modules = [
     ("Scenario grammar", "app/scenario-generator.ts", "Creates six reviewed rooms, links, scenes, choices, ledgers, and coherence reports."),
     ("Night reducer", "app/night-engine.ts", "Applies decisions, time advances, ambient pulses, access checks, and cross-room receipts."),
-    ("Interface", "app/page.tsx", "Renders the bounded house, room switching, progressive disclosure, relations, and closing receipts."),
-    ("Persistence", "app/save-model.ts", "Validates local slots and portable state with provenance, size, schema, and digest checks."),
-    ("Privacy controls", "app/privacy-panel.tsx", "Keeps session-only use as the default and exposes explicit save, import, export, and deletion controls."),
+	    ("Interface", "app/page.tsx", "Renders the bounded house, room switching, progressive disclosure, relations, and the completed-night reading order."),
+	    ("Conclusion copy", "app/debrief-copy.ts", "Derives the route-faithful natural summary and evidence-qualified plain concept receipt from typed pack and state records."),
+	    ("Persistence", "app/save-model.ts", "Validates local slots and portable state with provenance, size, schema, and digest checks."),
+	    ("Privacy controls", "app/privacy-panel.tsx", "Keeps open-tab memory as the default and exposes explicit save, import, export, and deletion controls."),
 ]
 _html = table_html("Primary runtime modules", ("Responsibility", "Source", "Boundary"), modules, row_headers=True)
 print(f"Mapped {len(modules)} primary modules; state changes remain concentrated in the generator and reducer.")''',
@@ -2149,6 +2151,7 @@ tracked_sources = [
     ("tests/concurrent-night.test.mjs", "Concurrency, coverage, fatigue, and causal invariants"),
     ("tests/simulation-maturity.test.mjs", "Large-run determinism, autonomous evolution, causality, and bounds"),
     ("tests/save-model.test.mjs", "Portable-state, migration, consent, and hostile-input checks"),
+    ("tests/copy-contract.test.mjs", "Truth purity, atomized copy, route fidelity, concept evidence, and ending structure"),
     ("tests/viewport-contract.test.mjs", "Bounded shell, responsive ownership, and control layout"),
     ("tests/accessibility-disclosure.test.mjs", "Naming, focus, progressive disclosure, and perceptual alternatives"),
 ]

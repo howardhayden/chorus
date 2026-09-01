@@ -4,8 +4,8 @@
 
 This document owns player-visible states, navigation, disclosure timing,
 responsive behavior, blocked-action interaction, relationship exploration, and
-the final receipt. It does not redefine the underlying communication model or
-event coefficients.
+the completed-night summary and concept receipt. It does not redefine the
+underlying communication model or event coefficients.
 
 ## Interaction thesis
 
@@ -19,7 +19,8 @@ of classification:
 
 - early play exposes records, uncertainty, immediate pressure, and action;
 - room-close views expose bounded consequences and unresolved questions; and
-- the whole-night debrief exposes complete causal and interpretive ledgers.
+- the completed-night view derives a continuous account from the causal state,
+  then explains supported concepts separately in plain language.
 
 ## Application states
 
@@ -33,7 +34,7 @@ of classification:
 | Waiting room | Return to the map until the next scheduled artifact. | All house-level views. | Future artifact content. |
 | Room close | Compare the immutable close snapshot with current afterimage. | Other rooms remain playable. | Whole-night interpretation. |
 | Relationships | Explore public outward relationships and current house effects. | Filters, keyboard node exploration, textual relation list. | Linguistic profiles and inferred hidden alliances. |
-| Whole-night debrief | Reconstruct causality after all 24 decisions. | Seven receipt sections. | Nothing required for interpretation. |
+| Completed-night view | Read the naturalized summary, its adjacent model limit, and then the plain concept receipt. | House map and whole-night replay. | Nothing required for the completed synthesis. |
 
 ## Single-viewport contract
 
@@ -84,12 +85,20 @@ An active scene separates four questions:
 
 - **Source:** what artifact arrived and how much trace remains;
 - **Seat:** the protagonist's immediate goal, known condition, and pressure;
-- **Record:** what is directly represented, what the room is reading, and what
-  remains unknown; and
+- **Record:** the current beat's typed public record, current question, and
+  current unknown, plus the single actual private assignment brief only for
+  the contracted Bridge seat; and
 - **Echoes:** attributable prior house effects permitted by current disclosure.
 
 Tabs use roving keyboard focus. Their content follows the same reading order as
 their visual order, and the selected panel is the only active tab panel.
+
+The Record panel consumes only `scene.disclosure`. Every disclosure atom has a
+stable ID, access class, label, and copy. It does not render the room-wide
+analytic communication ledger, and the room-close receipt does not repeat all
+four beats' atoms. This keeps laterResolution, circulatingFrame, audience
+inference, private motive, and unresolved questions from collapsing into one
+apparently authoritative block.
 
 ## Choice interaction
 
@@ -153,10 +162,12 @@ surface cue and bounded scene-specific hints. It may not expose:
 - a same-register/different-world-model classification; or
 - a cohesion score.
 
-After the night closes, one native collapsed disclosure inside Interpretation
-may show the repertoire, registers actually used by accepted decisions, switch
-pressure, continuity anchors, and mental-model comparison. It does not add
-another tab, drawer, graph edge, score, or nested scroll region.
+After the night closes, the naturalized summary may name a repertoire or
+assumption difference only when the completed pack, selected route, and state
+support it. The conclusion does not expose a separate repertoire tab, inferred
+relationship edge, score, or nested scroll region. Internal profile detail
+that is not required by the supported synthesis remains model data rather than
+being expanded into a concluding taxonomy.
 
 ## Relationship exploration
 
@@ -192,31 +203,70 @@ drawer pattern:
 Drawers contain supporting information and controls; they never hide the only
 way to progress the current beat.
 
-## Whole-night debrief
+The pre-completion Notes drawer contains only the House Guide, and the Privacy
+drawer withholds its Technical record disclosure. Research-record cards,
+embedded notebooks, and the notebook-index link enter the product navigation
+only after the same whole-night completion check. This is a progressive-
+disclosure boundary, not access control: static notebook URLs remain public if
+someone already knows or guesses them. CHORUS does not claim those public
+assets are confidential.
 
-The debrief opens only after all 24 choices have been accepted. Its sections
-have distinct ownership:
+## Completed-night view
 
-| Section | Question answered |
-|---|---|
-| House | What changed across the shared system? |
-| Choices | Which concrete actions were taken, including conversation routing? |
-| Interpretation | What did each communication and protection ledger represent? |
-| Crossings | Which effects carried content and which changed only the surrounding condition? |
-| Fatigue | Which loads reduced follow-through while discernment remained intact? |
-| Practice | Which sparse critical lenses and repair structures were contextually relevant? |
-| Heart | What do the encountered ideas mean after play? |
+The view opens only after all 24 choices have been accepted. It is one
+continuous stage and one named scroll owner; it has no receipt tablist and no
+Heart panel. Its reading order is fixed:
 
-“The Heart” defines the represented ideas rather than instructing the player to
-adopt a conclusion. Its central question is phrased as a matter of willingness:
-whether the player will understand every seat without declaring every choice
-innocent.
+1. **Naturalized summary.** `buildNaturalizedSummary(pack, state)` derives
+   paragraphs and supporting narrative-source identifiers from the completed
+   generated pack and night state. It may synthesize only supported choices,
+   routes, crossings, pressure, fatigue, repair, and consequences. It ends on
+   the remaining afterimage or unresolved reach of the night, not on a lesson,
+   command, score, or model disclaimer. Route sources distinguish selected-path
+   carriage from background-only model movement. When several post-close
+   metrics changed, the cited residue is selected by normalized magnitude and
+   retains raw close/debrief values plus the normalized change.
+2. **Model limit.** A visible labelled note sits adjacent to the summary but
+   outside its prose thesis. It states that authored fictional interiors and
+   modeled effects do not diagnose or predict real people. It cannot be
+   appended as the summary's final moral.
+3. **Plain concept receipt.** `buildConceptReceipt(pack, state)` deduplicates
+   `SceneLesson` terms belonging to scenes with actual accepted decisions. Each
+   entry uses the first related `lesson.definition` as plain meaning and its
+   `lesson.observable` as the limit, then gives the strongest supported status
+   under `played > experienced > encountered`. Encountered means an accepted
+   decision resolved the lesson scene. Experienced means an actual decision or
+   ambient-pulse receipt matched every field in one of that lesson's typed
+   `experienceRules`. Played means an accepted choice carried an explicit
+   term-matching `conceptPlays` binding. Saturation has no play binding. Scene
+   IDs, exact matched `effectEventIds`, and played decision IDs are derived
+   separately; played status does not require or invent an effect ID.
+
+Each concept entry also exposes one visible discriminated evidence sentence:
+scene evidence identifies the accepted scene, effect evidence identifies the
+recorded event and target room, and action evidence identifies the selected
+decision. A requested metric delta can meet a room bound, so effect prose does
+not promote its direction into a net increase without realized-delta evidence.
+Provenance is player-readable copy, not an opaque count of hidden IDs.
+
+The summary and concept receipt have different jobs. The summary carries the
+experienced relationships in a natural voice without restating every
+definition. The receipt explains model concepts directly without imitating the
+narrative voice. An offered action or accepted scene alone is not reported as
+played; selection counts only through an explicit authored binding. Labels,
+detail, intent, tags, and generic signal copy are not predicates, and a
+selected fictional action is not treated as the player's belief or character.
+
+Both derivations are pure: the same completed `GeneratedScenarioPack` and
+`NightState` produce the same ordered output. Reading, focus, reflow, opening a
+native disclosure, or returning to the house does not alter simulation state.
 
 ## Cognitive-load rules
 
 - Do not repeat how to play in every view.
 - Do not expose a placeholder for content that does not yet exist.
-- Prefer a labelled native disclosure to a new panel or nested modal.
+- Prefer a labelled native disclosure to a new panel or nested modal during
+  play; keep the completed-night view in one continuous reading order.
 - Keep a single source of truth for Trace and Fit explanations.
 - Do not show repository, privacy, rating, or explanatory disclaimers in the
   active play footer when they do not help the current decision.
@@ -228,7 +278,8 @@ innocent.
 
 The accessibility and viewport suites inspect navigation uniqueness, disclosure
 gates, operable blocked choices, focus transfer, relation-plot semantics,
-normal-flow expansions, scroll ownership, dynamic viewport use, mobile reflow,
-and the absence of premature analytic labels. Manual verification is specified
-in [Accessibility](ACCESSIBILITY.md).
-
+normal-flow expansions, the tab-free completed-night order, scroll ownership,
+dynamic viewport use, mobile reflow, and the absence of premature analytic
+labels. Browser and assistive-technology renewal for the version-14 source is
+still required under [Accessibility](ACCESSIBILITY.md) and
+[Release status](RELEASE-STATUS.md).

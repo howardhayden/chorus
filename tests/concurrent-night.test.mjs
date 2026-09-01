@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { generateScenarioPack } from "../app/scenario-generator.ts";
+import { generateScenarioPack, validateConcurrentNight } from "../app/scenario-generator.ts";
 import {
   advanceNightTo,
   advanceToNextOpening,
@@ -50,6 +50,23 @@ function playOrder(pack, ids) {
   return { state, actions };
 }
 
+function applyOpeningChoice(pack, scenario, choice) {
+  let state = createNightState(pack);
+  state = enterNightRoom(state, scenario.id);
+  state = advanceNightTo(pack, state, sceneArrivalOffset(pack, scenario.id, 0));
+  state = applyNightChoice(pack, state, scenario.id, scenario.scenes[0].id, choice.id);
+  const decision = state.decisions.at(-1);
+  assert.ok(decision, `expected ${choice.id} to produce a decision`);
+  return { state, decision };
+}
+
+function deliverySupportsLink(choice, link) {
+  if (["private", "withheld"].includes(choice.delivery.scope)) return false;
+  if (link.semantic === "content") return ["content", "content-and-format"].includes(choice.delivery.carriage);
+  if (link.semantic === "format") return ["format", "content-and-format"].includes(choice.delivery.carriage);
+  return false;
+}
+
 test("1,000 generated nights satisfy room and night coherence", () => {
   for (let seed = 0; seed < 1_000; seed += 1) {
     const pack = generateScenarioPack(seed);
@@ -57,6 +74,100 @@ test("1,000 generated nights satisfy room and night coherence", () => {
     assert.equal(pack.night.links.length, 30);
     assert.ok(pack.nightReport.passed);
     assert.ok(pack.reports.every((report) => report.passed));
+  }
+});
+
+test("cross-room semantic classes and carriers are typed independently of explanatory copy", () => {
+  for (let seed = 0; seed < 100; seed += 1) {
+    const pack = generateScenarioPack(seed);
+    for (const link of pack.night.links) {
+      assert.ok(["content", "format", "ambient"].includes(link.semantic));
+      if (link.semantic === "ambient") {
+        assert.equal(link.layer, "ambient");
+        assert.equal(link.carrier, undefined);
+        assert.equal(link.compatibilityBasis, undefined);
+      } else if (link.semantic === "content") {
+        assert.equal(link.layer, "direct");
+        assert.equal(link.carrier.kind, "shared-channel");
+        assert.ok(link.carrier.channel.length > 0);
+      } else {
+        assert.equal(link.layer, "direct");
+        assert.equal(link.carrier.kind, "artifact-format");
+        assert.ok(link.carrier.artifact.length > 0);
+      }
+    }
+  }
+
+  const pack = generateScenarioPack(0);
+  const editedNight = structuredClone(pack.night);
+  for (const link of editedNight.links) {
+    link.vagueCue = "A generic neighboring condition has shifted without identifying either represented room.";
+    link.revealedCue = "This deliberately contradictory copy mentions content, format imitation, and ambient pressure together.";
+    if (link.semantic !== "ambient") {
+      link.compatibilityBasis = "Contradictory prose mentions both format and a shared channel, but cannot change the typed route.";
+    }
+  }
+  const report = validateConcurrentNight(editedNight, pack.scenarios);
+  assert.ok(report.passed, report.checks.filter((check) => !check.passed).map((check) => check.id).join(", "));
+  assert.deepEqual(
+    editedNight.links.map((link) => link.semantic),
+    pack.night.links.map((link) => link.semantic),
+  );
+});
+
+test("private floor choices cannot use shared content or format carriers", () => {
+  const observed = new Set();
+  for (const [seed, expectedSemantic] of [[0, "format"], [0xffffffff, "content"]]) {
+    const pack = generateScenarioPack(seed);
+    const fixture = pack.scenarios.map((scenario) => ({
+      scenario,
+      choice: scenario.scenes[0].choices.find((choice) => choice.delivery.scope === "private"),
+      link: pack.night.links.find((link) => link.sourceScenarioId === scenario.id && link.semantic !== "ambient"),
+    })).find(({ choice, link }) => choice && link?.semantic === expectedSemantic);
+    assert.ok(fixture?.choice && fixture.link, `seed ${seed} needs a private-choice direct-route fixture`);
+    observed.add(fixture.link.semantic);
+    assert.ok(fixture.choice.ethicsTags.includes("non-amplification-floor"));
+    const { state, decision } = applyOpeningChoice(pack, fixture.scenario, fixture.choice);
+    const receipt = decision.effects.find((effect) => effect.linkId === fixture.link.id);
+    assert.ok(receipt);
+    assert.equal(receipt.semantic, fixture.link.semantic);
+    assert.equal(receipt.selectedCarriage, false);
+    assert.equal(receipt.selectedCarriageReach, 0);
+    assert.equal(receipt.appliedReach, 0);
+    assert.deepEqual(validateNightState(pack, state), []);
+  }
+  assert.deepEqual(observed, new Set(["format", "content"]));
+});
+
+test("typed public delivery—not an ethics tag—can produce selected carriage", () => {
+  let floorFixture;
+  let contrastFixture;
+  for (let seed = 0; seed < 100 && (!floorFixture || !contrastFixture); seed += 1) {
+    const pack = generateScenarioPack(seed);
+    for (const scenario of pack.scenarios) {
+      const link = pack.night.links.find((candidate) =>
+        candidate.sourceScenarioId === scenario.id && candidate.semantic !== "ambient",
+      );
+      if (!link) continue;
+      for (const choice of scenario.scenes[0].choices) {
+        if ((choice.effects.reach ?? 0) <= 0 || !deliverySupportsLink(choice, link)) continue;
+        const fixture = { pack, scenario, choice, link };
+        if (choice.ethicsTags.includes("non-amplification-floor")) floorFixture ??= fixture;
+        else contrastFixture ??= fixture;
+      }
+    }
+  }
+  assert.ok(floorFixture, "expected a bounded public floor with a compatible direct carrier");
+  assert.ok(contrastFixture, "expected a non-floor choice with a compatible direct carrier");
+  for (const fixture of [floorFixture, contrastFixture]) {
+    const { state, decision } = applyOpeningChoice(fixture.pack, fixture.scenario, fixture.choice);
+    const receipt = decision.effects.find((effect) => effect.linkId === fixture.link.id);
+    assert.ok(receipt);
+    assert.equal(receipt.semantic, fixture.link.semantic);
+    assert.equal(receipt.selectedCarriage, true);
+    assert.ok(receipt.selectedCarriageReach > 0);
+    assert.equal(receipt.selectedCarriageReach, receipt.appliedReach);
+    assert.deepEqual(validateNightState(fixture.pack, state), []);
   }
 });
 
@@ -235,6 +346,156 @@ test("a future artifact cannot be revealed through an early decision", () => {
   assert.deepEqual(validateNightState(pack, state), []);
 });
 
+test("visible crossing copy binds every claim to event kind, semantic, carriage, and reach receipts", () => {
+  const scenarios = [
+    { id: "source", title: "Source Room" },
+    { id: "target", title: "Target Room" },
+  ];
+  const state = {
+    rooms: {
+      source: { entered: true },
+      target: { entered: true },
+    },
+  };
+  const baseEvent = {
+    id: "event-1",
+    atMinute: 1,
+    sourceScenarioId: "source",
+    label: "Send selected words",
+    signal: "a visible signal",
+    kind: "choice",
+    effects: [],
+  };
+  const baseEffect = {
+    targetScenarioId: "target",
+    scope: "cross-room",
+    layer: "direct",
+    semantic: "content",
+    metrics: {},
+    backgroundReach: 0,
+    avoidedReach: 0,
+    appliedReach: 0,
+    selectedCarriage: false,
+    selectedCarriageReach: 0,
+    supportAdded: [],
+    vagueCue: "A neighboring pressure changed.",
+    revealedCue: "Source Room and Target Room share a visible channel.",
+  };
+  const cases = [
+    {
+      name: "selected content with applied selected reach",
+      effect: { selectedCarriage: true, selectedCarriageReach: 5, appliedReach: 5 },
+      begins: baseEffect.revealedCue,
+      matches: [/carried its message content/i, /selected carrier added reach here/i],
+      rejects: [/part of the record|factual claim/i],
+    },
+    {
+      name: "selected format without a content claim",
+      effect: { semantic: "format", selectedCarriage: true, selectedCarriageReach: 4, appliedReach: 4 },
+      begins: baseEffect.revealedCue,
+      matches: [/carried the recognizable form, not its message content/i, /selected carrier added reach here/i],
+      rejects: [/part of the record|factual claim/i],
+    },
+    {
+      name: "selected content with crossover but zero selected reach",
+      effect: { metrics: { crossover: 1 }, selectedCarriage: true },
+      begins: baseEffect.revealedCue,
+      matches: [/carried its message content/i, /changed crossover conditions without adding reach/i],
+      rejects: [/selected carrier added reach here/i],
+    },
+    {
+      name: "tampered carriage flag without realized movement",
+      effect: { selectedCarriage: true },
+      matches: [/did not carry its message content/i, /no applied, background, or avoided reach/i],
+      rejects: [/carried its message content[.]/i],
+    },
+    {
+      name: "background-only content route",
+      effect: { backgroundReach: 12 },
+      matches: [/did not carry its message content/i, /background circulation continued separately/i],
+      rejects: [/carried its message content[.]/i, /selected carrier added reach/i],
+    },
+    {
+      name: "avoided-only format route",
+      effect: { semantic: "format", avoidedReach: 7 },
+      matches: [/did not carry a recognizable form or its message content/i, /background circulation was avoided/i],
+      rejects: [/carried the recognizable form/i],
+    },
+    {
+      name: "ambient choice with a hostile selected-carriage flag",
+      effect: { semantic: "ambient", selectedCarriage: true, selectedCarriageReach: 3, appliedReach: 3 },
+      matches: [/carrier-free shared conditions/i, /added reach here without a selected carrier/i],
+      rejects: [/carried its message content[.]/i, /carried the recognizable form/i],
+    },
+    {
+      name: "autonomous activity on a content-capable route",
+      event: { kind: "ambient", label: "Selected move carried the whole record" },
+      effect: { selectedCarriage: true, selectedCarriageReach: 6, appliedReach: 6 },
+      matches: [/autonomous house activity/i, /content-capable route; no message content crossed/i, /autonomous activity added reach here without a selected carrier/i],
+      rejects: [/selected move/i, /part of the record/i, /carried the whole record/i],
+    },
+    {
+      name: "legacy autonomous kind also fails closed",
+      event: { kind: "autonomous", label: "Selected move copied the format" },
+      effect: { semantic: "format", selectedCarriage: true, selectedCarriageReach: 6, appliedReach: 6 },
+      matches: [/autonomous house activity/i, /format-capable route; no recognizable form or message content crossed/i],
+      rejects: [/selected move/i, /carried the recognizable form/i, /copied the format/i],
+    },
+    {
+      name: "metric-only choice with no reach movement",
+      effect: { semantic: undefined, metrics: { heat: 1 } },
+      matches: [/metric-only change/i, /no message content or format crossed/i, /no applied, background, or avoided reach/i],
+      rejects: [/carried its message content[.]/i, /carried the recognizable form/i],
+    },
+    {
+      name: "mixed selected, background, and avoided reach",
+      effect: { semantic: "format", selectedCarriage: true, selectedCarriageReach: 4, appliedReach: 4, backgroundReach: 9, avoidedReach: 2 },
+      begins: baseEffect.revealedCue,
+      matches: [/selected carrier added reach here/i, /background circulation continued separately/i, /background circulation was avoided/i],
+      rejects: [/carried its message content[.]/i],
+    },
+  ];
+
+  for (const fixture of cases) {
+    const event = { ...baseEvent, ...fixture.event };
+    const effect = { ...baseEffect, ...fixture.effect };
+    const copy = visibleCrossingCopy(event, effect, state, scenarios);
+    assert.ok(
+      copy.startsWith(fixture.begins ?? "A route between Source Room and Target Room is now visible."),
+      `${fixture.name} must lead with the observable cue: ${copy}`,
+    );
+    for (const pattern of fixture.matches) assert.match(copy, pattern, fixture.name);
+    for (const pattern of fixture.rejects) assert.doesNotMatch(copy, pattern, fixture.name);
+  }
+});
+
+test("generated crossing copy never promotes autonomous or uncarried effects", () => {
+  for (let seed = 0; seed < 8; seed += 1) {
+    const pack = generateScenarioPack(seed);
+    const { state } = playOrder(pack, pack.scenarios.map((scenario) => scenario.id));
+    for (const target of pack.scenarios) {
+      for (const { event, effect } of roomIncomingEvents(state, target.id)) {
+        const copy = visibleCrossingCopy(event, effect, state, pack.scenarios);
+        if (event.kind === "ambient") {
+          assert.doesNotMatch(copy, /selected move/i, `${event.id} presented autonomous activity as a selection`);
+          assert.ok(!copy.includes(event.label), `${event.id} exposed an autonomous label as selected-action copy`);
+        }
+        if (effect.semantic === "content" && !effect.selectedCarriage) {
+          assert.doesNotMatch(copy, /carried its message content[.]/i, `${event.id} promoted an uncarried content route`);
+        }
+        if (effect.semantic === "format" && !effect.selectedCarriage) {
+          assert.doesNotMatch(copy, /carried the recognizable form/i, `${event.id} promoted an uncarried format route`);
+        }
+        if (effect.backgroundReach > 0) assert.match(copy, /background circulation continued separately/i, event.id);
+        if (effect.avoidedReach > 0) assert.match(copy, /background circulation was avoided/i, event.id);
+        if (effect.appliedReach > 0 && !effect.selectedCarriage) {
+          assert.match(copy, /added reach here without a selected carrier/i, event.id);
+        }
+      }
+    }
+  }
+});
+
 test("disclosure remains vague in every entered/unentered combination", () => {
   const pack = generateScenarioPack(91);
   const base = advanceNightTo(pack, createNightState(pack), 180);
@@ -332,7 +593,7 @@ test("generated actors keep cohesive situated repertoires while code and world m
   const primaryByKind = new Map();
   for (let seed = 0; seed < 400; seed += 1) {
     const pack = generateScenarioPack(seed);
-    assert.equal(pack.generatorVersion, 13);
+    assert.equal(pack.generatorVersion, 14);
     assert.equal(pack.night.generationPolicy, "validated-regeneration-without-session-cap");
     const sharedDivergent = pack.scenarios.filter((scenario) => {
       const encounter = scenario.communicationModel.linguisticEncounter;
@@ -468,7 +729,7 @@ test("locked ideals are deterministically shuffled through every choice position
   assert.deepEqual(positions, new Set([0, 1, 2]));
 });
 
-test("every night represents deliberate protection of self, friend, family, and a person under authority", () => {
+test("every night keeps deliberate-protection ledgers internally bound, private, and available through player agency", () => {
   const required = new Set(["self", "friend", "family", "person-under-authority"]);
   const requiredDomains = new Set(["social-class-story", "sociocultural-standing", "professional-standing", "political-standing", "market-position"]);
   for (let seed = 0; seed < 250; seed += 1) {
@@ -483,14 +744,23 @@ test("every night represents deliberate protection of self, friend, family, and 
       const bindings = ledger.factBindings;
       assert.equal(ledger.intentionality, "deliberate");
       assert.ok(scenario.id.startsWith(`${bindings.incidentId}-`));
-      assert.ok(scenario.truth.knownFact.includes(bindings.knownRecord));
-      assert.ok(scenario.truth.misleadingFrame.includes(bindings.alteredAccount));
-      assert.ok(scenario.truth.unresolvedAtEntry.includes(bindings.audienceCost));
-      assert.ok(scenario.truth.laterResolution.includes(bindings.correctionDuty));
-      assert.ok(scenario.scenes[0].artifactCopy.includes(bindings.knownRecord));
-      assert.ok(scenario.scenes[1].artifactCopy.includes(bindings.alteredAccount));
-      assert.ok(scenario.scenes[2].artifactCopy.includes(bindings.audienceCost));
-      assert.ok(scenario.scenes[3].artifactCopy.includes(bindings.correctionDuty));
+      assert.equal(bindings.knownRecord, ledger.knownRecord);
+      assert.equal(bindings.alteredAccount, ledger.alteredAccount);
+      assert.equal(bindings.audienceCost, ledger.audienceCost);
+      assert.equal(bindings.correctionDuty, ledger.correctionDuty);
+      const publicTruthAndArtifacts = [
+        ...Object.values(scenario.truth),
+        ...Object.values(scenario.propagation),
+        ...scenario.scenes.map((scene) => scene.artifactCopy),
+        ...scenario.scenes.flatMap((scene) => [
+          ...scene.disclosure.records,
+          ...scene.disclosure.questions,
+          ...scene.disclosure.unknowns,
+        ].map((atom) => atom.copy)),
+      ].join(" ");
+      for (const privateBinding of [bindings.knownRecord, bindings.alteredAccount, bindings.audienceCost, bindings.correctionDuty]) {
+        assert.ok(!publicTruthAndArtifacts.includes(privateBinding), `${scenario.id} leaked a private deliberate-protection binding`);
+      }
       const incentive = ledger.incentiveIntersection;
       assert.ok(incentive.competenceThreat.length > 40);
       assert.ok(incentive.fearedInference.length > 40);
@@ -560,7 +830,7 @@ test("conversation diversion stays sparse, deterministic, and distinct from trut
         assert.equal(route.responseFit, "adjacent-separate-thread");
         assert.ok(route.recordBasis.length > 70);
         assert.ok(route.betterRoute.toLowerCase().includes("separate post"));
-        assert.ok(Object.values(scenario.truth).every((value) => !value.includes(route.recordBasis)), "the separate concern must not merge into the active incident ledger");
+        assert.ok([...Object.values(scenario.truth), ...Object.values(scenario.propagation)].every((value) => !value.includes(route.recordBasis)), "the separate concern must not merge into the active incident ledger");
         assert.ok(choice.effects.commonGround > 0, "a true adjacent concern may retain some material common ground");
       } else {
         assert.equal(route.propositionStatus, "no-proposition");
@@ -602,7 +872,7 @@ test("a chosen diversion persists beside its relational move and emits no incide
   }
 });
 
-test("every communication lesson is bound to its active incident truth and four represented artifacts", () => {
+test("truth, propagation, beat disclosure, and communication analysis remain separately incident-bound", () => {
   for (let seed = 0; seed < 250; seed += 1) {
     const pack = generateScenarioPack(seed);
     for (const scenario of pack.scenarios) {
@@ -610,18 +880,60 @@ test("every communication lesson is bound to its active incident truth and four 
       const bindings = ledger.factBindings;
       assert.ok(scenario.id.startsWith(`${bindings.incidentId}-`), "binding must identify the active incident");
       assert.ok(bindings.hookId.startsWith(`${bindings.incidentId}-`), "binding must use that incident's reviewed hook");
-      assert.ok(scenario.truth.knownFact.includes(bindings.surface));
-      assert.ok(scenario.truth.misleadingFrame.includes(bindings.bridge));
-      assert.ok(scenario.truth.unresolvedAtEntry.includes(bindings.crossover));
-      assert.ok(scenario.truth.laterResolution.includes(bindings.correction));
-      assert.ok(scenario.scenes[0].artifactCopy.includes(bindings.surface));
-      assert.ok(scenario.scenes[1].artifactCopy.includes(bindings.bridge));
-      assert.ok(scenario.scenes[2].artifactCopy.includes(bindings.crossover));
-      assert.ok(scenario.scenes[3].artifactCopy.includes(bindings.correction));
+      assert.deepEqual(Object.keys(scenario.truth), ["knownFact", "unresolvedAtEntry", "laterResolution"]);
+      assert.deepEqual(Object.keys(scenario.propagation), ["circulatingFrame"]);
+      assert.equal(scenario.scenes[0].artifactCopy, scenario.truth.knownFact);
+      assert.equal(scenario.scenes[1].artifactCopy, scenario.propagation.circulatingFrame);
+      assert.ok(scenario.scenes[2].artifactCopy.includes(scenario.truth.unresolvedAtEntry));
+      assert.equal(scenario.scenes[3].artifactCopy, scenario.truth.laterResolution);
+      const publicTruthAndArtifacts = [
+        ...Object.values(scenario.truth),
+        ...Object.values(scenario.propagation),
+        ...scenario.scenes.map((scene) => scene.artifactCopy),
+      ].join(" ");
+      for (const analyticBinding of [bindings.surface, bindings.bridge, bindings.crossover, bindings.correction]) {
+        assert.ok(!publicTruthAndArtifacts.includes(analyticBinding), `${scenario.id} merged analytic copy into the public incident arc`);
+      }
       assert.ok(ledger.observableRecord.join(" ").includes(bindings.surface));
       assert.ok(ledger.inferences.includes(bindings.bridge));
       assert.ok(ledger.recognitionCues.includes(bindings.crossover));
       assert.ok(ledger.repairMove.includes(bindings.correction));
+      const assignmentBrief = ledger.observableRecord.find((copy) => copy.startsWith("The assignment brief rewards"));
+      const contractedSeat = scenario.protagonistModel.kind === "abstract_bad_actor";
+      const atoms = [];
+      const privateAtoms = [];
+      const publicLabels = new Set();
+      scenario.scenes.forEach((scene) => {
+        assert.equal("communication" in scene, false, `${scene.id} must not retain the shared communication ledger`);
+        const expectsPrivateBrief = contractedSeat && scene.act === "BRIDGE";
+        assert.equal(scene.disclosure.records.length, expectsPrivateBrief ? 2 : 1);
+        assert.equal(scene.disclosure.questions.length, 1);
+        assert.equal(scene.disclosure.unknowns.length, 1);
+        const publicRecord = scene.disclosure.records.find((atom) => atom.access === "public-record");
+        const privateBrief = scene.disclosure.records.find((atom) => atom.access === "seat-private-assignment-brief");
+        assert.ok(publicRecord);
+        if (expectsPrivateBrief) {
+          assert.ok(privateBrief);
+          assert.equal(privateBrief.label, "PRIVATE ASSIGNMENT BRIEF");
+          assert.equal(privateBrief.copy, assignmentBrief);
+          privateAtoms.push(privateBrief);
+        } else {
+          assert.equal(privateBrief, undefined);
+        }
+        publicLabels.add(publicRecord.label);
+        for (const atom of [...scene.disclosure.questions, ...scene.disclosure.unknowns]) {
+          assert.equal(atom.access, "public-record");
+        }
+        for (const atom of [...scene.disclosure.records, ...scene.disclosure.questions, ...scene.disclosure.unknowns]) {
+          assert.ok(atom.id.startsWith(`${scene.id}-`));
+          assert.ok(atom.label.length > 0);
+          assert.ok(atom.copy.length > 20);
+          atoms.push(atom);
+        }
+      });
+      assert.equal(privateAtoms.length, contractedSeat ? 1 : 0, "only the contracted seat's bridge beat may expose one assignment brief");
+      assert.equal(publicLabels.size, 4, "each beat needs its own public record label");
+      assert.equal(new Set(atoms.map((atom) => atom.id)).size, atoms.length, "disclosure atoms must be unique by id");
       if (ledger.claim) {
         assert.ok(bindings.surface.includes(ledger.claim.boundedBehavior));
         assert.equal(bindings.bridge, ledger.claim.traitGeneralization);
@@ -689,7 +1001,7 @@ test("cross-code conflict preserves one concrete common-ground proposition", () 
     const scenario = generateScenarioPack(seed).scenarios.find((item) => item.communicationModel.dynamic === "cross-coalition-code-convergence");
     assert.ok(scenario.communicationModel.substantiveCommonGround);
     assert.ok(scenario.communicationModel.substantiveCommonGround.length >= 70);
-    assert.ok(scenario.communicationModel.factBindings.surface.includes("One coalition says"));
+    assert.ok(scenario.communicationModel.factBindings.surface.includes("Two coalitions attach"));
     assert.ok(scenario.communicationModel.factBindings.bridge.includes(scenario.communicationModel.substantiveCommonGround));
     assert.ok(scenario.communicationModel.factBindings.correction.includes(scenario.communicationModel.substantiveCommonGround));
     const midpointChoices = scenario.scenes.slice(1, 3).flatMap((scene) => scene.choices);

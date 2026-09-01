@@ -29,6 +29,15 @@ Published completed output:
 - [Release evidence index](../public/evidence/index.html), which links the
   executed notebooks to the exact retained release results they support
 
+These notebook sources and HTML publications are rebuilt deterministically
+from the current repository declarations. The Systems, Model Specification,
+and Research Design atlases explain the current version-14 contracts. The
+Historical Verification Ledger deliberately preserves earlier browser,
+distribution, and release runs under their original bindings and links
+separately to the current working-tree status. Publication does not substitute
+for live-browser or assistive-technology execution. Do not hand-edit
+`public/notebooks/`.
+
 ## Systems Atlas scope
 
 The Systems Atlas exposes fixed architectural declarations for:
@@ -38,7 +47,8 @@ The Systems Atlas exposes fixed architectural declarations for:
 - one-choice/six-receipt propagation;
 - logical clock and concurrent scheduling;
 - completion snapshots and afterimages;
-- systemic versus direct crossings;
+- typed content, format, and ambient links; matching choice delivery; and
+  selected-versus-background receipt carriage;
 - linguistic repertoire and world-model independence;
 - fatigue, discernment, enactment, and last-resort thresholds; and
 - save/replay boundaries.
@@ -77,15 +87,20 @@ The Research Design Atlas exposes:
 
 ## Validation Atlas scope
 
-The Validation Atlas is historical for the pre-update source binding. It preserves the retained `1.0.0-rc.1` browser, distribution, and release evidence without presenting those runs as current-source execution. The updated tree publishes its bounded status separately at [`public/evidence/updated-working-tree-status.html`](../public/evidence/updated-working-tree-status.html).
+The Validation Atlas is deliberately published as the Historical Verification
+Ledger. Its retained `1.0.0-rc.1` browser, distribution, and release runs remain
+historical under their recorded provenance; the rebuilt publication links
+separately to the current automated working-tree status and its explicit
+limits.
 
 The Validation Atlas exposes fixed verification declarations for:
 
 - the retained 4,096-seed/512-play simulation result, its content digest,
   exactly-once receipt totals, and finite-coverage limitation;
-- the retained current-source real-browser complete-night result, viewport and
-  application-origin error observations, explicitly separated earlier-source
-  interaction history, and every unverified browser boundary;
+- the retained browser complete-night result that was current for its
+  historical version-13 source binding, its viewport and application-origin
+  error observations, explicitly separated earlier-source interaction history,
+  and every unverified browser boundary;
 - the retained repository and neutral clean-room proof, including strict scan,
   fresh-cache installation, focused suites, independent build, production
   start, HTTP smoke, and the nonrecursive final-archive boundary;

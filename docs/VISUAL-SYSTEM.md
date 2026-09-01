@@ -75,10 +75,19 @@ Density follows the interaction phase:
 - Prelude: spacious and suggestive.
 - House map: compact comparison.
 - Active beat: one readable record and one bounded action set.
-- Debrief: denser evidence, separated into explicit receipt sections.
+- Completed night: an uninterrupted readable summary, a quiet adjacent
+  model-limit note, then a visually separate plain concept receipt. No tab bar,
+  dashboard grid, or Heart-card taxonomy interrupts the sequence.
 
 Text sizes may scale fluidly but retain minimum readable floors. Long generated
 copy wraps; it is never clipped to protect an ornamental frame.
+
+The naturalized summary uses a stable reading measure and ordinary paragraph
+flow. Its ending receives no oversized moral, badge, or ornamental full stop:
+the final thought remains the night's unresolved reach or afterimage. The
+plain concept receipt may repeat a restrained entry structure for scanning,
+but status and model limit remain explicit text and never depend on color or
+tile position.
 
 ## Responsive priority
 
@@ -101,4 +110,3 @@ Contrast, reduced motion, forced colors, focus, reflow, and touch behavior are
 specified in [Accessibility](ACCESSIBILITY.md). A visual change is incomplete
 until those states are tested. Decorative degradation is acceptable;
 information loss is not.
-

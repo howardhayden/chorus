@@ -15,7 +15,8 @@ maintenance rules.
 
 1. [Thesis and ethical argument](THESIS-AND-ETHICS.md)
 2. [Communication and fatigue atlas](COMMUNICATION-ATLAS.md)
-3. [Visual system](VISUAL-SYSTEM.md)
+3. [Copy and voice](COPY-VOICE.md)
+4. [Visual system](VISUAL-SYSTEM.md)
 
 These pages explain what CHORUS represents, which distinctions it protects,
 and why its aesthetic and disclosure structure serve the argument.
@@ -48,14 +49,15 @@ information timing, data handling, and degraded states.
 4. [Maintenance and release discipline](MAINTENANCE.md)
 5. [Limitations](LIMITATIONS.md)
 6. [Architecture decisions](decisions/README.md)
-7. [Glossary](GLOSSARY.md)
+7. [Copy and voice atomic requirements](requirements/COPY-VOICE-REGISTER.md)
+8. [Glossary](GLOSSARY.md)
 
 These pages connect claims to executable checks and record how to extend the
 system without weakening its boundaries.
 
 ### Inspect the evidence
 
-- [Updated working-tree status](../public/evidence/updated-working-tree-status.html)
+- [Current automated working-tree status](../public/evidence/updated-working-tree-status.html)
 - [Executed notebook publication](NOTEBOOKS.md)
 - [Systems Atlas](../public/notebooks/chorus-systems-atlas.html)
 - [Model Specification](../public/notebooks/chorus-model-specification.html)
@@ -73,11 +75,13 @@ remain available beside them so a result can be inspected and reproduced.
 |---|---|
 | Product thesis, audience, educational and ethical boundaries | [Thesis and ethical argument](THESIS-AND-ETHICS.md) |
 | Communication dynamics, linguistic repertoires, motive/evidence separation, fatigue semantics | [Communication and fatigue atlas](COMMUNICATION-ATLAS.md) |
+| Player-facing voice classes, atomization, naturalized summary, plain concept receipt, and copy evidence sequence | [Copy and voice](COPY-VOICE.md) |
+| Atomic copy requirements, provenance, precedence, conflicts, acceptance, and supersession | [Copy and voice atomic requirements](requirements/COPY-VOICE-REGISTER.md) |
 | Model constructs, assumptions, claim limits, coherence evaluation, and research variants | [Executed notebook publication](NOTEBOOKS.md) |
 | Module boundaries and data flow | [Architecture](ARCHITECTURE.md) |
 | Grammar, seed handling, assignment, rejection, and coherence gates | [Generation and coherence](GENERATION-COHERENCE.md) |
 | Clock, events, scheduling, propagation, replay, and state invariants | [Concurrent-night runtime](CONCURRENT-NIGHT.md) |
-| Views, navigation, drawers, blocked actions, debrief, and disclosure timing | [Interaction and progressive disclosure](INTERACTION-DISCLOSURE.md) |
+| Views, navigation, drawers, blocked actions, completed-night reading order, and disclosure timing | [Interaction and progressive disclosure](INTERACTION-DISCLOSURE.md) |
 | Semantic structure, keyboard, focus, motion, contrast, reflow, and verification | [Accessibility](ACCESSIBILITY.md) |
 | Data inventory, trust boundary, input handling, retention, and threat model | [Privacy and security](PRIVACY-SECURITY.md) |
 | Save envelope, migration, integrity, validation, and local slot behavior | [Portable save format](SAVE-FORMAT.md) |
@@ -96,6 +100,8 @@ remain available beside them so a result can be inspected and reproduced.
 - Domain semantics belong to the Communication Atlas; reducer mechanics belong
   to the concurrent runtime; interface timing belongs to the interaction
   specification.
+- Voice behavior and concluding copy ownership belong to Copy and voice;
+  atomic status and supersession belong to its requirements register.
 - Security and accessibility claims require evidence in their respective
   documents and a corresponding executable or manual check.
 - Notebook results never replace a release-blocking test. They explain and

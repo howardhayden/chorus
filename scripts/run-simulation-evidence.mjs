@@ -110,7 +110,7 @@ export async function runSimulationEvidence(overrides = {}) {
     }
 
     const scenes = pack.scenarios.flatMap((scenario) => scenario.scenes);
-    assertInvariant("pack-generator-version", pack.generatorVersion === 13, { seed });
+    assertInvariant("pack-generator-version", pack.generatorVersion === 14, { seed });
     assertInvariant("six-room-pack", pack.scenarios.length === 6, { seed, actual: pack.scenarios.length });
     assertInvariant("four-scenes-per-room", scenes.length === 24 && pack.scenarios.every((scenario) => scenario.scenes.length === 4), { seed, actual: scenes.length });
     assertInvariant("complete-directed-link-graph", pack.night.links.length === 30 && new Set(pack.night.links.map((link) => `${link.sourceScenarioId}->${link.targetScenarioId}`)).size === 30, { seed });

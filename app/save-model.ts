@@ -14,10 +14,12 @@ export const DEFAULT_SAVE_PREFERENCE = Object.freeze({
 });
 
 export const PORTABLE_SAVE_FORMAT = "CHORUS_PORTABLE_SAVE" as const;
-export const PORTABLE_SAVE_SCHEMA_VERSION = 1 as const;
-export const PORTABLE_SAVE_HEADER = "CHORUS SAVE · 1" as const;
+export const PORTABLE_SAVE_SCHEMA_VERSION = 2 as const;
+export const PORTABLE_SAVE_HEADER = "CHORUS SAVE · 2" as const;
 export const MAX_PORTABLE_SAVE_BYTES = 512 * 1024;
 export const SAVE_SLOTS = ["A", "B", "C"] as const;
+
+const LEGACY_PORTABLE_SAVE_HEADER = "CHORUS SAVE · 1" as const;
 
 export type SaveSlot = (typeof SAVE_SLOTS)[number];
 
@@ -55,9 +57,33 @@ export type SaveProvenance = {
   networkRequired: false;
 };
 
-export type PortableSaveEnvelopeV1 = {
+export type PortableDecisionCoordinateV2 = {
+  roomOrdinal: number;
+  choiceOrdinal: number;
+  startMinute: number;
+};
+
+export type PortableTracePayloadV2 = {
+  seed: number;
+  elapsedMinutes: number;
+  enteredRoomOrdinals: number[];
+  decisions: PortableDecisionCoordinateV2[];
+};
+
+export type PortableSaveEnvelopeV2 = {
   format: typeof PORTABLE_SAVE_FORMAT;
   schemaVersion: typeof PORTABLE_SAVE_SCHEMA_VERSION;
+  provenance: SaveProvenance;
+  payload: PortableTracePayloadV2;
+  integrity: {
+    algorithm: "fnv1a-32";
+    digest: string;
+  };
+};
+
+export type PortableSaveEnvelopeV1 = {
+  format: typeof PORTABLE_SAVE_FORMAT;
+  schemaVersion: 1;
   provenance: SaveProvenance;
   payload: {
     seed: number;
@@ -114,7 +140,8 @@ const MAX_TREE_DEPTH = 48;
 const MAX_TREE_NODES = 80_000;
 const MAX_STRING_LENGTH = 32_768;
 const MAX_ARRAY_LENGTH = 1_000;
-const LOCAL_SLOT_KEY_PREFIX = "chorus:local-save:v1:";
+const LOCAL_SLOT_KEY_PREFIX = "chorus:local-save:v2:";
+const LEGACY_LOCAL_SLOT_KEY_PREFIX = "chorus:local-save:v1:";
 const METRIC_NAMES = [
   "reach",
   "heat",
@@ -147,6 +174,11 @@ export function createPortableSave(state: NightState, options: PortableSaveOptio
   // identical across browsers and never depend on JavaScript-only values.
   const portableState = cloneJson(state);
   const pack = validateAndReconstructState(portableState);
+  const payload = tracePayloadFor(pack, portableState);
+  const reconstructed = reconstructTrace(pack, payload);
+  if (canonicalStringify(cloneJson(reconstructed)) !== canonicalStringify(portableState)) {
+    throw new SaveModelError("STATE_INVALID", "The night cannot be represented by the portable replay trace.");
+  }
   const unsigned = {
     format: PORTABLE_SAVE_FORMAT,
     schemaVersion: PORTABLE_SAVE_SCHEMA_VERSION,
@@ -158,12 +190,9 @@ export function createPortableSave(state: NightState, options: PortableSaveOptio
       storageScope: "portable-text",
       networkRequired: false,
     },
-    payload: {
-      seed: portableState.seed,
-      state: portableState,
-    },
-  } satisfies Omit<PortableSaveEnvelopeV1, "integrity">;
-  const envelope: PortableSaveEnvelopeV1 = {
+    payload,
+  } satisfies Omit<PortableSaveEnvelopeV2, "integrity">;
+  const envelope: PortableSaveEnvelopeV2 = {
     ...unsigned,
     integrity: {
       algorithm: "fnv1a-32",
@@ -180,14 +209,17 @@ export function parsePortableSave(text: string): ParsedPortableSave {
     throw new SaveModelError("INVALID_STRUCTURE", "The selected save is not text.");
   }
   assertByteLimit(text);
-  const jsonText = stripPortableHeader(text);
+  const stripped = stripPortableHeader(text);
   let raw: unknown;
   try {
-    raw = JSON.parse(jsonText);
-  } catch {
+    assertNoDuplicateJsonKeys(stripped.jsonText);
+    raw = JSON.parse(stripped.jsonText);
+  } catch (error) {
+    if (error instanceof SaveModelError) throw error;
     throw new SaveModelError("INVALID_JSON", "The selected save is not valid CHORUS text.");
   }
   assertBoundedJsonTree(raw);
+  assertHeaderMatchesSchema(stripped.headerSchemaVersion, raw);
   const migrated = migratePortableEnvelope(raw);
   const envelope = migrated.envelope;
   validateEnvelopeShape(envelope);
@@ -196,9 +228,6 @@ export function parsePortableSave(text: string): ParsedPortableSave {
   const { provenance, payload } = envelope;
   assertIsoTimestamp(provenance.exportedAt);
   assertSeed(payload.seed);
-  if (payload.state.seed !== payload.seed) {
-    throw new SaveModelError("STATE_INVALID", "The save seed and night state do not match.");
-  }
   let currentPack: GeneratedScenarioPack;
   try {
     currentPack = generateScenarioPack(payload.seed);
@@ -211,12 +240,10 @@ export function parsePortableSave(text: string): ParsedPortableSave {
       "This save was made with a different CHORUS scenario model.",
     );
   }
-  validateAndReconstructState(payload.state);
-
-  const state = cloneJson(payload.state);
+  const state = cloneJson(reconstructTrace(currentPack, payload));
   return {
     state,
-    preview: previewFor(envelope),
+    preview: previewFor(envelope, state),
     migratedFrom: migrated.migratedFrom,
   };
 }
@@ -227,13 +254,15 @@ export function inspectPortableSave(text: string): SavePreview {
 }
 
 /**
- * Current migration hook. Version 0 was an internal prototype with equivalent
- * data at the top level. Its checksum is verified before any conversion.
+ * Schema 1 stored a complete NightState. Version 0 was an internal prototype
+ * with equivalent data at the top level. A legacy checksum and full canonical
+ * replay are verified before the state is reduced to a schema-2 trace.
  */
 export function migratePortableEnvelope(raw: unknown): {
-  envelope: PortableSaveEnvelopeV1;
+  envelope: PortableSaveEnvelopeV2;
   migratedFrom: number | null;
 } {
+  assertBoundedJsonTree(raw);
   if (!isPlainObject(raw)) {
     throw new SaveModelError("INVALID_STRUCTURE", "The save envelope is missing.");
   }
@@ -241,7 +270,18 @@ export function migratePortableEnvelope(raw: unknown): {
     throw new SaveModelError("INVALID_FORMAT", "This file is not a CHORUS save.");
   }
   if (raw.schemaVersion === PORTABLE_SAVE_SCHEMA_VERSION) {
-    return { envelope: raw as PortableSaveEnvelopeV1, migratedFrom: null };
+    return { envelope: raw as PortableSaveEnvelopeV2, migratedFrom: null };
+  }
+  if (raw.schemaVersion === 1) {
+    validateLegacyV1(raw);
+    verifyLegacyIntegrity(raw as PortableSaveEnvelopeV1);
+    const envelope = migrateLegacyState({
+      generatorVersion: raw.provenance.generatorVersion,
+      exportedAt: raw.provenance.exportedAt,
+      seed: raw.payload.seed,
+      state: raw.payload.state,
+    });
+    return { envelope, migratedFrom: 1 };
   }
   if (raw.schemaVersion !== 0) {
     throw new SaveModelError("UNSUPPORTED_SCHEMA", "This CHORUS save version is not supported.");
@@ -249,27 +289,13 @@ export function migratePortableEnvelope(raw: unknown): {
 
   validateLegacyV0(raw);
   verifyRawIntegrity(raw);
-  const unsigned = {
-    format: PORTABLE_SAVE_FORMAT,
-    schemaVersion: PORTABLE_SAVE_SCHEMA_VERSION,
-    provenance: {
-      app: "CHORUS",
+  return {
+    envelope: migrateLegacyState({
       generatorVersion: raw.generatorVersion as number,
       exportedAt: raw.exportedAt as string,
-      exportMode: "player-controlled",
-      storageScope: "portable-text",
-      networkRequired: false,
-    },
-    payload: {
       seed: raw.seed as number,
       state: raw.state as NightState,
-    },
-  } satisfies Omit<PortableSaveEnvelopeV1, "integrity">;
-  return {
-    envelope: {
-      ...unsigned,
-      integrity: { algorithm: "fnv1a-32", digest: deterministicDigest(unsigned) },
-    },
+    }),
     migratedFrom: 0,
   };
 }
@@ -298,6 +324,14 @@ export function saveLocalSlot(
   } catch {
     throw new SaveModelError("STORAGE_UNAVAILABLE", "This browser could not write that local slot.");
   }
+  try {
+    storage.removeItem(legacyLocalSlotKey(consent.slot));
+  } catch {
+    throw new SaveModelError(
+      "STORAGE_UNAVAILABLE",
+      "The new trace was saved, but this browser could not remove the earlier slot value. Clear this slot to retire it.",
+    );
+  }
   return inspectPortableSave(text);
 }
 
@@ -306,7 +340,7 @@ export function loadLocalSlot(storage: StorageLike, slot: SaveSlot): ParsedPorta
   assertSaveSlot(slot);
   let text: string | null;
   try {
-    text = storage.getItem(localSlotKey(slot));
+    text = readLocalSlotText(storage, slot);
   } catch {
     throw new SaveModelError("STORAGE_UNAVAILABLE", "This browser could not read that local slot.");
   }
@@ -319,7 +353,7 @@ export function inspectLocalSlots(storage: StorageLike): LocalSlotInspection[] {
   return SAVE_SLOTS.map((slot) => {
     let text: string | null;
     try {
-      text = storage.getItem(localSlotKey(slot));
+      text = readLocalSlotText(storage, slot);
     } catch {
       return { slot, status: "invalid", errorCode: "STORAGE_UNAVAILABLE" } as const;
     }
@@ -339,6 +373,7 @@ export function inspectLocalSlots(storage: StorageLike): LocalSlotInspection[] {
 export function clearLocalSlot(storage: StorageLike, consent: LocalSlotConsent): void {
   assertConsent(consent);
   try {
+    storage.removeItem(legacyLocalSlotKey(consent.slot));
     storage.removeItem(localSlotKey(consent.slot));
   } catch {
     throw new SaveModelError("STORAGE_UNAVAILABLE", "This browser could not clear that local slot.");
@@ -348,6 +383,140 @@ export function clearLocalSlot(storage: StorageLike, consent: LocalSlotConsent):
 export function localSlotKey(slot: SaveSlot): string {
   assertSaveSlot(slot);
   return `${LOCAL_SLOT_KEY_PREFIX}${slot}`;
+}
+
+export function legacyLocalSlotKey(slot: SaveSlot): string {
+  assertSaveSlot(slot);
+  return `${LEGACY_LOCAL_SLOT_KEY_PREFIX}${slot}`;
+}
+
+function readLocalSlotText(storage: StorageLike, slot: SaveSlot): string | null {
+  const current = storage.getItem(localSlotKey(slot));
+  return current ?? storage.getItem(legacyLocalSlotKey(slot));
+}
+
+function migrateLegacyState(input: {
+  generatorVersion: number;
+  exportedAt: string;
+  seed: number;
+  state: NightState;
+}): PortableSaveEnvelopeV2 {
+  assertIsoTimestamp(input.exportedAt);
+  assertSeed(input.seed);
+  if (!Number.isSafeInteger(input.generatorVersion)) {
+    throw new SaveModelError("INVALID_STRUCTURE", "The earlier CHORUS save has an invalid generator version.");
+  }
+  let pack: GeneratedScenarioPack;
+  try {
+    pack = generateScenarioPack(input.seed);
+  } catch {
+    throw new SaveModelError("STATE_INVALID", "The night seed could not reconstruct a CHORUS house.");
+  }
+  if (Number(pack.generatorVersion) !== input.generatorVersion) {
+    throw new SaveModelError(
+      "GENERATOR_VERSION_MISMATCH",
+      "This save was made with a different CHORUS scenario model.",
+    );
+  }
+  if (input.state.seed !== input.seed) {
+    throw new SaveModelError("STATE_INVALID", "The save seed and night state do not match.");
+  }
+  const portableState = cloneJson(input.state);
+  validateAndReconstructState(portableState);
+  const payload = tracePayloadFor(pack, portableState);
+  const reconstructed = reconstructTrace(pack, payload);
+  if (canonicalStringify(cloneJson(reconstructed)) !== canonicalStringify(portableState)) {
+    throw new SaveModelError("STATE_INVALID", "The earlier night cannot be reduced to an exact replay trace.");
+  }
+  const unsigned = {
+    format: PORTABLE_SAVE_FORMAT,
+    schemaVersion: PORTABLE_SAVE_SCHEMA_VERSION,
+    provenance: {
+      app: "CHORUS",
+      generatorVersion: input.generatorVersion,
+      exportedAt: input.exportedAt,
+      exportMode: "player-controlled",
+      storageScope: "portable-text",
+      networkRequired: false,
+    },
+    payload,
+  } satisfies Omit<PortableSaveEnvelopeV2, "integrity">;
+  return {
+    ...unsigned,
+    integrity: { algorithm: "fnv1a-32", digest: deterministicDigest(unsigned) },
+  };
+}
+
+function tracePayloadFor(pack: GeneratedScenarioPack, state: NightState): PortableTracePayloadV2 {
+  const sceneCursors = new Map(pack.scenarios.map((scenario) => [scenario.id, 0]));
+  const decisions = state.decisions.map((decision): PortableDecisionCoordinateV2 => {
+    const roomOrdinal = pack.scenarios.findIndex((scenario) => scenario.id === decision.sourceScenarioId);
+    if (roomOrdinal < 0) invalidState("A decision refers to a room outside the generated night.");
+    const scenario = pack.scenarios[roomOrdinal];
+    const sceneIndex = sceneCursors.get(scenario.id) ?? 0;
+    const scene = scenario.scenes[sceneIndex];
+    if (!scene || scene.id !== decision.sourceSceneId) {
+      invalidState("A decision scene does not match its replay cursor.");
+    }
+    const choiceOrdinal = scene.choices.findIndex((choice) => choice.id === decision.choiceId);
+    if (choiceOrdinal < 0) invalidState("A decision refers to a choice outside its replay scene.");
+    const choice = scene.choices[choiceOrdinal];
+    const startMinute = decision.atMinute - choice.minutes;
+    if (!isBoundedInteger(startMinute, 0, 1_440)) invalidState("A decision start minute is invalid.");
+    sceneCursors.set(scenario.id, sceneIndex + 1);
+    return { roomOrdinal, choiceOrdinal, startMinute };
+  });
+  return {
+    seed: state.seed,
+    elapsedMinutes: state.elapsedMinutes,
+    enteredRoomOrdinals: pack.scenarios.flatMap((scenario, ordinal) =>
+      state.rooms[scenario.id]?.entered ? [ordinal] : []
+    ),
+    decisions,
+  };
+}
+
+function reconstructTrace(pack: GeneratedScenarioPack, payload: PortableTracePayloadV2): NightState {
+  assertTracePayloadShape(payload);
+  if (payload.seed !== pack.seed) invalidState("The replay seed does not match the generated night.");
+  let rebuilt = createNightState(pack);
+  for (const coordinate of payload.decisions) {
+    const scenario = pack.scenarios[coordinate.roomOrdinal];
+    const room = scenario ? rebuilt.rooms[scenario.id] : undefined;
+    const scene = scenario && room ? scenario.scenes[room.sceneIndex] : undefined;
+    const choice = scene?.choices[coordinate.choiceOrdinal];
+    if (!scenario || !room || !scene || !choice) {
+      invalidState("A replay coordinate is outside the generated night.");
+    }
+    if (coordinate.startMinute < rebuilt.elapsedMinutes) {
+      invalidState("The replay decision timing is inconsistent.");
+    }
+    rebuilt = advanceNightTo(pack, rebuilt, coordinate.startMinute);
+    rebuilt = enterNightRoom(rebuilt, scenario.id);
+    const beforeTurn = rebuilt.turn;
+    rebuilt = applyNightChoice(pack, rebuilt, scenario.id, scene.id, choice.id);
+    if (rebuilt.turn !== beforeTurn + 1) {
+      invalidState("A replayed choice was unavailable at its recorded time.");
+    }
+  }
+  if (payload.elapsedMinutes < rebuilt.elapsedMinutes) {
+    invalidState("The saved clock precedes its final choice.");
+  }
+  rebuilt = advanceNightTo(pack, rebuilt, payload.elapsedMinutes);
+  for (const ordinal of payload.enteredRoomOrdinals) {
+    rebuilt = enterNightRoom(rebuilt, pack.scenarios[ordinal].id);
+  }
+  const rebuiltEntries = pack.scenarios.flatMap((scenario, ordinal) =>
+    rebuilt.rooms[scenario.id].entered ? [ordinal] : []
+  );
+  if (!sameNumberArray(rebuiltEntries, payload.enteredRoomOrdinals)) {
+    invalidState("The entered-room trace omits a room used by a recorded choice.");
+  }
+  const issues = validateNightState(pack, rebuilt);
+  if (issues.length > 0) {
+    invalidState(`The replayed night is inconsistent (${issues[0]}).`);
+  }
+  return rebuilt;
 }
 
 function validateAndReconstructState(state: NightState): GeneratedScenarioPack {
@@ -502,8 +671,13 @@ function assertEffectShape(value: unknown, scenarioIds: string[]): void {
   if (!isStringArray(value.supportAdded, 10)) invalidState("A saved support receipt is invalid.");
 }
 
-function validateEnvelopeShape(value: unknown): asserts value is PortableSaveEnvelopeV1 {
-  if (!isPlainObject(value) || value.format !== PORTABLE_SAVE_FORMAT || value.schemaVersion !== PORTABLE_SAVE_SCHEMA_VERSION) {
+function validateEnvelopeShape(value: unknown): asserts value is PortableSaveEnvelopeV2 {
+  if (
+    !isPlainObject(value)
+    || !hasExactKeys(value, ["format", "schemaVersion", "provenance", "payload", "integrity"])
+    || value.format !== PORTABLE_SAVE_FORMAT
+    || value.schemaVersion !== PORTABLE_SAVE_SCHEMA_VERSION
+  ) {
     throw new SaveModelError("INVALID_STRUCTURE", "The CHORUS save envelope is invalid.");
   }
   if (!isPlainObject(value.provenance) || !isPlainObject(value.payload) || !isPlainObject(value.integrity)) {
@@ -511,29 +685,106 @@ function validateEnvelopeShape(value: unknown): asserts value is PortableSaveEnv
   }
   const provenance = value.provenance;
   if (
-    provenance.app !== "CHORUS"
+    !hasExactKeys(provenance, ["app", "generatorVersion", "exportedAt", "exportMode", "storageScope", "networkRequired"])
+    || provenance.app !== "CHORUS"
     || !Number.isSafeInteger(provenance.generatorVersion)
+    || typeof provenance.exportedAt !== "string"
     || provenance.exportMode !== "player-controlled"
     || provenance.storageScope !== "portable-text"
     || provenance.networkRequired !== false
   ) {
     throw new SaveModelError("INVALID_STRUCTURE", "The CHORUS save provenance is invalid.");
   }
-  if (value.integrity.algorithm !== "fnv1a-32" || !/^[0-9a-f]{8}$/.test(String(value.integrity.digest))) {
+  if (
+    !hasExactKeys(value.integrity, ["algorithm", "digest"])
+    || value.integrity.algorithm !== "fnv1a-32"
+    || typeof value.integrity.digest !== "string"
+    || !/^[0-9a-f]{8}$/.test(value.integrity.digest)
+  ) {
     throw new SaveModelError("INVALID_STRUCTURE", "The CHORUS save integrity record is invalid.");
   }
-  if (!("seed" in value.payload) || !("state" in value.payload)) {
-    throw new SaveModelError("INVALID_STRUCTURE", "The CHORUS save payload is incomplete.");
+  assertTracePayloadShape(value.payload);
+}
+
+function assertTracePayloadShape(value: unknown): asserts value is PortableTracePayloadV2 {
+  if (
+    !isPlainObject(value)
+    || !hasExactKeys(value, ["seed", "elapsedMinutes", "enteredRoomOrdinals", "decisions"])
+  ) {
+    throw new SaveModelError("INVALID_STRUCTURE", "The CHORUS replay trace is invalid.");
   }
+  assertSeed(value.seed);
+  if (!isBoundedInteger(value.elapsedMinutes, 0, 1_440)) invalidState("The replay clock is out of range.");
+  const elapsedMinutes = value.elapsedMinutes;
+  if (!Array.isArray(value.enteredRoomOrdinals) || value.enteredRoomOrdinals.length > 6) {
+    throw new SaveModelError("INVALID_STRUCTURE", "The replay room entries are invalid.");
+  }
+  if (!value.enteredRoomOrdinals.every((ordinal) => isBoundedInteger(ordinal, 0, 5))) {
+    invalidState("A replay room ordinal is out of range.");
+  }
+  for (let index = 1; index < value.enteredRoomOrdinals.length; index += 1) {
+    if (value.enteredRoomOrdinals[index] <= value.enteredRoomOrdinals[index - 1]) {
+      invalidState("Replay room ordinals must be unique and ordered.");
+    }
+  }
+  if (!Array.isArray(value.decisions) || value.decisions.length > 24) {
+    throw new SaveModelError("INVALID_STRUCTURE", "The replay decision trace is invalid.");
+  }
+  value.decisions.forEach((decision) => {
+    if (
+      !isPlainObject(decision)
+      || !hasExactKeys(decision, ["roomOrdinal", "choiceOrdinal", "startMinute"])
+    ) {
+      throw new SaveModelError("INVALID_STRUCTURE", "A replay decision coordinate is invalid.");
+    }
+    if (!isBoundedInteger(decision.roomOrdinal, 0, 5)) invalidState("A replay decision room is out of range.");
+    if (!isBoundedInteger(decision.choiceOrdinal, 0, 15)) invalidState("A replay choice ordinal is out of range.");
+    if (!isBoundedInteger(decision.startMinute, 0, 1_440) || decision.startMinute > elapsedMinutes) {
+      invalidState("A replay decision time is out of range.");
+    }
+  });
+}
+
+function validateLegacyV1(value: Record<string, unknown>): asserts value is PortableSaveEnvelopeV1 {
+  if (
+    !hasExactKeys(value, ["format", "schemaVersion", "provenance", "payload", "integrity"])
+    || value.format !== PORTABLE_SAVE_FORMAT
+    || value.schemaVersion !== 1
+    || !isPlainObject(value.provenance)
+    || !hasExactKeys(value.provenance, ["app", "generatorVersion", "exportedAt", "exportMode", "storageScope", "networkRequired"])
+    || value.provenance.app !== "CHORUS"
+    || !Number.isSafeInteger(value.provenance.generatorVersion)
+    || typeof value.provenance.exportedAt !== "string"
+    || value.provenance.exportMode !== "player-controlled"
+    || value.provenance.storageScope !== "portable-text"
+    || value.provenance.networkRequired !== false
+    || !isPlainObject(value.payload)
+    || !hasExactKeys(value.payload, ["seed", "state"])
+    || !("state" in value.payload)
+    || !isPlainObject(value.integrity)
+    || !hasExactKeys(value.integrity, ["algorithm", "digest"])
+    || value.integrity.algorithm !== "fnv1a-32"
+    || !/^[0-9a-f]{8}$/.test(String(value.integrity.digest))
+  ) {
+    throw new SaveModelError("INVALID_STRUCTURE", "The schema-1 CHORUS save is invalid.");
+  }
+  assertIsoTimestamp(value.provenance.exportedAt);
+  assertSeed(value.payload.seed);
 }
 
 function validateLegacyV0(value: Record<string, unknown>): void {
   if (
-    !Number.isSafeInteger(value.generatorVersion)
+    !hasExactKeys(value, ["format", "schemaVersion", "generatorVersion", "exportedAt", "seed", "state", "integrity"])
+    || value.format !== PORTABLE_SAVE_FORMAT
+    || value.schemaVersion !== 0
+    || !Number.isSafeInteger(value.generatorVersion)
     || typeof value.exportedAt !== "string"
     || !("seed" in value)
     || !("state" in value)
     || !isPlainObject(value.integrity)
+    || !hasExactKeys(value.integrity, ["algorithm", "digest"])
+    || value.integrity.algorithm !== "fnv1a-32"
+    || !/^[0-9a-f]{8}$/.test(String(value.integrity.digest))
   ) {
     throw new SaveModelError("INVALID_STRUCTURE", "The earlier CHORUS save is incomplete.");
   }
@@ -541,7 +792,14 @@ function validateLegacyV0(value: Record<string, unknown>): void {
   assertSeed(value.seed);
 }
 
-function verifyIntegrity(envelope: PortableSaveEnvelopeV1): void {
+function verifyIntegrity(envelope: PortableSaveEnvelopeV2): void {
+  const { integrity, ...unsigned } = envelope;
+  if (integrity.digest !== deterministicDigest(unsigned)) {
+    throw new SaveModelError("INTEGRITY_MISMATCH", "The save changed after it was written.");
+  }
+}
+
+function verifyLegacyIntegrity(envelope: PortableSaveEnvelopeV1): void {
   const { integrity, ...unsigned } = envelope;
   if (integrity.digest !== deterministicDigest(unsigned)) {
     throw new SaveModelError("INTEGRITY_MISMATCH", "The save changed after it was written.");
@@ -560,28 +818,155 @@ function verifyRawIntegrity(raw: Record<string, unknown>): void {
   }
 }
 
-function previewFor(envelope: PortableSaveEnvelopeV1): SavePreview {
-  const rooms = Object.values(envelope.payload.state.rooms);
+function previewFor(envelope: PortableSaveEnvelopeV2, state: NightState): SavePreview {
+  const rooms = Object.values(state.rooms);
   return Object.freeze({
     format: PORTABLE_SAVE_FORMAT,
     schemaVersion: PORTABLE_SAVE_SCHEMA_VERSION,
     generatorVersion: envelope.provenance.generatorVersion,
     exportedAt: envelope.provenance.exportedAt,
     seed: envelope.payload.seed,
-    turn: envelope.payload.state.turn,
-    elapsedMinutes: envelope.payload.state.elapsedMinutes,
+    turn: state.turn,
+    elapsedMinutes: state.elapsedMinutes,
     enteredRooms: rooms.filter((room) => room.entered).length,
     completedRooms: rooms.filter((room) => room.completed).length,
   });
 }
 
-function stripPortableHeader(text: string): string {
+function stripPortableHeader(text: string): { jsonText: string; headerSchemaVersion: number | null } {
   const normalized = text.replace(/^\uFEFF/, "").trim();
-  if (normalized.startsWith(`${PORTABLE_SAVE_HEADER}\n`)) {
-    return normalized.slice(PORTABLE_SAVE_HEADER.length).trimStart();
+  for (const [header, version] of [[PORTABLE_SAVE_HEADER, 2], [LEGACY_PORTABLE_SAVE_HEADER, 1]] as const) {
+    if (normalized.startsWith(`${header}\n`) || normalized.startsWith(`${header}\r\n`)) {
+      return { jsonText: normalized.slice(header.length).trimStart(), headerSchemaVersion: version };
+    }
   }
-  if (normalized.startsWith("{")) return normalized;
+  if (normalized.startsWith("{")) return { jsonText: normalized, headerSchemaVersion: null };
   throw new SaveModelError("INVALID_FORMAT", "This file is not a CHORUS save.");
+}
+
+function assertHeaderMatchesSchema(headerSchemaVersion: number | null, raw: unknown): void {
+  if (headerSchemaVersion === null) return;
+  if (!isPlainObject(raw) || raw.schemaVersion !== headerSchemaVersion) {
+    throw new SaveModelError("INVALID_FORMAT", "The CHORUS save header and schema version do not match.");
+  }
+}
+
+/**
+ * JSON.parse keeps only the last value for a repeated object key. Inspect the
+ * raw grammar first so a shadow field cannot carry discarded prose while the
+ * materialized object and digest still look canonical.
+ */
+function assertNoDuplicateJsonKeys(text: string): void {
+  let index = 0;
+
+  function invalidJson(): never {
+    throw new SyntaxError("Invalid JSON grammar");
+  }
+
+  function skipWhitespace(): void {
+    while (index < text.length && /[\t\n\r ]/.test(text[index])) index += 1;
+  }
+
+  function parseString(): string {
+    if (text[index] !== '"') invalidJson();
+    const start = index;
+    index += 1;
+    while (index < text.length) {
+      const character = text[index];
+      if (character === '"') {
+        index += 1;
+        return JSON.parse(text.slice(start, index)) as string;
+      }
+      if (character === "\\") {
+        index += 1;
+        if (index >= text.length) invalidJson();
+        if (text[index] === "u") {
+          if (!/^[0-9a-fA-F]{4}$/.test(text.slice(index + 1, index + 5))) invalidJson();
+          index += 5;
+          continue;
+        }
+        if (!/["\\/bfnrt]/.test(text[index])) invalidJson();
+        index += 1;
+        continue;
+      }
+      if (character.charCodeAt(0) < 0x20) invalidJson();
+      index += 1;
+    }
+    invalidJson();
+  }
+
+  function parseValue(depth: number): void {
+    if (depth > MAX_TREE_DEPTH) {
+      throw new SaveModelError("INVALID_STRUCTURE", "The selected save is too complex.");
+    }
+    skipWhitespace();
+    const character = text[index];
+    if (character === "{") {
+      index += 1;
+      skipWhitespace();
+      const keys = new Set<string>();
+      if (text[index] === "}") {
+        index += 1;
+        return;
+      }
+      while (index < text.length) {
+        const key = parseString();
+        if (keys.has(key)) {
+          throw new SaveModelError("INVALID_STRUCTURE", `The selected save repeats the field ${JSON.stringify(key)}.`);
+        }
+        keys.add(key);
+        skipWhitespace();
+        if (text[index] !== ":") invalidJson();
+        index += 1;
+        parseValue(depth + 1);
+        skipWhitespace();
+        if (text[index] === "}") {
+          index += 1;
+          return;
+        }
+        if (text[index] !== ",") invalidJson();
+        index += 1;
+        skipWhitespace();
+      }
+      invalidJson();
+    }
+    if (character === "[") {
+      index += 1;
+      skipWhitespace();
+      if (text[index] === "]") {
+        index += 1;
+        return;
+      }
+      while (index < text.length) {
+        parseValue(depth + 1);
+        skipWhitespace();
+        if (text[index] === "]") {
+          index += 1;
+          return;
+        }
+        if (text[index] !== ",") invalidJson();
+        index += 1;
+      }
+      invalidJson();
+    }
+    if (character === '"') {
+      parseString();
+      return;
+    }
+    for (const literal of ["true", "false", "null"]) {
+      if (text.startsWith(literal, index)) {
+        index += literal.length;
+        return;
+      }
+    }
+    const number = text.slice(index).match(/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?/u)?.[0];
+    if (!number) invalidJson();
+    index += number.length;
+  }
+
+  parseValue(0);
+  skipWhitespace();
+  if (index !== text.length) invalidJson();
 }
 
 function canonicalStringify(value: unknown): string {
@@ -694,6 +1079,16 @@ function isBoundedInteger(value: unknown, minimum: number, maximum: number): val
 
 function isBoundedNumber(value: unknown, minimum: number, maximum: number): value is number {
   return typeof value === "number" && Number.isFinite(value) && value >= minimum && value <= maximum;
+}
+
+function hasExactKeys(value: Record<string, unknown>, expected: readonly string[]): boolean {
+  const actual = Object.keys(value).sort();
+  const required = [...expected].sort();
+  return actual.length === required.length && actual.every((key, index) => key === required[index]);
+}
+
+function sameNumberArray(left: number[], right: number[]): boolean {
+  return left.length === right.length && left.every((value, index) => value === right[index]);
 }
 
 function isPlainObject(value: unknown): value is Record<string, unknown> {

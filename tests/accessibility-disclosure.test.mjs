@@ -12,10 +12,26 @@ const saves = await readFile(path.join(root, "app/save-model.ts"), "utf8");
 
 function functionSource(name, nextName) {
   const start = page.indexOf(`function ${name}`);
-  const end = page.indexOf(`function ${nextName}`, start + 1);
   assert.notEqual(start, -1, `missing ${name}`);
-  assert.notEqual(end, -1, `missing boundary ${nextName}`);
+  const explicitEnd = nextName ? page.indexOf(`function ${nextName}`, start + 1) : -1;
+  const remaining = page.slice(start + `function ${name}`.length);
+  const nextFunction = remaining.search(/\nfunction\s+[A-Za-z0-9_]+/);
+  const end = explicitEnd !== -1
+    ? explicitEnd
+    : nextFunction === -1
+      ? page.length
+      : start + `function ${name}`.length + nextFunction;
+  if (nextName) assert.notEqual(explicitEnd, -1, `missing boundary ${nextName}`);
   return page.slice(start, end);
+}
+
+function assertLabeledRegion(source, className) {
+  const escaped = className.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const opening = source.match(new RegExp(`<(?:section|article)[^>]*className=["'][^"']*\\b${escaped}\\b[^"']*["'][^>]*>`));
+  assert.ok(opening, `missing ${className} landmark`);
+  const label = opening[0].match(/aria-labelledby=["']([^"']+)["']/)?.[1];
+  assert.ok(label, `${className} is not named by a visible heading`);
+  assert.match(source, new RegExp(`id=["']${label.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}["']`));
 }
 
 test("prelude offers directional hints without naming the lessons", () => {
@@ -33,10 +49,15 @@ test("active play withholds classifications and recognition checklists", () => {
   assert.doesNotMatch(play, /recognitionCues|repairMove|relationalMove\.classification|protectedStake|emotionalOvertake|interiorOrientation/);
   assert.doesNotMatch(play, /conversationDiversion|adjacent concern|wrong thread|meme deflection|absurdist derailment/i);
   assert.doesNotMatch(play, /languageProfile|linguisticEncounter|codeTransition|socialContexts|stableCommitments/);
-  assert.match(play, /IN THE RECORD/);
-  assert.match(play, /ROOM READING/);
+  assert.match(play, /KNOWN TO THIS SEAT/);
+  assert.match(play, /QUESTIONS IN THIS ROOM/);
   assert.match(play, /NOT YET KNOWN/);
-  assert.match(play, /playInferenceHints/);
+  assert.match(play, /scene\.disclosure\.records/);
+  assert.match(play, /scene\.disclosure\.questions/);
+  assert.match(play, /scene\.disclosure\.unknowns/);
+  assert.match(play, /atom\.label/);
+  assert.match(play, /atom\.copy/);
+  assert.doesNotMatch(play, /scene\.communication|communicationModel\.(?:observableRecord|playInferenceHints|unknowns|inferences|recognitionCues)/);
   assert.match(play, /\["source", "Source"/);
   assert.match(play, /\["seat", "Seat"/);
   assert.match(play, /\["record", "Record"/);
@@ -50,70 +71,44 @@ test("active play withholds classifications and recognition checklists", () => {
 test("play exposes a bounded language surface rather than the analytic repertoire", () => {
   const invitation = functionSource("Invitation", "SimulationRoom");
   const closed = functionSource("RoomClosed", "NightDebrief");
+  const rail = functionSource("ContextRail", "Metric");
   const plot = functionSource("RelationshipPlot", "Invitation");
   assert.match(invitation, /communicationModel\.publicSurfaceCue/);
   assert.doesNotMatch(invitation, /communicationModel\.speechCode|languageProfile|linguisticEncounter|socialContexts|switchRules/);
-  assert.match(closed, /communicationModel\.playInferenceHints/);
-  assert.doesNotMatch(closed, /communicationModel\.inferences/);
+  assert.doesNotMatch(closed, /\.disclosure|PRIVATE ASSIGNMENT BRIEF|CIRCULATING CLAIM|communicationModel\.(?:observableRecord|playInferenceHints|unknowns|inferences)/);
+  assert.match(rail, /scenes\[liveRoom\.sceneIndex\]\?\.disclosure\.unknowns\[0\]/);
+  assert.doesNotMatch(rail, /communicationModel\.(?:observableRecord|playInferenceHints|unknowns|inferences)/);
   assert.doesNotMatch(plot, /languageProfile|linguisticEncounter|codeTransition|activeCodeId|worldModel/);
 });
 
-test("conversation routing is named only in one collapsed whole-night receipt", () => {
+test("conversation-route classifications stay out of active play and the ending does not revive their taxonomy", () => {
   const prelude = functionSource("Prelude", "RoomRail");
   const play = functionSource("SimulationRoom", "BlockedReceipt");
-  const receipt = functionSource("ChoiceReceipt", "InterpretationReceipt");
-  const debrief = functionSource("NightDebrief", "HouseReceipt");
+  const debrief = functionSource("NightDebrief");
 
   for (const surface of [prelude, play]) {
     assert.doesNotMatch(surface, /conversation diversion|valid concern · separate thread|meme · answer-shaped deflection|absurdism · question displaced/i);
   }
-  assert.match(receipt, /<details className="conversation-routes">/);
-  assert.match(receipt, /<summary><span>Conversation routes<\/span>/);
-  assert.match(receipt, /A moved question is not automatically a lie/);
-  assert.match(receipt, /not style alone/);
-  assert.match(receipt, /VALID CONCERN · SEPARATE THREAD/);
-  assert.match(receipt, /MEME · ANSWER-SHAPED DEFLECTION/);
-  assert.match(receipt, /ABSURDISM · QUESTION DISPLACED/);
-  assert.doesNotMatch(debrief, /id: "routes"|id: "diversion"/);
-  assert.match(css, /\.conversation-routes>summary\{[^}]*min-height:44px/);
-  assert.match(css, /@media\(max-width:680px\)[\s\S]*\.conversation-routes>summary,\.conversation-route-key,\.conversation-route-list\{grid-template-columns:minmax\(0,1fr\)/);
+  assert.doesNotMatch(debrief, /ChoiceReceipt|conversation-routes|VALID CONCERN · SEPARATE THREAD|MEME · ANSWER-SHAPED DEFLECTION|ABSURDISM · QUESTION DISPLACED/);
+  assert.match(debrief, /buildNaturalizedSummary\(\s*pack\s*,\s*state\s*\)|<NaturalizedSummary[^>]*\bpack=\{pack\}[^>]*\bstate=\{state\}/s);
 });
 
-test("linguistic repertoires open only inside the concluding Interpretation receipt", () => {
+test("analytic language profiles stay sealed while the ending uses only path-derived plain concepts", () => {
   const prelude = functionSource("Prelude", "RoomRail");
   const play = functionSource("SimulationRoom", "BlockedReceipt");
-  const receipt = functionSource("InterpretationReceipt", "CrossingReceipt");
-  const debrief = functionSource("NightDebrief", "HouseReceipt");
+  const debrief = functionSource("NightDebrief");
 
   for (const surface of [prelude, play]) {
     assert.doesNotMatch(surface, /Registers and assumptions|Registers at disposal|Context history|Played register actions|shared-code frictions/i);
   }
-  assert.match(receipt, /<details className="language-receipt">/);
-  assert.match(receipt, /<summary><span>Registers and assumptions<\/span>/);
-  assert.match(receipt, /fictional repertoires learned through particular places, resource settings, groups, institutions, and platforms/i);
-  assert.match(receipt, /does not establish shared belief, motive, truth, class position, competence, or care/i);
-  assert.match(receipt, /Switching registers does not prove deceit/i);
-  assert.match(receipt, /state\.decisions\.filter\(\(event\) => event\.codeTransition\)/);
-  assert.match(receipt, /event\.codeTransition!\.fromCodeId/);
-  assert.match(receipt, /event\.codeTransition!\.toCodeId/);
-  assert.match(receipt, /new Set\(\[profile\.primaryCodeId/);
-  assert.match(receipt, /Registers at disposal/);
-  assert.match(receipt, /Context history/);
-  assert.match(receipt, /What stayed constant/);
-  assert.match(receipt, /Played register actions/);
-  assert.match(receipt, /Shared surface/);
-  assert.match(receipt, /different assumptions/);
-  assert.doesNotMatch(receipt, /cohesion score|linguistic stability|unstable character/i);
-  assert.doesNotMatch(debrief, /\["language"|\["registers"|\["linguistic"/i);
-  assert.match(css, /\.language-receipt>summary\{[\s\S]*?min-height:44px/);
-  assert.match(css, /\.language-profile>summary\{[\s\S]*?min-height:54px/);
-  assert.match(css, /@media\(max-width:680px\)[\s\S]*?\.language-receipt>summary,\.language-profile-list,\.language-profile>summary,\.language-profile-body,\.language-model-comparison\{grid-template-columns:minmax\(0,1fr\)/);
+  assert.doesNotMatch(debrief, /InterpretationReceipt|LanguageReceipt|language-receipt|language-profile|Registers at disposal|Context history/);
+  assert.match(debrief, /buildConceptReceipt\(\s*pack\s*,\s*state\s*\)|<PlainConceptReceipt[^>]*\bpack=\{pack\}[^>]*\bstate=\{state\}/s);
 });
 
 test("the internal pressure contour is never taught as an in-game taxonomy", () => {
   const prelude = functionSource("Prelude", "RoomRail");
   const play = functionSource("SimulationRoom", "BlockedReceipt");
-  const debrief = functionSource("NightDebrief", "HouseReceipt");
+  const debrief = functionSource("NightDebrief");
   assert.doesNotMatch(prelude, /higher escalation|crisis phase|de-escalation|recovery phase/i);
   assert.doesNotMatch(play, /BEHAVIOR_PHASE_COPY|higher-escalation|de-escalation/);
   assert.match(play, /SEAT PRESSURE/);
@@ -121,45 +116,56 @@ test("the internal pressure contour is never taught as an in-game taxonomy", () 
   assert.doesNotMatch(debrief, /\["behavior", "Behavior"\]|BehaviorReceipt/);
 });
 
-test("practice receipts use CHORUS-native lenses and keep the internal action review sealed", () => {
+test("framework internals remain sealed instead of becoming a concluding practice syllabus", () => {
   const prelude = functionSource("Prelude", "RoomRail");
   const play = functionSource("SimulationRoom", "BlockedReceipt");
-  const receipt = functionSource("PracticeReceipt", "HeartReceipt");
   for (const surface of [prelude, play]) {
     assert.doesNotMatch(surface, /situated leadership|situated action review|repair conversation|frameworkMoves/i);
   }
-  assert.match(receipt, /SPARSE BY DESIGN/);
-  assert.match(receipt, /situated-leadership thread/);
-  assert.match(receipt, /accountable repair conversation/);
-  assert.match(receipt, /framework\.id !== "situated-action-review"/);
-  assert.doesNotMatch(receipt, /IDOC|PACE|Indiana Department|Leading From Within|sourceWork}/i);
-  assert.match(receipt, /CONDITION/);
-  assert.match(receipt, /READING/);
-  assert.match(receipt, /ACCOUNTABLE MOVE/);
+  const debrief = functionSource("NightDebrief");
+  assert.doesNotMatch(debrief, /PracticeReceipt|practice-receipt|SPARSE BY DESIGN|ACCOUNTABLE MOVE/);
 });
 
-test("deliberate-protection analysis stays sealed until the final receipt", () => {
+test("private motive and deliberate-protection ledgers stay sealed from both play and the user-facing ending", () => {
   const prelude = functionSource("Prelude", "RoomRail");
   const play = functionSource("SimulationRoom", "BlockedReceipt");
-  const receipt = functionSource("InterpretationReceipt", "CrossingReceipt");
+  const debrief = functionSource("NightDebrief");
   assert.doesNotMatch(prelude, /deliberate misrepresentation|friend|family|person under authority/i);
   assert.doesNotMatch(play, /DELIBERATE MISREPRESENTATION|FOR PERSON UNDER AUTHORITY/);
-  assert.match(receipt, /DELIBERATE MISREPRESENTATION/);
-  assert.match(receipt, /A deliberate departure requires represented private knowledge/);
-  assert.match(receipt, /POWER \/ RELATIONSHIP/);
-  assert.match(receipt, /CORRECTION DUTY/);
-  assert.match(receipt, /WHY THE SIMPLIFICATION REMAINED USEFUL/);
-  assert.match(receipt, /COMPETENCE THREAT/);
-  assert.match(receipt, /MATERIAL COUNTER-RECORD/);
-  assert.match(receipt, /GROUP \/ CLASS STORY PROTECTED/);
-  assert.match(receipt, /COMPETITIVE PRIZE/);
+  assert.doesNotMatch(debrief, /InterpretationReceipt|misrepresentation-receipt|incentive-intersection|CORRECTION DUTY|COMPETITIVE PRIZE/);
 });
 
 test("explicit interpretation remains gated behind whole-night completion", () => {
-  assert.match(page, /analysisAvailable=\{nightComplete\}/);
-  assert.match(page, /analysisAvailable \? <FieldNotes \/> : <HouseGuide \/>/);
+  const drawer = functionSource("HouseDrawer", "ResearchRecordLinks");
+  assert.equal((page.match(/analysisAvailable=\{nightComplete\}/g) ?? []).length, 2);
+  assert.match(drawer, /kind === "notes" && \(analysisAvailable \? <><FieldNotes \/><ResearchRecordLinks \/><\/> : <HouseGuide \/>\)/);
   assert.match(page, /analysisAvailable \? <MemeLineage \/> : <TraceGuide \/>/);
-  assert.match(page, /The whole-night receipt will name the pattern/);
+  assert.match(page, /debriefOpen && nightComplete \? \(\s*<NightDebrief/s);
+});
+
+test("the precompletion House Guide excludes scholarly records and conclusion claims", () => {
+  const drawer = functionSource("HouseDrawer", "ResearchRecordLinks");
+  const record = functionSource("ResearchRecordLinks", "HouseGuide");
+  const guide = functionSource("HouseGuide", "TraceGuide");
+  assert.match(drawer, /analysisAvailable \? <><FieldNotes \/><ResearchRecordLinks \/><\/> : <HouseGuide \/>/);
+  assert.equal((drawer.match(/<ResearchRecordLinks \/>/g) ?? []).length, 1);
+  assert.equal((page.match(/<iframe\b/g) ?? []).length, 1);
+  assert.equal((record.match(/<iframe\b/g) ?? []).length, 1);
+  assert.doesNotMatch(drawer, /<HouseGuide \/>[\s\S]*<ResearchRecordLinks \/>/);
+  assert.doesNotMatch(guide, /ResearchRecordLinks|\/notebooks\/|<iframe|authored interior/i);
+  assert.match(guide, /The conclusion will follow the visible record, selected actions, and modeled effects\./);
+  assert.match(guide, /It will not tell you what you believed or learned\./);
+});
+
+test("the fixed meme lineage is visibly labeled as general reference", () => {
+  const header = functionSource("HouseHeader", "Prelude");
+  const drawer = functionSource("HouseDrawer", "ResearchRecordLinks");
+  const lineage = functionSource("MemeLineage", "aggregateRoom");
+  assert.match(header, /analysisAvailable \? "Meme reference" : "Trace guide"/);
+  assert.match(drawer, /analysisAvailable \? "Meme reference" : "Trace guide"/);
+  assert.match(lineage, /GENERAL REFERENCE · NOT A PLAYED TRACE/);
+  assert.match(lineage, /It is not a trace of the night you played\./);
+  assert.doesNotMatch(header + drawer, /Meme trace/);
 });
 
 test("new nights remain available through one regeneration control without a campaign counter", () => {
@@ -262,9 +268,9 @@ test("meters expose names and values without relying on color", () => {
 test("focus, text scaling, and target-size floors are explicit", () => {
   assert.match(css, /button:focus-visible[^\{]*\{[^}]*outline:2px solid/);
   assert.match(css, /body\{[^}]*font-size:16px;[^}]*line-height:1\.5/);
-  assert.match(css, /\.debrief-tabs button\{min-height:44px\}/);
+  assert.match(css, /[^{}]*\.debrief-actions button[^{}]*\{[^}]*min-height:44px/);
   assert.match(css, /\.house-drawer>header button\{width:44px;height:44px\}/);
-  assert.match(css, /@media\(max-width:680px\)[\s\S]*\.header-nav button\{min-height:44px/);
+  assert.match(css, /@media\(max-width:680px\)[\s\S]*\.header-nav button\{[^}]*min-height:44px/);
   assert.match(css, /@media\(prefers-reduced-motion:reduce\)/);
   assert.match(css, /@media\(forced-colors:active\)/);
 });
@@ -275,7 +281,7 @@ test("locked ideals are discoverable without revealing the reason early", () => 
   assert.match(play, /aria-disabled=\{props\.choicesLocked\}/);
   assert.match(play, /aria-expanded=\{access\.locked \? expanded : undefined\}/);
   assert.match(play, /aria-controls=\{access\.locked \? receiptId : undefined\}/);
-  assert.match(play, /aria-describedby=\{expanded \? `\$\{receiptId\}-copy` : undefined\}/);
+  assert.doesNotMatch(play, /aria-describedby=/, "the focused control and inserted role=status must not announce the same receipt twice");
   assert.match(play, /Reason open; activate again to close/);
   assert.match(play, /REASON OPEN ↑/);
   assert.doesNotMatch(play, /conciseReason|lockReason|FATIGUE_COPY/);
@@ -288,13 +294,42 @@ test("locked ideals are discoverable without revealing the reason early", () => 
   assert.match(play, /className=\{`choice-shell choice-row\$\{expanded \? " is-expanded" : ""\}`\}/);
 });
 
-test("The heart defines the represented ideas without instructional imperatives", () => {
-  const heart = functionSource("HeartReceipt", "HouseDrawer");
-  assert.match(heart, /Will you understand every seat/);
-  assert.match(heart, /Scapegoating concentrates a distributed failure/);
-  assert.match(heart, /Deliberate protection is a knowingly altered account/);
-  assert.match(heart, /Cross-code agreement is a shared concrete action/);
-  assert.doesNotMatch(heart, /Can you understand|Do not require|Translate coalition|Treat both as/);
+test("the final story, plain concepts, and model limit are separate labeled regions in reading order", () => {
+  const debrief = functionSource("NightDebrief");
+  const summaryIndex = debrief.indexOf("naturalized-summary");
+  const conceptsIndex = debrief.indexOf("plain-concept-receipt");
+  const modelLimitIndex = debrief.indexOf("model-limit");
+  assert.ok(summaryIndex >= 0, "missing the naturalized summary region");
+  assert.ok(conceptsIndex > summaryIndex, "plain concepts must follow the continuous summary");
+  assert.ok(modelLimitIndex >= 0, "missing the visible model-limit note");
+  assertLabeledRegion(debrief, "naturalized-summary");
+  assertLabeledRegion(debrief, "plain-concept-receipt");
+  assert.match(debrief, /<p(?:\s|>)/, "natural summary must render as ordinary prose");
+  assert.match(debrief, /<(?:ul|ol)(?:\s|>)/, "concept explanations need list semantics");
+  assert.match(debrief, /\.evidenceStatus|\.status/, "encountered, experienced, or played status must be visible text");
+  const modelLimit = debrief.match(/<aside[^>]*className=["'][^"']*model-limit[^"']*["'][^>]*>/s);
+  assert.ok(modelLimit, "the model limit must be a visible aside");
+  assert.match(modelLimit[0], /role=["']note["']|aria-label=["'][^"']+["']/);
+  assert.doesNotMatch(debrief, /role=["']tablist["']|role=["']tab["']|role=["']tabpanel["']|<details|HeartReceipt/);
+});
+
+test("a malformed completed record reaches a plain recovery boundary before conclusion copy is built", () => {
+  const debrief = functionSource("NightDebrief");
+  const completionGate = debrief.indexOf("if (!isNightComplete(state)) return null;");
+  const validationGate = debrief.indexOf("if (validateNightState(pack, state).length > 0)");
+  const summaryBuild = debrief.indexOf("const summary = buildNaturalizedSummary(pack, state);");
+  const conceptBuild = debrief.indexOf("const receipt = buildConceptReceipt(pack, state);");
+  assert.ok(completionGate >= 0, "missing completion gate");
+  assert.ok(validationGate > completionGate, "validation must follow the completion gate");
+  assert.ok(summaryBuild > validationGate, "summary must be built only after validation");
+  assert.ok(conceptBuild > validationGate, "concept receipt must be built only after validation");
+
+  const recovery = debrief.slice(validationGate, summaryBuild);
+  assert.match(recovery, /WHOLE-NIGHT RECEIPT UNAVAILABLE/);
+  assert.match(recovery, /The completed record did not pass its consistency check\. No summary or interpretation was generated\./);
+  assert.match(recovery, /Start clean replay/);
+  assert.match(recovery, /onClick=\{onReplay\}/);
+  assert.doesNotMatch(recovery, /validationIssues|\.join\(|JSON\.stringify|state\.(?:turn|decisions|rooms|ambientEvents)/);
 });
 
 test("privacy and saves are one optional, progressively disclosed destination", () => {
@@ -302,13 +337,21 @@ test("privacy and saves are one optional, progressively disclosed destination", 
   assert.match(page, /openDrawer\("privacy", "header-privacy"\)/);
   assert.match(page, /kind === "privacy" && <PrivacyPanel/);
   assert.match(privacy, /<details className="privacy-disclosure">/);
-  assert.match(privacy, /Session only/);
+  assert.match(privacy, /Only this open tab/);
+  assert.match(privacy, /Closing or reloading the tab can erase it/);
+  assert.match(privacy, /Browser slots/);
+  assert.match(privacy, /Optional · this browser profile/);
   assert.match(privacy, /Check local slots/);
+  assert.match(privacy, /Portable text/);
+  assert.match(privacy, /Optional · a file you control/);
   assert.match(privacy, /Download save text/);
   assert.match(privacy, /CHECKED · NOT LOADED/);
   assert.match(privacy, /Load this night/);
   assert.match(privacy, /Technical record/);
-  assert.match(privacy, /Complete system · spoilers/);
+  assert.match(privacy, /Supporting records · spoilers/);
+  assert.match(privacy, /\{isNightComplete\(state\) && <details className="privacy-disclosure">[\s\S]*?<summary><span>Technical record<\/span>/);
+  assert.match(privacy, /not a complete account of the running system/);
+  assert.doesNotMatch(privacy, /Complete system/);
   assert.match(privacy, /href="\/notebooks\/index\.html"/);
   assert.match(privacy, /Open notebook index · new tab/);
   assert.match(saves, /mode: "memory-only"/);
@@ -329,10 +372,23 @@ test("privacy controls validate before restore and keep failures inside an annou
   assert.match(privacy, /link\.download = `chorus-night-turn-\$\{state\.turn\}\.txt`/);
   assert.match(privacy, /document\.body\.append\(link\)[\s\S]*link\.click\(\)[\s\S]*link\.remove\(\)/);
   assert.match(privacy, /window\.setTimeout\(\(\) => URL\.revokeObjectURL\(url\), 0\)/);
+  assert.match(privacy, /This browser could not read this slot\. Its contents were not checked or changed\./);
+  assert.match(privacy, /inspection\.errorCode === "STORAGE_UNAVAILABLE"/);
+  for (const label of ["Save current night to slot", "Load slot", "Clear slot", "Confirm clear slot", "Keep slot"]) {
+    assert.match(privacy, new RegExp(label));
+  }
+  assert.match(privacy, /focusAfterUpdate\("slot-A-primary"\)/);
+  assert.match(privacy, /focusAfterUpdate\(`slot-\$\{slot\}-confirm-clear`\)/);
+  assert.match(privacy, /focusAfterUpdate\(`slot-\$\{slot\}-clear`\)/);
+  assert.match(privacy, /focusAfterUpdate\("portable-save-file"\)/);
 });
-test("scholarly record is executed, public, bounded, and reachable from the House Guide", async () => {
+
+test("the Home route focuses and announces the introduction", () => {
+  const home = functionSource("Home", "FilmLayer");
+  assert.match(home, /onHome=\{\(\) => \{[\s\S]*setAnnouncement\("CHORUS introduction opened\.[^"']+"\)[\s\S]*focusStage\("prelude-title"\)/);
+});
+test("scholarly record is executed, public, bounded, and available after completion", async () => {
   const record = functionSource("ResearchRecordLinks", "HouseGuide");
-  assert.match(page, /kind === "notes" && <>\{analysisAvailable \? <FieldNotes \/> : <HouseGuide \/>\}<ResearchRecordLinks \/><\/>/);
   assert.match(record, /role="note" aria-labelledby="research-record-title"/);
   assert.match(record, /\/notebooks\/chorus-model-specification\.html/);
   assert.match(record, /\/notebooks\/chorus-research-design\.html/);
@@ -422,4 +478,3 @@ test("scholarly record is executed, public, bounded, and reachable from the Hous
     assert.ok(bytes.length > 100, `${iconName} is unexpectedly small`);
   }
 });
-

@@ -1,6 +1,7 @@
 # ADR 0004: Conclusion-gated progressive disclosure
 
-- Status: Accepted
+- Status: Accepted; former sectioned-conclusion consequence superseded by
+  [ADR 0009](0009-separate-experiential-ending-from-concept-receipt.md)
 - Date: 2026-08-18
 
 ## Context
@@ -33,3 +34,7 @@ decisions are complete.
 
 See [Interaction and progressive disclosure](../INTERACTION-DISCLOSURE.md).
 
+The disclosure gate remains governing. ADR 0009 later replaced only the
+sectioned/tabbed conclusion consequence with one continuous naturalized summary
+followed by a separate plain concept receipt. This note preserves the original
+decision rather than rewriting its history.

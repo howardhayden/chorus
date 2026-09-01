@@ -1,0 +1,161 @@
+{
+  "schema": "chorus.copy-baseline.v1",
+  "recordId": "copy-baseline.4fffddf.v1",
+  "captureDate": "2026-08-31",
+  "source": {
+    "branch": "main",
+    "commit": "4fffddf11a03a2fc84798a3c5343db00fc3135da",
+    "commitAbbreviation": "4fffddf",
+    "commitDate": "2026-08-24T13:00:35-04:00",
+    "commitSubject": "Prohibit commercial reuse and license CHORUS workflows (#7)",
+    "sourceFilesDifferedFromCommitAtCapture": false,
+    "generatedBuildArtifactsExcludedFromSourceCleanlinessClaim": true
+  },
+  "verification": {
+    "command": "npm run verify:working-tree",
+    "outcome": "passed",
+    "scope": "command-line verification only",
+    "simulationEvidence": {
+      "assertions": 118680,
+      "failures": 0
+    },
+    "testCounts": {
+      "night": 34,
+      "simulation": 5,
+      "save": 10,
+      "accessibilityDisclosure": 22,
+      "viewport": 8,
+      "renderedHtml": 1,
+      "total": 80
+    },
+    "interactiveBrowserRunPerformed": false,
+    "assistiveTechnologyRunPerformed": false,
+    "claim": "The recorded verification command passed. This record does not convert source-level, generated-seed, rendered-build, or interactive-browser omissions into copy correctness."
+  },
+  "sourceDigests": {
+    "algorithm": "sha256",
+    "files": {
+      "README.md": "12e4e72072662634fa0d55ed7957cf094f45c21077e6e4f4f41643500e17e2a9",
+      "app/layout.tsx": "a7703bac2255e0ca42df55de010960b6febc78c25acd658cf4ddb4b593838b19",
+      "app/night-engine.ts": "a81058d06d42a80671a25d7903a1873072ee66b85da04551223316ecbf8aebc7",
+      "app/page.tsx": "e41bb75cdb71ae3aad69cdabc64c8cf4ebb047f29922f0f9a354afc7b5d656df",
+      "app/privacy-panel.tsx": "fffee10ffbe897080ca022ae60e8f1fd3eed6f2ed924326d71a91ef6ff401328",
+      "app/save-model.ts": "21e723d4bae7dc63239dee39c9767fba141928c1e48d79e2e830ca42f9bcf297",
+      "app/scenario-generator.ts": "e0feb111e302ce029ff1e97f94b66907a3657cafabfeb7d30928d4c8d8d23a4d",
+      "docs/ACCESSIBILITY.md": "234f53f313e76808f0eb658c0bfaca0976d72bd7441a0c3e1843d18c11d1c325",
+      "docs/ARCHITECTURE.md": "04384fb9ea0d1c2d1c6834875ab2740c2480befaf4d67752df66693cc75a1a3b",
+      "docs/COMMUNICATION-ATLAS.md": "bfadf4d09576e7ad5cc1338e3a2efdad07a5df83da02931f8737e8c22167e9c3",
+      "docs/GENERATION-COHERENCE.md": "6c3e14b4bbeba87c6fa40322f49ad65733968ebdbb8602a35db69ea3cb133179",
+      "docs/GLOSSARY.md": "bfab74c22b8f62b71a8322b6f0e1929527151f9e460447e8beff241189450709",
+      "docs/INTERACTION-DISCLOSURE.md": "c265384e11a35f756991e2edc1bfaa2b04643c5aabdda2f3ba2a98aa4ddcef23",
+      "docs/LIMITATIONS.md": "917bb77666fd05d77b028166a4e3b95596fcf05bef62501f3dd43839f8609a3e",
+      "docs/NOTEBOOKS.md": "88473f13e884635711a988363b91e408333cac5d00b341af8759e7bb2604d8af",
+      "docs/PRIVACY-SECURITY.md": "0d5c7959819033d9c88581a5a61c32b0d1a1250c085104121f16890448893d3e",
+      "docs/SAVE-FORMAT.md": "45c92c094bc58dda65b94ce5dfc67b7f56a505b6d62ae794c54ec893a6730e0d",
+      "docs/THESIS-AND-ETHICS.md": "4904093a09b62d54fd07e82d7f66f19c80de4dd820876548e9ef8d5f6e0f9828",
+      "docs/VISUAL-SYSTEM.md": "8997cbf2d170055f449e20d755d456cdb513d404e2c363a85dce8c5998100421",
+      "tests/accessibility-disclosure.test.mjs": "ab0b79d12511f98ddf4e4dba70dea13720857af66726480072f60ea6184569c0",
+      "tests/concurrent-night.test.mjs": "b26d127f37a4fd8c0558780e94fa14f30088d379d8b28f371a895b19d4182f89",
+      "tests/rendered-html.test.mjs": "9c3d2da7f547cf532dc0ce7a398b30f964cf5497fcbd582329781db2f9ae317e",
+      "tests/save-model.test.mjs": "4fbdc7ae981fec2851b55c5e4a174d8a0c79955d0a06f3ba2f4991aba6403b6c",
+      "tests/simulation-maturity.test.mjs": "6e6a9e5229c9da1f57b629ab09f7237682b2318b76d76ce82bcd39f62066b22d",
+      "tests/viewport-contract.test.mjs": "79452439182296c99b98c8cfb566ee1e0de42bfab2cc4ea7783c45904e71447e"
+    }
+  },
+  "copySurfaceCoverage": [
+    {
+      "path": "app/page.tsx",
+      "surfaces": [
+        "prelude",
+        "house map",
+        "room rail",
+        "relationship view",
+        "invitation",
+        "active scene",
+        "choice cards",
+        "blocked receipts",
+        "screen-reader announcements",
+        "room-close receipt",
+        "whole-night debrief",
+        "guides",
+        "trace material",
+        "research links"
+      ]
+    },
+    {
+      "path": "app/scenario-generator.ts",
+      "surfaces": [
+        "incident copy",
+        "protagonist copy",
+        "record, inference, motive, and unknown ledgers",
+        "artifact copy",
+        "choice copy",
+        "cross-room cues",
+        "lessons",
+        "framework copy",
+        "generated summaries"
+      ]
+    },
+    {
+      "path": "app/night-engine.ts",
+      "surfaces": [
+        "crossing copy",
+        "behavior-transition reasons",
+        "ambient-event labels",
+        "modeled metric semantics"
+      ]
+    },
+    {
+      "path": "app/privacy-panel.tsx",
+      "surfaces": [
+        "session boundary",
+        "browser slots",
+        "portable save output and input",
+        "status announcements",
+        "technical-record disclosure"
+      ]
+    },
+    {
+      "path": "app/save-model.ts",
+      "surfaces": [
+        "validation errors",
+        "integrity semantics",
+        "save provenance"
+      ]
+    },
+    {
+      "path": "app/layout.tsx",
+      "surfaces": [
+        "page title",
+        "page description"
+      ]
+    },
+    {
+      "path": "README.md and docs/*.md",
+      "surfaces": [
+        "public product claims",
+        "model limits",
+        "disclosure contract",
+        "accessibility contract",
+        "privacy and persistence claims",
+        "copy architecture"
+      ]
+    },
+    {
+      "path": "tests/*.mjs",
+      "surfaces": [
+        "generated-copy validation",
+        "disclosure tests",
+        "semantic category tests",
+        "accessibility-name and value tests",
+        "debrief-structure tests"
+      ]
+    }
+  ],
+  "excludedChecks": [
+    "No interactive browser playthrough was performed for this baseline record.",
+    "No screen reader or other assistive-technology session was performed for this baseline record.",
+    "No external empirical validation of modeled coefficients or outcomes was performed.",
+    "No claim is made that a passing source-pattern test proves the generated runtime copy satisfies the disclosure contract."
+  ]
+}

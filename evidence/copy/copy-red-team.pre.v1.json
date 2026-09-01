@@ -1,0 +1,558 @@
+{
+  "schema": "chorus.copy-red-team.v1",
+  "recordId": "copy-red-team.pre.v1",
+  "phase": "pre-rewrite",
+  "captureDate": "2026-08-31",
+  "baseline": {
+    "record": "evidence/copy/copy-baseline.4fffddf.v1.json",
+    "commit": "4fffddf11a03a2fc84798a3c5343db00fc3135da"
+  },
+  "method": {
+    "performed": [
+      "Line-anchored source inspection of player-visible copy, generated-copy composition, runtime receipt semantics, save copy, documentation promises, and copy-related tests.",
+      "Deterministic generation of seed 0x43484f52 to inspect complete artifact and choice text.",
+      "Deterministic non-amplification playthrough of seed 0x43484f52 through all 24 decisions using only available choices tagged non-amplification-floor.",
+      "Static comparison of implementation behavior against README, model-limit, interaction-disclosure, communication, accessibility, notebook, and save-format claims.",
+      "Adversarial inspection of screen-reader announcement sources and accessible-name/value parity."
+    ],
+    "notPerformed": [
+      "interactive browser playthrough",
+      "screen-reader or other assistive-technology run",
+      "external empirical validation of model coefficients",
+      "post-rewrite verification"
+    ]
+  },
+  "seedEvidence": {
+    "seedHex": "0x43484f52",
+    "seedDecimal": 1128812370,
+    "artifactCopyWordCounts": {
+      "count": 24,
+      "minimum": 72,
+      "meanRounded": 99,
+      "maximum": 135,
+      "over100Words": 12
+    },
+    "choiceDetailWordCounts": {
+      "count": 75,
+      "minimum": 10,
+      "meanRounded": 34,
+      "maximum": 132,
+      "over100Words": 6
+    },
+    "nonAmplificationCounterexample": {
+      "selectionRule": "At every beat, choose one available action whose ethicsTags includes non-amplification-floor.",
+      "turnsCompleted": 24,
+      "roomsCompleted": 6,
+      "nightStateValidationIssues": [],
+      "chosenDeliberateMisrepresentations": 0,
+      "scenarioLedgersTypedDeliberate": 6,
+      "currentEndingUnconditionallyRendersDeliberateClassifications": 6,
+      "status": "failed",
+      "failure": "A valid route containing no selected deliberate misrepresentation is still concluded with six unconditional DELIBERATE MISREPRESENTATION classifications."
+    }
+  },
+  "summary": {
+    "releaseBlocking": 5,
+    "high": 12,
+    "medium": 6,
+    "total": 23,
+    "result": "failed",
+    "reason": "The baseline passes its existing verification suite while violating its own runtime disclosure, epistemic-separation, route-fidelity, claim-boundary, cognitive-accessibility, and ending contracts."
+  },
+  "findings": [
+    {
+      "id": "CRT-PRE-001",
+      "severity": "release-blocking",
+      "status": "failed",
+      "title": "Generated active-play copy leaks the sealed interpretation",
+      "failureMode": "The Source panel renders generated artifactCopy. That copy directly includes private knowledge, knowingly altered accounts, beneficiary protection, audience costs, and correction duties before the whole-night conclusion.",
+      "anchors": [
+        "app/page.tsx:586",
+        "app/page.tsx:629-630",
+        "app/scenario-generator.ts:2028-2034",
+        "app/scenario-generator.ts:3278-3282",
+        "app/scenario-generator.ts:3300-3304",
+        "app/scenario-generator.ts:3321-3326",
+        "app/scenario-generator.ts:3343-3348",
+        "README.md:20-35",
+        "docs/COMMUNICATION-ATLAS.md:140",
+        "docs/COMMUNICATION-ATLAS.md:350-359",
+        "docs/COMMUNICATION-ATLAS.md:367-378"
+      ],
+      "testGap": [
+        "tests/accessibility-disclosure.test.mjs:31-48",
+        "tests/accessibility-disclosure.test.mjs:141-156"
+      ],
+      "adversarialEvidence": "The disclosure tests inspect JSX property names and literals, not the generated strings interpolated into the component. They pass while a Bridge artifact says that a knowingly altered account is available.",
+      "acceptanceCriteria": [
+        "Active-play artifact text contains only the represented artifact and disclosure-eligible context.",
+        "Private interior, analytic labels, incentive classification, and correction duty remain absent until their authorized surface.",
+        "Tests render or evaluate generated strings across deterministic seeds rather than searching component source alone."
+      ]
+    },
+    {
+      "id": "CRT-PRE-002",
+      "severity": "release-blocking",
+      "status": "failed",
+      "title": "Truth, record, motive, counterfactual, and prescription are concatenated",
+      "failureMode": "TruthLedger and groundTruth combine incident facts with authored private knowledge, unresolved conditions with hypothetical audience costs, misleading frames with an available altered account, and later resolution with a normative correction duty.",
+      "anchors": [
+        "app/scenario-generator.ts:475-480",
+        "app/scenario-generator.ts:2902-2907",
+        "app/scenario-generator.ts:2940-2943",
+        "app/page.tsx:680-683",
+        "docs/ARCHITECTURE.md:135-139",
+        "docs/GLOSSARY.md:30",
+        "docs/GLOSSARY.md:46",
+        "docs/COMMUNICATION-ATLAS.md:80-95"
+      ],
+      "impact": "The ending labels a mixed analytic essay as ground truth, defeating the product's central epistemic distinction.",
+      "acceptanceCriteria": [
+        "Every copy atom has an explicit epistemic class: represented record, authored private state, audience inference, unresolved question, hypothetical consequence, or normative repair proposal.",
+        "Ground truth contains only authored incident facts and their factual resolution.",
+        "Rendering never joins atoms under a broader label that changes their epistemic status."
+      ]
+    },
+    {
+      "id": "CRT-PRE-003",
+      "severity": "release-blocking",
+      "status": "failed",
+      "title": "The ending reports unchosen misrepresentation as enacted history",
+      "failureMode": "Interpretation renders the deliberate-misrepresentation ledger for every scenario regardless of the accepted decisions. Correction artifacts also presume a deliberate departure because correctionDuty is injected unconditionally and scheduled pulses occur independent of choice history.",
+      "anchors": [
+        "app/page.tsx:691-693",
+        "app/scenario-generator.ts:3337-3356",
+        "app/night-engine.ts:437-517"
+      ],
+      "counterexample": "Seed 0x43484f52 completes cleanly with 24 non-amplification-floor decisions and zero selected deliberate misrepresentations, yet the ending renders six DELIBERATE MISREPRESENTATION sections.",
+      "acceptanceCriteria": [
+        "The naturalized summary is derived from accepted decision events.",
+        "Unchosen authored possibilities are omitted or explicitly labelled as offered but not taken.",
+        "A regression test completes a zero-deliberate path and asserts that no deliberate act is narrated as played."
+      ]
+    },
+    {
+      "id": "CRT-PRE-004",
+      "severity": "release-blocking",
+      "status": "failed",
+      "title": "Record and inference separation is structural but not semantic",
+      "failureMode": "observableRecord can contain authorial code classifications, incentive readings, or synthesized common ground. The UI label ROOM READING renders generic analytic questions rather than an audience inference.",
+      "anchors": [
+        "app/scenario-generator.ts:2179-2181",
+        "app/scenario-generator.ts:2209-2211",
+        "app/scenario-generator.ts:2239-2241",
+        "app/page.tsx:592-596",
+        "app/page.tsx:665",
+        "docs/COMMUNICATION-ATLAS.md:80-90",
+        "docs/INTERACTION-DISCLOSURE.md:81-90"
+      ],
+      "testGap": [
+        "tests/concurrent-night.test.mjs:605-629",
+        "tests/concurrent-night.test.mjs:668-684"
+      ],
+      "acceptanceCriteria": [
+        "Observable record contains only represented words, actions, timing, source state, and reply access.",
+        "Audience readings are declarative inferences attributed to the modeled room, not unlabeled coaching questions.",
+        "Semantic category tests reject motive, prescription, and analytic classification inside the record field."
+      ]
+    },
+    {
+      "id": "CRT-PRE-005",
+      "severity": "release-blocking",
+      "status": "failed",
+      "title": "The passing suite certifies copy properties it does not execute",
+      "failureMode": "Source-pattern tests claim that classification and deliberate-protection analysis remain sealed, but they do not generate a pack, render its copy, or traverse a completed route for those assertions.",
+      "anchors": [
+        "tests/accessibility-disclosure.test.mjs:21-48",
+        "tests/accessibility-disclosure.test.mjs:141-163",
+        "docs/ACCESSIBILITY.md:174-200"
+      ],
+      "baselineEvidence": "npm run verify:working-tree passed, including 22 accessibility-disclosure tests, while CRT-PRE-001 through CRT-PRE-004 remained reproducible.",
+      "acceptanceCriteria": [
+        "Copy-disclosure assertions run against generated runtime strings for positive, negative, boundary, and route-combination cases.",
+        "A green source-pattern check is not described as runtime disclosure evidence.",
+        "Failed pre-rewrite fixtures remain preserved alongside corrected fixtures."
+      ]
+    },
+    {
+      "id": "CRT-PRE-006",
+      "severity": "high",
+      "status": "failed",
+      "title": "Playable artifacts are omniscient essays wearing random formats",
+      "failureMode": "The generator assigns clip, meme, comments, screenshot, live, status, map, or other artifact kinds, then renders the same long analytic prose grammar inside each visual form. A meme can therefore contain a private-knowledge and incentive essay.",
+      "anchors": [
+        "app/scenario-generator.ts:28-41",
+        "app/scenario-generator.ts:3270-3356",
+        "app/page.tsx:629-630"
+      ],
+      "seedEvidence": "For seed 0x43484f52, every one of 24 artifact copies is 72 to 135 words; mean is 99 words.",
+      "acceptanceCriteria": [
+        "Artifact copy follows format-specific constraints and plausible speaker access.",
+        "Narration, private interior, and analytic explanation are not rendered as artifact contents.",
+        "Artifact-length and modality tests cover every ArtifactKind."
+      ]
+    },
+    {
+      "id": "CRT-PRE-007",
+      "severity": "high",
+      "status": "failed",
+      "title": "Copy repeats the same inference through every available surface",
+      "failureMode": "One communication object is attached to all four scenes; the same record, reading, and unknowns repeat each beat. Known records, altered accounts, audience costs, correction duties, and combined motives recur in artifacts, choices, room-close receipts, Interpretation, Field Notes, Practice, and Heart.",
+      "anchors": [
+        "app/scenario-generator.ts:2135-2151",
+        "app/scenario-generator.ts:3232-3268",
+        "app/scenario-generator.ts:3635-3649",
+        "app/scenario-generator.ts:3786-3798",
+        "app/page.tsx:592-596",
+        "app/page.tsx:659-665",
+        "app/page.tsx:691-745"
+      ],
+      "concreteExamples": [
+        "Warm-interior observableRecord repeats hook.prosocialEvidence because it is already inside factBindings.surface and is then appended again.",
+        "Generated details can produce constructions such as 'This seat knows this seat participated'.",
+        "For seed 0x43484f52, choice details average 34 words and reach 132 words."
+      ],
+      "acceptanceCriteria": [
+        "Each material inference is stated once in the narrative layer that owns it.",
+        "Later copy may deepen or recontextualize an atom but does not restate it as explanation.",
+        "Generated-copy tests detect exact and near-duplicate clauses across active play and conclusion."
+      ]
+    },
+    {
+      "id": "CRT-PRE-008",
+      "severity": "high",
+      "status": "failed",
+      "title": "Choice copy announces its moral and analytic classification before choice",
+      "failureMode": "Choices use labels such as 'Let one person stand in for the whole failure' and details that explicitly state knowing concealment, competence fear, beneficiary protection, and competitive prize. The player is asked to select a pre-explained lesson rather than experience ambiguous pressure and consequence.",
+      "anchors": [
+        "app/scenario-generator.ts:3532-3590",
+        "app/scenario-generator.ts:3629-3650",
+        "app/scenario-generator.ts:3786-3798",
+        "app/page.tsx:599-607"
+      ],
+      "impact": "This produces a fixed morality vignette, eliminates subtext, and makes the later interpretation redundant.",
+      "acceptanceCriteria": [
+        "Choice labels state concrete actions in the occupied seat's natural language.",
+        "Immediate known tradeoffs may be visible; analytic classification and total motive explanation are deferred.",
+        "No choice is marked as the virtuous or corrupt answer by label alone."
+      ]
+    },
+    {
+      "id": "CRT-PRE-009",
+      "severity": "high",
+      "status": "failed",
+      "title": "The ending is a seven-part audit rather than a naturalized summary",
+      "failureMode": "NightDebrief decomposes the conclusion into House, Choices, Interpretation, Crossings, Fatigue, Practice, and Heart. The same conclusion is distributed across taxonomies instead of becoming one route-specific narrative.",
+      "anchors": [
+        "app/page.tsx:670-676",
+        "docs/INTERACTION-DISCLOSURE.md:195-213",
+        "docs/ACCESSIBILITY.md:161-172",
+        "docs/VISUAL-SYSTEM.md:73-78",
+        "tests/accessibility-disclosure.test.mjs:61-155",
+        "tests/viewport-contract.test.mjs:157-182"
+      ],
+      "acceptanceCriteria": [
+        "The primary ending is one concise, route-faithful narrative summary.",
+        "Technical receipts remain optional supporting evidence rather than fragments of the summary.",
+        "Concept definitions are separate, plain, and do not break the narrative ending into another taxonomy."
+      ]
+    },
+    {
+      "id": "CRT-PRE-010",
+      "severity": "high",
+      "status": "failed",
+      "title": "Core concepts exist in data but are not taught in the interface",
+      "failureMode": "Every scene has a SceneLesson and generation validation requires saturation, signaling, market value, correction drag, trust capital, and status capital. page.tsx never renders term, definition, perspective, or observable.",
+      "anchors": [
+        "app/scenario-generator.ts:460-473",
+        "app/scenario-generator.ts:4109-4157",
+        "app/scenario-generator.ts:4329-4331",
+        "app/page.tsx:670-676"
+      ],
+      "impact": "The system claims concept coverage from generation, not from anything the player can read or understand.",
+      "acceptanceCriteria": [
+        "A separate plain-language concept surface lists only concepts the completed route encountered, offered, or played, with those states distinguished.",
+        "Each concept is grounded in one concrete moment from the player's night.",
+        "Tests assert rendered concept copy and path provenance, not pack membership alone."
+      ]
+    },
+    {
+      "id": "CRT-PRE-011",
+      "severity": "high",
+      "status": "failed",
+      "title": "Heart is fixed, state-insensitive, and morally directive",
+      "failureMode": "HeartReceipt receives pack but no NightState, so it cannot know what the player did. Its willingness question prescribes the approved moral posture while the specification and test describe it as non-instructional.",
+      "anchors": [
+        "app/page.tsx:676",
+        "app/page.tsx:744-745",
+        "docs/INTERACTION-DISCLOSURE.md:210-213",
+        "tests/accessibility-disclosure.test.mjs:291-298"
+      ],
+      "acceptanceCriteria": [
+        "The summary receives and uses accepted decision history.",
+        "It describes consequences and unresolved tensions without testing the player's willingness or innocence.",
+        "Fixed concept definitions move to the separate concept surface."
+      ]
+    },
+    {
+      "id": "CRT-PRE-012",
+      "severity": "high",
+      "status": "failed",
+      "title": "The ending exceeds the evidence boundary",
+      "failureMode": "Interpretation says motive remains unknown until evidence resolves it. Heart says the event record proves a rumor false. A record can support a bounded inference or contradict a proposition; it does not necessarily resolve an interior or falsify every part of a rumor.",
+      "anchors": [
+        "app/page.tsx:691-692",
+        "app/page.tsx:744-745",
+        "app/page.tsx:812-821",
+        "docs/COMMUNICATION-ATLAS.md:126-130",
+        "docs/THESIS-AND-ETHICS.md:82-101"
+      ],
+      "internalContradiction": "Field Notes correctly says that a defensive motive is not a truth test and a rumor may contain a bounded true detail, while Heart says the event record proves the rumor false.",
+      "acceptanceCriteria": [
+        "Copy distinguishes contradiction of a proposition from falsification of a whole account.",
+        "Motive remains authored private state inside fiction and bounded inference outside it unless direct represented evidence establishes it.",
+        "Claim-boundary tests reject prove, resolve, detect, and score language when the underlying model cannot support it."
+      ]
+    },
+    {
+      "id": "CRT-PRE-013",
+      "severity": "high",
+      "status": "failed",
+      "title": "Internal invariant coverage is presented as causal coherence",
+      "failureMode": "validateConcurrentNight.score is only the percentage of internal checks passed. House Map displays it as 'causal coherence', which reads as an empirical or substantive model-validity measure.",
+      "anchors": [
+        "app/scenario-generator.ts:2513-2589",
+        "app/page.tsx:442-447",
+        "docs/LIMITATIONS.md:11-32"
+      ],
+      "acceptanceCriteria": [
+        "Do not expose internal pass percentage as causal coherence.",
+        "If exposed, label it as generator checks passed and keep it outside the lived simulation metrics.",
+        "The player sees a concise visible statement that coefficients are designed indices, not measured effects, probabilities, or predictions."
+      ]
+    },
+    {
+      "id": "CRT-PRE-014",
+      "severity": "high",
+      "status": "failed",
+      "title": "Designed indices are displayed with unsupported quantitative precision",
+      "failureMode": "Blame, interpretation gap, common ground, clarity, carrying power, and other authored state variables are shown as percentages or precise values without a nearby model boundary. Their formulas use reviewed design constants, not measured effect sizes.",
+      "anchors": [
+        "app/page.tsx:442-447",
+        "app/page.tsx:641-656",
+        "app/page.tsx:659-665",
+        "app/page.tsx:680-682",
+        "app/night-engine.ts:22-38",
+        "app/night-engine.ts:940-1056",
+        "app/night-engine.ts:1131-1145",
+        "docs/LIMITATIONS.md:13-29"
+      ],
+      "acceptanceCriteria": [
+        "Use modeled index language and avoid percentage signs where they imply probability, share, or measurement.",
+        "Define each visible index in plain language at first use.",
+        "Keep numerical output subordinate to concrete narrative consequences."
+      ]
+    },
+    {
+      "id": "CRT-PRE-015",
+      "severity": "high",
+      "status": "failed",
+      "title": "Direct crossing includes format resemblance while copy calls it content transfer",
+      "failureMode": "The generator marks a link direct when rooms merely share an artifact format, then its revealed cue says format imitation is not a shared factual claim. CrossingReceipt labels every direct link DIRECT CROSSING after saying direct routes carry content.",
+      "anchors": [
+        "app/scenario-generator.ts:2469-2499",
+        "app/page.tsx:715-716"
+      ],
+      "acceptanceCriteria": [
+        "Content transfer, shared carrier, and format imitation are separate typed relations.",
+        "DIRECT CONTENT CROSSING appears only when the represented content actually transfers.",
+        "User-facing explanation never asserts and denies content transfer in the same receipt."
+      ]
+    },
+    {
+      "id": "CRT-PRE-016",
+      "severity": "high",
+      "status": "failed",
+      "title": "Opening copy encourages the inference the model says to resist",
+      "failureMode": "'Every feed has a back room' suggests hidden coordination behind every feed. 'Six facts' calls unresolved incidents facts. 'The house will not tell you what to conclude' is contradicted by active copy that states knowing distortion and the moral result.",
+      "anchors": [
+        "app/page.tsx:402-413",
+        "app/page.tsx:442-447",
+        "app/layout.tsx:4-9"
+      ],
+      "relatedCopy": "The metadata phrase 'manufactured social reality' similarly exceeds the bounded explanatory claim.",
+      "acceptanceCriteria": [
+        "Opening language invites attention to unseen social contexts without universalizing covert coordination.",
+        "Incidents, observations, claims, and facts remain distinct nouns.",
+        "The no-conclusion promise is retained only if active copy genuinely leaves classification open."
+      ]
+    },
+    {
+      "id": "CRT-PRE-017",
+      "severity": "high",
+      "status": "failed",
+      "title": "Screen-reader users can receive the same blocked reason three times",
+      "failureMode": "A locked-choice activation updates the global polite live region, inserts a BlockedReceipt with role=status, and focuses a choice whose aria-describedby points to the same receipt. Privacy actions also combine their local role=status with the global announcer.",
+      "anchors": [
+        "app/page.tsx:267-279",
+        "app/page.tsx:310-315",
+        "app/page.tsx:599-620",
+        "app/privacy-panel.tsx:45-49",
+        "app/privacy-panel.tsx:70-74",
+        "app/privacy-panel.tsx:97-105",
+        "app/privacy-panel.tsx:209"
+      ],
+      "interactiveStatus": "Source-level duplication identified; assistive-technology behavior was not run in this pass.",
+      "acceptanceCriteria": [
+        "Each state transition has one authoritative announcement path.",
+        "Focused accessible description and live status do not repeat the same full explanation.",
+        "Assistive-technology verification records announcement order and duplication for blocked and save actions."
+      ]
+    },
+    {
+      "id": "CRT-PRE-018",
+      "severity": "medium",
+      "status": "failed",
+      "title": "Relationship filtering can announce an entire changing edge list",
+      "failureMode": "The whole selected-node detail, including every related edge, is inside aria-live=polite. Search and filters can therefore create long repeated announcements.",
+      "anchors": [
+        "app/page.tsx:518-534"
+      ],
+      "interactiveStatus": "Source-level live-region scope identified; screen-reader behavior was not run in this pass.",
+      "acceptanceCriteria": [
+        "A short status announces result count and selected node.",
+        "The detailed relationship list remains readable but outside the live region."
+      ]
+    },
+    {
+      "id": "CRT-PRE-019",
+      "severity": "medium",
+      "status": "failed",
+      "title": "Visible Reach and announced Reach are different quantities",
+      "failureMode": "The visible Reach value is raw modeled impressions while its progressbar exposes a logarithmically normalized value from 0 to 100 under the same label.",
+      "anchors": [
+        "app/page.tsx:641-656",
+        "tests/accessibility-disclosure.test.mjs:254-260",
+        "docs/ACCESSIBILITY.md:29-44"
+      ],
+      "acceptanceCriteria": [
+        "Visible and programmatic names identify different quantities if both are retained.",
+        "The accessible value communicates the same user-relevant measure as the visible value.",
+        "Tests assert name, value, units, and visible/programmatic parity."
+      ]
+    },
+    {
+      "id": "CRT-PRE-020",
+      "severity": "medium",
+      "status": "failed",
+      "title": "Announcements are technical, inaccurate, or omit the new context",
+      "failureMode": "Selecting a completed room announces that it resumed; a choice announces receipt counts instead of the concrete consequence and destination; collapsing a reason says it was concealed; replay copy is syntactically opaque. The RoomClosed debrief route does not use the focus transfer used by the rail route.",
+      "anchors": [
+        "app/page.tsx:168-195",
+        "app/page.tsx:235-242",
+        "app/page.tsx:267-307",
+        "app/page.tsx:333",
+        "app/page.tsx:346"
+      ],
+      "acceptanceCriteria": [
+        "Announcements name the resulting view and one concrete state change in plain language.",
+        "Completed rooms are opened, not resumed.",
+        "Every debrief entry route transfers focus to the debrief heading."
+      ]
+    },
+    {
+      "id": "CRT-PRE-021",
+      "severity": "medium",
+      "status": "failed",
+      "title": "Privacy and save copy overstates containment, completeness, and download confirmation",
+      "failureMode": "'Play stays in this tab' and 'this device' omit browser-profile and operating-system boundaries. Technical notebooks are called the 'Complete system'. Export announces 'downloaded' after dispatching a click without browser confirmation. 'Validated text file' does not distinguish replay and structure checks from authorship or authentication.",
+      "anchors": [
+        "app/privacy-panel.tsx:110-125",
+        "app/privacy-panel.tsx:162-173",
+        "app/privacy-panel.tsx:192-205",
+        "app/save-model.ts:277-285",
+        "docs/LIMITATIONS.md:67-79",
+        "docs/NOTEBOOKS.md:145-158",
+        "docs/SAVE-FORMAT.md:188-206",
+        "tests/accessibility-disclosure.test.mjs:300-317"
+      ],
+      "acceptanceCriteria": [
+        "Session copy describes CHORUS save behavior, not total device privacy.",
+        "Browser slots are identified as belonging to the current browser profile.",
+        "Export says created or requested unless completion is verified.",
+        "Save validation explicitly means internally consistent and replayable, not authentic, encrypted, or author-signed.",
+        "Notebook copy says model and verification records, not complete system."
+      ]
+    },
+    {
+      "id": "CRT-PRE-022",
+      "severity": "medium",
+      "status": "failed",
+      "title": "The post-completion Meme trace is a fixed example presented as played evidence",
+      "failureMode": "The drawer changes from Trace guide to Meme trace after completion, but MemeLineage receives no pack or state and always renders the same stages and TRACE/FIT values.",
+      "anchors": [
+        "app/page.tsx:792-793",
+        "app/page.tsx:824-826"
+      ],
+      "acceptanceCriteria": [
+        "Either label the content as an illustrative example or derive every stage and value from the played night.",
+        "A fixed teaching example is not named as a trace of the player's completed route."
+      ]
+    },
+    {
+      "id": "CRT-PRE-023",
+      "severity": "medium",
+      "status": "failed",
+      "title": "Public copy is jargon-heavy and some safety and reproduction claims are absolute",
+      "failureMode": "Public copy leads with bounded consequence, constrained grammar, interpretation receipts, enactment, repertoire, and other model vocabulary before concrete examples. README says PG-safe and underqualifies deterministic reproduction by omitting the required generator version.",
+      "anchors": [
+        "README.md:8-18",
+        "README.md:20-35",
+        "README.md:113-123",
+        "docs/GLOSSARY.md:13-48",
+        "docs/THESIS-AND-ETHICS.md:139-149",
+        "docs/GENERATION-COHERENCE.md:255-261",
+        "docs/SAVE-FORMAT.md:188-206"
+      ],
+      "acceptanceCriteria": [
+        "Concrete action and consequence precede technical terminology.",
+        "PG is described as an authored content boundary, not an external safety certification.",
+        "Reproduction claims name seed, ordered choices, generator version, and compatible schema where applicable."
+      ]
+    }
+  ],
+  "requiredRegressionEvidence": [
+    {
+      "id": "CRT-REG-001",
+      "description": "Generate multiple fixed seeds and assert no sealed analytic phrase or field appears in active rendered copy."
+    },
+    {
+      "id": "CRT-REG-002",
+      "description": "Complete seed 0x43484f52 through the preserved zero-deliberate route and assert the ending attributes zero deliberate acts to the played history."
+    },
+    {
+      "id": "CRT-REG-003",
+      "description": "Validate every rendered atom against its record, private-state, inference, unknown, hypothetical, concept, or normative label."
+    },
+    {
+      "id": "CRT-REG-004",
+      "description": "Assert the naturalized summary changes when accepted decision history changes while immutable incident fact remains stable."
+    },
+    {
+      "id": "CRT-REG-005",
+      "description": "Assert the separate concept surface identifies encountered, offered, and played concepts in plain language with one route-specific example each."
+    },
+    {
+      "id": "CRT-REG-006",
+      "description": "Verify blocked, privacy, relationship-filter, choice, replay, and debrief announcements with at least one supported screen reader and preserve the announcement transcript."
+    },
+    {
+      "id": "CRT-REG-007",
+      "description": "Assert visible metric name, value, unit, and programmatic accessible value agree."
+    },
+    {
+      "id": "CRT-REG-008",
+      "description": "Run duplicate-clause and length checks on generated artifacts, choices, close receipts, and ending copy without treating the checks as a substitute for human prose review."
+    }
+  ]
+}

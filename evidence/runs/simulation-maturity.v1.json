@@ -14,17 +14,17 @@
     "files": [
       {
         "path": "app/night-engine.ts",
-        "sha256": "a81058d06d42a80671a25d7903a1873072ee66b85da04551223316ecbf8aebc7",
-        "bytes": 48930
+        "sha256": "fcbc5abf6a0b00c3e1909b9f46b7b271faa21e568fe34f41d959a2e199176d70",
+        "bytes": 55319
       },
       {
         "path": "app/scenario-generator.ts",
-        "sha256": "e0feb111e302ce029ff1e97f94b66907a3657cafabfeb7d30928d4c8d8d23a4d",
-        "bytes": 263122
+        "sha256": "9e0ae6ec25382567d09b32fd08c589fbed709f57a13f9620e41e1c67a96c6668",
+        "bytes": 290402
       },
       {
         "path": "scripts/run-simulation-evidence.mjs",
-        "sha256": "1bc2d77da3f5c9f6d649b7a78976e4d53f4860450029e2f6103c7d8cb0a559dc",
+        "sha256": "e4b12fa8b30c70ce737de328478ae4f7b49235cd75d30078e81686e7ca06a902",
         "bytes": 34479
       },
       {
@@ -33,7 +33,7 @@
         "bytes": 4644
       }
     ],
-    "sha256": "ad53810218a17ba9b199174e370f2421e87ff97dd367246e33d238055036c2da"
+    "sha256": "81510041844115aa67dc9984eb0e2f65b143f7a2df1448daad48f395c1ee141d"
   },
   "seedDomain": {
     "startInclusive": 0,
@@ -59,7 +59,7 @@
   },
   "results": {
     "status": "pass",
-    "assertions": 118680,
+    "assertions": 118668,
     "invariantFailures": 0,
     "validationFailures": 0,
     "coherentNights": 4096,
@@ -69,7 +69,7 @@
     "completedNights": 512,
     "replayedNights": 512,
     "randomizedInterleavings": 512,
-    "roomSwitches": 10239,
+    "roomSwitches": 10287,
     "decisions": 12288,
     "decisionEffects": 73728,
     "localDecisionEffects": 12288,
@@ -88,41 +88,41 @@
     "stateValidationFailures": 0,
     "replayFailures": 0,
     "bounds": {
-      "stateObservations": 13019,
-      "roomObservations": 78114,
+      "stateObservations": 13017,
+      "roomObservations": 78102,
       "reach": {
         "minimum": 32,
-        "maximum": 3307,
+        "maximum": 3334,
         "rule": "non-negative safe integer"
       },
       "normalizedMetrics": {
         "heat": {
           "minimum": 4.98,
-          "maximum": 86.7462
+          "maximum": 90.9271
         },
         "crossover": {
           "minimum": 2,
-          "maximum": 70.0714
+          "maximum": 69.62
         },
         "belief": {
           "minimum": 4,
           "maximum": 6
         },
         "consensus": {
-          "minimum": 0,
-          "maximum": 64.9011
+          "minimum": 0.37,
+          "maximum": 61.53425
         },
         "provenance": {
-          "minimum": 55.5412,
+          "minimum": 51.09755,
           "maximum": 100
         },
         "verification": {
           "minimum": 4,
-          "maximum": 82.2608
+          "maximum": 77.9174
         },
         "trust": {
-          "minimum": 33.878,
-          "maximum": 72.3704
+          "minimum": 33.0444,
+          "maximum": 71.5088
         },
         "coordination": {
           "minimum": 0,
@@ -130,18 +130,18 @@
         },
         "blame": {
           "minimum": 0,
-          "maximum": 63.3556
+          "maximum": 62.5276
         },
         "interpretiveGap": {
           "minimum": 0,
-          "maximum": 75.8152
+          "maximum": 71.9228
         },
         "commonGround": {
           "minimum": 0,
-          "maximum": 86.0918
+          "maximum": 87.8318
         },
         "threadFocus": {
-          "minimum": 43.7176,
+          "minimum": 42.8336,
           "maximum": 76
         },
         "discernment": {
@@ -149,38 +149,38 @@
           "maximum": 92.42
         },
         "enactment": {
-          "minimum": 9.6276,
+          "minimum": 10.9059,
           "maximum": 87.9736
         }
       },
       "fatigue": {
         "attentional": {
           "minimum": 0.08,
-          "maximum": 63.31
+          "maximum": 63.09
         },
         "affective": {
           "minimum": 0.06,
-          "maximum": 60.93
+          "maximum": 59.95
         },
         "relational": {
           "minimum": 0.04,
-          "maximum": 68.86
+          "maximum": 68.97
         },
         "verification": {
           "minimum": 0.04,
-          "maximum": 56.12
+          "maximum": 56.07
         },
         "efficacy": {
           "minimum": 0.02,
-          "maximum": 47.92
+          "maximum": 48.62
         }
       },
       "normalizedRule": "finite and within 0–100 inclusive"
     },
     "digests": {
-      "generatedPackSignaturesSha256": "57cd8bf6666ef0f58dfac72dbc8f74afde992133b04ca1f3d6b55d3383b220d3",
-      "completedStatesSha256": "cab7b3c5318994a07c4943ecd77be65436a253920aa3a6d9c8f45fb98fe819df",
-      "actionOrdersSha256": "b1b966bc952b7442dba9782463cbd56b513ab3fa9d2da4c70389d68f6e8d4e95"
+      "generatedPackSignaturesSha256": "9b270778f76ba66787542ea1e25bbb92e5e8f3beb9f34ee157064ba4971c747d",
+      "completedStatesSha256": "fe3d7b1ce09b4f8ffdc498ad6d15a880e89cb7c0ff1c3b5cb2db09c56590da30",
+      "actionOrdersSha256": "2ad4f9f987e6af18446e8f040bce18268d812c0048201c220b7e5757b575af41"
     },
     "failures": []
   },
@@ -190,5 +190,5 @@
     "Normalized state metrics and fatigue are bounded to 0–100; reach is a non-negative safe integer because it is a cumulative audience count.",
     "The harness exercises four deterministic choice policies, not the combinatorial total of every possible 24-choice path."
   ],
-  "evidenceSha256": "ffd9821c8dfd3dc3b4f3a06f2715b3d490c150e7abf65f201474fe6df25fe844"
+  "evidenceSha256": "b9b26ed41a2073790d59da469c73803540b6e875f7c95a8b2725e3ad9774cb1e"
 }

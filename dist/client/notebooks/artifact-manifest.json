@@ -20,14 +20,14 @@
     {
       "path": "notebooks/CHORUS-Systems-Atlas.ipynb",
       "media_type": "application/x-ipynb+json",
-      "bytes": 162378,
-      "sha256": "e05fbd1dc8c0c263817dbedce37e5bd71ead471b05e90331f4e4cf1fa29ede7d"
+      "bytes": 163321,
+      "sha256": "a52991267be3c36df8c1ab4fb35f4a5e081b8faa4c7bd2be2732ac4127ecf71e"
     },
     {
       "path": "notebooks/CHORUS-Validation-Atlas.ipynb",
       "media_type": "application/x-ipynb+json",
-      "bytes": 181589,
-      "sha256": "627461122d5b3cf2774249b7d1f33c54f000bf4709bc260f5186e83a14ef229c"
+      "bytes": 182052,
+      "sha256": "4fd086f5958b1d04197c9b1bf8b42a4c01b2935835b337c2cd97d4bbf18250a3"
     },
     {
       "path": "public/notebooks/CHORUS-Model-Specification.ipynb",
@@ -44,14 +44,14 @@
     {
       "path": "public/notebooks/CHORUS-Systems-Atlas.ipynb",
       "media_type": "application/x-ipynb+json",
-      "bytes": 162378,
-      "sha256": "e05fbd1dc8c0c263817dbedce37e5bd71ead471b05e90331f4e4cf1fa29ede7d"
+      "bytes": 163321,
+      "sha256": "a52991267be3c36df8c1ab4fb35f4a5e081b8faa4c7bd2be2732ac4127ecf71e"
     },
     {
       "path": "public/notebooks/CHORUS-Validation-Atlas.ipynb",
       "media_type": "application/x-ipynb+json",
-      "bytes": 181589,
-      "sha256": "627461122d5b3cf2774249b7d1f33c54f000bf4709bc260f5186e83a14ef229c"
+      "bytes": 182052,
+      "sha256": "4fd086f5958b1d04197c9b1bf8b42a4c01b2935835b337c2cd97d4bbf18250a3"
     },
     {
       "path": "public/notebooks/chorus-model-specification.html",
@@ -68,14 +68,14 @@
     {
       "path": "public/notebooks/chorus-systems-atlas.html",
       "media_type": "text/html",
-      "bytes": 145577,
-      "sha256": "54705e6dcc584ccd2e5aa9a559920cf8be6a4978b2321e84df88ef1c8fd8e6f6"
+      "bytes": 146261,
+      "sha256": "09cf3820c536c79db948e216d3502d5609a20b8d873a7096a5a346a5544601b8"
     },
     {
       "path": "public/notebooks/chorus-validation-atlas.html",
       "media_type": "text/html",
-      "bytes": 159330,
-      "sha256": "5bf4142aa171d21b52aaa08afc495e8277afbfd4980004853931741bbc6dea9f"
+      "bytes": 159660,
+      "sha256": "f4be2df3c87e9a9f4796c6729b2032e0eeff97607946ade26c956fe44fd401ac"
     },
     {
       "path": "public/notebooks/index.html",

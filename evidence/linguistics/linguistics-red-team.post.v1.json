@@ -1,0 +1,351 @@
+{
+  "schema": "chorus.linguistics-red-team.v1",
+  "recordId": "linguistics-red-team.post.v1",
+  "phase": "post-correction",
+  "captureDate": "2026-09-01",
+  "authority": {
+    "requestId": "SRC-U-20260831-CHORUS-LING",
+    "requestSha256": "6f3045c41a3287dcf82d2c8657034dbc968fa26f8afb9d63b438316423be91d3",
+    "registerId": "CHR-LING-REGISTER",
+    "catalysisCorpusSha256": "566f7c653142b239c098a0a3a0b628f3a3179535b219a99d889fdd48cc9513af",
+    "baselineCommit": "4fffddf11a03a2fc84798a3c5343db00fc3135da"
+  },
+  "sourceBinding": {
+    "implementationDigest": "0267a53f0810314110de25b4521fa2739ca9153ac019ccc0e7269c3972acfbd8",
+    "verificationPath": "evidence/linguistics/linguistics-verification.v1.json",
+    "preRecord": {
+      "path": "evidence/linguistics/linguistics-red-team.pre.v1.json",
+      "sha256": "808a30297d6a61f185098ae88b994b765a4fbcda7bafeb4a052de33f7e32a8dd"
+    }
+  },
+  "method": {
+    "performed": [
+      "Retested every preserved pre-correction finding against one final implementation binding.",
+      "Exercised generated, visual, nonvisual, persisted, publication, malformed-state, choice, route, concept, and conclusion channels.",
+      "Ran Catalysis-specific attacks for semantic camouflage, fake subtext, cadence monopoly, repeated inference, scene delay, purple ambiguity, causal truncation, and analeptic repair.",
+      "Ran 194 completed-night current-source debrief probes across both choice policies plus exact correction-beat, route, equal-afterimage, and no-change boundaries.",
+      "Ran the focused project suites, deterministic 118,668-assertion simulation evidence, typecheck, lint, notebook drift check, production build, and rendered metadata test."
+    ],
+    "notPerformed": [
+      "Current-source browser completion and keyboard interaction.",
+      "VoiceOver or NVDA transcript review and the manual viewport/zoom/forced-colors/reduced-motion matrix.",
+      "Current-lock dependency advisory check, current-source route check, and neutral clean-room distribution renewal."
+    ]
+  },
+  "preFindingDispositions": [
+    {
+      "id": "LING-PRE-001",
+      "status": "corrected-with-accepted-limitation",
+      "correction": "Schema 2 persists only the numeric replay trace; legacy payloads are structurally validated and canonically replayed before in-memory migration.",
+      "evidenceRefs": [
+        "RUN-SAVE-20260901",
+        "LING-POST-001",
+        "app/save-model.ts"
+      ],
+      "residualRisk": "Generator-13 saves intentionally fail closed, and current/legacy local-slot key updates are not transactional."
+    },
+    {
+      "id": "LING-PRE-002",
+      "status": "corrected",
+      "correction": "Live crossing clauses now branch on event kind, semantic, selected carriage, and separated selected/applied/background/avoided reach.",
+      "evidenceRefs": [
+        "RUN-LINGUISTICS-CONTRACT-20260901",
+        "RUN-NIGHT-20260901",
+        "app/night-engine.ts#visibleCrossingCopy"
+      ],
+      "residualRisk": "Manual live-region and browser announcement review remains an open promotion gap."
+    },
+    {
+      "id": "LING-PRE-003",
+      "status": "corrected",
+      "correction": "Both pure conclusion builders and the rendered debrief fail closed for unfinished or malformed completed state.",
+      "evidenceRefs": [
+        "RUN-COPY-20260901",
+        "RUN-A11Y-20260901",
+        "app/debrief-copy.ts"
+      ],
+      "residualRisk": "No unresolved automated conclusion-gate defect remains."
+    },
+    {
+      "id": "LING-PRE-004",
+      "status": "corrected-with-accepted-limitation",
+      "correction": "The product exposes operational guidance before completion and discovers spoiler-bearing research links and embeds only after completion.",
+      "evidenceRefs": [
+        "RUN-A11Y-20260901",
+        "RUN-LINGUISTICS-CONTRACT-20260901",
+        "CHR-LING-DISC-010"
+      ],
+      "residualRisk": "Direct static publication URLs remain public by design and are not a confidentiality boundary."
+    },
+    {
+      "id": "LING-PRE-005",
+      "status": "corrected",
+      "correction": "Active choice details retain situated action and omission while removing the appended protected-interest analysis.",
+      "evidenceRefs": [
+        "RUN-LINGUISTICS-CONTRACT-20260901",
+        "CHR-LING-ATOM-CHOICE-001"
+      ],
+      "residualRisk": "Stable systemic affordances repeat only in the separately typed plain-utility class."
+    },
+    {
+      "id": "LING-PRE-006",
+      "status": "corrected",
+      "correction": "Authored mentality and incident connection use explicit third-person fictional-seat language rather than assigning an interior to the player.",
+      "evidenceRefs": [
+        "RUN-LINGUISTICS-CONTRACT-20260901",
+        "app/scenario-generator.ts"
+      ],
+      "residualRisk": "Editorial browser review remains open; the automated 128-seed boundary passes."
+    },
+    {
+      "id": "LING-PRE-007",
+      "status": "corrected",
+      "correction": "Summary assembly selects complete sentences and retains every protected party, benefit, harmed party, harm, and self-cost without ellipsis.",
+      "evidenceRefs": [
+        "RUN-COPY-20260901",
+        "SWEEP-DEBRIEF-194"
+      ],
+      "residualRisk": "Manual screen-reader linearization and narrow reflow remain open promotion evidence."
+    },
+    {
+      "id": "LING-PRE-008",
+      "status": "corrected",
+      "correction": "Decision and room IDs, never normalized label text, establish identity; route provenance remains between exact origin and receiver decisions.",
+      "evidenceRefs": [
+        "RUN-COPY-20260901",
+        "CHR-LING-END-004"
+      ],
+      "residualRisk": "No unresolved automated identity or chronology defect remains."
+    },
+    {
+      "id": "LING-PRE-009",
+      "status": "corrected",
+      "correction": "The guide describes the implemented ending, and the fixed Meme lineage is explicitly labeled as a general reference rather than a played trace.",
+      "evidenceRefs": [
+        "RUN-A11Y-20260901",
+        "RUN-COPY-20260901"
+      ],
+      "residualRisk": "Manual product-language review remains an open promotion activity."
+    },
+    {
+      "id": "LING-PRE-010",
+      "status": "corrected",
+      "correction": "The v1.1.0 register, 29-atom inventory, exact owner checks, and evidence-chain validator supply stable channel, class, phase, proposition, and requirement bindings.",
+      "evidenceRefs": [
+        "SWEEP-LINGUISTIC-SURFACE-INVENTORY",
+        "docs/requirements/LINGUISTICS-REGISTER.md",
+        "scripts/validate-linguistics-evidence.mjs"
+      ],
+      "residualRisk": "The preserved pre record is a notarized finding record; its unavailable old working bytes are not mislabeled as a reproducible checkout."
+    },
+    {
+      "id": "LING-PRE-011",
+      "status": "corrected-with-accepted-limitation",
+      "correction": "Typed incident-responsive copy remains Catalysis; learnable safety, repair, and locked-ideal affordances use plain utility. Debrief cadence is state-derived, chronological, and scene-first.",
+      "evidenceRefs": [
+        "RUN-COPY-20260901",
+        "SWEEP-DEBRIEF-194",
+        "CHR-LING-VOICE-011",
+        "CHR-LING-END-005"
+      ],
+      "residualRisk": "Stable utility wording intentionally repeats the same systemic affordance; it is excluded from Catalysis uniqueness claims."
+    },
+    {
+      "id": "LING-PRE-012",
+      "status": "corrected-with-accepted-limitation",
+      "correction": "The normal workflow now exercises builders, persisted raw bytes, real event kinds, route semantics, malformed state, causal clauses, and inventory provenance.",
+      "evidenceRefs": [
+        "RUN-LINGUISTICS-CONTRACT-20260901",
+        "RUN-COPY-20260901",
+        "RUN-SAVE-20260901"
+      ],
+      "residualRisk": "Browser, assistive-technology, and physical viewport evidence remains explicitly open rather than inferred from source and unit contracts."
+    },
+    {
+      "id": "LING-PRE-013",
+      "status": "corrected-with-accepted-limitation",
+      "correction": "Generator-14 publications and working-tree status now use the final implementation binding and mechanically checked focused-test and simulation counts.",
+      "evidenceRefs": [
+        "RUN-DOCS-CHECK-20260901",
+        "evidence/runs/updated-working-tree-status.v1.json",
+        "linguistics-verification.v1"
+      ],
+      "residualRisk": "Release promotion remains held until current browser, route, dependency, assistive-technology, and distribution evidence is renewed."
+    }
+  ],
+  "newFindings": [
+    {
+      "id": "LING-POST-001",
+      "severity": "release-blocking",
+      "status": "corrected",
+      "title": "Duplicate decoded JSON keys could bypass field-uniqueness intent",
+      "issue": "JSON.parse materializes only one value for duplicate raw or escaped keys.",
+      "correction": "Scan decoded object keys before materialization and reject duplicate seed, escaped se\\u0065d, and shadow payload probes.",
+      "evidenceRefs": [
+        "RUN-SAVE-20260901",
+        "SWEEP-RAW-DUPLICATE-JSON-KEYS"
+      ]
+    },
+    {
+      "id": "LING-POST-002",
+      "severity": "high",
+      "status": "corrected",
+      "title": "Selected direct concept evidence could be mislabeled ambient",
+      "issue": "Market-value evidence previously used an ambient frame even for selected direct content or format carriage.",
+      "correction": "Use typed semantic and selectedCarriage to distinguish selected content, selected form, background, and ambient conditions.",
+      "evidenceRefs": [
+        "RUN-COPY-20260901"
+      ]
+    },
+    {
+      "id": "LING-POST-003",
+      "severity": "high",
+      "status": "corrected",
+      "title": "Autonomous correction evidence invented a source-bearing update",
+      "issue": "An ambient event could be narrated as though an actor supplied an update.",
+      "correction": "Autonomous evidence names pre-choice activity and never invents a source-bearing action.",
+      "evidenceRefs": [
+        "RUN-COPY-20260901"
+      ]
+    },
+    {
+      "id": "LING-POST-004",
+      "severity": "high",
+      "status": "corrected",
+      "title": "Salience-selected ending blocks could reverse chronology",
+      "issue": "A route chain and appended last resorts could narrate earlier decisions after later decisions.",
+      "correction": "Build typed decision blocks, prevent chains from jumping intervening last resorts, and sort globally by accepted turn.",
+      "evidenceRefs": [
+        "RUN-COPY-20260901",
+        "SWEEP-DEBRIEF-194",
+        "CHR-LING-END-004"
+      ]
+    },
+    {
+      "id": "LING-POST-005",
+      "severity": "high",
+      "status": "corrected",
+      "title": "Malformed completed state could render an empty analytic shell",
+      "issue": "The UI completion flag could reach conclusion rendering before state consistency was checked.",
+      "correction": "Validate before invoking either builder and render direct recovery copy without internal ledger detail.",
+      "evidenceRefs": [
+        "RUN-A11Y-20260901",
+        "RUN-COPY-20260901"
+      ]
+    },
+    {
+      "id": "LING-POST-006",
+      "severity": "medium",
+      "status": "accepted-limitation",
+      "title": "Static notebook URLs are always public",
+      "issue": "Product gating cannot provide access control for published static artifacts.",
+      "correction": "Specify completion as a product discovery gate only; static publications contain no played state.",
+      "evidenceRefs": [
+        "CHR-LING-DISC-010",
+        "RUN-A11Y-20260901"
+      ]
+    },
+    {
+      "id": "LING-POST-007",
+      "severity": "medium",
+      "status": "accepted-limitation",
+      "title": "Generator-13 saves do not migrate under generator 14",
+      "issue": "Exact replay cannot be claimed across a changed generation model.",
+      "correction": "Reject with GENERATOR_VERSION_MISMATCH instead of silently replaying different authored state.",
+      "evidenceRefs": [
+        "RUN-SAVE-20260901"
+      ]
+    },
+    {
+      "id": "LING-POST-008",
+      "severity": "medium",
+      "status": "open",
+      "title": "Current and legacy local-slot updates are not atomic",
+      "issue": "Browser Storage exposes separate current-key and legacy-key writes/removals, so a failure can leave both or leave the current key after a clear attempt.",
+      "correction": "Keep deterministic current-key read priority and explicit partial-failure recovery copy; a future storage transaction design may close the residual.",
+      "evidenceRefs": [
+        "RUN-SAVE-20260901",
+        "app/save-model.ts#saveLocalSlot"
+      ]
+    },
+    {
+      "id": "LING-POST-009",
+      "severity": "high",
+      "status": "corrected",
+      "title": "Status and dependency claims had drifted from current bytes",
+      "issue": "The status record carried stale source/test counts and a dependency pass bound to another package-lock digest.",
+      "correction": "Mechanically derive source/test/simulation metadata and mark dependency and route checks not run for current bytes.",
+      "evidenceRefs": [
+        "evidence/runs/updated-working-tree-status.v1.json",
+        "scripts/docs/build_working_tree_status.py"
+      ]
+    },
+    {
+      "id": "LING-POST-010",
+      "severity": "medium",
+      "status": "corrected",
+      "title": "Repeated stable affordances were misclassified as Catalysis",
+      "issue": "Safety, repair, and locked-ideal actions intentionally repeat and should not be evaluated as incident-responsive literary variation.",
+      "correction": "Classify from typed availability and ethics tags, never label text.",
+      "evidenceRefs": [
+        "RUN-LINGUISTICS-CONTRACT-20260901",
+        "CHR-LING-VOICE-011"
+      ]
+    },
+    {
+      "id": "LING-POST-011",
+      "severity": "medium",
+      "status": "corrected",
+      "title": "Afterimage selection lacked equal-tie and no-change boundaries",
+      "issue": "A deterministic strongest residue needed explicit proof at equal magnitude and when every post-close metric is unchanged.",
+      "correction": "Use normalized magnitude plus scenario/metric lexical ties and emit no room-afterimage for a valid zero-change state.",
+      "evidenceRefs": [
+        "SWEEP-AFTERIMAGE-EQUAL-TIE",
+        "SWEEP-AFTERIMAGE-NO-CHANGE",
+        "RUN-COPY-20260901"
+      ]
+    },
+    {
+      "id": "LING-POST-012",
+      "severity": "high",
+      "status": "corrected",
+      "title": "Chronological prose still showed mechanical cadence and delayed the scene",
+      "issue": "The first rewrite could remain a uniform transition template and open with abstract causal summary rather than the public incident.",
+      "correction": "Use the actual scene act to order public disclosure atoms, typed route semantics to govern carriage language, and metric/direction-specific residue; no path hash selects near-synonyms.",
+      "evidenceRefs": [
+        "SWEEP-DEBRIEF-194",
+        "CHR-LING-END-005",
+        "RUN-COPY-20260901"
+      ]
+    },
+    {
+      "id": "LING-POST-013",
+      "severity": "high",
+      "status": "corrected",
+      "title": "The after-summary could contradict its selected scene and expose its audit schema",
+      "issue": "A correction scene was paired with the scenario-entry unknown, while repeated evidence wrappers, causal route verbs, and split cost ledgers displaced the lived incident.",
+      "correction": "Build the opening only from the selected scene's public disclosure atoms, keep later decisions chronological rather than causal, and pack each sourced semantic atom and complete last-resort unit without exposing review vocabulary.",
+      "evidenceRefs": [
+        "evidence/copy/after-summary-and-map-red-team.post.v2.json",
+        "SWEEP-DEBRIEF-194",
+        "RUN-COPY-20260901"
+      ]
+    }
+  ],
+  "summary": {
+    "result": "pass-with-release-hold",
+    "openBlockers": 0,
+    "openHighSeverityFindings": 0
+  },
+  "decision": {
+    "linguisticImplementation": "pass",
+    "release": "held",
+    "openGapIds": [
+      "GAP-MANUAL-AT-VIEWPORT",
+      "GAP-BROWSER-COMPLETION",
+      "GAP-DEPENDENCY-CURRENT-LOCK",
+      "GAP-CURRENT-PRODUCTION-ROUTE",
+      "GAP-DISTRIBUTION-CLEAN-ROOM"
+    ]
+  }
+}

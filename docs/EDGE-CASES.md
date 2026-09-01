@@ -16,7 +16,7 @@ effect so a failure can be distinguished from an intentional constraint.
 | Sparse leadership or repair structure is absent | Omit it; absence is valid. | No synthetic framework event. | None; concluding receipt may state contextual absence. |
 | Pressure contour omits phases | Preserve only supported states. | No fabricated transitions. | None. |
 | Instrumental actor has no pressure contour | Keep pressure state null. | No pressure receipt. | None. |
-| No authored direct carrier between two rooms | Use systemic effect only. | Metrics may change; content does not cross. | None. |
+| No authored direct carrier between two rooms | Use an `ambient` link with no carrier. | Metrics may change; content and format do not cross. | None. |
 | New-night random sample is zero | Use deterministic arithmetic fallback for the next seed. | New validated pack. | None. |
 
 ## Scheduling and room switching
@@ -140,4 +140,3 @@ When an edge case fails, preserve evidence in this order:
 
 Do not repair a visible symptom by weakening generation, state, disclosure,
 security, or accessibility validation.
-

@@ -1,7 +1,7 @@
 "use client";
 
-import { useRef, useState, type ChangeEvent } from "react";
-import type { NightState } from "./night-engine";
+import { useLayoutEffect, useRef, useState, type ChangeEvent } from "react";
+import { isNightComplete, type NightState } from "./night-engine";
 import {
   MAX_PORTABLE_SAVE_BYTES,
   SAVE_SLOTS,
@@ -32,12 +32,25 @@ export function PrivacyPanel({ state, onRestore, onAnnounce }: PrivacyPanelProps
   const [pendingImport, setPendingImport] = useState<ParsedPortableSave | null>(null);
   const [pendingImportName, setPendingImportName] = useState("");
   const [confirmClear, setConfirmClear] = useState<SaveSlot | null>(null);
-  const [status, setStatus] = useState("Session only. Nothing has been written by this panel.");
+  const [status, setStatus] = useState("This night is in this open tab. This panel has not saved it.");
   const fileRef = useRef<HTMLInputElement>(null);
+  const pendingFocusRef = useRef<string | null>(null);
+
+  useLayoutEffect(() => {
+    if (!pendingFocusRef.current) return;
+    const target = document.getElementById(pendingFocusRef.current);
+    if (!target) return;
+    target.focus({ preventScroll: true });
+    pendingFocusRef.current = null;
+  });
+
+  function focusAfterUpdate(id: string) {
+    pendingFocusRef.current = id;
+  }
 
   function storage(): Storage {
     if (typeof window === "undefined" || !window.localStorage) {
-      throw new SaveModelError("STORAGE_UNAVAILABLE", "Local browser storage is unavailable.");
+      throw new SaveModelError("STORAGE_UNAVAILABLE", "This site cannot use storage in this browser profile.");
     }
     return window.localStorage;
   }
@@ -45,12 +58,12 @@ export function PrivacyPanel({ state, onRestore, onAnnounce }: PrivacyPanelProps
   function report(error: unknown) {
     const message = error instanceof SaveModelError ? error.message : "That save action could not be completed.";
     setStatus(message);
-    onAnnounce(message);
   }
 
   function refreshSlots() {
     try {
       const next = inspectLocalSlots(storage());
+      focusAfterUpdate("slot-A-primary");
       setSlots(next);
       setStatus("Local slots checked. No save was loaded or changed.");
     } catch (error) {
@@ -69,8 +82,7 @@ export function PrivacyPanel({ state, onRestore, onAnnounce }: PrivacyPanelProps
     try {
       saveLocalSlot(storage(), consent, state);
       setSlots(inspectLocalSlots(storage()));
-      setStatus(`Current night saved to local slot ${slot}.`);
-      onAnnounce(`Current night saved to local slot ${slot}.`);
+      setStatus(`Current night saved to slot ${slot} in this browser profile.`);
     } catch (error) {
       report(error);
     }
@@ -90,6 +102,7 @@ export function PrivacyPanel({ state, onRestore, onAnnounce }: PrivacyPanelProps
     if (!consents[slot]) {
       setConsents((current) => ({ ...current, [slot]: grantLocalSlotConsent(slot) }));
     }
+    focusAfterUpdate(`slot-${slot}-confirm-clear`);
     setConfirmClear(slot);
     setStatus(`Clear local slot ${slot}? This cannot be undone.`);
   }
@@ -98,10 +111,10 @@ export function PrivacyPanel({ state, onRestore, onAnnounce }: PrivacyPanelProps
     const consent = consents[slot] ?? grantLocalSlotConsent(slot);
     try {
       clearLocalSlot(storage(), consent);
+      focusAfterUpdate(`slot-${slot}-primary`);
       setSlots(inspectLocalSlots(storage()));
       setConfirmClear(null);
       setStatus(`Local slot ${slot} cleared.`);
-      onAnnounce(`Local slot ${slot} cleared.`);
     } catch (error) {
       report(error);
     }
@@ -120,8 +133,7 @@ export function PrivacyPanel({ state, onRestore, onAnnounce }: PrivacyPanelProps
       link.click();
       link.remove();
       window.setTimeout(() => URL.revokeObjectURL(url), 0);
-      setStatus("Portable text created. Your browser controls where it is kept.");
-      onAnnounce("Portable CHORUS save downloaded.");
+      setStatus("Save text created and handed to your browser. Your browser controls whether and where it is saved.");
     } catch (error) {
       report(error);
     }
@@ -141,8 +153,7 @@ export function PrivacyPanel({ state, onRestore, onAnnounce }: PrivacyPanelProps
       const parsed = parsePortableSave(await file.text());
       setPendingImport(parsed);
       setPendingImportName(file.name);
-      setStatus("Save checked. Review the summary before loading it.");
-      onAnnounce("Portable save checked and ready for review.");
+      setStatus("Integrity and replay checks passed. These checks do not authenticate the file. Review the summary before loading it.");
     } catch (error) {
       report(error);
       event.target.value = "";
@@ -159,17 +170,31 @@ export function PrivacyPanel({ state, onRestore, onAnnounce }: PrivacyPanelProps
     onAnnounce(`Portable save loaded. Turn ${turn} restored.`);
   }
 
+  function keepSlot(slot: SaveSlot) {
+    focusAfterUpdate(`slot-${slot}-clear`);
+    setConfirmClear(null);
+    setStatus(`Local slot ${slot} kept.`);
+  }
+
+  function cancelImport() {
+    focusAfterUpdate("portable-save-file");
+    setPendingImport(null);
+    setPendingImportName("");
+    setStatus("Selected file cleared. The current night was not changed.");
+    if (fileRef.current) fileRef.current.value = "";
+  }
+
   return <div className="privacy-panel">
     <section className="privacy-current" aria-labelledby="privacy-current-title">
       <span className="panel-label">CURRENT MODE</span>
-      <h3 id="privacy-current-title">Session only</h3>
-      <p>Play stays in this tab unless you deliberately choose a local slot or portable text.</p>
+      <h3 id="privacy-current-title">Only this open tab</h3>
+      <p>Your current night is in this tab&apos;s memory. Closing or reloading the tab can erase it. Nothing is saved unless you choose a browser slot or create save text.</p>
     </section>
 
     <details className="privacy-disclosure">
-      <summary><span>Browser slots</span><small>Optional · this device</small></summary>
+      <summary><span>Browser slots</span><small>Optional · this browser profile</small></summary>
       <div className="privacy-disclosure-body">
-        <p>Checking reads only CHORUS slots. Writing or clearing requires a fresh choice for that slot in this panel.</p>
+        <p>Slots use this site&apos;s storage in this browser profile. Another CHORUS tab in the same profile can read them. Each current slot stores a compact numeric replay trace, not generated scene, choice, effect, or conclusion prose. The matching CHORUS code can reconstruct the night from that trace, so this is data minimization rather than encryption. CHORUS does not copy slots to another browser or device; your browser controls any backup, sync, or deletion of site data. Checking reads only CHORUS slots. A slot is written or cleared only after you choose it in this open panel.</p>
         {slots === null ? <button type="button" onClick={refreshSlots}>Check local slots</button> : <div className="save-slot-list">
           {SAVE_SLOTS.map((slot) => {
             const inspection = slots.find((item) => item.slot === slot) ?? { slot, status: "empty" as const };
@@ -177,11 +202,11 @@ export function PrivacyPanel({ state, onRestore, onAnnounce }: PrivacyPanelProps
             return <article className="save-slot" key={slot}>
               <header><strong>Slot {slot}</strong><span>{slotStatus(inspection)}</span></header>
               {inspection.status === "ready" && <SavePreviewLine preview={inspection.preview} />}
-              {inspection.status === "invalid" && <p>This slot cannot be validated.</p>}
+              {inspection.status === "invalid" && <p>{slotProblem(inspection)}</p>}
               <div className="save-slot-actions">
-                {!consent ? <button type="button" onClick={() => enableSlot(slot)}>Enable slot {slot}</button> : <button type="button" onClick={() => saveSlot(slot)}>Save current night</button>}
-                {inspection.status === "ready" && <button type="button" onClick={() => restoreSlot(slot)}>Load</button>}
-                {inspection.status !== "empty" && (confirmClear === slot ? <><button className="danger-action" type="button" onClick={() => clearSlot(slot)}>Confirm clear</button><button type="button" onClick={() => setConfirmClear(null)}>Keep</button></> : <button type="button" onClick={() => requestClear(slot)}>Clear</button>)}
+                {!consent ? <button id={`slot-${slot}-primary`} type="button" onClick={() => enableSlot(slot)}>Enable slot {slot}</button> : <button id={`slot-${slot}-primary`} type="button" aria-label={`Save current night to slot ${slot}`} onClick={() => saveSlot(slot)}>Save current night</button>}
+                {inspection.status === "ready" && <button type="button" aria-label={`Load slot ${slot}`} onClick={() => restoreSlot(slot)}>Load</button>}
+                {inspection.status !== "empty" && !(inspection.status === "invalid" && inspection.errorCode === "STORAGE_UNAVAILABLE") && (confirmClear === slot ? <><button id={`slot-${slot}-confirm-clear`} className="danger-action" type="button" aria-label={`Confirm clear slot ${slot}`} onClick={() => clearSlot(slot)}>Confirm clear</button><button type="button" aria-label={`Keep slot ${slot}`} onClick={() => keepSlot(slot)}>Keep</button></> : <button id={`slot-${slot}-clear`} type="button" aria-label={`Clear slot ${slot}`} onClick={() => requestClear(slot)}>Clear</button>)}
               </div>
             </article>;
           })}
@@ -190,21 +215,21 @@ export function PrivacyPanel({ state, onRestore, onAnnounce }: PrivacyPanelProps
     </details>
 
     <details className="privacy-disclosure">
-      <summary><span>Portable text</span><small>Optional · player-controlled</small></summary>
+      <summary><span>Portable text</span><small>Optional · a file you control</small></summary>
       <div className="privacy-disclosure-body portable-save-grid">
-        <section><h3>Output</h3><p>Download the current ledger as a validated text file.</p><button type="button" onClick={exportText}>Download save text</button></section>
-        <section><h3>Input</h3><p>Selecting a file checks it first. Nothing changes until you confirm the preview.</p><label className="file-picker">Choose save text<input ref={fileRef} type="file" accept=".txt,text/plain,application/json" onChange={inspectImport} /></label></section>
-        {pendingImport && <aside className="import-preview" aria-labelledby="import-preview-title"><span className="panel-label">CHECKED · NOT LOADED</span><h3 id="import-preview-title">{pendingImportName}</h3><SavePreviewLine preview={pendingImport.preview} /><div><button type="button" onClick={restoreImport}>Load this night</button><button type="button" onClick={() => { setPendingImport(null); setPendingImportName(""); if (fileRef.current) fileRef.current.value = ""; }}>Cancel</button></div></aside>}
+        <section><h3>Create</h3><p>Ask your browser to create a compact text trace containing the seed, modeled time, entered room numbers, and choice coordinates. CHORUS reconstructs and checks the current night before creating it; generated prose and derived analysis are not copied into the trace. Your browser decides whether and where the file is saved.</p><button type="button" onClick={exportText}>Download save text</button></section>
+        <section><h3>Open</h3><p>CHORUS checks the file&apos;s format and integrity digest, then asks the stated generator to replay its numeric trace. These checks can find corruption, impossible choices, or inconsistent timing. They do not prove who made the file or whether its account is true. Nothing changes until you confirm the preview.</p><label className="file-picker">Choose save text<input id="portable-save-file" ref={fileRef} type="file" accept=".txt,text/plain,application/json" onChange={inspectImport} /></label></section>
+        {pendingImport && <aside className="import-preview" aria-labelledby="import-preview-title"><span className="panel-label">CHECKED · NOT LOADED</span><h3 id="import-preview-title">{pendingImportName}</h3><SavePreviewLine preview={pendingImport.preview} /><div><button type="button" onClick={restoreImport}>Load this night</button><button type="button" onClick={cancelImport}>Cancel</button></div></aside>}
       </div>
     </details>
 
-    <details className="privacy-disclosure">
-      <summary><span>Technical record</span><small>Complete system · spoilers</small></summary>
+    {isNightComplete(state) && <details className="privacy-disclosure">
+      <summary><span>Technical record</span><small>Supporting records · spoilers</small></summary>
       <div className="privacy-disclosure-body">
-        <p>Executed architecture and verification notebooks, with downloadable source.</p>
+        <p>Architecture and verification notebooks show how parts of CHORUS were designed and checked. They support the record; they are not a complete account of the running system. Their source files are available from the index.</p>
         <a className="privacy-reference-link" href="/notebooks/index.html" target="_blank" rel="noreferrer">Open notebook index · new tab</a>
       </div>
-    </details>
+    </details>}
 
     <p className="privacy-status" role="status">{status}</p>
   </div>;
@@ -216,8 +241,14 @@ function SavePreviewLine({ preview }: { preview: SavePreview }) {
 
 function slotStatus(inspection: LocalSlotInspection) {
   if (inspection.status === "empty") return "EMPTY";
-  if (inspection.status === "invalid") return "NEEDS REVIEW";
+  if (inspection.status === "invalid") return inspection.errorCode === "STORAGE_UNAVAILABLE" ? "UNREADABLE" : "NEEDS REVIEW";
   return `TURN ${inspection.preview.turn}`;
+}
+
+function slotProblem(inspection: Extract<LocalSlotInspection, { status: "invalid" }>): string {
+  return inspection.errorCode === "STORAGE_UNAVAILABLE"
+    ? "This browser could not read this slot. Its contents were not checked or changed."
+    : "The saved text in this slot did not pass CHORUS's format, integrity, or replay checks.";
 }
 
 function formatSaveDate(value: string) {

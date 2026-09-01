@@ -31,8 +31,10 @@ This sequence supports three movements:
 2. **Act inside constraints.** Experience how evidence, authority,
    relationships, distribution, fatigue, and concurrent consequences change
    which repairs are possible.
-3. **Reconstruct causality.** Compare the final authored interior, action
-   history, and cross-room receipts against the player's earlier reading.
+3. **Reconstruct causality.** Follow one source-backed chain from factual
+   record, through selected actions and typed cross-room receipts, into a
+   later resolution and post-close afterimage. The player-facing ending does
+   not expose the authored interior or claim to recap every seat.
 
 The intended outcome is not suspicion toward every warm, terse, political,
 regional, professional, or culturally situated exchange. It is a more precise
@@ -139,12 +141,12 @@ through generation, state, interface, and tests is mapped in
 ## Audience
 
 CHORUS is designed for players willing to read uncertainty, inhabit imperfect
-seats, and revisit an early interpretation. Its PG boundary permits use in
-household, classroom, library, civic, and professional-learning contexts while
-avoiding the assumption that younger or more general audiences need flattened
-social systems.
+seats, and revisit an early interpretation. Its authored PG-bounded content
+grammar permits use in household, classroom, library, civic, and
+professional-learning contexts while avoiding the assumption that younger or
+more general audiences need flattened social systems. This is an authored
+content boundary, not an external rating or universal safety certification.
 
 The experience is not designed as a timed assessment. It does not rank the
 player, infer traits from play, or claim that one night measures real-world
 judgment.
-
