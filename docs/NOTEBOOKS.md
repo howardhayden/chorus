@@ -31,7 +31,7 @@ Published completed output:
 
 These notebook sources and HTML publications are rebuilt deterministically
 from the current repository declarations. The Systems, Model Specification,
-and Research Design atlases explain the current version-14 contracts. The
+and Research Design atlases explain the current version-15 contracts. The
 Historical Verification Ledger deliberately preserves earlier browser,
 distribution, and release runs under their original bindings and links
 separately to the current working-tree status. Publication does not substitute

@@ -31,7 +31,7 @@ the linked specifications.
 | Entered room | A room whose seat the player has opened; entry changes disclosure but not clock time. |
 | Fit | How readily an artifact's form feels native to the receiving social context; not a truth measure. |
 | Generated pack | One validated seed, six scenarios, shared night, routes, pulses, and coherence report. |
-| Generator version | Compatibility identifier for the scenario model produced by a seed. The current authored model is version 14; retained `1.0.0-rc.1` evidence describes historical version 13. |
+| Generator version | Compatibility identifier for the scenario model produced by a seed. The current authored model is version 15; retained `1.0.0-rc.1` evidence describes historical version 13, and the preceding Summary architecture is historical version 14. |
 | House effect | A current outward connection created by an accepted event, not necessarily a direct content crossing. |
 | Immutable truth | Authored incident record that player action and propagation cannot change. |
 | Interpretation gap | Distance between represented record and audience reading; not a measure of intelligence or worth. |

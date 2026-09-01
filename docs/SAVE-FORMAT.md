@@ -8,7 +8,7 @@ reconstruct a night. It does not persist the generated night state, authored
 scene or choice copy, linguistic records, effect receipts, frameworks, motives,
 or conclusion text.
 
-The current authored generator is version 14. A save can reproduce its exact
+The current authored generator is version 15. A save can reproduce its exact
 night only through the matching generator and reducer. A save from a different
 generator version fails closed with `GENERATOR_VERSION_MISMATCH` unless that
 version has a separate, explicit, tested reconstructor. Relabeling a legacy save
@@ -58,7 +58,7 @@ analysis from being carried inside an otherwise valid save envelope.
 | Field | Type | Requirement |
 |---|---|---|
 | `app` | string | Exactly `CHORUS`. |
-| `generatorVersion` | integer | Must equal the generator that reconstructs the seed; current exports use `14`. |
+| `generatorVersion` | integer | Must equal the generator that reconstructs the seed; current exports use `15`. |
 | `exportedAt` | string | Canonical valid UTC ISO timestamp ending in `Z`. |
 | `exportMode` | string | Exactly `player-controlled`. |
 | `storageScope` | string | Exactly `portable-text`. |

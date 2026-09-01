@@ -1,0 +1,294 @@
+{
+  "schema": "chorus.summary-in-world-red-team.v1",
+  "recordId": "summary-in-world-red-team.pre.v1",
+  "phase": "pre-implementation",
+  "captureDate": "2026-09-01",
+  "authority": {
+    "directSourceId": "SRC-U-20260901-CHORUS-SUMMARY-IN-WORLD",
+    "directRequirement": "Treat the complete Summary as in-game copy and remove 'the simulation', 'simulating', and equivalent language.",
+    "attachmentSourceId": "SRC-U-20260901-CHORUS-SUMMARY-EXAMPLE",
+    "attachmentName": "Pasted markdown(7).md",
+    "attachmentBytes": 10651,
+    "attachmentSha256": "1a611a9133507a0652ae118b413e87f1f80d0ab2c34655792d28583b5a1e5b29",
+    "implementationBaseCommit": "e517e609292d7e9c35c7c50a41d128f891b19372",
+    "requirementsRegister": "docs/requirements/SUMMARY-IN-WORLD-REGISTER.md"
+  },
+  "scope": {
+    "included": [
+      "NightDebrief successful branch",
+      "NightDebrief invalid-record recovery branch",
+      "visible headings and controls",
+      "naturalized story paragraphs",
+      "fiction and claim-limit boundary",
+      "status key and status glosses",
+      "plain concept cards and generated evidence copy",
+      "accessible names and visually hidden text"
+    ],
+    "excluded": [
+      "maintainer documentation",
+      "source identifiers, type names, and internal code",
+      "technical test and evidence descriptions",
+      "global application surfaces not rendered by NightDebrief"
+    ],
+    "lexicalRule": "The rendered NightDebrief surface must contain zero case-insensitive matches for \\bsimulat\\w* and no player-facing game, engine, model, generated-output, or score-report frame; the bounded phrase 'does not score real people' remains required safety language."
+  },
+  "baselineAudit": {
+    "repositoryCommit": "e517e609292d7e9c35c7c50a41d128f891b19372",
+    "centralFinding": "The natural story paragraphs are already free of simulat* in a broad probe, but the complete NightDebrief breaks immersion in its always-visible boundary, receipt introduction, status key, accessible label, and path-dependent concept evidence.",
+    "dynamicProbe": {
+      "completedNights": 400,
+      "seeds": "0 through 199",
+      "policies": ["floor", "contrast"],
+      "naturalSummarySimulatHits": 0,
+      "conceptReceiptSimulatHitNights": 1,
+      "conceptReceiptHitFixture": {
+        "seed": 67,
+        "policy": "contrast",
+        "term": "correction drag",
+        "status": "experienced"
+      },
+      "claimBoundary": "This probe is pre-implementation diagnostic evidence, not exhaustive verification. The required post-correction sweep remains seeds 0 through 95 and 4294967295 under both policies plus recovery and malformed-state boundaries."
+    },
+    "observedOutsideFrames": [
+      {
+        "path": "app/debrief-copy.ts",
+        "owner": "DEBRIEF_MODEL_LIMIT",
+        "copy": "CHORUS is a fictional simulation. It does not diagnose, predict, assess, measure, or score real people or the player.",
+        "violations": ["simulation"]
+      },
+      {
+        "path": "app/page.tsx",
+        "owner": "NightDebrief fiction boundary",
+        "copy": "Model limit / Its numbers and authored motives belong only to this generated night.",
+        "violations": ["model", "generated"]
+      },
+      {
+        "path": "app/page.tsx",
+        "owner": "CONCEPT_STATUS_COPY.experienced",
+        "copy": "The simulation recorded a related effect without a matching selected action.",
+        "violations": ["simulation"]
+      },
+      {
+        "path": "app/page.tsx",
+        "owner": "NightDebrief concept introduction",
+        "copy": "These labels describe the simulation record, not your beliefs, motives, or character.",
+        "violations": ["simulation"]
+      },
+      {
+        "path": "app/debrief-copy.ts",
+        "owner": "experiencedEvidenceCopy correction-drag branch",
+        "copy": "Before or after a choice, the simulation recorded more checking or source support.",
+        "violations": ["simulation"]
+      },
+      {
+        "path": "app/debrief-copy.ts",
+        "owner": "experiencedEvidenceCopy trust-capital branch",
+        "copy": "The simulation recorded trust from one room affecting reception in another.",
+        "violations": ["simulation"]
+      }
+    ],
+    "existingTestConflict": {
+      "path": "tests/copy-contract.test.mjs",
+      "observation": "The review-separation contract explicitly requires the sentence 'These labels describe the simulation record...'; the model-limit contract also accepts a fictional simulation.",
+      "disposition": "Historical evidence only. Replace the presentation expectation, preserve the fiction and non-diagnosis propositions, and add whole-surface negative lexical tests."
+    }
+  },
+  "findings": [
+    {
+      "id": "SUMMARY-IW-PRE-001",
+      "severity": "blocker",
+      "status": "open",
+      "title": "The completed-night surface repeatedly names itself from outside the house",
+      "issue": "Always-visible copy and some generated evidence use simulat* even though the Summary is in-game copy.",
+      "requirements": ["CHR-SUM-IW-002", "CHR-SUM-IW-003", "CHR-SUM-IW-017"],
+      "requiredCorrection": "Use the night, room, record, named seats, or CHORUS as fiction; verify zero case-insensitive simulat* across the entire rendered surface."
+    },
+    {
+      "id": "SUMMARY-IW-PRE-002",
+      "severity": "high",
+      "status": "open",
+      "title": "The boundary still uses model and generated-output frames",
+      "issue": "The accessible label says 'Model limit' and the notice says 'generated night'; 'does not score real people' is retained as bounded safety language.",
+      "requirements": ["CHR-SUM-IW-004", "CHR-SUM-IW-017"],
+      "requiredCorrection": "Retain the fiction and claim-limit propositions without game, engine, model, generated-output, or score-report framing."
+    },
+    {
+      "id": "SUMMARY-IW-PRE-003",
+      "severity": "high",
+      "status": "open",
+      "title": "The status presentation conflicts with the new in-world example",
+      "issue": "The current labels are Selected action, Recorded effect, and Seen in scene; the new source requires Played, Experienced, and Encountered with immediate plain glosses.",
+      "requirements": ["CHR-SUM-IW-010", "CHR-SUM-IW-014"],
+      "requiredCorrection": "Supersede only the presentation clause of CHR-DEBRIEF-UND-006 while preserving typed statuses, strongest-status ordering, and evidence provenance."
+    },
+    {
+      "id": "SUMMARY-IW-PRE-004",
+      "severity": "medium",
+      "status": "open",
+      "title": "The heading can imply broader coverage than the narrative builder supplies",
+      "issue": "'What changed across the night' sounds exhaustive while the builder intentionally follows one governing route, all selected last resorts, and one residue.",
+      "requirements": ["CHR-SUM-IW-005", "CHR-SUM-IW-006"],
+      "requiredCorrection": "Name the bounded subject actually narrated and keep the scene before the interpretation."
+    },
+    {
+      "id": "SUMMARY-IW-PRE-005",
+      "severity": "high",
+      "status": "open",
+      "title": "The current close records residue without completing the new proof boundary",
+      "issue": "The story closes on later resolution and afterimage, while the new example also names what the movement cannot prove.",
+      "requirements": ["CHR-SUM-IW-008", "CHR-SUM-IW-010", "CHR-SUM-IW-018"],
+      "requiredCorrection": "Bind the proof limit to the source-backed residue without replacing it with a generic disclaimer, lesson, or moral."
+    },
+    {
+      "id": "SUMMARY-IW-PRE-006",
+      "severity": "high",
+      "status": "open",
+      "title": "Selected action language remains vulnerable to completed-effect substitution",
+      "issue": "A fluent rewrite can turn design or attempt into completed carriage, reach, or change without adding evidence.",
+      "requirements": ["CHR-SUM-IW-007", "CHR-SUM-IW-010"],
+      "requiredCorrection": "Add mutation tests that fail selected-to-completed substitutions unless a distinct typed receipt supports the downstream effect."
+    },
+    {
+      "id": "SUMMARY-IW-PRE-007",
+      "severity": "high",
+      "status": "open",
+      "title": "Exposure, cognition, motive, and concept boundaries require new-source regression evidence",
+      "issue": "Prior tests predate the exact example and do not jointly prove that exposure stays separate from belief, motive from character, and a played concept from its outcome on the corrected surface.",
+      "requirements": ["CHR-SUM-IW-008", "CHR-SUM-IW-009", "CHR-SUM-IW-010"],
+      "requiredCorrection": "Preserve each distinction with typed evidence and explicit adversarial mutations on the new source binding."
+    },
+    {
+      "id": "SUMMARY-IW-PRE-008",
+      "severity": "high",
+      "status": "open",
+      "title": "Narrative smoothness can erase beneficiaries or invent a carrier",
+      "issue": "Compression can merge separately protected people, while connective prose can supply an unrecorded channel, format, audience, or recognizable copy.",
+      "requirements": ["CHR-SUM-IW-011", "CHR-SUM-IW-012"],
+      "requiredCorrection": "Keep every beneficiary and cost bearer recoverable and every carrier exactly traceable to the typed record."
+    },
+    {
+      "id": "SUMMARY-IW-PRE-009",
+      "severity": "high",
+      "status": "open",
+      "title": "Cross-room chronology can be misread as causal identity",
+      "issue": "A message that did not arrive, an ambient blame shift, and a later room decision can be merged into one causal chain by adjacency alone.",
+      "requirements": ["CHR-SUM-IW-011", "CHR-SUM-IW-013"],
+      "requiredCorrection": "Name each object and carriage state and refuse causal linkage without an explicit recorded edge."
+    },
+    {
+      "id": "SUMMARY-IW-PRE-010",
+      "severity": "medium",
+      "status": "open",
+      "title": "Metaphor and interpretation can conceal missing proof or duplicate the scene",
+      "issue": "House and movement language can become the only carrier of a fact, while a polished interpretation can restate an inference already carried by the preceding scene.",
+      "requirements": ["CHR-SUM-IW-015", "CHR-SUM-IW-016"],
+      "requiredCorrection": "Require proof to survive metaphor removal and remove interpretation that adds no boundary, relation, or distinct supported concept."
+    }
+  ],
+  "adversarialRegressionAttacks": [
+    {
+      "id": "LAT-RT-01",
+      "attack": "Replace design or attempt language with carried, reached, changed, or another completed effect.",
+      "requiredResult": "Fail unless an independent downstream receipt proves that effect.",
+      "requirements": ["CHR-SUM-IW-007", "CHR-SUM-IW-010"]
+    },
+    {
+      "id": "LAT-RT-02",
+      "attack": "Collapse the targeted peer, people with less reply access, and young people relying on the record into one audience or response.",
+      "requiredResult": "Fail; preserve each authored beneficiary and only the attributed protection.",
+      "requirements": ["CHR-SUM-IW-012"]
+    },
+    {
+      "id": "LAT-RT-03",
+      "attack": "Rewrite added impressions as familiarity, persuasion, belief, acceptance, or agreement.",
+      "requiredResult": "Fail unless the exact cognitive change is independently recorded.",
+      "requirements": ["CHR-SUM-IW-008"]
+    },
+    {
+      "id": "LAT-RT-04",
+      "attack": "Turn a motive claim into personality, morality, identity, or a claim about what kind of person someone is.",
+      "requiredResult": "Fail; the prose may reject or bound motive but may not broaden it into character.",
+      "requirements": ["CHR-SUM-IW-009"]
+    },
+    {
+      "id": "LAT-RT-05",
+      "attack": "Add a channel, format, audience, notice type, or recognizable form not named in the record.",
+      "requiredResult": "Fail even when the invention improves fluency or atmosphere.",
+      "requirements": ["CHR-SUM-IW-011"]
+    },
+    {
+      "id": "LAT-RT-06",
+      "attack": "Describe signaling, market value, trust capital, status capital, or correction drag as successful because its action was selected.",
+      "requiredResult": "Fail; played establishes design only, while experienced requires a matching change.",
+      "requirements": ["CHR-SUM-IW-007", "CHR-SUM-IW-010"]
+    },
+    {
+      "id": "LAT-RT-07",
+      "attack": "Scan the complete Summary for simulat*, game, engine, model, generated-output, score-report, or other explanations spoken from outside the house; exempt only the bounded non-scoring safety proposition.",
+      "requiredResult": "Fail on any player-facing match; technical documentation and internal code remain excluded.",
+      "requirements": ["CHR-SUM-IW-002", "CHR-SUM-IW-003", "CHR-SUM-IW-004", "CHR-SUM-IW-017"]
+    },
+    {
+      "id": "LAT-RT-08",
+      "attack": "Remove each metaphor and inspect what remains.",
+      "requiredResult": "Fail if action, state, consequence, uncertainty, or evidentiary limit becomes unrecoverable.",
+      "requirements": ["CHR-SUM-IW-015"]
+    },
+    {
+      "id": "LAT-RT-09",
+      "attack": "Compare every interpretive sentence with the scene immediately before it.",
+      "requiredResult": "Fail if it only restates the same inference without narrowing evidence, blocking a false inference, or adding a distinct supported concept.",
+      "requirements": ["CHR-SUM-IW-005", "CHR-SUM-IW-016"]
+    },
+    {
+      "id": "LAT-RT-10",
+      "attack": "Read every cross-room message, form, blame shift, and pressure as a potentially different object.",
+      "requiredResult": "Fail if prose merges them without an explicit recorded link or treats an ambient shift as proof that an unreceived message caused it.",
+      "requirements": ["CHR-SUM-IW-011", "CHR-SUM-IW-013"]
+    }
+  ],
+  "supersession": {
+    "priorRequirement": "CHR-DEBRIEF-UND-006",
+    "supersededPart": "Visible label presentation only: Selected action, Recorded effect, and Seen in scene.",
+    "replacementRequirement": "CHR-SUM-IW-014",
+    "replacementLabels": ["Played", "Experienced", "Encountered"],
+    "preservedParts": [
+      "typed lower-case status values",
+      "strongest-status ordering",
+      "scene, action, and effect provenance",
+      "a direct gloss that prevents memorization burden"
+    ]
+  },
+  "requiredVerification": {
+    "minimumCompletedNightProbes": 194,
+    "seedPolicies": "Seeds 0 through 95 and 4294967295 under floor and contrast policies.",
+    "boundaries": [
+      "successful and invalid-record recovery branches",
+      "Played, Experienced, and Encountered statuses",
+      "played-only and played-with-effect distinctions",
+      "background exposure without cognition",
+      "content, format, ambient, held, and background-only routes",
+      "multiple beneficiaries and repeated last-resort labels",
+      "unrecorded-carrier mutation",
+      "cross-room adjacency without causation",
+      "zero-change and changed afterimages",
+      "accessible names and reading order",
+      "closing residue with proof boundary"
+    ],
+    "promotionEvidenceStillRequired": [
+      "current-source browser inspection",
+      "VoiceOver or NVDA reading-order review",
+      "200 percent text zoom",
+      "forced-colors inspection",
+      "manual editorial review of generated extremes"
+    ]
+  },
+  "decision": {
+    "implementationDisposition": "fail-before-correction",
+    "openBlockers": 1,
+    "openHighSeverityFindings": 7,
+    "openMediumSeverityFindings": 2,
+    "implementationAuthorizedByThisRecord": false,
+    "reason": "The authoritative source and pre-red-team are now atomized, but the base NightDebrief contains prohibited outside framing and has no evidence bound to the new requirements. Implementation, failed mutation evidence, post-red-team, and full verification must remain distinct later stages."
+  }
+}

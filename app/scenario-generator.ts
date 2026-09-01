@@ -824,7 +824,7 @@ export type PageScenario = {
 };
 
 export type GeneratedScenario = PageScenario & {
-  generatorVersion: 14;
+  generatorVersion: 15;
   audienceRating: "PG";
   contentNotes: string[];
   truth: TruthLedger;
@@ -854,7 +854,7 @@ export type CoherenceReport = {
 
 export type GeneratedScenarioPack = {
   seed: number;
-  generatorVersion: 14;
+  generatorVersion: 15;
   night: GeneratedNight;
   nightReport: CoherenceReport;
   scenarios: GeneratedScenario[];
@@ -955,7 +955,7 @@ type LinguisticEncounterAssignment = Pick<
 
 type ConversationDiversionAssignment = Pick<ConversationDiversion, "mode" | "scenePhase">;
 
-const GENERATOR_VERSION = 14 as const;
+const GENERATOR_VERSION = 15 as const;
 const NO_SINGLE_ACTOR = "No single actor controls this outcome." as const;
 
 const LINGUISTIC_CODES: Record<LinguisticCodeId, LinguisticCodeDefinition> = {
@@ -3010,7 +3010,7 @@ export function validateGeneratedScenario(scenario: GeneratedScenario): Coherenc
   const artifactsCarryPublicArc = Boolean(boundIncident)
     && scenario.scenes[0]?.artifactCopy === boundIncident?.knownFact
     && scenario.scenes[1]?.artifactCopy === boundIncident?.circulatingFrame
-    && scenario.scenes[2]?.artifactCopy === `Multiple trusted accounts now repeat the same unresolved claim about the ${boundIncident?.placeNoun}.`
+    && scenario.scenes[2]?.artifactCopy === `Multiple trusted accounts now repeat the claim about the ${boundIncident?.placeNoun}. ${boundIncident?.unresolved}`
     && scenario.scenes[3]?.artifactCopy === boundIncident?.resolution;
   const ledgerCarriesBindings = communication.observableRecord.join(" ").includes(bindings.surface)
     && communication.inferences.includes(bindings.bridge)
@@ -3582,7 +3582,7 @@ function buildSceneDisclosure(
     BRIDGE: { label: "CIRCULATING CLAIM", copy: incident.circulatingFrame },
     CROSSOVER: {
       label: "PUBLIC REPEAT RECORD",
-      copy: `Multiple trusted accounts now repeat the same unresolved claim about the ${incident.placeNoun}.`,
+      copy: `Multiple trusted accounts now repeat the claim about the ${incident.placeNoun}. ${incident.unresolved}`,
     },
     CORRECTION: { label: "PUBLIC UPDATE", copy: incident.resolution },
   };
@@ -3591,7 +3591,7 @@ function buildSceneDisclosure(
     BRIDGE: { label: "QUESTION AT HANDOFF", copy: hook.activeQuestion },
     CROSSOVER: {
       label: "QUESTION AT SCALE",
-      copy: "The record did not show which copies preserved the source's uncertainty.",
+      copy: "Which repeated copies still keep those limits visible?",
     },
     CORRECTION: {
       label: "REPAIR QUESTION",
@@ -3603,7 +3603,7 @@ function buildSceneDisclosure(
     BRIDGE: { label: "REPLY ACCESS UNKNOWN", copy: communication.unknowns[1] },
     CROSSOVER: {
       label: "AUDIENCE UNKNOWN",
-      copy: `It is not known whether people seeing the repeated ${incident.placeNoun} claim also saw the source's uncertainty.`,
+      copy: `It is not known whether people seeing the repeated ${incident.placeNoun} claim also saw those limits.`,
     },
     CORRECTION: {
       label: "CARRIAGE UNKNOWN",
@@ -3813,10 +3813,10 @@ function buildFourBeatArc(input: FourBeatInput): GeneratedScene[] {
       channel: chain[2]?.room ?? "public comments",
       heading: "Repeated exposure grows faster than shared understanding.",
       body: `One compressed claim now appears in several versions. ${incident.unresolved}`,
-      reason: `Because altered copies reached ${definitePhrase(chain[2]?.room ?? "another public room")} before any copy that included the source's uncertainty.`,
+      reason: `Because altered copies reached ${definitePhrase(chain[2]?.room ?? "another public room")} before any copy that kept those limits visible.`,
       artifact: actor.kind === "abstract_bad_actor" ? "dashboard" : pick(incident.artifactKinds, random),
       artifactTitle: "CROSS-ROOM REPEAT EXPOSURE",
-      artifactCopy: `Multiple trusted accounts now repeat the same unresolved claim about the ${incident.placeNoun}.`,
+      artifactCopy: `Multiple trusted accounts now repeat the claim about the ${incident.placeNoun}. ${incident.unresolved}`,
       artifactTag: "UNIQUE REACH SLOWING · FAMILIARITY RISING",
       bridge: chain[3]?.room,
       provenance: provenances[2],
@@ -4687,7 +4687,7 @@ function lessonForBeat(act: SceneAct, actor: ActorTemplate): SceneLesson {
       term: "signaling",
       definition: "An action can show identity, loyalty, or urgency as well as its literal message.",
       perspective: `For the ${actor.role}, answering now can also show usefulness, loyalty, or responsibility.`,
-      observable: "An audience response would not, by itself, show what the player believed.",
+      observable: "An audience response would not, by itself, show what you believed.",
       experienceRules: experienceRulesFor("signaling"),
     };
   }

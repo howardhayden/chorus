@@ -232,7 +232,7 @@ test("schema-2 portable text round-trips a partial night and exposes a bounded p
   assert.deepEqual(parsed.preview, {
     format: PORTABLE_SAVE_FORMAT,
     schemaVersion: 2,
-    generatorVersion: 14,
+    generatorVersion: 15,
     exportedAt: EXPORTED_AT,
     seed: state.seed,
     turn: 1,
@@ -262,11 +262,13 @@ test("zero-decision, partial, and completed saves contain only numeric traces an
   assert.equal(complete.turn, 24);
 });
 
-test("a historical v13 scenario model reports a version mismatch before trace replay", () => {
+test("historical v13 and v14 scenario models report a version mismatch before trace replay", () => {
   const { state } = oneDecisionState(89);
-  const envelope = envelopeFrom(createPortableSave(state, { exportedAt: EXPORTED_AT }));
-  envelope.provenance.generatorVersion = 13;
-  assert.throws(() => parsePortableSave(JSON.stringify(withFreshIntegrity(envelope))), expectCode("GENERATOR_VERSION_MISMATCH"));
+  for (const generatorVersion of [13, 14]) {
+    const envelope = envelopeFrom(createPortableSave(state, { exportedAt: EXPORTED_AT }));
+    envelope.provenance.generatorVersion = generatorVersion;
+    assert.throws(() => parsePortableSave(JSON.stringify(withFreshIntegrity(envelope))), expectCode("GENERATOR_VERSION_MISMATCH"));
+  }
 });
 
 test("an ordinary trace mutation fails the deterministic corruption check", () => {

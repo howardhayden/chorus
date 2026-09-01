@@ -1,7 +1,7 @@
 {
   "format": "CHORUS_NOTEBOOK_ARTIFACTS",
   "version": 1,
-  "build_date": "2026-08-19",
+  "build_date": "2026-09-01",
   "builder": "scripts/docs/build_notebooks.py",
   "deterministic": true,
   "artifacts": [
@@ -9,79 +9,79 @@
       "path": "notebooks/CHORUS-Model-Specification.ipynb",
       "media_type": "application/x-ipynb+json",
       "bytes": 260598,
-      "sha256": "81c559024457299b68ff22972b43fa63a5cc83b57aa090a888e980d0373407c8"
+      "sha256": "1a7d119c301fd1829049859296a8ab35ebc7ccf6ded0d9dc35d29f0d1454b591"
     },
     {
       "path": "notebooks/CHORUS-Research-Design.ipynb",
       "media_type": "application/x-ipynb+json",
       "bytes": 234358,
-      "sha256": "c5dde01679f1b8d794731e77b1053a3d4e9fe87df7e28d0097b97e456a844141"
+      "sha256": "86f7f8e1c603b62e8e1a6846fc192860d1a166c1040a5d492c385d4ad74e35ff"
     },
     {
       "path": "notebooks/CHORUS-Systems-Atlas.ipynb",
       "media_type": "application/x-ipynb+json",
       "bytes": 163321,
-      "sha256": "81a495b2daef39b662cd5b6b992a25a37ba63b87c18b971645aad867a8c76d7f"
+      "sha256": "d6a179c385e7faf952421d98254941ccd07ddde2657d9f34e0544c0958207608"
     },
     {
       "path": "notebooks/CHORUS-Validation-Atlas.ipynb",
       "media_type": "application/x-ipynb+json",
       "bytes": 182052,
-      "sha256": "260a9f8a628602656d83eca91f5b801ecf55097642011433762abaf24bf65996"
+      "sha256": "71a00ee11a9493d95d610bb7134f3377ca7cfa1fb8fac4058c3173d682417500"
     },
     {
       "path": "public/notebooks/CHORUS-Model-Specification.ipynb",
       "media_type": "application/x-ipynb+json",
       "bytes": 260598,
-      "sha256": "81c559024457299b68ff22972b43fa63a5cc83b57aa090a888e980d0373407c8"
+      "sha256": "1a7d119c301fd1829049859296a8ab35ebc7ccf6ded0d9dc35d29f0d1454b591"
     },
     {
       "path": "public/notebooks/CHORUS-Research-Design.ipynb",
       "media_type": "application/x-ipynb+json",
       "bytes": 234358,
-      "sha256": "c5dde01679f1b8d794731e77b1053a3d4e9fe87df7e28d0097b97e456a844141"
+      "sha256": "86f7f8e1c603b62e8e1a6846fc192860d1a166c1040a5d492c385d4ad74e35ff"
     },
     {
       "path": "public/notebooks/CHORUS-Systems-Atlas.ipynb",
       "media_type": "application/x-ipynb+json",
       "bytes": 163321,
-      "sha256": "81a495b2daef39b662cd5b6b992a25a37ba63b87c18b971645aad867a8c76d7f"
+      "sha256": "d6a179c385e7faf952421d98254941ccd07ddde2657d9f34e0544c0958207608"
     },
     {
       "path": "public/notebooks/CHORUS-Validation-Atlas.ipynb",
       "media_type": "application/x-ipynb+json",
       "bytes": 182052,
-      "sha256": "260a9f8a628602656d83eca91f5b801ecf55097642011433762abaf24bf65996"
+      "sha256": "71a00ee11a9493d95d610bb7134f3377ca7cfa1fb8fac4058c3173d682417500"
     },
     {
       "path": "public/notebooks/chorus-model-specification.html",
       "media_type": "text/html",
       "bytes": 223736,
-      "sha256": "c9a6b47fe9ce7d2f85c180fc528d40a64cde28a7c6f1c694c0fdf1266208647f"
+      "sha256": "0200342748dfeb56b5d05c2e9ee5044cf2304b43bb59756ae6ffdbd8a747dd7d"
     },
     {
       "path": "public/notebooks/chorus-research-design.html",
       "media_type": "text/html",
       "bytes": 199769,
-      "sha256": "efdd9e47c8c008325abf9c4a49025a7ed551d58b48d2fa383e648d00e3168ae0"
+      "sha256": "0f688f354b984963c4ae370e1c23f6ac9f7a3fcb3114314bbcafdd8dbb94e646"
     },
     {
       "path": "public/notebooks/chorus-systems-atlas.html",
       "media_type": "text/html",
       "bytes": 146261,
-      "sha256": "27176e11ba789fa08b0df9c9432c8f3bb7716a424a8ea4350bc6cc20b6a3f0d2"
+      "sha256": "6cb9ce144030068112c60c1d90d352e775e687d58a4f66a958f62e89ec67fb49"
     },
     {
       "path": "public/notebooks/chorus-validation-atlas.html",
       "media_type": "text/html",
       "bytes": 159660,
-      "sha256": "c39ee6ace1eb8fa160091a62b7c13cbe3fc12ba945195625305979b817866c41"
+      "sha256": "7ef16be8af1f16b61b1813c4adf240f67a3a58f1ef5346ad6e4ec3ead4b21095"
     },
     {
       "path": "public/notebooks/index.html",
       "media_type": "text/html",
       "bytes": 9737,
-      "sha256": "39df0ae2d0923933dd83f1a9cb33c04aa5fc09dd289f6eb38afb2decdb2a9721"
+      "sha256": "be8fffac280dc8489dbcc412ece0b7037995001ee210449d237fe61ba5e3b2d5"
     }
   ]
 }

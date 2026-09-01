@@ -13,7 +13,7 @@
 | Implementation status at registration | **Partially implemented; adversarial failures open** |
 | Verification status at registration | **Failed / pending correction** |
 | Current implementation status | **Catalysis and debrief-understandability correction pass implemented; preserved initial failures remain historical evidence** |
-| Current verification status | **Automated working-tree pass on digest `09f21cfa…99021`; browser, assistive-technology, manual viewport, current route/dependency, and distribution evidence remain open** |
+| Current verification status | **Automated working-tree pass on digest `65a23bf8…adc84`; browser, assistive-technology, manual viewport, current route/dependency, and distribution evidence remain open** |
 | Related register | [`CHR-COPY-REGISTER`](COPY-VOICE-REGISTER.md) |
 
 This register is the operative atomization for CHORUS linguistics. It does not

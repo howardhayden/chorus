@@ -1,0 +1,371 @@
+{
+  "schema": "chorus.summary-in-world-red-team.v1",
+  "recordId": "summary-in-world-red-team.post.v1",
+  "phase": "post-implementation-full-automated-verification",
+  "captureDate": "2026-09-01",
+  "authority": {
+    "directSourceId": "SRC-U-20260901-CHORUS-SUMMARY-IN-WORLD",
+    "directRequirement": "Treat the complete Summary as in-game copy and remove 'the simulation', 'simulating', and equivalent language.",
+    "attachmentSourceId": "SRC-U-20260901-CHORUS-SUMMARY-EXAMPLE",
+    "attachmentName": "Pasted markdown(7).md",
+    "attachmentBytes": 10651,
+    "attachmentSha256": "1a611a9133507a0652ae118b413e87f1f80d0ab2c34655792d28583b5a1e5b29",
+    "implementationBaseCommit": "e517e609292d7e9c35c7c50a41d128f891b19372",
+    "requirementsRegister": "docs/requirements/SUMMARY-IN-WORLD-REGISTER.md",
+    "requirementsRegisterVersion": "1.3.0"
+  },
+  "sourceBinding": {
+    "algorithm": "project selected-source sha256-path-length-content binding",
+    "implementationDigest": "65a23bf8126bac896b0217cf0623b029b26e4b9931f10b2927327237933adc84",
+    "focusedCoreBinding": {
+      "algorithm": "sha256-path-length-content over the six files enumerated below",
+      "digest": "d7c62645d7122b389c9dd0cb3373748ac5bd0fe80324c2f9efa4f3cd4d5de12a"
+    },
+    "implementationAndTestFileCount": 6,
+    "coreFiles": {
+      "app/debrief-copy.ts": {
+        "bytes": 46095,
+        "sha256": "ab50eddaf8f1a52ea26ba74ca961cc6a67fd20f0252d764343694f481388cc48"
+      },
+      "app/page.tsx": {
+        "bytes": 72687,
+        "sha256": "05bc526fb8391482814a352a9bbff1f267bfeb34b927b4474f497f3ffeebc178"
+      },
+      "app/scenario-generator.ts": {
+        "bytes": 290332,
+        "sha256": "7e7850dab054823f7bcd539bceb155c26f4ffb6545d32a3dd23874ed5e041375"
+      },
+      "tests/copy-contract.test.mjs": {
+        "bytes": 109834,
+        "sha256": "97ea98d1438dd03a16db2f9358c37bed63762126544cc3677a310418cd9374e9"
+      },
+      "tests/concurrent-night.test.mjs": {
+        "bytes": 69655,
+        "sha256": "345e08e3a3aef35f9f559b698b807040d9840c45abeb9ce7023b41e727dae2fb"
+      },
+      "tests/accessibility-disclosure.test.mjs": {
+        "bytes": 30279,
+        "sha256": "e729fda068b639c8354e63dc5e9f6f5a379e96d77fc2dbbe5db0a909ebd3b099"
+      }
+    },
+    "requirementsRegisterBinding": {
+      "path": "docs/requirements/SUMMARY-IN-WORLD-REGISTER.md",
+      "bytes": 26377,
+      "sha256": "a54b252378c6567114d8b2ec19b369e420775d5497eda723950b4b20f4b5398f"
+    },
+    "preRecord": {
+      "path": "evidence/linguistics/summary-in-world-red-team.pre.v1.json",
+      "bytes": 15778,
+      "sha256": "925ea432038b01f543a01b013caa70639636f0000183ce26594edb40e2dc9be5"
+    },
+    "bindingBoundary": "This digest covers the implementation and focused tests named above. It does not reuse or silently amend the earlier linguistics verification, working-tree status, or release binding."
+  },
+  "implementedArchitecture": {
+    "inWorldNarrator": [
+      "NightDebrief now says what the house kept moving, the played night, and by closing time.",
+      "The fiction boundary identifies CHORUS as fiction and names this night without simulation, model, engine, game, generated-output, runtime, player, or authored-production narration.",
+      "The bounded negative safety proposition 'does not diagnose, predict, assess, measure, or score real people or you' is retained. Its use of score denies an assessment output; it is not a scoring frame.",
+      "Malformed completed records remain inside the house and refuse to tell a story from an unverifiable record."
+    ],
+    "statusPresentation": [
+      "Visible labels are Played, Experienced, and Encountered.",
+      "Each label has an adjacent direct gloss while the typed lower-case status and its provenance remain unchanged.",
+      "Played says that the action matched a concept without claiming that its intended effect followed; Experienced says that a matching change occurred without claiming that it was chosen or agreed with."
+    ],
+    "sceneBeforeInterpretation": [
+      "The concrete artifact and public disclosure still precede the first decision and the concept receipt.",
+      "Crossover records name the incident material as a claim about the incident place and state the concrete unresolved limit before asking which repeated copies retained those limits.",
+      "The abstract pressure sentence 'this seat's role carries trust' is excluded when it would displace a concrete scene fact."
+    ],
+    "causalAndCarrierBoundaries": [
+      "Direct content and direct format routes use typed carriers; ambient routes explicitly deny carriage.",
+      "When a chosen message or presentation did not cross, any attribution, ranking, trust, workload, language, or other background change is named separately.",
+      "Aggregate afterimages no longer invent posts, copies, accounts, an outbound source, or a particular carrier from a room-level delta.",
+      "Aggregate Crossover residue names only a path for material and immediately states that the path does not prove that any particular message or belief crossed."
+    ],
+    "beneficiariesAndCosts": [
+      "Every selected last resort retains the positive consequence, protected party, harmed party with harm, and the acting seat's self-cost.",
+      "Repeated choice labels remain separate events with independent decision and cost provenance."
+    ],
+    "closingProofBoundary": [
+      "Every changed afterimage produces a resolution, a metric-specific residue, and a separately typed reflection atom with the same source.",
+      "The no-change branch produces a sourced no-net-change residue and states that the absence does not settle the account or make it true.",
+      "The reflection is direction-neutral as proof: rising and falling variants describe different movement, but neither sign proves more than the typed metric supports."
+    ],
+    "generatorCompatibility": [
+      "A pre-commit byte audit found that the in-world correction changed generated Crossover and signaling-observable copy while the generator identifier still said version 14.",
+      "That failed compatibility state was corrected by advancing the authored model to version 15; version-13 and version-14 saves now fail closed before trace replay.",
+      "Version-salted copy fixtures, simulation evidence, publications, and current-source bindings are regenerated for version 15 rather than relabeling version-14 evidence."
+    ]
+  },
+  "directionNeutralProofBoundaries": {
+    "targetedCombinations": 22,
+    "metrics": {
+      "reach": "More or fewer people seeing material does not prove belief or truth.",
+      "crossover": "An easier or harder path for material does not prove that a particular message or belief crossed.",
+      "provenance": "More or less source context does not prove that a particular copy moved or stopped.",
+      "verification": "More or less support for checking does not prove that anyone checked or changed a belief.",
+      "heat": "More heated or calmer reactions do not prove belief or cause.",
+      "blame": "Rising or falling blame does not prove responsibility.",
+      "belief": "Stronger or weaker acceptance does not prove truth.",
+      "consensus": "A wider or narrower appearance of agreement does not prove shared belief or truth.",
+      "trust": "Rising or falling trust does not prove truth or source trustworthiness.",
+      "coordination": "Rising or easing pressure to coordinate does not prove agreement or shared purpose.",
+      "commonGround": "Clearer or harder-to-see shared action does not prove shared motive, language, or belief; when a concrete shared action is named, its communication record is a co-source."
+    },
+    "zeroChange": "No later net change does not settle the account or make it true.",
+    "adversarialResult": "All 11 metrics in both directions preserve exact residue, reflection, and source assertions in the strengthened copy contract."
+  },
+  "materialNamedCrossover": {
+    "sceneRecord": "The Crossover artifact now names the repeated claim about the incident's place noun and includes the exact unresolved-at-entry limit.",
+    "sceneQuestion": "The following question asks which repeated copies kept those already stated limits visible instead of referring to an unexplained unresolved claim or source uncertainty.",
+    "aggregateAfterimageBoundary": "A room-level Crossover delta cannot identify a specific carrier; the ending therefore says only that the path for material became easier or harder and refuses to infer a particular message or belief.",
+    "evidence": [
+      "app/scenario-generator.ts validation and Crossover construction",
+      "tests/concurrent-night.test.mjs truth/propagation/disclosure separation contract",
+      "tests/copy-contract.test.mjs scene-first and targeted Crossover proof-boundary contracts"
+    ]
+  },
+  "findingDispositions": [
+    {
+      "id": "SUMMARY-IW-PRE-001",
+      "status": "corrected-focused-verification-pass",
+      "correction": "All Summary-owned static strings, generated natural prose, concept evidence, status copy, recovery copy, and fiction-boundary copy are scanned without simulat*; the persistent header now says social trust fiction."
+    },
+    {
+      "id": "SUMMARY-IW-PRE-002",
+      "status": "corrected-focused-verification-pass",
+      "correction": "The accessible boundary is named Fiction boundary; generated-night, model-limit, authored-production, and score-report framing were removed. The bounded words 'does not ... score real people or you' remain solely as a negative safety proposition."
+    },
+    {
+      "id": "SUMMARY-IW-PRE-003",
+      "status": "corrected-focused-verification-pass",
+      "correction": "Played, Experienced, and Encountered are visible with direct adjacent glosses; the underlying typed statuses and provenance remain unchanged."
+    },
+    {
+      "id": "SUMMARY-IW-PRE-004",
+      "status": "corrected-focused-verification-pass",
+      "correction": "The heading is now 'What the house kept moving.', matching the bounded movement selected by the narrative rather than claiming an exhaustive list of all changes."
+    },
+    {
+      "id": "SUMMARY-IW-PRE-005",
+      "status": "corrected-focused-verification-pass",
+      "correction": "The ending attaches a metric-specific, direction-neutral proof boundary to every changed residue and an explicit truth boundary to the zero-change branch. All 22 metric-direction combinations now have targeted assertions."
+    },
+    {
+      "id": "SUMMARY-IW-PRE-006",
+      "status": "corrected-focused-verification-pass",
+      "correction": "Played concept copy names action design, while completed carriage and other changes require matching typed receipts and remain separate evidence propositions."
+    },
+    {
+      "id": "SUMMARY-IW-PRE-007",
+      "status": "corrected-focused-verification-pass",
+      "correction": "Exposure/cognition, motive/character, concept/outcome, metric/truth, and status/provenance distinctions are enforced by generated-path and targeted branch tests."
+    },
+    {
+      "id": "SUMMARY-IW-PRE-008",
+      "status": "corrected-focused-verification-pass",
+      "correction": "Carriers remain typed and source-bound; room-level afterimages no longer invent outbound material. Last-resort beneficiaries and cost bearers remain separately sourced and recoverable."
+    },
+    {
+      "id": "SUMMARY-IW-PRE-009",
+      "status": "corrected-focused-verification-pass",
+      "correction": "Ambient blame and other background changes are introduced separately after explicit non-carriage; later decisions remain chronological rather than being narrated as caused replies."
+    },
+    {
+      "id": "SUMMARY-IW-PRE-010",
+      "status": "implemented-manual-editorial-review-pending",
+      "correction": "Concrete scene atoms carry proof independently of the house metaphor, and metric-specific reflections state a distinct false-inference boundary instead of repeating 'the night records' or 'what movement could not prove'.",
+      "openEvidence": "The final manual metaphor-removal and decorative-restatement review is not replaced by the source tests."
+    },
+    {
+      "id": "SUMMARY-IW-POST-011",
+      "status": "failed-precommit-state-corrected-final-verification-pass",
+      "correction": "The generator compatibility identifier advances from 14 to 15 because changed generated authored bytes invalidate byte-identical version-14 reconstruction. Historical version-13 and version-14 saves fail closed, and version-salted fixtures and evidence are renewed rather than relabeled."
+    }
+  ],
+  "adversarialTestDisposition": [
+    {
+      "attackId": "LAT-RT-01",
+      "status": "focused-pass",
+      "evidence": "played/experienced independence, action-design, refusal-only, and typed-carriage copy contracts"
+    },
+    {
+      "attackId": "LAT-RT-02",
+      "status": "focused-pass",
+      "evidence": "complete split-consequence, repeated-label, cost-provenance, and 1,000-night beneficiary contracts"
+    },
+    {
+      "attackId": "LAT-RT-03",
+      "status": "focused-pass",
+      "evidence": "background exposure, reach residue, and 22 targeted direction-neutral proof-boundary assertions"
+    },
+    {
+      "attackId": "LAT-RT-04",
+      "status": "focused-pass-manual-hostile-reading-pending",
+      "evidence": "private-ledger exclusion, non-diagnosis boundary, and motive/character source contracts"
+    },
+    {
+      "attackId": "LAT-RT-05",
+      "status": "focused-pass",
+      "evidence": "typed carrier branches, non-carriage summaries, aggregate-afterimage carrier rejection, and material-named Crossover tests"
+    },
+    {
+      "attackId": "LAT-RT-06",
+      "status": "focused-pass",
+      "evidence": "authored status bindings, played-without-effect, experienced receipt matching, and concept/outcome separation"
+    },
+    {
+      "attackId": "LAT-RT-07",
+      "status": "focused-pass-live-browser-accessible-tree-pending",
+      "evidence": "whole-function static scans, 96 generated completed paths, fiction-boundary assertion, recovery assertion, and persistent-header assertion"
+    },
+    {
+      "attackId": "LAT-RT-08",
+      "status": "implemented-manual-mutation-pending",
+      "evidence": "typed narrative sources and concrete event clauses remain; manual metaphor-removal review remains open"
+    },
+    {
+      "attackId": "LAT-RT-09",
+      "status": "focused-pass-manual-editorial-review-pending",
+      "evidence": "scene-first atom order, audit-scaffolding rejection, generic-reflection rejection, and metric-specific proof boundaries"
+    },
+    {
+      "attackId": "LAT-RT-10",
+      "status": "focused-pass",
+      "evidence": "source/target/object route assertions, explicit non-carriage, separately named attribution change, and chronological-not-causal receiving decisions"
+    }
+  ],
+  "automatedResults": {
+    "initialImplementationGate": {
+      "copyContract": {
+        "command": "npm run test:copy",
+        "passed": 36,
+        "failed": 0,
+        "status": "pass"
+      },
+      "note": "This was the first post-implementation pass before adding the exhaustive 11-metric by 2-direction residue fixture."
+    },
+    "strengthenedFocusedGate": {
+      "copyContract": {
+        "command": "npm run test:copy",
+        "passed": 37,
+        "failed": 0,
+        "status": "pass",
+        "coverage": "Includes 194 generated completed-night paths and 22 targeted metric-direction residue/proof/source assertions."
+      },
+      "concurrentNight": {
+        "command": "npm run test:night",
+        "passed": 39,
+        "failed": 0,
+        "status": "pass",
+        "coverage": "Includes 1,000 generated-night coherence cases and 256 interleaved whole nights."
+      },
+      "accessibilityDisclosure": {
+        "command": "npm run test:a11y",
+        "passed": 26,
+        "failed": 0,
+        "status": "pass",
+        "boundary": "Source-level disclosure and semantic-order contracts; not a live assistive-technology session."
+      },
+      "typecheck": {
+        "command": "npx tsc --noEmit",
+        "status": "pass"
+      },
+      "lint": {
+        "command": "npm run lint",
+        "status": "pass"
+      },
+      "diffCheck": {
+        "command": "git diff --check",
+        "status": "pass"
+      }
+    },
+    "finalFullVerification": {
+      "command": "npm run verify:working-tree",
+      "status": "pass",
+      "implementationDigest": "65a23bf8126bac896b0217cf0623b029b26e4b9931f10b2927327237933adc84",
+      "observedGates": {
+        "lint": "pass",
+        "typecheck": "pass",
+        "deterministicAssertions": 118626,
+        "notebookArtifacts": 16,
+        "concurrentNightTests": 39,
+        "simulationMaturityTests": 5,
+        "saveModelTests": 18,
+        "copyContractTests": 37,
+        "linguisticsContractTests": 10,
+        "accessibilityDisclosureTests": 26,
+        "viewportContractTests": 10,
+        "productionBuild": "pass",
+        "renderedHtmlTests": 1,
+        "workingTreeStatus": "pass"
+      }
+    }
+  },
+  "focusedCoverage": {
+    "completedNightNarrativeSweep": {
+      "count": 194,
+      "seeds": "0 through 95 and 4294967295",
+      "policies": ["floor", "contrast"]
+    },
+    "inWorldLexicalSweep": {
+      "count": 96,
+      "seeds": "0 through 95",
+      "policySelection": "alternating floor and contrast",
+      "plus": [
+        "NightDebrief static success and recovery source",
+        "persistent HouseHeader source",
+        "all three status definitions",
+        "fiction-boundary constant"
+      ]
+    },
+    "targetedAfterimageMatrix": {
+      "metrics": 11,
+      "directionsPerMetric": 2,
+      "combinations": 22,
+      "assertions": ["exact residue", "exact proof boundary", "source equality"]
+    },
+    "generatorAndCausality": {
+      "coherentGeneratedNights": 1000,
+      "interleavedWholeNights": 256,
+      "routeBranches": ["direct-content", "direct-format", "ambient", "held", "background-only"],
+      "openingActs": ["SURFACE", "BRIDGE", "CROSSOVER", "CORRECTION"]
+    }
+  },
+  "openVerificationBoundaries": [
+    {
+      "id": "SUMMARY-IW-OPEN-002",
+      "kind": "browser-and-assistive-technology",
+      "status": "pending",
+      "description": "Inspect the successful and recovery Summary in a live browser and with VoiceOver or NVDA, including headings, fiction boundary, status key, concept cards, focus, and reading order."
+    },
+    {
+      "id": "SUMMARY-IW-OPEN-003",
+      "kind": "manual-viewport-and-editorial",
+      "status": "pending",
+      "description": "Review 200 percent text zoom, forced colors, narrow/short viewports, metaphor removal, decorative restatement, and hostile readings of motive and character boundaries."
+    }
+  ],
+  "legacyBindingPolicy": {
+    "updatedByThisRecord": true,
+    "renewedPaths": [
+      "evidence/linguistics/linguistics-verification.v1.json",
+      "evidence/linguistics/linguistics-red-team.post.v1.json",
+      "evidence/runs/updated-working-tree-status.v1.json",
+      "public/evidence/updated-working-tree-status.v1.json"
+    ],
+    "reason": "The broader linguistic and working-tree records were rebound to the same implementation digest before the repository-wide automated gate passed. Historical browser, route, dependency, and distribution evidence remains historical and is not relabeled as current."
+  },
+  "decision": {
+    "implementationDisposition": "pass",
+    "focusedAutomatedDisposition": "pass",
+    "openImplementationBlockers": 0,
+    "openFocusedAutomatedFailures": 0,
+    "finalFullVerification": "pass",
+    "manualBrowserAndAssistiveTechnology": "held-pending",
+    "formalLatticeConformanceClaim": false,
+    "releaseClaim": "not-made",
+    "reason": "The source-bound implementation, strengthened focused suites, and repository-wide automated gate pass, including in-world narration, material-named Crossover context, direction-neutral proof boundaries, deterministic evidence, production build, and publication checks. Live browser, assistive-technology, and manual editorial evidence remain distinct unfinished gates."
+  }
+}

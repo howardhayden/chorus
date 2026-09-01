@@ -326,7 +326,7 @@ test("a malformed completed record reaches a plain recovery boundary before conc
 
   const recovery = debrief.slice(validationGate, summaryBuild);
   assert.match(recovery, /WHOLE-NIGHT RECEIPT UNAVAILABLE/);
-  assert.match(recovery, /The completed record did not pass its consistency check\. No summary or interpretation was generated\./);
+  assert.match(recovery, /The completed record did not pass its consistency check\. The house will not tell a story from a record it cannot verify\./);
   assert.match(recovery, /Start clean replay/);
   assert.match(recovery, /onClick=\{onReplay\}/);
   assert.doesNotMatch(recovery, /validationIssues|\.join\(|JSON\.stringify|state\.(?:turn|decisions|rooms|ambientEvents)/);

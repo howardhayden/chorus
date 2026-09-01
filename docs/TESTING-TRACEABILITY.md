@@ -62,7 +62,7 @@ This is the principal systems suite. It covers:
 
 ### `tests/copy-contract.test.mjs`
 
-This suite owns the source-level version-14 conclusion contract. It checks:
+This suite owns the source-level version-15 conclusion contract. It checks:
 
 - a single naturalized state-derived summary followed by a separate plain
   concept receipt, with no seven-receipt or Heart structure;
@@ -88,7 +88,7 @@ This suite owns the source-level version-14 conclusion contract. It checks:
 
 The suite is an automated source contract, not browser, screen-reader, or
 release evidence by itself. Its final execution result remains to be bound to
-the promoted version-14 source digest.
+the promoted version-15 source digest.
 
 ### `tests/save-model.test.mjs`
 
@@ -124,7 +124,7 @@ The retained release harness expands that contract to seeds 0 through 4,095:
   768 unentered waiting-room evolution checks;
 - 432 targeted semantic and structural state mutations rejected without a
   crash or state replacement, and 640 invalid actions confirmed as no-ops; and
-- 118,668 assertions with zero invariant, validation, replay, or choice-path
+- 118,626 assertions with zero invariant, validation, replay, or choice-path
   failures.
 
 The raw [simulation maturity result](../evidence/runs/simulation-maturity.v1.json)
@@ -150,13 +150,13 @@ historical generator-version-13 binding and verified:
   CSS pixels with zero body offset; and
 - zero warnings or errors attributed to the application origin.
 
-That run does not verify the version-14 naturalized summary, plain concept
+That run does not verify the version-15 naturalized summary, plain concept
 receipt, model-limit placement, or absence of the former tab/Heart structure.
 A new current-source browser completion is pending.
 
 Earlier manual keyboard, drawer-focus, blocked-reason, local-slot, and
 export-control observations remain in the same record under their prior-source
-digest. They are useful defect and interaction history, not version-14
+digest. They are useful defect and interaction history, not version-15
 execution proof. The historical record marks browser import, download arrival,
 request-level network observation, assistive technology, physical mobile/touch,
 automated contrast scanning, and a second browser engine unverified.
@@ -214,7 +214,7 @@ inspection.
 | Every accepted choice produces six effects | Route and choice construction | Reducer requires six target effects | Concurrent suite | Systems Atlas propagation view |
 | Unentered rooms evolve autonomously by logical time | Scheduled autonomous scene for every beat | `advanceNightTo` processes due pulses without entry | Simulation maturity suite and 128-seed clock sweep | Machine simulation result |
 | Interleaved play preserves exactly-once cross-room causality | Six-effect choice and pulse construction | State validation, inbound ledgers, replay | 512-play maturity sweep, 147,456 receipts, zero failures | Machine simulation result |
-| A complete playable browser path reaches the current conclusion | Four beats in six rooms | Version-14 browser completion pending | Historical v13 browser result does not verify the current conclusion | Renewed browser record pending; Validation Atlas remains historical |
+| A complete playable browser path reaches the current conclusion | Four beats in six rooms | Version-15 browser completion pending | Historical v13 browser result does not verify the current conclusion | Renewed browser record pending; Validation Atlas remains historical |
 | Ground truth never changes | Immutable generated pack | Truth excluded from effect application | Concurrent suite | Source review |
 | Communication dynamics appear exactly once | Pack validator | Ledger remains attached to scenario | Concurrent suite | Validation Atlas coverage table |
 | Truth, propagation, disclosure, and analytic communication facts belong to the active incident without merging | Exact three-field `TruthLedger`; one-field `PropagationLedger`; beat-local `SceneDisclosure`; analytic fact bindings | Scene identity and disclosure access validated | Concurrent and disclosure suites | Validation Atlas fact-binding sample remains historical until regenerated |
@@ -304,7 +304,7 @@ contracts they explain; they do not import the TypeScript runtime or perform the
 generation. If a notebook declaration and a release test disagree, the release
 test fails and the discrepancy is investigated; the notebook is never used to
 waive a gate. These publications are rebuilt from current declarations and
-explain the current version-14 contracts. The Historical Verification Ledger
+explain the current version-15 contracts. The Historical Verification Ledger
 retains earlier browser, distribution, and release results under their original
 provenance. Neither publication generation nor current focused tests substitutes
 for live-browser or assistive-technology evidence.

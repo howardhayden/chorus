@@ -26,7 +26,7 @@ from urllib.parse import unquote, urlsplit
 ROOT = Path(__file__).resolve().parents[2]
 SOURCE_DIR = ROOT / "notebooks"
 PUBLISH_DIR = ROOT / "public" / "notebooks"
-BUILD_STAMP = "2026-08-19"
+BUILD_STAMP = "2026-09-01"
 COMPANION_PUBLICATION_TARGETS = {
     ROOT / "public" / "evidence" / "index.html",
     ROOT / "public" / "evidence" / "dependency-inventory.json",

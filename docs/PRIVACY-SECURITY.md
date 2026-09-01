@@ -151,7 +151,7 @@ Portable input fails closed through layered checks:
 12. finite, bounded seed, clock, room ordinals, choice ordinals, start minutes,
     and coordinate counts;
 13. sorted unique entered-room ordinals;
-14. current generator-version match, presently version 14;
+14. current generator-version match, presently version 15;
 15. deterministic corruption check;
 16. coordinate-by-coordinate reconstruction through the current reducer;
 17. rejection of stale, early, locked, reordered, or out-of-range choices;

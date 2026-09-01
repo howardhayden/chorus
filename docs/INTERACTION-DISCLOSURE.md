@@ -280,6 +280,6 @@ The accessibility and viewport suites inspect navigation uniqueness, disclosure
 gates, operable blocked choices, focus transfer, relation-plot semantics,
 normal-flow expansions, the tab-free completed-night order, scroll ownership,
 dynamic viewport use, mobile reflow, and the absence of premature analytic
-labels. Browser and assistive-technology renewal for the version-14 source is
+labels. Browser and assistive-technology renewal for the version-15 source is
 still required under [Accessibility](ACCESSIBILITY.md) and
 [Release status](RELEASE-STATUS.md).

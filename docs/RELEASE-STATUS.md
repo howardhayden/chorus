@@ -1,23 +1,23 @@
 # Release status
 
-> **Current generator-version-14 working tree — automated verification passed;
+> **Current generator-version-15 working tree — automated verification passed;
 > release promotion held (1 September 2026).** The rewritten authored copy and
 > continuous completed-night view pass the current source-bound automated
 > gate. Prior browser, assistive-technology, route, dependency, distribution,
 > and release records are not relabeled as proof for this source.
 
-## Current version-14 hold
+## Current version-15 hold
 
-The current authored model uses generator version 14 and portable-save schema
+The current authored model uses generator version 15 and portable-save schema
 2. The completed-night target is a pure state-derived naturalized summary,
-followed by a visible adjacent model limit and a separate plain concept receipt;
-it is not the historical seven-tab/Heart conclusion. Version-13 saves fail
-closed unless an explicit tested reconstruction path is later added.
+followed by a visible adjacent fiction boundary and a separate plain concept receipt;
+it is not the historical seven-tab/Heart conclusion. Version-13 and version-14
+saves fail closed unless an explicit tested reconstruction path is later added.
 
 Implementation documentation, generated publications, deterministic evidence,
-34 copy tests, 10 linguistic tests, 10 viewport tests, and the 143-test focused
+37 copy tests, 10 linguistic tests, 10 viewport tests, and the 146-test focused
 working-tree gate are current at implementation digest
-`09f21cfa04ee52fc8d33cd04f268b951e5667d6db6222ec239b9763b6c999021`.
+`65a23bf8126bac896b0217cf0623b029b26e4b9931f10b2927327237933adc84`.
 Promotion remains held for current-source browser completion, keyboard and
 assistive-technology review, manual mobile/reflow inspection, current-lock
 dependency review, current production-route evidence, and neutral-distribution
@@ -126,7 +126,7 @@ candidate's source binding and requires a new evidence capture. Documentation
 copy that does not alter those contracts still requires link, publication, and
 artifact-drift checks.
 
-The version-14 change crosses several of those boundaries. Consequently, the
+The version-15 change crosses several of those boundaries. Consequently, the
 historical 52-step browser completion, manual interaction observations,
 assistive-technology gaps, and neutral-distribution result do not verify the
 current conclusion even where the older record says “current-source” relative
