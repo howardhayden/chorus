@@ -1,0 +1,1608 @@
+{
+  "format": "CHORUS_DISCOVERY_ATLAS",
+  "schemaVersion": 1,
+  "revision": "2026-09-08",
+  "title": "CHORUS concept and discovery register",
+  "authority": {
+    "canonicalSource": "docs/discovery/CHORUS-DISCOVERY-ATLAS.json",
+    "builder": "scripts/docs/build_discovery_maps.py",
+    "claimBoundary": "Repository certainties are bounded to cited implementation, automated evidence, or explicit product boundaries. They are not claims of external validity, user comprehension, prediction, diagnosis, or universal accessibility.",
+    "classificationPolicy": "A classification changes only in this register, with a dated history entry and cited evidence. Filtering, selecting, expanding, or exporting a rendered view never changes authoritative state.",
+    "supersessionPolicy": "Stable item and concept identifiers persist across revisions. A removed assertion remains traceable through supersedes or supersededBy rather than being silently rewritten."
+  },
+  "sources": [
+    {
+      "id": "CHR-SRC-THESIS",
+      "label": "Thesis and ethical argument",
+      "path": "docs/THESIS-AND-ETHICS.md"
+    },
+    {
+      "id": "CHR-SRC-COMM",
+      "label": "Communication and fatigue atlas",
+      "path": "docs/COMMUNICATION-ATLAS.md"
+    },
+    {
+      "id": "CHR-SRC-ARCH",
+      "label": "Architecture",
+      "path": "docs/ARCHITECTURE.md"
+    },
+    {
+      "id": "CHR-SRC-GENERATION",
+      "label": "Generation and coherence",
+      "path": "docs/GENERATION-COHERENCE.md"
+    },
+    {
+      "id": "CHR-SRC-RUNTIME",
+      "label": "Concurrent-night runtime",
+      "path": "docs/CONCURRENT-NIGHT.md"
+    },
+    {
+      "id": "CHR-SRC-INTERACTION",
+      "label": "Interaction and progressive disclosure",
+      "path": "docs/INTERACTION-DISCLOSURE.md"
+    },
+    {
+      "id": "CHR-SRC-ACCESSIBILITY",
+      "label": "Accessibility",
+      "path": "docs/ACCESSIBILITY.md"
+    },
+    {
+      "id": "CHR-SRC-PRIVACY",
+      "label": "Privacy and security",
+      "path": "docs/PRIVACY-SECURITY.md"
+    },
+    {
+      "id": "CHR-SRC-SAVE",
+      "label": "Portable save format",
+      "path": "docs/SAVE-FORMAT.md"
+    },
+    {
+      "id": "CHR-SRC-COPY",
+      "label": "Copy and voice",
+      "path": "docs/COPY-VOICE.md"
+    },
+    {
+      "id": "CHR-SRC-TESTING",
+      "label": "Testing and traceability",
+      "path": "docs/TESTING-TRACEABILITY.md"
+    },
+    {
+      "id": "CHR-SRC-LIMITS",
+      "label": "Limitations",
+      "path": "docs/LIMITATIONS.md"
+    },
+    {
+      "id": "CHR-SRC-RELEASE",
+      "label": "Release status",
+      "path": "docs/RELEASE-STATUS.md"
+    },
+    {
+      "id": "CHR-SRC-NIGHT-TEST",
+      "label": "Concurrent-night executable contract",
+      "path": "tests/concurrent-night.test.mjs"
+    },
+    {
+      "id": "CHR-SRC-SIM-TEST",
+      "label": "Simulation-maturity executable contract",
+      "path": "tests/simulation-maturity.test.mjs"
+    },
+    {
+      "id": "CHR-SRC-COPY-TEST",
+      "label": "Conclusion-copy executable contract",
+      "path": "tests/copy-contract.test.mjs"
+    },
+    {
+      "id": "CHR-SRC-A11Y-TEST",
+      "label": "Accessibility and disclosure source contract",
+      "path": "tests/accessibility-disclosure.test.mjs"
+    },
+    {
+      "id": "CHR-SRC-VIEWPORT-TEST",
+      "label": "Viewport source contract",
+      "path": "tests/viewport-contract.test.mjs"
+    },
+    {
+      "id": "CHR-SRC-SAVE-TEST",
+      "label": "Portable-save executable contract",
+      "path": "tests/save-model.test.mjs"
+    },
+    {
+      "id": "CHR-SRC-WORKING-STATUS",
+      "label": "Current bounded working-tree status",
+      "path": "evidence/runs/updated-working-tree-status.v1.json"
+    },
+    {
+      "id": "CHR-SRC-NNG-CSD",
+      "label": "NN/g CSD Matrix framework",
+      "url": "https://www.nngroup.com/articles/csd-matrix/"
+    }
+  ],
+  "perspectives": [
+    {
+      "id": "all",
+      "label": "Complete map",
+      "description": "All documented concept domains and their typed relations."
+    },
+    {
+      "id": "reader",
+      "label": "Reading the night",
+      "description": "The evidence, situated agency, and conclusion concepts a reader encounters."
+    },
+    {
+      "id": "causality",
+      "label": "Following causality",
+      "description": "The clock, events, routes, receipts, snapshots, and reconstruction path."
+    },
+    {
+      "id": "claims",
+      "label": "Checking claim limits",
+      "description": "The distinctions and visible boundaries that keep explanation from becoming diagnosis or prediction."
+    }
+  ],
+  "groups": [
+    {
+      "id": "knowledge",
+      "label": "Knowledge",
+      "description": "What the work fixes, exposes, separates, and leaves unresolved.",
+      "order": 1
+    },
+    {
+      "id": "concurrency",
+      "label": "Concurrency",
+      "description": "How six rooms share one logical night without penalizing reading or navigation.",
+      "order": 2
+    },
+    {
+      "id": "agency",
+      "label": "Situated agency",
+      "description": "How recognition, support, fatigue, responsibility, and carryable action remain distinct.",
+      "order": 3
+    },
+    {
+      "id": "consequence",
+      "label": "Consequence",
+      "description": "How one local decision leaves typed, bounded effects across the house.",
+      "order": 4
+    },
+    {
+      "id": "conclusion",
+      "label": "Conclusion",
+      "description": "How a completed record becomes narrative, limit, and plain concept receipt without a score.",
+      "order": 5
+    }
+  ],
+  "edgeKinds": [
+    {
+      "id": "structure",
+      "label": "Organizes",
+      "description": "Places a concept inside a governing domain."
+    },
+    {
+      "id": "causal",
+      "label": "Produces",
+      "description": "Names a state or event consequence."
+    },
+    {
+      "id": "constraint",
+      "label": "Constrains",
+      "description": "Limits what another concept may do or claim."
+    },
+    {
+      "id": "evidence",
+      "label": "Supplies evidence",
+      "description": "Provides a record used by a later explanation."
+    },
+    {
+      "id": "interpretive",
+      "label": "Explains without determining",
+      "description": "Makes a condition legible without treating it as destiny, truth, or excuse."
+    }
+  ],
+  "conceptMap": {
+    "canvas": {
+      "width": 1394,
+      "height": 860
+    },
+    "rootId": "CHR-MAP-N-000",
+    "nodes": [
+      {
+        "id": "CHR-MAP-N-000",
+        "label": "CHORUS",
+        "caption": "Concurrent social meaning",
+        "group": "root",
+        "x": 572,
+        "y": 20,
+        "width": 250,
+        "height": 110,
+        "definition": "A fictional, deterministic mechanism laboratory in which six social-trust incidents continue on one logical clock and remain inspectable through bounded causal records.",
+        "authority": "Product thesis and repository architecture",
+        "sourceIds": [
+          "CHR-SRC-THESIS",
+          "CHR-SRC-ARCH"
+        ],
+        "perspectives": [
+          "all",
+          "reader",
+          "causality",
+          "claims"
+        ],
+        "aliases": [
+          "house",
+          "mechanism laboratory",
+          "social trust"
+        ]
+      },
+      {
+        "id": "CHR-MAP-N-001",
+        "label": "Knowledge boundary",
+        "caption": "Evidence before interpretation",
+        "group": "knowledge",
+        "x": 20,
+        "y": 220,
+        "width": 250,
+        "height": 100,
+        "definition": "The work keeps what happened, what circulated, what an audience inferred, what a fictional seat protects, and what remains unresolved in separately governed records.",
+        "authority": "Communication and fatigue atlas",
+        "sourceIds": [
+          "CHR-SRC-COMM",
+          "CHR-SRC-THESIS"
+        ],
+        "perspectives": [
+          "all",
+          "reader",
+          "claims"
+        ],
+        "aliases": [
+          "epistemic separation",
+          "record",
+          "inference"
+        ]
+      },
+      {
+        "id": "CHR-MAP-N-002",
+        "label": "Fixed truth ledger",
+        "caption": "Incident facts do not move",
+        "group": "knowledge",
+        "x": 20,
+        "y": 390,
+        "width": 250,
+        "height": 100,
+        "definition": "Known fact, unresolved-at-entry boundary, and later resolution are fixed by generation and excluded from propagation coefficients and player-state mutation.",
+        "authority": "Scenario grammar and coherence gates",
+        "sourceIds": [
+          "CHR-SRC-GENERATION",
+          "CHR-SRC-ARCH",
+          "CHR-SRC-NIGHT-TEST"
+        ],
+        "perspectives": [
+          "all",
+          "reader",
+          "causality",
+          "claims"
+        ],
+        "aliases": [
+          "ground truth",
+          "known fact",
+          "later resolution"
+        ]
+      },
+      {
+        "id": "CHR-MAP-N-003",
+        "label": "Record · inference · unknown",
+        "caption": "Different authority, different burden",
+        "group": "knowledge",
+        "x": 20,
+        "y": 560,
+        "width": 250,
+        "height": 100,
+        "definition": "Observed conduct, audience interpretation, authored interior, and unresolved questions remain distinguishable; none silently upgrades another into fact.",
+        "authority": "Communication ledger and disclosure contract",
+        "sourceIds": [
+          "CHR-SRC-COMM",
+          "CHR-SRC-INTERACTION"
+        ],
+        "perspectives": [
+          "all",
+          "reader",
+          "claims"
+        ],
+        "aliases": [
+          "observation",
+          "audience inference",
+          "motive",
+          "uncertainty"
+        ]
+      },
+      {
+        "id": "CHR-MAP-N-004",
+        "label": "Explanatory boundary",
+        "caption": "Not diagnosis or prediction",
+        "group": "knowledge",
+        "x": 20,
+        "y": 730,
+        "width": 250,
+        "height": 100,
+        "definition": "The represented mechanisms explain a synthetic night. They do not infer real motive, rank trustworthiness, diagnose people, or predict real-world frequency.",
+        "authority": "Thesis, ethics, and limitations",
+        "sourceIds": [
+          "CHR-SRC-THESIS",
+          "CHR-SRC-LIMITS"
+        ],
+        "perspectives": [
+          "all",
+          "reader",
+          "claims"
+        ],
+        "aliases": [
+          "model limit",
+          "synthetic",
+          "non-predictive"
+        ]
+      },
+      {
+        "id": "CHR-MAP-N-005",
+        "label": "One concurrent night",
+        "caption": "Externalities remain in view",
+        "group": "concurrency",
+        "x": 296,
+        "y": 220,
+        "width": 250,
+        "height": 100,
+        "definition": "Six incidents remain active together so a locally understandable action can change what another room can notice, verify, attribute, or carry.",
+        "authority": "Product thesis and concurrent runtime",
+        "sourceIds": [
+          "CHR-SRC-THESIS",
+          "CHR-SRC-RUNTIME"
+        ],
+        "perspectives": [
+          "all",
+          "reader",
+          "causality"
+        ],
+        "aliases": [
+          "concurrent rooms",
+          "externalities",
+          "night"
+        ]
+      },
+      {
+        "id": "CHR-MAP-N-006",
+        "label": "Six rooms · one clock",
+        "caption": "Entry does not create the room",
+        "group": "concurrency",
+        "x": 296,
+        "y": 390,
+        "width": 250,
+        "height": 100,
+        "definition": "Every room exists from minute zero. Navigation changes the occupied view, while accepted actions and explicit clock movement advance modeled time.",
+        "authority": "Concurrent-night runtime",
+        "sourceIds": [
+          "CHR-SRC-RUNTIME",
+          "CHR-SRC-INTERACTION"
+        ],
+        "perspectives": [
+          "all",
+          "reader",
+          "causality"
+        ],
+        "aliases": [
+          "logical clock",
+          "room entry",
+          "navigation"
+        ]
+      },
+      {
+        "id": "CHR-MAP-N-007",
+        "label": "Choice + scheduled pulse",
+        "caption": "Only modeled events advance state",
+        "group": "concurrency",
+        "x": 296,
+        "y": 560,
+        "width": 250,
+        "height": 100,
+        "definition": "Accepted choices and due autonomous pulses are the causal inputs. Reading speed, focus, room inspection, and assistive technology do not become events.",
+        "authority": "Reducer and scheduling contracts",
+        "sourceIds": [
+          "CHR-SRC-RUNTIME",
+          "CHR-SRC-ACCESSIBILITY",
+          "CHR-SRC-NIGHT-TEST"
+        ],
+        "perspectives": [
+          "all",
+          "causality",
+          "claims"
+        ],
+        "aliases": [
+          "decision",
+          "ambient event",
+          "pulse"
+        ]
+      },
+      {
+        "id": "CHR-MAP-N-008",
+        "label": "Append-only night state",
+        "caption": "Replay checks the causal record",
+        "group": "concurrency",
+        "x": 296,
+        "y": 730,
+        "width": 250,
+        "height": 100,
+        "definition": "Accepted decisions, pulse identities, and effects accumulate in one validated state that can be deterministically replayed from the seed and ordered action record.",
+        "authority": "Concurrent runtime and save reconstruction",
+        "sourceIds": [
+          "CHR-SRC-RUNTIME",
+          "CHR-SRC-SAVE",
+          "CHR-SRC-SAVE-TEST"
+        ],
+        "perspectives": [
+          "all",
+          "causality",
+          "claims"
+        ],
+        "aliases": [
+          "event ledger",
+          "replay",
+          "determinism"
+        ]
+      },
+      {
+        "id": "CHR-MAP-N-009",
+        "label": "Situated occupied seat",
+        "caption": "Action begins inside constraints",
+        "group": "agency",
+        "x": 572,
+        "y": 220,
+        "width": 250,
+        "height": 100,
+        "definition": "The reader acts from a fictional position with bounded knowledge, authority, relationships, responsibilities, language resources, and costs.",
+        "authority": "Thesis and communication model",
+        "sourceIds": [
+          "CHR-SRC-THESIS",
+          "CHR-SRC-COMM"
+        ],
+        "perspectives": [
+          "all",
+          "reader",
+          "claims"
+        ],
+        "aliases": [
+          "protagonist",
+          "position",
+          "authority"
+        ]
+      },
+      {
+        "id": "CHR-MAP-N-010",
+        "label": "Discernment ≠ enactment",
+        "caption": "Recognition is not capacity",
+        "group": "agency",
+        "x": 572,
+        "y": 390,
+        "width": 250,
+        "height": 100,
+        "definition": "A seat can still recognize a better action while lacking enough current follow-through capacity to carry it.",
+        "authority": "Communication and fatigue model",
+        "sourceIds": [
+          "CHR-SRC-COMM",
+          "CHR-SRC-RUNTIME",
+          "CHR-SRC-NIGHT-TEST"
+        ],
+        "perspectives": [
+          "all",
+          "reader",
+          "causality",
+          "claims"
+        ],
+        "aliases": [
+          "recognition",
+          "follow-through",
+          "capacity"
+        ]
+      },
+      {
+        "id": "CHR-MAP-N-011",
+        "label": "Support + five fatigue channels",
+        "caption": "Systems change what is carryable",
+        "group": "agency",
+        "x": 572,
+        "y": 560,
+        "width": 250,
+        "height": 100,
+        "definition": "Source, evidence, institutional, relational, and distribution support can open action; attentional, affective, relational, verification, and efficacy load can narrow enactment.",
+        "authority": "Choice-access and fatigue contracts",
+        "sourceIds": [
+          "CHR-SRC-COMM",
+          "CHR-SRC-RUNTIME"
+        ],
+        "perspectives": [
+          "all",
+          "reader",
+          "causality"
+        ],
+        "aliases": [
+          "support",
+          "fatigue",
+          "choice access"
+        ]
+      },
+      {
+        "id": "CHR-MAP-N-012",
+        "label": "Carryable non-amplification",
+        "caption": "Exhaustion never forces spread",
+        "group": "agency",
+        "x": 572,
+        "y": 730,
+        "width": 250,
+        "height": 100,
+        "definition": "Every beat retains an available route that does not personalize or further distribute the claim, even when fuller repair is inaccessible.",
+        "authority": "Non-amplification floor invariant",
+        "sourceIds": [
+          "CHR-SRC-COMM",
+          "CHR-SRC-GENERATION",
+          "CHR-SRC-NIGHT-TEST"
+        ],
+        "perspectives": [
+          "all",
+          "reader",
+          "causality",
+          "claims"
+        ],
+        "aliases": [
+          "floor guarantee",
+          "refusal",
+          "repair"
+        ]
+      },
+      {
+        "id": "CHR-MAP-N-013",
+        "label": "Typed cross-room routes",
+        "caption": "Content · format · ambient",
+        "group": "consequence",
+        "x": 848,
+        "y": 220,
+        "width": 250,
+        "height": 100,
+        "definition": "A route declares whether content, artifact form, or a social condition can cross; carrier and delivery fields prevent prose from inventing transmission.",
+        "authority": "Generation and reducer route grammar",
+        "sourceIds": [
+          "CHR-SRC-GENERATION",
+          "CHR-SRC-RUNTIME",
+          "CHR-SRC-COPY-TEST"
+        ],
+        "perspectives": [
+          "all",
+          "causality",
+          "claims"
+        ],
+        "aliases": [
+          "content route",
+          "format route",
+          "ambient pressure",
+          "carrier"
+        ]
+      },
+      {
+        "id": "CHR-MAP-N-014",
+        "label": "One event · six receipts",
+        "caption": "Local choice, house-wide record",
+        "group": "consequence",
+        "x": 848,
+        "y": 390,
+        "width": 250,
+        "height": 100,
+        "definition": "Each accepted choice writes one local receipt and one bounded receipt for every other room, preserving target, semantic, reach, support, and realized carriage.",
+        "authority": "Pure night reducer",
+        "sourceIds": [
+          "CHR-SRC-RUNTIME",
+          "CHR-SRC-NIGHT-TEST",
+          "CHR-SRC-SIM-TEST"
+        ],
+        "perspectives": [
+          "all",
+          "reader",
+          "causality"
+        ],
+        "aliases": [
+          "effect receipt",
+          "decision event",
+          "cross-room effect"
+        ]
+      },
+      {
+        "id": "CHR-MAP-N-015",
+        "label": "Completion snapshot",
+        "caption": "Close state is frozen",
+        "group": "consequence",
+        "x": 848,
+        "y": 560,
+        "width": 250,
+        "height": 100,
+        "definition": "A room's fourth accepted decision freezes its at-completion metrics while the wider night and its inbound consequences continue.",
+        "authority": "Room completion contract",
+        "sourceIds": [
+          "CHR-SRC-RUNTIME",
+          "CHR-SRC-NIGHT-TEST"
+        ],
+        "perspectives": [
+          "all",
+          "reader",
+          "causality"
+        ],
+        "aliases": [
+          "at completion",
+          "close receipt",
+          "room close"
+        ]
+      },
+      {
+        "id": "CHR-MAP-N-016",
+        "label": "Live afterimage",
+        "caption": "Consequences continue after close",
+        "group": "consequence",
+        "x": 848,
+        "y": 730,
+        "width": 250,
+        "height": 100,
+        "definition": "Later house events may move a closed room's current state without rewriting its frozen completion snapshot.",
+        "authority": "Concurrent state and conclusion provenance",
+        "sourceIds": [
+          "CHR-SRC-RUNTIME",
+          "CHR-SRC-COPY"
+        ],
+        "perspectives": [
+          "all",
+          "reader",
+          "causality"
+        ],
+        "aliases": [
+          "residue",
+          "post-close effect",
+          "remaining change"
+        ]
+      },
+      {
+        "id": "CHR-MAP-N-017",
+        "label": "All six rooms complete",
+        "caption": "Twenty-four accepted choices",
+        "group": "conclusion",
+        "x": 1124,
+        "y": 220,
+        "width": 250,
+        "height": 100,
+        "definition": "Explicit interpretation becomes available only when every four-beat room is complete and the validated night contains twenty-four accepted decisions.",
+        "authority": "Completion and disclosure gate",
+        "sourceIds": [
+          "CHR-SRC-RUNTIME",
+          "CHR-SRC-INTERACTION",
+          "CHR-SRC-A11Y-TEST"
+        ],
+        "perspectives": [
+          "all",
+          "reader",
+          "causality",
+          "claims"
+        ],
+        "aliases": [
+          "turn 24",
+          "night complete",
+          "conclusion gate"
+        ]
+      },
+      {
+        "id": "CHR-MAP-N-018",
+        "label": "Naturalized summary",
+        "caption": "A supported causal account",
+        "group": "conclusion",
+        "x": 1124,
+        "y": 390,
+        "width": 250,
+        "height": 100,
+        "definition": "Pure derivation turns supported decisions, typed routes, later resolution, and the strongest normalized afterimage into one chronological account.",
+        "authority": "Conclusion-copy derivation",
+        "sourceIds": [
+          "CHR-SRC-COPY",
+          "CHR-SRC-INTERACTION",
+          "CHR-SRC-COPY-TEST"
+        ],
+        "perspectives": [
+          "all",
+          "reader",
+          "causality",
+          "claims"
+        ],
+        "aliases": [
+          "whole-night story",
+          "causal chain",
+          "summary"
+        ]
+      },
+      {
+        "id": "CHR-MAP-N-019",
+        "label": "Visible model limit",
+        "caption": "Outside the story, never hidden",
+        "group": "conclusion",
+        "x": 1124,
+        "y": 560,
+        "width": 250,
+        "height": 100,
+        "definition": "A separate note states that fictional interiors and modeled effects do not diagnose or predict real people; it cannot become the story's moral.",
+        "authority": "Completed-night reading order",
+        "sourceIds": [
+          "CHR-SRC-INTERACTION",
+          "CHR-SRC-THESIS",
+          "CHR-SRC-A11Y-TEST"
+        ],
+        "perspectives": [
+          "all",
+          "reader",
+          "claims"
+        ],
+        "aliases": [
+          "claim limit",
+          "disclaimer",
+          "boundary note"
+        ]
+      },
+      {
+        "id": "CHR-MAP-N-020",
+        "label": "Plain concept receipt",
+        "caption": "Encountered · experienced · played",
+        "group": "conclusion",
+        "x": 1124,
+        "y": 730,
+        "width": 250,
+        "height": 100,
+        "definition": "Typed scene rules and explicit choice bindings yield plain meanings, limits, status, and discriminated evidence without inferring semantics from labels or tone.",
+        "authority": "Concept-receipt derivation",
+        "sourceIds": [
+          "CHR-SRC-COPY",
+          "CHR-SRC-GENERATION",
+          "CHR-SRC-COPY-TEST"
+        ],
+        "perspectives": [
+          "all",
+          "reader",
+          "causality",
+          "claims"
+        ],
+        "aliases": [
+          "concept status",
+          "scene evidence",
+          "effect evidence",
+          "action evidence"
+        ]
+      }
+    ],
+    "edges": [
+      {
+        "id": "CHR-MAP-E-001",
+        "source": "CHR-MAP-N-000",
+        "target": "CHR-MAP-N-001",
+        "label": "organizes evidence discipline",
+        "kind": "structure",
+        "drawn": true,
+        "points": [[600, 130], [600, 155], [145, 155], [145, 220]]
+      },
+      {
+        "id": "CHR-MAP-E-002",
+        "source": "CHR-MAP-N-000",
+        "target": "CHR-MAP-N-005",
+        "label": "organizes concurrent time",
+        "kind": "structure",
+        "drawn": true,
+        "points": [[650, 130], [650, 175], [421, 175], [421, 220]]
+      },
+      {
+        "id": "CHR-MAP-E-003",
+        "source": "CHR-MAP-N-000",
+        "target": "CHR-MAP-N-009",
+        "label": "situates action",
+        "kind": "structure",
+        "drawn": true,
+        "points": [[700, 130], [700, 190], [697, 190], [697, 220]]
+      },
+      {
+        "id": "CHR-MAP-E-004",
+        "source": "CHR-MAP-N-000",
+        "target": "CHR-MAP-N-013",
+        "label": "organizes consequence",
+        "kind": "structure",
+        "drawn": true,
+        "points": [[750, 130], [750, 175], [973, 175], [973, 220]]
+      },
+      {
+        "id": "CHR-MAP-E-005",
+        "source": "CHR-MAP-N-000",
+        "target": "CHR-MAP-N-017",
+        "label": "organizes bounded interpretation",
+        "kind": "structure",
+        "drawn": true,
+        "points": [[800, 130], [800, 155], [1249, 155], [1249, 220]]
+      },
+      {
+        "id": "CHR-MAP-E-006",
+        "source": "CHR-MAP-N-001",
+        "target": "CHR-MAP-N-002",
+        "label": "fixes the factual record",
+        "kind": "constraint",
+        "drawn": true,
+        "points": [[145, 320], [145, 390]]
+      },
+      {
+        "id": "CHR-MAP-E-007",
+        "source": "CHR-MAP-N-002",
+        "target": "CHR-MAP-N-003",
+        "label": "separates evidence classes",
+        "kind": "constraint",
+        "drawn": true,
+        "points": [[145, 490], [145, 560]]
+      },
+      {
+        "id": "CHR-MAP-E-008",
+        "source": "CHR-MAP-N-003",
+        "target": "CHR-MAP-N-004",
+        "label": "bounds interpretation",
+        "kind": "constraint",
+        "drawn": true,
+        "points": [[145, 660], [145, 730]]
+      },
+      {
+        "id": "CHR-MAP-E-009",
+        "source": "CHR-MAP-N-005",
+        "target": "CHR-MAP-N-006",
+        "label": "shares one logical clock",
+        "kind": "structure",
+        "drawn": true,
+        "points": [[421, 320], [421, 390]]
+      },
+      {
+        "id": "CHR-MAP-E-010",
+        "source": "CHR-MAP-N-006",
+        "target": "CHR-MAP-N-007",
+        "label": "advances through modeled events",
+        "kind": "causal",
+        "drawn": true,
+        "points": [[421, 490], [421, 560]]
+      },
+      {
+        "id": "CHR-MAP-E-011",
+        "source": "CHR-MAP-N-007",
+        "target": "CHR-MAP-N-008",
+        "label": "appends validated state",
+        "kind": "causal",
+        "drawn": true,
+        "points": [[421, 660], [421, 730]]
+      },
+      {
+        "id": "CHR-MAP-E-012",
+        "source": "CHR-MAP-N-009",
+        "target": "CHR-MAP-N-010",
+        "label": "separates recognition from capacity",
+        "kind": "interpretive",
+        "drawn": true,
+        "points": [[697, 320], [697, 390]]
+      },
+      {
+        "id": "CHR-MAP-E-013",
+        "source": "CHR-MAP-N-010",
+        "target": "CHR-MAP-N-011",
+        "label": "explains action access",
+        "kind": "interpretive",
+        "drawn": true,
+        "points": [[697, 490], [697, 560]]
+      },
+      {
+        "id": "CHR-MAP-E-014",
+        "source": "CHR-MAP-N-011",
+        "target": "CHR-MAP-N-012",
+        "label": "cannot remove the floor",
+        "kind": "constraint",
+        "drawn": true,
+        "points": [[697, 660], [697, 730]]
+      },
+      {
+        "id": "CHR-MAP-E-015",
+        "source": "CHR-MAP-N-013",
+        "target": "CHR-MAP-N-014",
+        "label": "types each receipt",
+        "kind": "causal",
+        "drawn": true,
+        "points": [[973, 320], [973, 390]]
+      },
+      {
+        "id": "CHR-MAP-E-016",
+        "source": "CHR-MAP-N-014",
+        "target": "CHR-MAP-N-015",
+        "label": "accumulates toward room close",
+        "kind": "causal",
+        "drawn": true,
+        "points": [[973, 490], [973, 560]]
+      },
+      {
+        "id": "CHR-MAP-E-017",
+        "source": "CHR-MAP-N-015",
+        "target": "CHR-MAP-N-016",
+        "label": "reveals later residue",
+        "kind": "evidence",
+        "drawn": true,
+        "points": [[973, 660], [973, 730]]
+      },
+      {
+        "id": "CHR-MAP-E-018",
+        "source": "CHR-MAP-N-017",
+        "target": "CHR-MAP-N-018",
+        "label": "unlocks causal narration",
+        "kind": "evidence",
+        "drawn": true,
+        "points": [[1249, 320], [1249, 390]]
+      },
+      {
+        "id": "CHR-MAP-E-019",
+        "source": "CHR-MAP-N-018",
+        "target": "CHR-MAP-N-019",
+        "label": "is bounded by a visible limit",
+        "kind": "constraint",
+        "drawn": true,
+        "points": [[1249, 490], [1249, 560]]
+      },
+      {
+        "id": "CHR-MAP-E-020",
+        "source": "CHR-MAP-N-019",
+        "target": "CHR-MAP-N-020",
+        "label": "keeps explanation distinct from story",
+        "kind": "interpretive",
+        "drawn": true,
+        "points": [[1249, 660], [1249, 730]]
+      },
+      {
+        "id": "CHR-MAP-E-021",
+        "source": "CHR-MAP-N-007",
+        "target": "CHR-MAP-N-014",
+        "label": "produces one event with six receipts",
+        "kind": "causal",
+        "drawn": false
+      },
+      {
+        "id": "CHR-MAP-E-022",
+        "source": "CHR-MAP-N-011",
+        "target": "CHR-MAP-N-007",
+        "label": "conditions which choice is carryable",
+        "kind": "constraint",
+        "drawn": false
+      },
+      {
+        "id": "CHR-MAP-E-023",
+        "source": "CHR-MAP-N-012",
+        "target": "CHR-MAP-N-007",
+        "label": "guarantees a non-amplifying input",
+        "kind": "constraint",
+        "drawn": false
+      },
+      {
+        "id": "CHR-MAP-E-024",
+        "source": "CHR-MAP-N-014",
+        "target": "CHR-MAP-N-016",
+        "label": "continues to move closed rooms",
+        "kind": "causal",
+        "drawn": false
+      },
+      {
+        "id": "CHR-MAP-E-025",
+        "source": "CHR-MAP-N-002",
+        "target": "CHR-MAP-N-018",
+        "label": "supplies incident resolution without yielding truth to reach",
+        "kind": "evidence",
+        "drawn": false
+      },
+      {
+        "id": "CHR-MAP-E-026",
+        "source": "CHR-MAP-N-014",
+        "target": "CHR-MAP-N-018",
+        "label": "supplies typed causal provenance",
+        "kind": "evidence",
+        "drawn": false
+      },
+      {
+        "id": "CHR-MAP-E-027",
+        "source": "CHR-MAP-N-004",
+        "target": "CHR-MAP-N-019",
+        "label": "governs the public claim boundary",
+        "kind": "constraint",
+        "drawn": false
+      },
+      {
+        "id": "CHR-MAP-E-028",
+        "source": "CHR-MAP-N-017",
+        "target": "CHR-MAP-N-020",
+        "label": "unlocks typed concept status",
+        "kind": "evidence",
+        "drawn": false
+      }
+    ]
+  },
+  "csd": {
+    "method": {
+      "name": "CSD matrix",
+      "attribution": "Certainties, Suppositions, and Doubts as described by Nielsen Norman Group; the technique was created by Tennyson Pinheiro, Luis Alt, and the Livework São Paulo team.",
+      "sourceId": "CHR-SRC-NNG-CSD"
+    },
+    "topics": [
+      {
+        "id": "knowledge",
+        "label": "Knowledge and claim boundary",
+        "description": "Whether the work preserves evidence classes and limits what may be inferred.",
+        "order": 1
+      },
+      {
+        "id": "causality",
+        "label": "Concurrent causality",
+        "description": "Whether the shared night and its effects remain deterministic, inspectable, and comprehensible.",
+        "order": 2
+      },
+      {
+        "id": "agency",
+        "label": "Agency under pressure",
+        "description": "Whether the work distinguishes judgment, capacity, support, responsibility, and safe fallback action.",
+        "order": 3
+      },
+      {
+        "id": "disclosure",
+        "label": "Disclosure and learning",
+        "description": "Whether interpretation arrives at the right time and remains understandable without becoming a score or diagnosis.",
+        "order": 4
+      },
+      {
+        "id": "accessibility",
+        "label": "Accessibility and visual reading",
+        "description": "Whether equivalent meaning survives input method, reflow, motion reduction, and nonvisual reading.",
+        "order": 5
+      },
+      {
+        "id": "privacy",
+        "label": "Privacy and persistence",
+        "description": "Whether people understand and retain control over memory, browser slots, and portable files.",
+        "order": 6
+      },
+      {
+        "id": "release",
+        "label": "Release and external use",
+        "description": "Which claims are currently verified and which require live, participant, or contextual evidence.",
+        "order": 7
+      }
+    ],
+    "items": [
+      {
+        "id": "CHR-CSD-001",
+        "classification": "certainty",
+        "topic": "knowledge",
+        "statement": "We know the current model stores incident fact, circulating frame, scene disclosure, audience inference, authored interior, and unresolved questions in separately governed records.",
+        "basis": "The architecture and generation contracts declare distinct types, while current focused tests reject fact-binding and disclosure collapse.",
+        "sourceIds": ["CHR-SRC-ARCH", "CHR-SRC-GENERATION", "CHR-SRC-NIGHT-TEST"],
+        "evidence": "Current source contract plus executable focused coverage.",
+        "testOrResearch": "Keep ledger cardinality, incident binding, and disclosure-separation attacks in the focused gate.",
+        "decisionUse": "Do not simplify the data model or interface by merging these records.",
+        "owner": "Model architecture",
+        "priority": "critical",
+        "status": "current",
+        "lastReviewed": "2026-09-08",
+        "reviewTrigger": "Any truth, propagation, disclosure, motive, or conclusion schema change.",
+        "dependencies": [],
+        "supersedes": [],
+        "history": [{"date": "2026-09-08", "from": null, "to": "certainty", "basis": "Initial audited discovery register."}]
+      },
+      {
+        "id": "CHR-CSD-002",
+        "classification": "certainty",
+        "topic": "knowledge",
+        "statement": "We know truth values do not change during play and do not participate in reach, trust, blame, fatigue, ranking, or propagation coefficients.",
+        "basis": "The fixed truth-ledger contract is enforced across generation, reduction, replay, and mutation tests.",
+        "sourceIds": ["CHR-SRC-THESIS", "CHR-SRC-RUNTIME", "CHR-SRC-NIGHT-TEST"],
+        "evidence": "Current invariant with executable negative tests.",
+        "testOrResearch": "Continue attacking every new effect and summary path for truth-by-popularity leakage.",
+        "decisionUse": "Reject features that let repetition, warmth, or selection rewrite incident fact.",
+        "owner": "Runtime assurance",
+        "priority": "critical",
+        "status": "current",
+        "lastReviewed": "2026-09-08",
+        "reviewTrigger": "Any metric, route, effect, or summary-source addition.",
+        "dependencies": ["CHR-CSD-001"],
+        "supersedes": [],
+        "history": [{"date": "2026-09-08", "from": null, "to": "certainty", "basis": "Initial audited discovery register."}]
+      },
+      {
+        "id": "CHR-CSD-003",
+        "classification": "supposition",
+        "topic": "knowledge",
+        "statement": "We believe repeated separation of record, inference, incentive, power, and unknown will help readers resist treating plausible social meaning as established fact.",
+        "basis": "The learning sequence, disclosure labels, and concluding receipt repeatedly preserve these distinctions, but no participant study currently establishes the outcome.",
+        "sourceIds": ["CHR-SRC-THESIS", "CHR-SRC-COMM", "CHR-SRC-INTERACTION"],
+        "evidence": "Design rationale and implemented prompts; user evidence not yet collected.",
+        "testOrResearch": "Run consented think-aloud sessions with pre-play, immediate, and delayed evidence-classification tasks; look for correct boundaries without motive overreach.",
+        "decisionUse": "Confirm before claiming that CHORUS improves epistemic judgment.",
+        "owner": "UX research",
+        "priority": "high",
+        "status": "research-needed",
+        "lastReviewed": "2026-09-08",
+        "reviewTrigger": "A participant study or material disclosure rewrite.",
+        "dependencies": ["CHR-CSD-001", "CHR-CSD-002"],
+        "supersedes": [],
+        "history": [{"date": "2026-09-08", "from": null, "to": "supposition", "basis": "Plausible from the implemented learning sequence; unverified with participants."}]
+      },
+      {
+        "id": "CHR-CSD-004",
+        "classification": "doubt",
+        "topic": "knowledge",
+        "statement": "Does access to a fictional seat's authored interior clarify motive-versus-truth, or encourage some readers to overgeneralize that access to real people?",
+        "basis": "The ethical boundary is explicit, but this representational tradeoff has not been tested with readers.",
+        "sourceIds": ["CHR-SRC-THESIS", "CHR-SRC-LIMITS"],
+        "evidence": "Open representational-risk question.",
+        "testOrResearch": "Compare bounded variants with and without authored interior, then probe inference about unfamiliar real people and recall of the model limit.",
+        "decisionUse": "May change interior disclosure, facilitation guidance, or the public claim boundary.",
+        "owner": "Ethics and UX research",
+        "priority": "high",
+        "status": "open",
+        "lastReviewed": "2026-09-08",
+        "reviewTrigger": "Participant evidence, harm report, or interior-model change.",
+        "dependencies": ["CHR-CSD-003"],
+        "supersedes": [],
+        "history": [{"date": "2026-09-08", "from": null, "to": "doubt", "basis": "Material effect is not known."}]
+      },
+      {
+        "id": "CHR-CSD-005",
+        "classification": "certainty",
+        "topic": "causality",
+        "statement": "We know each accepted choice produces one decision event with exactly one local and five cross-room effect receipts.",
+        "basis": "The pure reducer enforces receipt cardinality, and focused plus multi-seed evidence checks reject missing, duplicated, or mistargeted effects.",
+        "sourceIds": ["CHR-SRC-RUNTIME", "CHR-SRC-NIGHT-TEST", "CHR-SRC-SIM-TEST"],
+        "evidence": "Current executable invariant.",
+        "testOrResearch": "Retain exactly-once, target-completeness, replay, and invalid-action no-op coverage.",
+        "decisionUse": "Treat one-choice/six-receipt causality as a non-negotiable architecture boundary.",
+        "owner": "Runtime assurance",
+        "priority": "critical",
+        "status": "current",
+        "lastReviewed": "2026-09-08",
+        "reviewTrigger": "Any room-count, route, pulse, reducer, or event-schema change.",
+        "dependencies": [],
+        "supersedes": [],
+        "history": [{"date": "2026-09-08", "from": null, "to": "certainty", "basis": "Initial audited discovery register."}]
+      },
+      {
+        "id": "CHR-CSD-006",
+        "classification": "certainty",
+        "topic": "causality",
+        "statement": "We know navigation, rereading, focus movement, disclosure controls, and assistive-technology use do not advance logical time or add modeled fatigue.",
+        "basis": "Only accepted modeled actions and explicit clock movement mutate the night; same-minute inspection is idempotent.",
+        "sourceIds": ["CHR-SRC-RUNTIME", "CHR-SRC-ACCESSIBILITY", "CHR-SRC-NIGHT-TEST"],
+        "evidence": "Current mutation boundary and executable idempotency checks.",
+        "testOrResearch": "Keep input-method and repeated-inspection paths outside the state transition surface.",
+        "decisionUse": "Reject timing or analytics features that turn reading behavior into modeled evidence or cost.",
+        "owner": "Runtime and accessibility",
+        "priority": "critical",
+        "status": "current",
+        "lastReviewed": "2026-09-08",
+        "reviewTrigger": "Any timing, analytics, navigation, or fatigue change.",
+        "dependencies": ["CHR-CSD-005"],
+        "supersedes": [],
+        "history": [{"date": "2026-09-08", "from": null, "to": "certainty", "basis": "Initial audited discovery register."}]
+      },
+      {
+        "id": "CHR-CSD-007",
+        "classification": "supposition",
+        "topic": "causality",
+        "statement": "We believe one concurrent night will make social externalities and delayed cross-room consequences more legible than the same incidents presented as independent stories.",
+        "basis": "The product thesis and state architecture preserve externalities, but no comparative comprehension evidence currently establishes the advantage.",
+        "sourceIds": ["CHR-SRC-THESIS", "CHR-SRC-RUNTIME"],
+        "evidence": "Mechanism rationale and implemented causal record; comparative user evidence absent.",
+        "testOrResearch": "Compare matched concurrent and serial presentations using causal-reconstruction tasks, confidence calibration, and interview evidence.",
+        "decisionUse": "Confirm before describing concurrency as a superior learning form rather than an intentional design choice.",
+        "owner": "Product and UX research",
+        "priority": "high",
+        "status": "research-needed",
+        "lastReviewed": "2026-09-08",
+        "reviewTrigger": "Comparative study or material concurrency redesign.",
+        "dependencies": ["CHR-CSD-005", "CHR-CSD-006"],
+        "supersedes": [],
+        "history": [{"date": "2026-09-08", "from": null, "to": "supposition", "basis": "Plausible design hypothesis without comparative evidence."}]
+      },
+      {
+        "id": "CHR-CSD-008",
+        "classification": "doubt",
+        "topic": "causality",
+        "statement": "How much room switching and delayed attribution can readers carry before the concurrent structure obscures the causal chain it is meant to expose?",
+        "basis": "The interface limits simultaneous panels, but the comprehension ceiling has not been observed with participants.",
+        "sourceIds": ["CHR-SRC-INTERACTION", "CHR-SRC-LIMITS"],
+        "evidence": "Open cognitive-load question.",
+        "testOrResearch": "Observe route reconstruction, backtracking, mistaken source attribution, and recovery across varied reading strategies without converting dwell time into a player score.",
+        "decisionUse": "May change wayfinding, trace-on-request, room reminders, or facilitation guidance.",
+        "owner": "Interaction design and UX research",
+        "priority": "high",
+        "status": "open",
+        "lastReviewed": "2026-09-08",
+        "reviewTrigger": "Usability evidence or navigation redesign.",
+        "dependencies": ["CHR-CSD-007"],
+        "supersedes": [],
+        "history": [{"date": "2026-09-08", "from": null, "to": "doubt", "basis": "Reader capacity under concurrency is not known."}]
+      },
+      {
+        "id": "CHR-CSD-009",
+        "classification": "certainty",
+        "topic": "agency",
+        "statement": "We know the current model represents discernment and enactment separately and prevents fatigue from lowering discernment.",
+        "basis": "Typed actor baselines, access checks, and reducer protections preserve recognition while allowing follow-through capacity to change.",
+        "sourceIds": ["CHR-SRC-COMM", "CHR-SRC-RUNTIME", "CHR-SRC-NIGHT-TEST"],
+        "evidence": "Current semantic and executable invariant.",
+        "testOrResearch": "Retain baseline separation, fatigue application, blocked-access, and discernment-nondecline attacks.",
+        "decisionUse": "Do not collapse capacity pressure into ignorance, intent, or moral worth.",
+        "owner": "Model architecture",
+        "priority": "critical",
+        "status": "current",
+        "lastReviewed": "2026-09-08",
+        "reviewTrigger": "Any actor, fatigue, metric, or access-model change.",
+        "dependencies": [],
+        "supersedes": [],
+        "history": [{"date": "2026-09-08", "from": null, "to": "certainty", "basis": "Initial audited discovery register."}]
+      },
+      {
+        "id": "CHR-CSD-010",
+        "classification": "certainty",
+        "topic": "agency",
+        "statement": "We know every beat retains an enactment-exempt non-amplification choice, so modeled exhaustion never forces personalization or further spread.",
+        "basis": "Generation rejects a beat without the floor, and runtime access preserves it under high fatigue.",
+        "sourceIds": ["CHR-SRC-GENERATION", "CHR-SRC-COMM", "CHR-SRC-NIGHT-TEST"],
+        "evidence": "Current generation and runtime invariant with extreme-load coverage.",
+        "testOrResearch": "Continue testing every beat, generated role, choice ordering, and fatigue extreme.",
+        "decisionUse": "Block any design that makes harmful amplification the only available progression route.",
+        "owner": "Safety and runtime assurance",
+        "priority": "critical",
+        "status": "current",
+        "lastReviewed": "2026-09-08",
+        "reviewTrigger": "Any choice grammar, access, fatigue, or progression change.",
+        "dependencies": ["CHR-CSD-009"],
+        "supersedes": [],
+        "history": [{"date": "2026-09-08", "from": null, "to": "certainty", "basis": "Initial audited discovery register."}]
+      },
+      {
+        "id": "CHR-CSD-011",
+        "classification": "supposition",
+        "topic": "agency",
+        "statement": "We believe leaving an ideal visible and explaining its capacity barrier can make systems pressure legible without excusing the next harmful action or shaming the reader.",
+        "basis": "The blocked receipt names motive, pressure, missing support, enactment gap, and dominant fatigue while preserving responsibility; participant interpretation is untested.",
+        "sourceIds": ["CHR-SRC-COMM", "CHR-SRC-INTERACTION"],
+        "evidence": "Implemented causal explanation and ethical rationale; no reception evidence.",
+        "testOrResearch": "Use cognitive interviews after blocked choices to test whether readers distinguish explanation, inevitability, responsibility, and available fallback action.",
+        "decisionUse": "Confirm before treating the blocked-receipt pattern as cognitively or affectively successful.",
+        "owner": "UX research and ethics",
+        "priority": "high",
+        "status": "research-needed",
+        "lastReviewed": "2026-09-08",
+        "reviewTrigger": "Participant evidence or blocked-receipt copy change.",
+        "dependencies": ["CHR-CSD-009", "CHR-CSD-010"],
+        "supersedes": [],
+        "history": [{"date": "2026-09-08", "from": null, "to": "supposition", "basis": "Plausible from the causal receipt; affective outcome unverified."}]
+      },
+      {
+        "id": "CHR-CSD-012",
+        "classification": "doubt",
+        "topic": "agency",
+        "statement": "Which barriers do readers understand as structural support gaps, and which do they misread as fixed personality or permission to disengage?",
+        "basis": "The model makes the distinction explicit, but different readers may still import individualizing explanations.",
+        "sourceIds": ["CHR-SRC-COMM", "CHR-SRC-THESIS", "CHR-SRC-LIMITS"],
+        "evidence": "Open interpretation and harm question.",
+        "testOrResearch": "Probe explanation, responsibility allocation, and proposed next actions across several blocked-receipt variants and audience contexts.",
+        "decisionUse": "May change barrier language, support visualization, model limits, or facilitation notes.",
+        "owner": "Ethics and UX research",
+        "priority": "high",
+        "status": "open",
+        "lastReviewed": "2026-09-08",
+        "reviewTrigger": "Participant evidence, misuse report, or fatigue-model revision.",
+        "dependencies": ["CHR-CSD-011"],
+        "supersedes": [],
+        "history": [{"date": "2026-09-08", "from": null, "to": "doubt", "basis": "Reader attribution is not known."}]
+      },
+      {
+        "id": "CHR-CSD-013",
+        "classification": "certainty",
+        "topic": "disclosure",
+        "statement": "We know analytic classifications remain sealed until all six rooms close and the completed-night reading order is naturalized summary, visible model limit, then plain concept receipt.",
+        "basis": "Completion gates, render order, and source inspections prohibit premature analytic surfaces and the historical tabbed receipt structure.",
+        "sourceIds": ["CHR-SRC-INTERACTION", "CHR-SRC-A11Y-TEST", "CHR-SRC-VIEWPORT-TEST"],
+        "evidence": "Current source-bound disclosure and reading-order contract.",
+        "testOrResearch": "Preserve completion, accessibility-tree, DOM-order, and no-tab/no-Heart negative checks.",
+        "decisionUse": "Do not move the concept taxonomy into active play or fragment the conclusion into competing panels.",
+        "owner": "Interaction and copy architecture",
+        "priority": "critical",
+        "status": "current",
+        "lastReviewed": "2026-09-08",
+        "reviewTrigger": "Any disclosure, navigation, conclusion, or accessibility-tree change.",
+        "dependencies": [],
+        "supersedes": [],
+        "history": [{"date": "2026-09-08", "from": null, "to": "certainty", "basis": "Initial audited discovery register."}]
+      },
+      {
+        "id": "CHR-CSD-014",
+        "classification": "certainty",
+        "topic": "disclosure",
+        "statement": "We know concept status is derived from accepted-scene rules, matched effect receipts, and explicit choice bindings rather than from labels, intent, tags, prose, or tone.",
+        "basis": "The pure concept-receipt builder retains independent scene, effect, and decision provenance and is attacked by prose-mutation and removed-binding tests.",
+        "sourceIds": ["CHR-SRC-COPY", "CHR-SRC-GENERATION", "CHR-SRC-COPY-TEST"],
+        "evidence": "Current typed derivation with adversarial executable tests.",
+        "testOrResearch": "Keep independent provenance and semantic-mutation attacks whenever concepts or copy change.",
+        "decisionUse": "Reject any shortcut that reads user-facing language as the semantic authority.",
+        "owner": "Copy and model assurance",
+        "priority": "critical",
+        "status": "current",
+        "lastReviewed": "2026-09-08",
+        "reviewTrigger": "Any lesson, binding, effect, status, or conclusion-copy change.",
+        "dependencies": ["CHR-CSD-013"],
+        "supersedes": [],
+        "history": [{"date": "2026-09-08", "from": null, "to": "certainty", "basis": "Initial audited discovery register."}]
+      },
+      {
+        "id": "CHR-CSD-015",
+        "classification": "supposition",
+        "topic": "disclosure",
+        "statement": "We believe a continuous naturalized account followed by a separate plain receipt will preserve experiential coherence while still making the underlying concepts inspectable.",
+        "basis": "The two surfaces have deliberately different jobs and pass source-level copy and reading-order gates; comparative comprehension and preference evidence is absent.",
+        "sourceIds": ["CHR-SRC-COPY", "CHR-SRC-INTERACTION", "CHR-SRC-COPY-TEST"],
+        "evidence": "Implemented and source-verified presentation hypothesis.",
+        "testOrResearch": "Compare causal reconstruction, concept explanation, model-limit recall, and reading continuity against bounded alternate conclusion structures.",
+        "decisionUse": "Confirm before claiming the current conclusion improves understanding or engagement.",
+        "owner": "Content design and UX research",
+        "priority": "high",
+        "status": "research-needed",
+        "lastReviewed": "2026-09-08",
+        "reviewTrigger": "Participant evidence or material conclusion rewrite.",
+        "dependencies": ["CHR-CSD-013", "CHR-CSD-014"],
+        "supersedes": [],
+        "history": [{"date": "2026-09-08", "from": null, "to": "supposition", "basis": "Coherent design rationale; user outcome unverified."}]
+      },
+      {
+        "id": "CHR-CSD-016",
+        "classification": "doubt",
+        "topic": "disclosure",
+        "statement": "After time has passed, which causal relationships and claim limits do readers retain, and which parts of the night collapse into a simpler moral?",
+        "basis": "Current checks establish derivation and presentation, not delayed comprehension or resistance to narrative compression.",
+        "sourceIds": ["CHR-SRC-THESIS", "CHR-SRC-INTERACTION", "CHR-SRC-LIMITS"],
+        "evidence": "Open delayed-learning question.",
+        "testOrResearch": "Use immediate and delayed reconstruction interviews, asking for evidence, unknowns, causal routes, and prohibited generalizations rather than a satisfaction score alone.",
+        "decisionUse": "May change the receipt, revisit tools, facilitation material, or public learning claims.",
+        "owner": "Learning research",
+        "priority": "high",
+        "status": "open",
+        "lastReviewed": "2026-09-08",
+        "reviewTrigger": "Delayed study evidence or a new learning claim.",
+        "dependencies": ["CHR-CSD-015"],
+        "supersedes": [],
+        "history": [{"date": "2026-09-08", "from": null, "to": "doubt", "basis": "No delayed comprehension evidence exists."}]
+      },
+      {
+        "id": "CHR-CSD-017",
+        "classification": "certainty",
+        "topic": "accessibility",
+        "statement": "We know current automated checks cover semantic landmarks, keyboard contracts, visible focus, disclosure parity, reduced motion, forced colors, reflow rules, and non-color status labels, but do not establish full accessibility conformance.",
+        "basis": "The accessibility specification distinguishes source evidence from manual browser and assistive-technology evidence, and release status keeps those gates open.",
+        "sourceIds": ["CHR-SRC-ACCESSIBILITY", "CHR-SRC-A11Y-TEST", "CHR-SRC-VIEWPORT-TEST", "CHR-SRC-RELEASE"],
+        "evidence": "Current automated contract with an explicit evidence ceiling.",
+        "testOrResearch": "Continue automated regression checks and complete the named manual matrix on the exact release binding.",
+        "decisionUse": "Do not convert passing static checks into an unqualified accessibility claim.",
+        "owner": "Accessibility assurance",
+        "priority": "critical",
+        "status": "current-limited",
+        "lastReviewed": "2026-09-08",
+        "reviewTrigger": "Any interaction, style, disclosure, build, or release-binding change.",
+        "dependencies": [],
+        "supersedes": [],
+        "history": [{"date": "2026-09-08", "from": null, "to": "certainty", "basis": "Certainty is the bounded state of evidence, not a conformance claim."}]
+      },
+      {
+        "id": "CHR-CSD-018",
+        "classification": "certainty",
+        "topic": "accessibility",
+        "statement": "We know the documented interaction model requires equivalent text for graphs and makes reading pace, input method, focus, zoom, and assistive technology irrelevant to modeled outcomes.",
+        "basis": "Accessibility and mutation contracts require semantic alternatives and exclude interface inspection from night-state transitions.",
+        "sourceIds": ["CHR-SRC-ACCESSIBILITY", "CHR-SRC-RUNTIME", "CHR-SRC-A11Y-TEST"],
+        "evidence": "Current design and source-bound invariant.",
+        "testOrResearch": "Preserve canonical text equivalents and state-idempotency checks for every new visual or interactive documentation surface.",
+        "decisionUse": "Treat visual exploration as supplementary and never as the only source of meaning.",
+        "owner": "Accessibility and documentation",
+        "priority": "critical",
+        "status": "current",
+        "lastReviewed": "2026-09-08",
+        "reviewTrigger": "Any graph, timing, input, or documentation interaction change.",
+        "dependencies": ["CHR-CSD-006"],
+        "supersedes": [],
+        "history": [{"date": "2026-09-08", "from": null, "to": "certainty", "basis": "Initial audited discovery register."}]
+      },
+      {
+        "id": "CHR-CSD-019",
+        "classification": "supposition",
+        "topic": "accessibility",
+        "statement": "We believe searchable, keyboard-operable maps with complete static text equivalents will let different readers inspect complexity without making the visual graph a comprehension prerequisite.",
+        "basis": "The exported documentation uses progressive enhancement and a canonical text list, but it has not yet been exercised with assistive-technology users.",
+        "sourceIds": ["CHR-SRC-ACCESSIBILITY", "CHR-SRC-INTERACTION"],
+        "evidence": "Standards-informed implementation hypothesis; usability evidence pending.",
+        "testOrResearch": "Run keyboard, VoiceOver, NVDA, zoom, reflow, forced-colors, and reduced-motion tasks on both no-script and enhanced editions with representative readers.",
+        "decisionUse": "Confirm before calling the interactive maps easier or more accessible than the Markdown source alone.",
+        "owner": "Documentation UX and accessibility",
+        "priority": "high",
+        "status": "research-needed",
+        "lastReviewed": "2026-09-08",
+        "reviewTrigger": "Manual map review or interaction redesign.",
+        "dependencies": ["CHR-CSD-017", "CHR-CSD-018"],
+        "supersedes": [],
+        "history": [{"date": "2026-09-08", "from": null, "to": "supposition", "basis": "Progressive enhancement is implemented; reader outcome unverified."}]
+      },
+      {
+        "id": "CHR-CSD-020",
+        "classification": "doubt",
+        "topic": "accessibility",
+        "statement": "Where do current CHORUS and documentation interactions fail under VoiceOver, NVDA, touch, 400% reflow, forced colors, or a second browser engine?",
+        "basis": "Those current-source manual observations remain open in the release record.",
+        "sourceIds": ["CHR-SRC-ACCESSIBILITY", "CHR-SRC-RELEASE", "CHR-SRC-WORKING-STATUS"],
+        "evidence": "Explicitly unverified release boundary.",
+        "testOrResearch": "Execute the manual assistive-technology and viewport matrix against one exact source digest and retain failures, corrections, and reruns.",
+        "decisionUse": "Blocks unqualified accessibility and release-completion claims; defects may change interaction or styling.",
+        "owner": "Accessibility assurance",
+        "priority": "critical",
+        "status": "open",
+        "lastReviewed": "2026-09-08",
+        "reviewTrigger": "Completion of any named manual run or source-binding change.",
+        "dependencies": ["CHR-CSD-017", "CHR-CSD-019"],
+        "supersedes": [],
+        "history": [{"date": "2026-09-08", "from": null, "to": "doubt", "basis": "Current-source manual evidence is absent."}]
+      },
+      {
+        "id": "CHR-CSD-021",
+        "classification": "certainty",
+        "topic": "privacy",
+        "statement": "We know an open-tab, memory-only session is the default and a browser slot is written only after explicit per-slot enablement and save action.",
+        "basis": "The save model has no import-time storage effect, and focused tests verify consent and selected-key isolation.",
+        "sourceIds": ["CHR-SRC-ARCH", "CHR-SRC-PRIVACY", "CHR-SRC-SAVE", "CHR-SRC-SAVE-TEST"],
+        "evidence": "Current persistence contract with executable storage tests.",
+        "testOrResearch": "Keep zero-import-write, per-slot consent, inventory, deletion, and corrupt-slot isolation checks.",
+        "decisionUse": "Reject automatic persistence, inventory reads, or cross-slot writes.",
+        "owner": "Privacy and persistence",
+        "priority": "critical",
+        "status": "current",
+        "lastReviewed": "2026-09-08",
+        "reviewTrigger": "Any storage, privacy-panel, save, or browser-platform change.",
+        "dependencies": [],
+        "supersedes": [],
+        "history": [{"date": "2026-09-08", "from": null, "to": "certainty", "basis": "Initial audited discovery register."}]
+      },
+      {
+        "id": "CHR-CSD-022",
+        "classification": "certainty",
+        "topic": "privacy",
+        "statement": "We know portable input is bounded, previewed, integrity-checked, reconstructed through ordinary generation and reduction, and rejected before state replacement when validation fails.",
+        "basis": "Save parsing and replay reject malformed, oversized, foreign, unsupported, or fabricated state even when a checksum is recomputed.",
+        "sourceIds": ["CHR-SRC-SAVE", "CHR-SRC-ARCH", "CHR-SRC-SAVE-TEST"],
+        "evidence": "Current fail-closed import and reconstruction evidence.",
+        "testOrResearch": "Retain hostile size, depth, type, version, corruption, fabrication, and replay-mismatch cases.",
+        "decisionUse": "Do not load untrusted state directly or treat checksum validity as semantic validity.",
+        "owner": "Privacy, security, and persistence",
+        "priority": "critical",
+        "status": "current",
+        "lastReviewed": "2026-09-08",
+        "reviewTrigger": "Any schema, parser, migration, reconstruction, or export change.",
+        "dependencies": ["CHR-CSD-021"],
+        "supersedes": [],
+        "history": [{"date": "2026-09-08", "from": null, "to": "certainty", "basis": "Initial audited discovery register."}]
+      },
+      {
+        "id": "CHR-CSD-023",
+        "classification": "supposition",
+        "topic": "privacy",
+        "statement": "We believe separating open-tab memory, optional browser slots, and portable files in one progressively disclosed privacy destination will improve control and trust without interrupting play.",
+        "basis": "The interface exposes distinct scope, consent, preview, and deletion language, but users' storage mental models have not been studied.",
+        "sourceIds": ["CHR-SRC-PRIVACY", "CHR-SRC-INTERACTION", "CHR-SRC-SAVE"],
+        "evidence": "Implemented privacy rationale; comprehension and trust effects unknown.",
+        "testOrResearch": "Ask readers to predict what survives close, reload, another profile, export, clear, and corrupt import before and after using the controls.",
+        "decisionUse": "Confirm before claiming the controls communicate privacy effectively.",
+        "owner": "Privacy UX research",
+        "priority": "high",
+        "status": "research-needed",
+        "lastReviewed": "2026-09-08",
+        "reviewTrigger": "Privacy comprehension evidence or control redesign.",
+        "dependencies": ["CHR-CSD-021", "CHR-CSD-022"],
+        "supersedes": [],
+        "history": [{"date": "2026-09-08", "from": null, "to": "supposition", "basis": "Clear architecture does not establish user comprehension."}]
+      },
+      {
+        "id": "CHR-CSD-024",
+        "classification": "doubt",
+        "topic": "privacy",
+        "statement": "Which storage boundary do readers misunderstand most often: open-tab loss, browser-profile scope, explicit slot consent, or player-controlled file transfer?",
+        "basis": "The distinctions are implemented and documented, but no observed comprehension evidence identifies the remaining failure point.",
+        "sourceIds": ["CHR-SRC-PRIVACY", "CHR-SRC-SAVE", "CHR-SRC-LIMITS"],
+        "evidence": "Open privacy mental-model question.",
+        "testOrResearch": "Use scenario-based prediction and recovery tasks, including cancel, clear, corrupt file, version mismatch, and another-profile cases.",
+        "decisionUse": "May change labels, ordering, confirmation, recovery copy, or whether a control remains in the shared drawer.",
+        "owner": "Privacy UX research",
+        "priority": "high",
+        "status": "open",
+        "lastReviewed": "2026-09-08",
+        "reviewTrigger": "Observed comprehension evidence or persistence change.",
+        "dependencies": ["CHR-CSD-023"],
+        "supersedes": [],
+        "history": [{"date": "2026-09-08", "from": null, "to": "doubt", "basis": "No observed storage mental-model evidence exists."}]
+      },
+      {
+        "id": "CHR-CSD-025",
+        "classification": "certainty",
+        "topic": "release",
+        "statement": "We know the current generator-version-14 source passed its recorded automated working-tree gate, while release promotion remains held for renewed browser, assistive-technology, route, dependency, mobile, and neutral-distribution evidence on the exact promoted binding.",
+        "basis": "The release record separates current automated evidence from historical browser and distribution runs rather than relabeling earlier results.",
+        "sourceIds": ["CHR-SRC-RELEASE", "CHR-SRC-WORKING-STATUS", "CHR-SRC-TESTING"],
+        "evidence": "Time- and source-bounded release status; not a permanent production-readiness claim.",
+        "testOrResearch": "Renew every open promotion gate on one exact source digest and preserve failed observations and corrections.",
+        "decisionUse": "Continue to describe the build as held rather than fully promoted until the evidence set closes.",
+        "owner": "Release assurance",
+        "priority": "critical",
+        "status": "current-limited",
+        "lastReviewed": "2026-09-08",
+        "reviewTrigger": "Any source, dependency, deployment, evidence, or release-decision change.",
+        "dependencies": [],
+        "supersedes": [],
+        "history": [{"date": "2026-09-08", "from": null, "to": "certainty", "basis": "Certainty is the bounded release decision and its explicit open gates."}]
+      },
+      {
+        "id": "CHR-CSD-026",
+        "classification": "certainty",
+        "topic": "release",
+        "statement": "We know CHORUS is a synthetic explanatory model and currently has no evidence that it predicts real behavior, diagnoses people, measures player judgment, or establishes real-world learning transfer.",
+        "basis": "Those uses are prohibited by the thesis and limitations, and no external participant or predictive validation record is present.",
+        "sourceIds": ["CHR-SRC-THESIS", "CHR-SRC-LIMITS", "CHR-SRC-RELEASE"],
+        "evidence": "Explicit product boundary and absence-of-evidence statement.",
+        "testOrResearch": "Keep public language within the established evidence ceiling; evaluate any new claim before publication.",
+        "decisionUse": "Reject diagnostic, predictive, personnel, trust-scoring, or universal learning claims.",
+        "owner": "Product ethics and release assurance",
+        "priority": "critical",
+        "status": "current-limited",
+        "lastReviewed": "2026-09-08",
+        "reviewTrigger": "Any study, public claim, audience expansion, or product-positioning change.",
+        "dependencies": ["CHR-CSD-025"],
+        "supersedes": [],
+        "history": [{"date": "2026-09-08", "from": null, "to": "certainty", "basis": "The known fact is the current evidence boundary, not proof of no possible effect."}]
+      },
+      {
+        "id": "CHR-CSD-027",
+        "classification": "supposition",
+        "topic": "release",
+        "statement": "We believe the PG-bounded, local-first, inspectable form may support useful reflection in household, classroom, library, civic, and professional-learning contexts without flattening the represented social systems.",
+        "basis": "The content, privacy, accessibility, and explanation boundaries were designed for those contexts, but contextual pilots and transfer evidence do not yet establish suitability or benefit.",
+        "sourceIds": ["CHR-SRC-THESIS", "CHR-SRC-PRIVACY", "CHR-SRC-ACCESSIBILITY", "CHR-SRC-LIMITS"],
+        "evidence": "Audience and deployment hypothesis; external evidence absent.",
+        "testOrResearch": "Run small, consented contextual pilots with facilitators and participants; examine comprehension, burden, misapplication, accessibility, and delayed transfer separately.",
+        "decisionUse": "Confirm per context before making audience-specific benefit or adoption claims.",
+        "owner": "Product and contextual research",
+        "priority": "high",
+        "status": "research-needed",
+        "lastReviewed": "2026-09-08",
+        "reviewTrigger": "Contextual pilot, facilitator feedback, harm report, or audience change.",
+        "dependencies": ["CHR-CSD-026"],
+        "supersedes": [],
+        "history": [{"date": "2026-09-08", "from": null, "to": "supposition", "basis": "Intended audience fit is plausible but unverified."}]
+      },
+      {
+        "id": "CHR-CSD-028",
+        "classification": "doubt",
+        "topic": "release",
+        "statement": "Which audiences retain CHORUS's distinctions and transfer them responsibly without turning the work into a detector, personality theory, or interpersonal targeting frame?",
+        "basis": "External validity, delayed transfer, facilitator effects, and misuse pathways remain unmeasured.",
+        "sourceIds": ["CHR-SRC-THESIS", "CHR-SRC-LIMITS", "CHR-SRC-RELEASE"],
+        "evidence": "Open external-validity and misuse question.",
+        "testOrResearch": "Use staged contextual studies with delayed follow-up, prohibited-inference probes, accessibility review, facilitator comparison, and explicit adverse-use red teaming.",
+        "decisionUse": "May narrow audiences, add facilitation requirements, change public positioning, or stop a deployment context.",
+        "owner": "Product ethics and research",
+        "priority": "critical",
+        "status": "open",
+        "lastReviewed": "2026-09-08",
+        "reviewTrigger": "Any external study, deployment, misuse report, or audience claim.",
+        "dependencies": ["CHR-CSD-027"],
+        "supersedes": [],
+        "history": [{"date": "2026-09-08", "from": null, "to": "doubt", "basis": "Responsible transfer has not been established."}]
+      }
+    ]
+  }
+}

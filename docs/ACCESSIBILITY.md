@@ -25,6 +25,8 @@ colors, and screen-reader checks.
 6. The document remains zoomable and text remains reflowable.
 7. A graph is paired with an equivalent text representation.
 8. Dynamic updates are announced without seizing focus unpredictably.
+9. Interactive documentation begins with complete static semantics; filtering
+   and export are optional enhancements and never change authoritative state.
 
 ## Structure and semantics
 
@@ -41,6 +43,10 @@ colors, and screen-reader checks.
 - Metrics expose text labels and values in addition to visual bars.
 - The relationship SVG exposes focusable named nodes and has a textual list
   that provides the same relations.
+- The documentation concept map exposes focusable named nodes, a complete
+  concept catalog, and a complete typed-relation table. Its CSD companion uses
+  native disclosures and labelled filters while retaining every entry without
+  scripting.
 - Status messages use a polite live region. Destructive confirmation and import
   preview remain visible in normal document flow.
 
@@ -206,6 +212,7 @@ leaked through the accessibility tree.
 | Mobile and short-landscape reflow | `tests/viewport-contract.test.mjs` |
 | Tab-free naturalized summary and separate plain concept receipt in normal flow | `tests/viewport-contract.test.mjs` and `tests/accessibility-disclosure.test.mjs` |
 | Reading and repeated state inspection do not add fatigue | `tests/concurrent-night.test.mjs` |
+| Discovery-map source parity, geometry, semantic fallback, controls, contrast, and no-network/no-storage boundary | `scripts/docs/build_discovery_maps.py --check` |
 
 ### Manual release checks
 

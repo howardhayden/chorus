@@ -39,7 +39,9 @@ A change can occupy several classes; apply every relevant review.
 9. Add a decision record if rationale, trust boundary, versioning, or a durable
    constraint changed.
 10. Rebuild executed notebooks when their source data or claims changed.
-11. Build and inspect a clean source archive.
+11. Rebuild the discovery maps when a mapped concept, relation, evidence
+    class, research question, or cited source changed.
+12. Build and inspect a clean source archive.
 
 For a candidate, `npm run verify:release` is the complete repository gate; it
 does not replace the retained browser and clean-distribution results named by
@@ -184,12 +186,23 @@ executed provenance cells; notebook metadata records build date, builder, and
 deterministic publication status. Rebuild when generator, reducer, validation,
 metric definitions, or analyzed test fixtures change.
 
+### Discovery-map revision
+
+`docs/discovery/CHORUS-DISCOVERY-ATLAS.json` is the sole source for the
+concept-map and CSD-matrix projections. Preserve stable IDs. Add dated history
+before changing a CSD classification, update supersession explicitly, rebuild
+with `python3 scripts/docs/build_discovery_maps.py`, and reject any public or
+Markdown drift with `--check`. A filtered browser export is never a source
+revision.
+
 ## Documentation maintenance
 
 - Update the canonical owner, not every page that links to it.
 - Keep README setup commands synchronized with distributable package scripts.
 - Reject links to files excluded from the clean archive.
 - Keep notebook source and completed HTML together.
+- Keep the discovery register, generated Markdown, interactive HTML, public
+  data copy, and integrity manifests together; never hand-edit a projection.
 - Do not name prohibited source traditions, hidden internal taxonomies, or
   platform-specific repository internals in public documentation.
 - Run the documentation reference and link scan before release.
@@ -252,6 +265,10 @@ were a release transcript.
 - [ ] Forbidden-reference scan passes.
 - [ ] Systems and Validation notebook sources execute cleanly.
 - [ ] Completed notebook HTML and source downloads are present.
+- [ ] Concept-map and CSD Markdown, HTML, public data, and manifests pass their
+      deterministic drift check.
+- [ ] Discovery-map keyboard, no-script, reflow, forced-colors, and Markdown
+      export paths are inspected in a browser.
 - [ ] Traceability and known limitations are current.
 - [ ] Release evidence records environment, commands, digests, and manual matrix.
 

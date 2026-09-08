@@ -13,10 +13,11 @@ maintenance rules.
 
 ### Understand the work
 
-1. [Thesis and ethical argument](THESIS-AND-ETHICS.md)
-2. [Communication and fatigue atlas](COMMUNICATION-ATLAS.md)
-3. [Copy and voice](COPY-VOICE.md)
-4. [Visual system](VISUAL-SYSTEM.md)
+1. [Interactive concept map](CONCEPT-MAP.md)
+2. [Thesis and ethical argument](THESIS-AND-ETHICS.md)
+3. [Communication and fatigue atlas](COMMUNICATION-ATLAS.md)
+4. [Copy and voice](COPY-VOICE.md)
+5. [Visual system](VISUAL-SYSTEM.md)
 
 These pages explain what CHORUS represents, which distinctions it protects,
 and why its aesthetic and disclosure structure serve the argument.
@@ -50,7 +51,10 @@ information timing, data handling, and degraded states.
 5. [Limitations](LIMITATIONS.md)
 6. [Architecture decisions](decisions/README.md)
 7. [Copy and voice atomic requirements](requirements/COPY-VOICE-REGISTER.md)
-8. [Glossary](GLOSSARY.md)
+8. [Interactive CSD matrix](CSD-MATRIX.md)
+9. [Discovery-map publication contract](DISCOVERY-MAPS.md)
+10. [Discovery-map atomic requirements](requirements/DISCOVERY-MAPS-REGISTER.md)
+11. [Glossary](GLOSSARY.md)
 
 These pages connect claims to executable checks and record how to extend the
 system without weakening its boundaries.
@@ -58,6 +62,9 @@ system without weakening its boundaries.
 ### Inspect the evidence
 
 - [Current automated working-tree status](../public/evidence/updated-working-tree-status.html)
+- [Interactive documentation-map index](../public/documentation/index.html)
+- [Interactive concept-map export](../public/documentation/chorus-concept-map.html)
+- [Interactive CSD-matrix export](../public/documentation/chorus-csd-matrix.html)
 - [Executed notebook publication](NOTEBOOKS.md)
 - [Systems Atlas](../public/notebooks/chorus-systems-atlas.html)
 - [Model Specification](../public/notebooks/chorus-model-specification.html)
@@ -74,6 +81,7 @@ remain available beside them so a result can be inspected and reproduced.
 | Topic | Canonical document |
 |---|---|
 | Product thesis, audience, educational and ethical boundaries | [Thesis and ethical argument](THESIS-AND-ETHICS.md) |
+| Concept-map nodes, typed relationships, CSD evidence classes, research paths, and exported-map behavior | [Interactive discovery maps](DISCOVERY-MAPS.md) and its [authoritative register](discovery/CHORUS-DISCOVERY-ATLAS.json) |
 | Communication dynamics, linguistic repertoires, motive/evidence separation, fatigue semantics | [Communication and fatigue atlas](COMMUNICATION-ATLAS.md) |
 | Player-facing voice classes, atomization, naturalized summary, plain concept receipt, and copy evidence sequence | [Copy and voice](COPY-VOICE.md) |
 | Atomic copy requirements, provenance, precedence, conflicts, acceptance, and supersession | [Copy and voice atomic requirements](requirements/COPY-VOICE-REGISTER.md) |
@@ -106,5 +114,8 @@ remain available beside them so a result can be inspected and reproduced.
   documents and a corresponding executable or manual check.
 - Notebook results never replace a release-blocking test. They explain and
   visualize the same deterministic contracts.
+- Discovery maps summarize their cited canonical owners. Filters and exports
+  alter presentation only; they do not revise evidence state or supersede a
+  behavioral specification.
 - A changed behavior updates its canonical document, traceability row, and
   decision record when the rationale or boundary changes.
