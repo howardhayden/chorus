@@ -1,0 +1,62 @@
+{
+  "format": "CHORUS_DISCOVERY_ARTIFACTS",
+  "schemaVersion": 1,
+  "revision": "2026-09-08",
+  "buildDate": "2026-09-08",
+  "builder": "scripts/docs/build_discovery_maps.py",
+  "canonicalSource": "docs/discovery/CHORUS-DISCOVERY-ATLAS.json",
+  "canonicalSourceSha256": "35670849d7c1d5aabf2338493f35621a9d726a0357f2d2ed5ed854fe9d387924",
+  "deterministic": true,
+  "progressiveEnhancement": true,
+  "authoritativeStateMutableInBrowser": false,
+  "artifacts": [
+    {
+      "path": "docs/CONCEPT-MAP.md",
+      "mediaType": "text/markdown",
+      "bytes": 27625,
+      "sha256": "41959ad2c21cb78059966267f60dc8119f338f00b9c31e9720306b1c75d7fd5d"
+    },
+    {
+      "path": "docs/CSD-MATRIX.md",
+      "mediaType": "text/markdown",
+      "bytes": 51394,
+      "sha256": "b5766059fcd834ef57d2aaf5659b5803099d7c2306b9904532e70c7b200169a9"
+    },
+    {
+      "path": "public/documentation/CHORUS-CONCEPT-MAP.md",
+      "mediaType": "text/markdown",
+      "bytes": 27577,
+      "sha256": "34fdfb28f7dc7a4b00fe68caa5dc2ac6ab5cffa65eb4eca2b64b513418264f13"
+    },
+    {
+      "path": "public/documentation/CHORUS-CSD-MATRIX.md",
+      "mediaType": "text/markdown",
+      "bytes": 51346,
+      "sha256": "7f92e07201ded3b6e74355966ba193db8861b644fb2d10a0f058b586aa7f38a0"
+    },
+    {
+      "path": "public/documentation/chorus-concept-map.html",
+      "mediaType": "text/html",
+      "bytes": 99808,
+      "sha256": "4ceeb3c8cef065f120844f8d2e683c84219a100f1c58a87d48f4e6d455de5f08"
+    },
+    {
+      "path": "public/documentation/chorus-csd-matrix.html",
+      "mediaType": "text/html",
+      "bytes": 116112,
+      "sha256": "59588c9b86cef0441219bfd46e5d52c9fb9eb9b223679d9aceff13e624f39d44"
+    },
+    {
+      "path": "public/documentation/discovery-atlas.json",
+      "mediaType": "application/json",
+      "bytes": 75724,
+      "sha256": "b1444129b57f3b049b3c106fc41c25cea8c4309ba2e7cd3661352aa011645767"
+    },
+    {
+      "path": "public/documentation/index.html",
+      "mediaType": "text/html",
+      "bytes": 14031,
+      "sha256": "8c386ac6753e09c91ca3fdbe2453421c56dca0436c61d5407721faa650fe7e04"
+    }
+  ]
+}

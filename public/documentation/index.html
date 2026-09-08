@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Interactive and downloadable concept-map and CSD-matrix editions generated from one authoritative discovery register.">
+<meta name="theme-color" content="#0b2819">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="icon" href="../favicon-32x32.png" sizes="32x32" type="image/png">
+<link rel="shortcut icon" href="../favicon.ico">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png" sizes="180x180">
+<link rel="manifest" href="../site.webmanifest">
+<title>CHORUS documentation maps · CHORUS documentation</title>
+<style>
+:root{
+  color-scheme:dark;
+  --ink:#f2f1e8;--muted:#c7d1c9;--green:#0b2819;--green-2:#123d27;
+  --mint:#a7e0bd;--gold:#e2c57f;--silver:#d5dedc;--line:rgba(213,222,220,.24);
+  --paper:#07140d;--panel:#0b1f14;--focus:#f1cf78;--danger:#f1b5a8;
+  font-family:Georgia,"Times New Roman",serif;
+}
+*{box-sizing:border-box}
+html{background:var(--paper);color:var(--ink);scroll-behavior:smooth}
+body{margin:0;min-width:280px;background:
+  radial-gradient(circle at 10% 0%,rgba(37,101,64,.32),transparent 34rem),
+  radial-gradient(circle at 92% 12%,rgba(196,155,72,.13),transparent 28rem),var(--paper);line-height:1.65}
+a{color:var(--mint);text-underline-offset:.18em}
+a:hover{text-decoration-thickness:.15em}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible,
+.map-stage:focus-visible,.table-wrap:focus-visible,.concept-node:focus-visible .node-shape{
+  outline:3px solid var(--focus);outline-offset:4px
+}
+.skip-link{position:absolute;left:1rem;top:-8rem;z-index:30;padding:.7rem 1rem;background:#fff;color:#07140d;border-radius:.4rem}
+.skip-link:focus{top:1rem}
+.site-header{border-bottom:1px solid var(--line);padding:clamp(2rem,7vw,5.5rem) max(1rem,calc((100vw - 76rem)/2));background:rgba(4,18,11,.72)}
+.eyebrow{margin:0 0 .8rem;color:var(--gold);font:700 .78rem/1.4 ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:.14em;text-transform:uppercase}
+h1,h2,h3,h4{line-height:1.15;text-wrap:balance}
+h1{margin:0;max-width:17ch;font-size:clamp(2.4rem,7vw,5.8rem);font-weight:600;letter-spacing:-.035em}
+.lede{max-width:72ch;margin:1.2rem 0 0;color:var(--silver);font-size:clamp(1rem,2vw,1.24rem)}
+.doc-nav{display:flex;flex-wrap:wrap;gap:.65rem;margin-top:1.5rem}
+.doc-nav a,.button-link{display:inline-flex;align-items:center;min-height:44px;padding:.55rem .9rem;border:1px solid var(--line);border-radius:999px;background:rgba(11,40,25,.72);text-decoration:none}
+.doc-nav a[aria-current=page]{border-color:var(--gold);color:var(--gold)}
+main{width:min(76rem,calc(100% - 2rem));margin:0 auto;padding:2rem 0 5rem}
+.doc-card{margin:0 0 1.2rem;padding:clamp(1rem,3vw,1.7rem);border:1px solid var(--line);border-radius:.75rem 1.25rem .85rem 1.05rem;background:linear-gradient(145deg,rgba(11,31,20,.96),rgba(8,24,15,.9));box-shadow:0 1rem 3rem rgba(0,0,0,.12)}
+.doc-card h2{margin-top:0;font-size:clamp(1.55rem,3.4vw,2.35rem);color:var(--gold)}
+.doc-card h3{color:var(--silver)}
+.doc-card p,.doc-card li{max-width:82ch}
+.boundary{border-left:5px solid var(--gold)}
+.toolbar{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,13rem),1fr));gap:.8rem;align-items:end;margin:1rem 0;padding:1rem;border:1px solid var(--line);border-radius:.8rem;background:rgba(5,19,11,.76)}
+.toolbar label,.toolbar legend{display:block;color:var(--silver);font-weight:700}
+.toolbar input[type=search],.toolbar select{width:100%;min-height:44px;margin-top:.35rem;padding:.55rem .65rem;border:1px solid var(--line);border-radius:.45rem;background:#041009;color:var(--ink);font:inherit}
+.toolbar button{min-height:44px;padding:.55rem .8rem;border:1px solid var(--line);border-radius:.45rem;background:var(--green);color:var(--ink);font:inherit;cursor:pointer}
+.toolbar button:hover{border-color:var(--gold);color:var(--gold)}
+.toolbar fieldset{min-width:0;margin:0;padding:.45rem .65rem;border:1px solid var(--line);border-radius:.45rem}
+.check-row{display:flex;flex-wrap:wrap;gap:.3rem .8rem;margin-top:.3rem}
+.check-row label{display:flex;gap:.35rem;align-items:center;font-weight:400}
+.status-line{min-height:1.65em;color:var(--mint);font-family:ui-monospace,SFMono-Regular,Consolas,monospace}
+.map-stage{max-width:100%;overflow:auto;border:1px solid var(--line);border-radius:.8rem;background:rgba(4,16,9,.84);overscroll-behavior:contain}
+.map-stage svg{display:block;width:100%;height:auto;min-width:68rem}
+.edge{fill:none;stroke:var(--silver);stroke-width:2;marker-end:url(#map-arrow);opacity:.68;vector-effect:non-scaling-stroke}
+.edge-kind-constraint{stroke:var(--gold);stroke-dasharray:7 6}
+.edge-kind-evidence{stroke:var(--mint)}
+.edge-kind-interpretive{stroke:var(--silver);stroke-dasharray:3 5}
+.concept-node{cursor:pointer;color:inherit;text-decoration:none}
+.node-shape{fill:#0b1f14;stroke:var(--silver);stroke-width:2;rx:14;vector-effect:non-scaling-stroke}
+.concept-node[data-group=knowledge] .node-shape{fill:#10291f}
+.concept-node[data-group=concurrency] .node-shape{fill:#0d2b22}
+.concept-node[data-group=agency] .node-shape{fill:#14281a;stroke:var(--gold)}
+.concept-node[data-group=consequence] .node-shape{fill:#0c2520;stroke:var(--mint)}
+.concept-node[data-group=conclusion] .node-shape{fill:#1a2519;stroke:var(--gold)}
+.concept-node[data-group=root] .node-shape{fill:#123d27;stroke:var(--gold);stroke-width:3}
+.concept-node:hover .node-shape,.concept-node:focus-visible .node-shape,.concept-node.is-selected .node-shape{stroke:var(--focus);stroke-width:4;filter:drop-shadow(0 .5rem .7rem rgba(0,0,0,.35))}
+.concept-node.is-related .node-shape{stroke:var(--mint);stroke-width:3}
+.concept-node.is-dimmed,.edge.is-dimmed{opacity:.16}
+.is-filtered{display:none!important}
+.node-group{fill:var(--gold);font:700 11px ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:1.3px;text-transform:uppercase}
+.node-title{fill:var(--ink);font:700 17px Georgia,"Times New Roman",serif}
+.node-caption{fill:var(--muted);font:12.5px Georgia,"Times New Roman",serif}
+.legend{display:flex;flex-wrap:wrap;gap:.7rem 1.2rem;margin:.8rem 0;color:var(--muted);font-size:.9rem}
+.legend span{display:inline-flex;align-items:center;gap:.45rem}
+.legend i{display:inline-block;width:1.9rem;border-top:2px solid var(--silver)}
+.legend .constraint{border-top-color:var(--gold);border-top-style:dashed}
+.legend .evidence{border-top-color:var(--mint)}
+.legend .interpretive{border-top-style:dotted}
+.selection-panel{margin-top:1rem;padding:1rem;border:1px solid var(--gold);border-radius:.7rem;background:rgba(18,61,39,.38)}
+.selection-panel h3{margin-top:0}
+.catalog-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,20rem),1fr));gap:.8rem}
+.concept-card,.index-card{min-width:0;padding:1rem;border:1px solid var(--line);border-radius:.7rem;background:rgba(14,54,33,.42)}
+.concept-card h3,.index-card h2{margin:.2rem 0 .45rem;color:var(--silver)}
+.concept-card .identifier,.csd-card .identifier{color:var(--gold);font:700 .75rem ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:.07em}
+.source-list{padding-left:1.2rem}
+.table-wrap{max-width:100%;overflow-x:auto;border:1px solid var(--line);border-radius:.7rem;background:rgba(5,19,11,.8)}
+table{width:100%;border-collapse:collapse;min-width:48rem}
+caption{padding:1rem;text-align:left;color:var(--gold);font-size:1.04rem;font-weight:700}
+th,td{padding:.75rem;vertical-align:top;text-align:left;border-top:1px solid var(--line)}
+thead th{color:var(--silver);background:rgba(20,61,39,.72)}
+tbody th{color:var(--mint)}
+.csd-topic{margin:1rem 0 1.35rem;padding-top:.5rem;border-top:1px solid var(--line)}
+.csd-topic>header h3{margin-bottom:.25rem;color:var(--gold);font-size:1.45rem}
+.csd-topic>header p{margin-top:0;color:var(--muted)}
+.csd-columns{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.8rem;align-items:start}
+.csd-column{min-width:0;padding:.8rem;border:1px solid var(--line);border-radius:.7rem;background:rgba(5,19,11,.58)}
+.csd-column h4{margin:.1rem 0 .7rem;color:var(--silver);font-size:1rem}
+.csd-count{display:inline-block;margin-left:.35rem;padding:.05rem .4rem;border:1px solid currentColor;border-radius:999px;font:700 .7rem ui-monospace,SFMono-Regular,Consolas,monospace}
+.csd-card{margin:.6rem 0;border:1px solid var(--line);border-radius:.6rem;background:rgba(14,54,33,.42)}
+.csd-card summary{min-height:44px;padding:.8rem;cursor:pointer;color:var(--ink);font-weight:700}
+.csd-card summary::marker{color:var(--gold)}
+.csd-body{padding:0 .8rem .8rem;border-top:1px solid var(--line)}
+.csd-body dl{margin:.7rem 0 0}
+.csd-body dt{margin-top:.55rem;color:var(--mint);font-weight:700}
+.csd-body dd{margin:.1rem 0 0}
+.classification-certainty{border-top:3px solid var(--mint)}
+.classification-supposition{border-top:3px dashed var(--gold)}
+.classification-doubt{border-top:3px dotted var(--silver)}
+.method-note{padding:1rem;border-left:4px solid var(--mint);background:rgba(14,54,33,.38)}
+.card-index{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,20rem),1fr));gap:1rem}
+.index-card p{color:var(--muted)}
+.link-row{display:flex;flex-wrap:wrap;gap:.65rem;margin-top:1rem}
+.link-row a{display:inline-flex;align-items:center;min-height:44px;padding:.55rem .85rem;border:1px solid var(--line);border-radius:.5rem;text-decoration:none}
+.no-script{color:var(--muted)}
+.js .no-script{display:none}
+.site-footer{border-top:1px solid var(--line);padding:1.5rem max(1rem,calc((100vw - 76rem)/2));color:var(--muted)}
+.sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
+@media(max-width:52rem){.csd-columns{grid-template-columns:1fr}.map-stage svg{min-width:62rem}}
+@media(max-width:42rem){main{width:min(100% - 1rem,76rem)}.doc-card{padding:1rem}.toolbar{grid-template-columns:1fr}table{min-width:42rem}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
+@media(forced-colors:active){*{box-shadow:none!important}.doc-card,.concept-card,.selection-panel,.map-stage,.table-wrap,.csd-column,.csd-card,.index-card{border:1px solid CanvasText}.node-shape{fill:Canvas!important;stroke:CanvasText!important}.edge{stroke:CanvasText!important}.node-title,.node-caption,.node-group{fill:CanvasText!important}.concept-node.is-dimmed,.edge.is-dimmed{opacity:1}.concept-node.is-dimmed .node-shape{stroke-dasharray:2 5!important}}
+@media print{html,body{background:#fff;color:#111}.site-header,.doc-card,.concept-card,.selection-panel,.csd-column,.csd-card,.index-card{background:#fff;color:#111;box-shadow:none}.doc-nav,.skip-link,.toolbar,.selection-panel,.no-script{display:none!important}a{color:#111}.map-stage{overflow:visible}.map-stage svg{min-width:0}.node-shape{fill:#fff!important;stroke:#111!important}.node-title,.node-caption,.node-group{fill:#111!important}.edge{stroke:#111!important}.table-wrap{overflow:visible}table{min-width:0}.csd-columns{grid-template-columns:repeat(3,minmax(0,1fr))}}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to documentation</a>
+<header class="site-header">
+  <p class="eyebrow">CHORUS technical record</p>
+  <h1>CHORUS documentation maps</h1>
+  <p class="lede">Interactive and downloadable concept-map and CSD-matrix editions generated from one authoritative discovery register.</p>
+  <nav class="doc-nav" aria-label="Documentation map navigation"><a href="index.html" aria-current="page">Documentation maps</a><a href="chorus-concept-map.html">Concept map</a><a href="chorus-csd-matrix.html">CSD matrix</a><a href="../notebooks/index.html">Executed notebooks</a></nav>
+</header>
+<main id="main">
+<section class="doc-card boundary"><p class="eyebrow">Two coordinated views · revision 2026-09-08</p><h2>Architecture beside uncertainty</h2><p>The concept map shows how CHORUS's documented concepts relate. The CSD matrix shows which claims are established for the repository, which are testable suppositions, and which remain unresolved. Both editions keep complete text semantics without JavaScript and add read-only filtering and Markdown export when scripting is available.</p></section>
+<section class="card-index" aria-label="Available documentation maps">
+  <article class="index-card"><p class="eyebrow">Typed system relations</p><h2>Concept map</h2><p>Explore knowledge, concurrency, situated agency, cross-room consequence, and the bounded conclusion without treating visual proximity as evidence.</p><div class="link-row"><a href="chorus-concept-map.html">Open interactive edition</a><a href="CHORUS-CONCEPT-MAP.md" download>Download Markdown</a></div></article>
+  <article class="index-card"><p class="eyebrow">NN/g discovery frame</p><h2>CSD matrix</h2><p>Compare current repository certainties, plausible experience outcomes, and open research or release questions by topic and priority.</p><div class="link-row"><a href="chorus-csd-matrix.html">Open interactive edition</a><a href="CHORUS-CSD-MATRIX.md" download>Download Markdown</a></div></article>
+</section>
+<section class="doc-card"><h2>Authority and integrity</h2><p><a href="discovery-atlas.json">Machine-readable authoritative register</a> · <a href="artifact-manifest.json">Artifact manifest with SHA-256 digests</a> · <a href="../notebooks/index.html">Executed notebooks</a> · <a href="../evidence/updated-working-tree-status.html">Current bounded working-tree status</a></p><p>These pages load no remote fonts, scripts, analytics, or media. Source citations may open the canonical repository or the NN/g method page, but all map and matrix content is embedded.</p></section>
+</main>
+<footer class="site-footer"><p>Canonical register · deterministic Markdown and HTML projections · 2026-09-08 · no analytics, storage, or remote runtime dependencies</p></footer>
+</body>
+</html>

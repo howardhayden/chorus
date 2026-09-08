@@ -71,9 +71,10 @@ npm run verify:working-tree
 ```
 
 `npm run verify:working-tree` checks the updated source, deterministic simulation
-evidence, all focused suites, four executed notebook publications, the production
-build, and rendered metadata without rebinding the historical browser and
-clean-room records. The narrower commands remain available:
+evidence, all focused suites, the interactive discovery-map publications, four
+executed notebook publications, the production build, and rendered metadata
+without rebinding the historical browser and clean-room records. The narrower
+commands remain available:
 
 ```sh
 npm run lint
@@ -112,6 +113,9 @@ Start with the [documentation index](docs/index.md). It routes readers by
 purpose and identifies the canonical owner of each specification.
 
 - [Thesis and ethical argument](docs/THESIS-AND-ETHICS.md)
+- [Interactive concept map](docs/CONCEPT-MAP.md)
+- [Interactive CSD matrix](docs/CSD-MATRIX.md)
+- [Discovery-map publication contract](docs/DISCOVERY-MAPS.md)
 - [Architecture](docs/ARCHITECTURE.md)
 - [Generation and coherence](docs/GENERATION-COHERENCE.md)
 - [Concurrent-night runtime](docs/CONCURRENT-NIGHT.md)
@@ -129,6 +133,7 @@ purpose and identifies the canonical owner of each specification.
 - [Dependencies and supply chain](docs/DEPENDENCIES-SUPPLY-CHAIN.md)
 - [Maintenance and release discipline](docs/MAINTENANCE.md)
 - [Executed notebook publication](docs/NOTEBOOKS.md)
+- [Interactive documentation-map exports](public/documentation/index.html)
 - [Architecture decisions](docs/decisions/README.md)
 
 ## Scope boundary

@@ -20,7 +20,7 @@ release decision.
 | `npm run test:linguistics` | Exact voice-source authority, fictional-seat focalization, disclosure-gated builders and publications, route-language truthfulness, sealed save bytes, and complete causal clauses. |
 | `npm run test:a11y` | Progressive disclosure, navigation uniqueness, semantic relations, focus contracts, target floors, privacy disclosure, and labelled completed-night reading order. |
 | `npm run test:viewport` | One-viewport ownership, reflow, named scroll regions, mobile/landscape behavior, operable blocked actions, and the normal-flow completed-night region. |
-| `npm run docs:check` | Documentation-link integrity plus committed notebook source/output drift, completed cells, publication metadata, static HTML structure, local assets, and notebook contrast floor. |
+| `npm run docs:check` | Discovery-register schema, concept geometry and parity, CSD evidence classification, interactive export boundaries, publication manifests, documentation-link integrity, plus committed notebook source/output drift, completed cells, publication metadata, static HTML structure, local assets, and contrast floors. |
 | `npm run build` | Production compilation. |
 | `npm test` | Documentation; night, simulation-contract, save, copy, linguistics, accessibility, viewport, portability, and distribution suites; production build; and rendered metadata check. |
 | `npm run verify:release` | Lint, type check, committed simulation-evidence drift check, then the complete `npm test` release gate. |
@@ -286,6 +286,11 @@ Automated suites do not replace these checks:
     receipt, with no conclusion tabs or Heart taxonomy.
 11. Open every documentation and rendered-notebook link in the source archive
     and published documentation index.
+12. Open both discovery-map editions with and without JavaScript; exercise
+    search, every filter, node selection, native disclosures, reset, keyboard
+    order, narrow reflow, forced colors, and complete and filtered Markdown
+    downloads. Confirm that no interaction reclassifies an item or writes
+    browser storage.
 
 ## Notebook evidence
 
@@ -308,6 +313,26 @@ explain the current version-15 contracts. The Historical Verification Ledger
 retains earlier browser, distribution, and release results under their original
 provenance. Neither publication generation nor current focused tests substitutes
 for live-browser or assistive-technology evidence.
+
+## Interactive discovery-map evidence
+
+The [concept map](../public/documentation/chorus-concept-map.html) and
+[CSD matrix](../public/documentation/chorus-csd-matrix.html) are generated from
+one [authoritative register](discovery/CHORUS-DISCOVERY-ATLAS.json). The
+standard-library builder validates stable IDs, sources, classification history,
+topic coverage, explicit evidence and research paths, non-overlapping node
+geometry, orthogonal crossing-free primary routes, complete text equivalence,
+progressive-enhancement controls, export scope warnings, styling and contrast
+contracts, prohibited network or storage behavior, and exact artifact drift.
+
+```sh
+python3 scripts/docs/build_discovery_maps.py --check
+```
+
+That command is evidence for deterministic publication and static interaction
+contracts. It does not prove live keyboard behavior, assistive-technology
+output, responsive browser layout, forced-colors rendering, or downloaded-file
+arrival. Those observations remain part of the manual release matrix.
 
 ## Failure reporting
 

@@ -23,6 +23,7 @@ behavior.
 | [0007](0007-separate-discernment-and-enactment.md) | Separate discernment from enactment and preserve a non-amplification floor. | Accepted |
 | [0008](0008-situated-individual-linguistic-repertoires.md) | Model linguistic code as situated individual repertoire. | Accepted |
 | [0009](0009-separate-experiential-ending-from-concept-receipt.md) | Separate the naturalized experiential ending from the plain concept receipt. | Accepted, implemented, automated verification passed; interactive promotion evidence open |
+| [0010](0010-authoritative-read-only-discovery-maps.md) | Generate interactive concept and CSD views from one read-only authoritative register. | Accepted and implemented; deterministic publication checks present, manual interaction evidence open |
 
 ## Creating a record
 

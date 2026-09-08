@@ -35,8 +35,8 @@ implementation. It recalculates implementation, artifact, package, and lock
 bindings. The check command fails on source drift, a missing or altered run,
 an unpassed blocking gate, a missing raw demonstration, or publication drift.
 
-`npm run docs:build` and `npm run docs:check` build or verify the notebook and
-release-evidence publications together.
+`npm run docs:build` and `npm run docs:check` build or verify the interactive
+discovery maps, executed notebooks, and release-evidence publications together.
 
 ## Result rules
 
