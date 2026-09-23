@@ -9,11 +9,19 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[2]
-LICENSE_ID = "LicenseRef-Hayden-Proprietary-1.0"
+LICENSE_ID = "LicenseRef-Hayden-Proprietary-1.1"
+LICENSE_NAME = "Hayden Howard Proprietary Product and Source License 1.1"
+CANONICAL_LICENSE_SHA256 = "07b7734eb4da7c79ffdd32d4641ab64eea1922e8149ebf50c430e5f54657628c"
+COPY_SPECIFIC_NOTICE = (
+    "Permissions validly attached to earlier distributed copies remain governed "
+    "by their own terms and do not automatically attach to later copies or snapshots."
+)
 PACKAGE_LICENSE = "SEE LICENSE IN LICENSE"
 BASELINE_PARENT = "a96194f02e9e03082d63d37f5e76ba5bacdc3e6c"
 OSI_CUTOFF = "40290f61d5605fbc767abd28f014dd39f2e93fce"
 HISTORICAL_LICENSE_HASHES = {
+    "LICENSES/HISTORICAL/Hayden-Howard-Proprietary-Product-and-Source-License-1.0.txt":
+        "822ce196a020ed2d4e3f077af3f2b49f11f8fc57e4310f3b32ac7cdb461054a0",
     "LICENSES/MIT-2026-08-18.txt":
         "f1ae5d3c15dc06b1cadeabb6c55e1abf095275554875c1d40df41d870f797d72",
     "LICENSES/AGPL-3.0-or-later-2026-08-24.txt":
@@ -38,7 +46,7 @@ def main() -> None:
     license_text = (ROOT / "LICENSE").read_text(encoding="utf-8")
     normalized_license = " ".join(license_text.split())
     require(
-        license_text.startswith("# Hayden Howard Proprietary Product and Source License 1.0\n"),
+        license_text.startswith(f"# {LICENSE_NAME}\n"),
         "root LICENSE title is not the authorized policy",
     )
     require(
@@ -46,23 +54,23 @@ def main() -> None:
         "root LICENSE is missing its identifier",
     )
     require(
+        hashlib.sha256(license_text.encode("utf-8")).hexdigest()
+        == CANONICAL_LICENSE_SHA256,
+        "root LICENSE does not match the canonical 1.1 text",
+    )
+    require(
         "applies prospectively" in normalized_license
-        and "does not revoke or narrow valid earlier grants" in normalized_license,
+        and COPY_SPECIFIC_NOTICE in normalized_license,
         "prospective and historical-grant boundaries are missing",
     )
     require(
         "machine-learning model training, fine-tuning" in normalized_license,
         "machine-learning restriction wording drifted",
     )
-    require(
-        "an earlier grant automatically attaches to it" in normalized_license,
-        "copy-specific historical-grant boundary is missing from LICENSE",
-    )
-
     licensing = (ROOT / "LICENSING.md").read_text(encoding="utf-8")
     normalized_licensing = " ".join(licensing.split())
     require(
-        "an earlier grant automatically attaches to a later snapshot" in normalized_licensing,
+        COPY_SPECIFIC_NOTICE in normalized_licensing,
         "copy-specific historical-grant boundary is missing from LICENSING.md",
     )
 
@@ -86,7 +94,7 @@ def main() -> None:
     require(license_map.get("permissive_exceptions") == [], "unexpected permissive exception")
     historical_notice = license_map.get("historical_notice", "")
     require(
-        "an earlier grant automatically attaches to a later snapshot" in historical_notice,
+        COPY_SPECIFIC_NOTICE in " ".join(historical_notice.split()),
         "license-map copy-specific historical notice drifted",
     )
     require(
@@ -126,6 +134,20 @@ def main() -> None:
     baseline = (ROOT / "COMMERCIAL_BASELINE.md").read_text(encoding="utf-8")
     require(BASELINE_PARENT in baseline, "commercial baseline parent drifted")
     require(OSI_CUTOFF in baseline, "historical OSI cutoff drifted")
+    require(LICENSE_ID in baseline, "successor policy is missing from the baseline record")
+
+    for relative in (
+        "COMMERCIAL-LICENSE.md",
+        "NOTICE",
+        "PERMISSIVE-EXCEPTIONS.md",
+        "README.md",
+        "WORKFLOW-BOUNDARIES.md",
+    ):
+        surface = " ".join((ROOT / relative).read_text(encoding="utf-8").split())
+        require(
+            COPY_SPECIFIC_NOTICE in surface,
+            f"copy-specific historical boundary is missing from {relative}",
+        )
 
     third_party = (ROOT / "THIRD_PARTY_NOTICES.md").read_text(encoding="utf-8")
     require("package-lock.json" in third_party, "third-party dependency notice is missing")
