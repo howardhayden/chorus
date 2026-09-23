@@ -1,17 +1,17 @@
 {
   "format": "CHORUS_UPDATED_WORKING_TREE_STATUS",
   "schema_version": 1,
-  "captured_at": "2026-09-01T22:32:35Z",
+  "captured_at": "2026-09-23T09:46:32Z",
   "base_repository": "howardhayden/chorus",
-  "base_commit": "4fffddf11a03a2fc84798a3c5343db00fc3135da",
+  "base_commit": "0e3d278a5849f79061f84913b61a8db1ac103bb2",
   "application_version": "1.0.0-rc.1",
   "generator_version": 15,
   "portable_save_schema": 2,
   "working_tree_state": "held-for-evidence-renewal",
-  "state_label": "Version-15 copy and linguistic working tree verified automatically; held for current browser, assistive-technology, and distribution renewal",
+  "state_label": "Current CHORUS working tree verified automatically; held for current browser, assistive-technology, dependency, and distribution renewal",
   "implementation_binding": {
     "algorithm": "sha256-path-length-content",
-    "digest": "65a23bf8126bac896b0217cf0623b029b26e4b9931f10b2927327237933adc84",
+    "digest": "fcc3d45ec5ea49a22278e1266d7b87e1e3aa26e48d95e89188ba0f0a1225bf64",
     "file_count": 22,
     "files": [
       {
@@ -21,8 +21,8 @@
       },
       {
         "path": "app/globals.css",
-        "bytes": 97806,
-        "sha256": "315118a1fca23f16f545a8d37b2a8642117efcbdfaf7f1b1f471ce372734d50b"
+        "bytes": 97827,
+        "sha256": "332791da1737cc27fdefa89a76dcac8d9cda7060bc7f64f87fb1a3f217f9d3de"
       },
       {
         "path": "app/layout.tsx",
@@ -36,8 +36,8 @@
       },
       {
         "path": "app/page.tsx",
-        "bytes": 72687,
-        "sha256": "05bc526fb8391482814a352a9bbff1f267bfeb34b927b4474f497f3ffeebc178"
+        "bytes": 72510,
+        "sha256": "11ec7031fe4ec2e84fcb1018196a328200acdc7f019408d44bc824a816673a91"
       },
       {
         "path": "app/privacy-panel.tsx",
@@ -76,8 +76,8 @@
       },
       {
         "path": "tests/accessibility-disclosure.test.mjs",
-        "bytes": 30279,
-        "sha256": "e729fda068b639c8354e63dc5e9f6f5a379e96d77fc2dbbe5db0a909ebd3b099"
+        "bytes": 30648,
+        "sha256": "0096b700a278818e2c9fa2273266d99917f0f17ef4e5a36d0f0a5da5f384f5aa"
       },
       {
         "path": "tests/concurrent-night.test.mjs",
@@ -111,8 +111,8 @@
       },
       {
         "path": "tests/viewport-contract.test.mjs",
-        "bytes": 14817,
-        "sha256": "f37f814463b1985dfbb74424ccee0aa53387962f29a8169508430b14ab8a89d4"
+        "bytes": 15337,
+        "sha256": "295b0369e4c5b232ce1bebb42dcb1121ca94bfaeade5b0a257abf9ed1bec0aed"
       },
       {
         "path": "tsconfig.json",
@@ -127,6 +127,9 @@
     ]
   },
   "included_update": [
+    "Desktop Relations navigation restored as one centered persistent header control",
+    "Seven mobile house tools retained in one horizontally scrollable row with 44px targets",
+    "Prospective proprietary policy integrated with historical and third-party rights preserved",
     "Atomized Catalysis voice across generated scenes while keeping utility and concept copy plain",
     "First-read debrief correction with one governing route, direct status labels, plain concept subtitles, and a pinned Lattice advisory red-team",
     "Continuous completed-night summary followed by a separate encountered, experienced, and played concept receipt",
@@ -219,7 +222,7 @@
   },
   "dependency_advisory_check": {
     "status": "not-run-current-lock",
-    "package_lock_sha256": "6a696f1b335222b5eb48d36d76b9d7fdf135af241d6fbb60b841338a625bdeb3",
+    "package_lock_sha256": "594b536b8f0cc8fab602946b3ff4ea77fb86906803f0c58c1940242ec7d64e1a",
     "total_dependencies": 649,
     "vulnerabilities": {
       "info": 0,
@@ -242,7 +245,7 @@
   ],
   "current_observation_limits": [
     "Live browser navigation could not be repeated in the packaging runtime because its managed Chromium policy blocked navigation, including loopback and intercepted test origins.",
-    "Current production compilation, rendered HTML metadata, icon assets, semantic contracts, viewport contracts, state tests, and deterministic simulation evidence were observed directly; production-route interaction and a current-lock dependency advisory check were not rerun.",
+    "Current licensing checks, production compilation, rendered HTML metadata, icon assets, semantic contracts, viewport contracts, state tests, deterministic simulation evidence, and notebook publications were observed directly; production-route interaction and a current-lock dependency advisory check were not rerun.",
     "The current clean source archive was assembled and hashed, but a second independent fresh-cache installation is reserved for promotion evidence rather than inferred from the verified working tree."
   ],
   "promotion_requirements": [

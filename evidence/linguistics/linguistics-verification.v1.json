@@ -1,7 +1,7 @@
 {
   "schema": "chorus.linguistics-verification.v1",
   "recordId": "linguistics-verification.v1",
-  "captureDate": "2026-09-01",
+  "captureDate": "2026-09-23",
   "authority": {
     "requestId": "SRC-U-20260831-CHORUS-LING",
     "requestSha256": "6f3045c41a3287dcf82d2c8657034dbc968fa26f8afb9d63b438316423be91d3",
@@ -11,7 +11,7 @@
   },
   "sourceBinding": {
     "algorithm": "sha256-path-length-content",
-    "implementationDigest": "65a23bf8126bac896b0217cf0623b029b26e4b9931f10b2927327237933adc84",
+    "implementationDigest": "fcc3d45ec5ea49a22278e1266d7b87e1e3aa26e48d95e89188ba0f0a1225bf64",
     "selectedFiles": [
       {
         "path": "app/debrief-copy.ts",
@@ -20,8 +20,8 @@
       },
       {
         "path": "app/globals.css",
-        "bytes": 97806,
-        "sha256": "315118a1fca23f16f545a8d37b2a8642117efcbdfaf7f1b1f471ce372734d50b"
+        "bytes": 97827,
+        "sha256": "332791da1737cc27fdefa89a76dcac8d9cda7060bc7f64f87fb1a3f217f9d3de"
       },
       {
         "path": "app/layout.tsx",
@@ -35,8 +35,8 @@
       },
       {
         "path": "app/page.tsx",
-        "bytes": 72687,
-        "sha256": "05bc526fb8391482814a352a9bbff1f267bfeb34b927b4474f497f3ffeebc178"
+        "bytes": 72510,
+        "sha256": "11ec7031fe4ec2e84fcb1018196a328200acdc7f019408d44bc824a816673a91"
       },
       {
         "path": "app/privacy-panel.tsx",
@@ -75,8 +75,8 @@
       },
       {
         "path": "tests/accessibility-disclosure.test.mjs",
-        "bytes": 30279,
-        "sha256": "e729fda068b639c8354e63dc5e9f6f5a379e96d77fc2dbbe5db0a909ebd3b099"
+        "bytes": 30648,
+        "sha256": "0096b700a278818e2c9fa2273266d99917f0f17ef4e5a36d0f0a5da5f384f5aa"
       },
       {
         "path": "tests/concurrent-night.test.mjs",
@@ -110,8 +110,8 @@
       },
       {
         "path": "tests/viewport-contract.test.mjs",
-        "bytes": 14817,
-        "sha256": "f37f814463b1985dfbb74424ccee0aa53387962f29a8169508430b14ab8a89d4"
+        "bytes": 15337,
+        "sha256": "295b0369e4c5b232ce1bebb42dcb1121ca94bfaeade5b0a257abf9ed1bec0aed"
       },
       {
         "path": "tsconfig.json",
@@ -125,18 +125,25 @@
       }
     ],
     "statusRecord": "evidence/runs/updated-working-tree-status.v1.json",
-    "statusBinding": "65a23bf8126bac896b0217cf0623b029b26e4b9931f10b2927327237933adc84"
+    "statusBinding": "fcc3d45ec5ea49a22278e1266d7b87e1e3aa26e48d95e89188ba0f0a1225bf64"
   },
   "runs": [
     {
-      "id": "RUN-LINT-TYPECHECK-20260901",
+      "id": "RUN-LICENSING-20260923",
+      "command": "npm run test:licensing",
+      "result": "pass",
+      "exitCode": 0,
+      "note": "The prospective proprietary policy, package pointers, no-reuse flags, and byte-preserved historical PolyForm and Creative Commons texts passed."
+    },
+    {
+      "id": "RUN-LINT-TYPECHECK-20260923",
       "command": "npm run lint && npx tsc --noEmit",
       "result": "pass",
       "exitCode": 0,
-      "note": "ESLint returned zero errors; informational unused-helper warnings did not fail the configured gate."
+      "note": "ESLint and the TypeScript no-emit check returned zero errors."
     },
     {
-      "id": "RUN-SIMULATION-EVIDENCE-20260901",
+      "id": "RUN-SIMULATION-EVIDENCE-20260923",
       "command": "npm run evidence:simulation",
       "result": "pass",
       "exitCode": 0,
@@ -145,7 +152,7 @@
       "evidenceSha256": "2e0baade3151a9d215b13b96bc95824a715546eabe8403a0fa1e546079195788"
     },
     {
-      "id": "RUN-NIGHT-20260901",
+      "id": "RUN-NIGHT-20260923",
       "command": "npm run test:night",
       "result": "pass",
       "exitCode": 0,
@@ -153,7 +160,7 @@
       "failures": 0
     },
     {
-      "id": "RUN-SIMULATION-FOCUSED-20260901",
+      "id": "RUN-SIMULATION-FOCUSED-20260923",
       "command": "npm run test:simulation",
       "result": "pass",
       "exitCode": 0,
@@ -161,7 +168,7 @@
       "failures": 0
     },
     {
-      "id": "RUN-SAVE-20260901",
+      "id": "RUN-SAVE-20260923",
       "command": "npm run test:save",
       "result": "pass",
       "exitCode": 0,
@@ -169,7 +176,7 @@
       "failures": 0
     },
     {
-      "id": "RUN-COPY-20260901",
+      "id": "RUN-COPY-20260923",
       "command": "npm run test:copy",
       "result": "pass",
       "exitCode": 0,
@@ -177,7 +184,7 @@
       "failures": 0
     },
     {
-      "id": "RUN-LINGUISTICS-CONTRACT-20260901",
+      "id": "RUN-LINGUISTICS-CONTRACT-20260923",
       "command": "node --experimental-strip-types --experimental-specifier-resolution=node --test tests/linguistics-contract.test.mjs",
       "result": "pass",
       "exitCode": 0,
@@ -185,7 +192,7 @@
       "failures": 0
     },
     {
-      "id": "RUN-A11Y-20260901",
+      "id": "RUN-A11Y-20260923",
       "command": "npm run test:a11y",
       "result": "pass",
       "exitCode": 0,
@@ -193,7 +200,7 @@
       "failures": 0
     },
     {
-      "id": "RUN-VIEWPORT-20260901",
+      "id": "RUN-VIEWPORT-20260923",
       "command": "npm run test:viewport",
       "result": "pass",
       "exitCode": 0,
@@ -201,14 +208,14 @@
       "failures": 0
     },
     {
-      "id": "RUN-DOCS-CHECK-20260901",
+      "id": "RUN-DOCS-CHECK-20260923",
       "command": "npm run docs:check:working-tree",
       "result": "pass",
       "exitCode": 0,
       "artifacts": 16
     },
     {
-      "id": "RUN-BUILD-RENDERED-20260901",
+      "id": "RUN-BUILD-RENDERED-20260923",
       "command": "npm run build && node --test tests/rendered-html.test.mjs",
       "result": "pass",
       "exitCode": 0,
@@ -216,7 +223,7 @@
       "failures": 0
     },
     {
-      "id": "RUN-WORKING-TREE-20260901",
+      "id": "RUN-WORKING-TREE-20260923",
       "command": "npm run verify:working-tree",
       "result": "pass",
       "exitCode": 0,
@@ -313,6 +320,6 @@
     "linguisticHighSeverityOpen": 0,
     "releaseHold": true,
     "releaseState": "held",
-    "reason": "Automated implementation and adversarial copy gates pass; browser, assistive-technology, viewport, current-route, dependency, and distribution evidence remain open for promotion."
+    "reason": "Automated implementation, licensing, publication, and adversarial copy gates pass; browser, assistive-technology, current-route, dependency, and distribution evidence remain open for promotion."
   }
 }

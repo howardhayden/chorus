@@ -207,7 +207,9 @@ test("relationship plot is filterable, keyboard explorable, and disclosure-bound
   assert.match(css, /\.relations-filters input,\.relations-filters select\{[^}]*min-height:44px/);
 });
 
-test("each visible navigation destination has one control per viewport", () => {
+test("each persistent navigation destination has one control per viewport", () => {
+  const header = functionSource("HouseHeader", "Prelude");
+  const rail = functionSource("RoomRail", "nextHouseArrival");
   const prelude = functionSource("Prelude", "RoomRail");
   const map = functionSource("HouseMap", "RelationshipPlot");
   const plot = functionSource("RelationshipPlot", "Invitation");
@@ -215,9 +217,11 @@ test("each visible navigation destination has one control per viewport", () => {
   assert.equal(page.match(/openDrawer\("lineage"/g)?.length, 1);
   assert.doesNotMatch(map, /onSelect|<button/);
   assert.doesNotMatch(plot, /Open this story|relationship-table[\s\S]*?<button/);
+  assert.equal((header.match(/id="header-relations"/g) ?? []).length, 1);
+  assert.match(header, /id="header-relations" className="relations-header-button" type="button" onClick=\{props\.onRelations\}>Relations<\/button>/);
+  assert.doesNotMatch(rail, /onRelations|>RELATIONS</);
   assert.match(css, /\.signals-button\{display:inline-flex/);
-  assert.match(css, /\.relations-header-button\{display:none\}/);
-  assert.match(css, /@media\(max-width:680px\)[\s\S]*\.relations-header-button\{display:inline-flex/);
+  assert.match(css, /\.relations-header-button\{display:inline-flex;align-items:center;justify-content:center;text-align:center\}/);
   assert.match(css, /\.rail-fallback-action\{display:none!important;[^}]*text-align:center/);
   assert.match(css, /@media\(max-width:680px\)[\s\S]*\.rail-fallback-action\{display:inline-flex!important\}/);
 });

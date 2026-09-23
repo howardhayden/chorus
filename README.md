@@ -49,11 +49,13 @@ remote content service, telemetry, or network write is required to play.
   scene effect rules. It is never guessed from labels, intent, tags, or the
   tone of the selected prose.
 
-## Run locally
+## Owner-authorized development
 
-Requirements for local play: Node.js 22.13 or newer and npm. Full verification
-and notebook rebuilding additionally require Python 3.10 or newer; the notebook
-builder uses only the standard library.
+These commands are for the Owner and expressly authorized collaborators. They
+document the development workflow; they are not a separate permission to build,
+run, modify, or redistribute the source. Authorized development requires Node.js
+22.13 or newer and npm. Full verification and notebook rebuilding additionally
+require Python 3.10 or newer; the notebook builder uses only the standard library.
 
 ```sh
 npm ci
@@ -154,9 +156,14 @@ interpretation boundary.
 
 ## Licensing
 
-CHORUS is **source-available for noncommercial use** under
-**PolyForm-Noncommercial-1.0.0**; commercial use requires a separate written license. Separable original documentation and media use **CC-BY-NC-SA-4.0**.
-No current source file or function has a permissive commercial-use exception.
-See [`LICENSING.md`](LICENSING.md),
+CHORUS is proprietary under the
+[`Hayden Howard Proprietary Product and Source License 1.0`](LICENSE)
+(`LicenseRef-Hayden-Proprietary-1.0`). An Official Product may be used only
+within its intentionally offered free scope or a purchased entitlement. Public
+source availability permits inspection under the controlling terms, not a
+general right to build, modify, redistribute, self-host, or reuse the
+implementation. This policy applies prospectively and preserves valid earlier
+grants, third-party terms, platform rights, and statutory exceptions. See
+[`LICENSING.md`](LICENSING.md),
 [`WORKFLOW-BOUNDARIES.md`](WORKFLOW-BOUNDARIES.md), and
 [`LICENSE-MAP.json`](LICENSE-MAP.json) for scope and historical limits.

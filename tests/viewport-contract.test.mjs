@@ -25,6 +25,19 @@ function cssBlock(selector, source = css) {
   assert.fail(`unterminated CSS block for ${selector}`);
 }
 
+function atRuleBlock(marker, source = compact(css)) {
+  const start = source.indexOf(`${marker}{`);
+  assert.notEqual(start, -1, `missing CSS at-rule ${marker}`);
+  const bodyStart = start + marker.length + 1;
+  let depth = 1;
+  for (let index = bodyStart; index < source.length; index += 1) {
+    if (source[index] === "{") depth += 1;
+    if (source[index] === "}") depth -= 1;
+    if (depth === 0) return source.slice(bodyStart, index);
+  }
+  assert.fail(`unterminated CSS at-rule ${marker}`);
+}
+
 function functionSource(name) {
   const start = page.indexOf(`function ${name}`);
   assert.notEqual(start, -1, `missing ${name}`);
@@ -241,11 +254,12 @@ test("the natural story, concept receipt, and model limit reflow inside the one 
   assert.match(compact(css), /@media\(forced-colors:active\)[\s\S]*(?:\.naturalized-summary|\.plain-concept-receipt|\.model-limit)/);
 });
 
-test("the seven mobile house tools wrap without a hidden horizontal nav", () => {
-  const mobile = compact(css);
-  assert.match(mobile, /@media\(max-width:680px\)[\s\S]*\.header-nav\{[^}]*overflow:visible;[^}]*display:grid;[^}]*grid-template-columns:repeat\(3,minmax\(0,1fr\)\)/);
-  assert.match(mobile, /@media\(max-width:680px\)[\s\S]*\.header-navbutton\{[^}]*min-width:0;[^}]*min-height:44px;[^}]*white-space:normal;[^}]*overflow-wrap:anywhere/);
-  assert.doesNotMatch(mobile, /@media\(max-width:680px\)[\s\S]*\.header-nav::-webkit-scrollbar\{display:none\}/);
+test("the seven mobile house tools occupy one horizontally scrollable row", () => {
+  const mobile = atRuleBlock("@media(max-width:680px)");
+  assert.match(mobile, /\.header-nav\{[^}]*overflow-x:auto;[^}]*overflow-y:hidden;[^}]*display:flex;[^}]*flex-wrap:nowrap;[^}]*overscroll-behavior-x:contain;[^}]*scrollbar-width:auto/);
+  assert.match(mobile, /\.header-navbutton\{[^}]*flex:00auto;[^}]*min-height:44px;[^}]*white-space:nowrap/);
+  assert.doesNotMatch(mobile, /\.header-nav\{[^}]*display:grid/);
+  assert.doesNotMatch(mobile, /\.header-nav::-webkit-scrollbar\{display:none\}/);
   const header = functionSource("HouseHeader");
   assert.equal((header.match(/<button\b/g) ?? []).length, 8, "one Home control plus seven house tools should remain in the DOM");
 });

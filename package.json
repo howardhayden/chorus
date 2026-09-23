@@ -1,7 +1,7 @@
 {
   "name": "chorus",
   "version": "1.0.0-rc.1",
-  "license": "PolyForm-Noncommercial-1.0.0",
+  "license": "SEE LICENSE IN LICENSE",
   "private": true,
   "engines": {
     "node": ">=22.13.0"
@@ -10,7 +10,8 @@
     "dev": "vite",
     "build": "vinext build",
     "start": "vinext start",
-    "test": "npm run docs:check && npm run test:night && npm run test:simulation && npm run test:save && npm run test:copy && npm run test:linguistics && npm run test:a11y && npm run test:viewport && npm run build && node --test tests/rendered-html.test.mjs",
+    "test": "npm run test:licensing && npm run docs:check && npm run test:night && npm run test:simulation && npm run test:save && npm run test:copy && npm run test:linguistics && npm run test:a11y && npm run test:viewport && npm run build && node --test tests/rendered-html.test.mjs",
+    "test:licensing": "python3 scripts/docs/check_licensing.py",
     "test:night": "node --experimental-strip-types --experimental-specifier-resolution=node --test tests/concurrent-night.test.mjs",
     "test:simulation": "node --experimental-strip-types --experimental-specifier-resolution=node --test tests/simulation-maturity.test.mjs",
     "test:save": "node --experimental-strip-types --experimental-specifier-resolution=node --test tests/save-model.test.mjs",
@@ -25,7 +26,7 @@
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
     "docs:build:working-tree": "python3 scripts/docs/build_discovery_maps.py && python3 scripts/docs/build_notebooks.py --notebooks-only",
     "docs:check:working-tree": "python3 scripts/docs/build_discovery_maps.py --check && python3 scripts/docs/build_notebooks.py --check --notebooks-only",
-    "verify:working-tree": "npm run lint && npx tsc --noEmit && npm run evidence:simulation && npm run docs:check:working-tree && npm run test:night && npm run test:simulation && npm run test:save && npm run test:copy && npm run test:linguistics && npm run test:a11y && npm run test:viewport && npm run build && node --test tests/rendered-html.test.mjs && npm run status:check",
+    "verify:working-tree": "npm run lint && npx tsc --noEmit && npm run evidence:simulation && npm run test:licensing && npm run docs:check:working-tree && npm run test:night && npm run test:simulation && npm run test:save && npm run test:copy && npm run test:linguistics && npm run test:a11y && npm run test:viewport && npm run build && node --test tests/rendered-html.test.mjs && npm run status:check",
     "verify:deploy": "npm run verify:working-tree",
     "status:build": "python3 scripts/docs/build_working_tree_status.py",
     "status:check": "python3 scripts/docs/build_working_tree_status.py --check"

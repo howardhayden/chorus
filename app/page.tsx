@@ -356,7 +356,7 @@ export default function Home() {
         analysisAvailable={nightComplete}
       />
       <div className={"house-workspace" + (introOpen ? " is-intro" : "")}>
-        {!introOpen && <RoomRail pack={pack} state={state} activeId={selectedId} relationsOpen={relationsOpen} onSelect={selectScenario} onHouse={returnToHouse} onRelations={openRelations} onDebrief={() => { if (!nightComplete) return; setDebriefOpen(true); setRelationsOpen(false); setSelectedId(null); focusStage("debrief-title"); }} onAdvance={advanceClock} onRegenerate={regenerate} />}
+        {!introOpen && <RoomRail pack={pack} state={state} activeId={selectedId} relationsOpen={relationsOpen} onSelect={selectScenario} onHouse={returnToHouse} onDebrief={() => { if (!nightComplete) return; setDebriefOpen(true); setRelationsOpen(false); setSelectedId(null); focusStage("debrief-title"); }} onAdvance={advanceClock} onRegenerate={regenerate} />}
         <section className="stage-view" ref={stageRef} role="region" aria-labelledby={stageHeadingId(introOpen, debriefOpen, relationsOpen, activeRoom)} tabIndex={0} data-scroll-region="primary">
           {introOpen ? (
             <Prelude onEnter={enterHouse} />
@@ -442,11 +442,11 @@ function Prelude({ onEnter }: { onEnter: () => void }) {
 
 function RoomRail(props: {
   pack: GeneratedScenarioPack; state: NightState; activeId: string | null; onSelect: (id: string) => void;
-  relationsOpen: boolean; onHouse: () => void; onRelations: () => void; onDebrief: () => void; onAdvance: () => void; onRegenerate: () => void;
+  relationsOpen: boolean; onHouse: () => void; onDebrief: () => void; onAdvance: () => void; onRegenerate: () => void;
 }) {
   const nextOpening = nextHouseArrival(props.pack, props.state);
   return <aside className="room-rail warm-frame" aria-label="Concurrent rooms">
-    <div className="rail-heading"><div><button type="button" onClick={props.onHouse} aria-current={!props.activeId && !props.relationsOpen ? "page" : undefined}>MAP</button><button type="button" onClick={props.onRelations} aria-current={props.relationsOpen ? "page" : undefined}>RELATIONS</button></div><span>{completedRoomCount(props.state)}/6 CLOSED</span></div>
+    <div className="rail-heading"><div><button type="button" onClick={props.onHouse} aria-current={!props.activeId && !props.relationsOpen ? "page" : undefined}>MAP</button></div><span>{completedRoomCount(props.state)}/6 CLOSED</span></div>
     <div className="room-tabs" aria-label="Room selector">{props.pack.scenarios.map((scenario, index) => { const room = props.state.rooms[scenario.id]; const due = !room.completed && isSceneDue(props.pack, props.state, scenario.id); return <button key={scenario.id} type="button" aria-current={!props.relationsOpen && props.activeId === scenario.id ? "page" : undefined} onClick={() => props.onSelect(scenario.id)}><span>{String(index + 1).padStart(2, "0")}</span><strong>{scenario.title.split(" · ").at(-1)}</strong><small>{room.completed ? "AFTERIMAGE" : room.entered ? (due ? "WAITING ON YOU" : "HOUSE MOVING") : "ENTER ANY TIME"}</small><i>{roomSignal(index)}</i></button>; })}</div>
     <div className="rail-actions">{isNightComplete(props.state) && <button type="button" onClick={props.onDebrief}>Whole-night receipt ↘</button>}{nextOpening !== undefined && <button type="button" onClick={props.onAdvance}>Advance +{nextOpening - props.state.elapsedMinutes}m</button>}<button type="button" onClick={props.onRegenerate}>{props.state.turn ? "Close and regenerate" : "Regenerate night"} ↻</button></div>
   </aside>;
