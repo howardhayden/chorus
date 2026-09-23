@@ -21,13 +21,13 @@
       "path": "notebooks/CHORUS-Systems-Atlas.ipynb",
       "media_type": "application/x-ipynb+json",
       "bytes": 163321,
-      "sha256": "d6a179c385e7faf952421d98254941ccd07ddde2657d9f34e0544c0958207608"
+      "sha256": "d03c6c0287d6d8a72c65344e80b23416932e7eb45dc40f35c59c48f82a35aaf4"
     },
     {
       "path": "notebooks/CHORUS-Validation-Atlas.ipynb",
       "media_type": "application/x-ipynb+json",
       "bytes": 182052,
-      "sha256": "71a00ee11a9493d95d610bb7134f3377ca7cfa1fb8fac4058c3173d682417500"
+      "sha256": "eb56a640987ecd64a41f32d1f3d8ec6a26dd7a4cf324174aab8c18ddd00231ff"
     },
     {
       "path": "public/notebooks/CHORUS-Model-Specification.ipynb",
@@ -45,13 +45,13 @@
       "path": "public/notebooks/CHORUS-Systems-Atlas.ipynb",
       "media_type": "application/x-ipynb+json",
       "bytes": 163321,
-      "sha256": "d6a179c385e7faf952421d98254941ccd07ddde2657d9f34e0544c0958207608"
+      "sha256": "d03c6c0287d6d8a72c65344e80b23416932e7eb45dc40f35c59c48f82a35aaf4"
     },
     {
       "path": "public/notebooks/CHORUS-Validation-Atlas.ipynb",
       "media_type": "application/x-ipynb+json",
       "bytes": 182052,
-      "sha256": "71a00ee11a9493d95d610bb7134f3377ca7cfa1fb8fac4058c3173d682417500"
+      "sha256": "eb56a640987ecd64a41f32d1f3d8ec6a26dd7a4cf324174aab8c18ddd00231ff"
     },
     {
       "path": "public/notebooks/chorus-model-specification.html",
@@ -69,13 +69,13 @@
       "path": "public/notebooks/chorus-systems-atlas.html",
       "media_type": "text/html",
       "bytes": 146261,
-      "sha256": "6cb9ce144030068112c60c1d90d352e775e687d58a4f66a958f62e89ec67fb49"
+      "sha256": "9e69293b7ce9f08a0c150f026a559f9d0f31bc74e24be381a63169887f1d59dc"
     },
     {
       "path": "public/notebooks/chorus-validation-atlas.html",
       "media_type": "text/html",
       "bytes": 159660,
-      "sha256": "7ef16be8af1f16b61b1813c4adf240f67a3a58f1ef5346ad6e4ec3ead4b21095"
+      "sha256": "8df0ec624e4ce6d233c0dad0c09a682648720308d6936a9f8d0bb1dd4da5cc60"
     },
     {
       "path": "public/notebooks/index.html",

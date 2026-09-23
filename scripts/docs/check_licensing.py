@@ -54,9 +54,18 @@ def main() -> None:
     )
     require(license_map.get("implementation_reuse_granted") is False, "reuse boundary drifted")
     require(license_map.get("noncommercial_reuse_granted") is False, "noncommercial boundary drifted")
+    require(license_map.get("institutional_reuse_exception") is False, "institutional boundary drifted")
+    require(license_map.get("priced_product_requires_entitlement") is True, "priced-product boundary drifted")
+    require(
+        license_map.get("no_automatic_permissive_exceptions") is True,
+        "permissive-exception boundary drifted",
+    )
     require(license_map.get("permissive_exceptions") == [], "unexpected permissive exception")
     require("commercial_use_granted" not in license_map, "ambiguous commercial-use field returned")
     require("official_product_use_only" not in license_map, "ambiguous Official Product field returned")
+    mapped_licenses = {rule.get("license") for rule in license_map.get("rules", [])}
+    require("SOURCE-COMPONENT-TERMS" in mapped_licenses, "generated-component boundary drifted")
+    require("SOURCE-SPECIFIC-NOTICES" in mapped_licenses, "source-specific notice boundary drifted")
 
     package = load_json("package.json")
     lock = load_json("package-lock.json")
@@ -74,6 +83,8 @@ def main() -> None:
         "source-available for noncommercial use" not in readme,
         "README restores the former prospective grant",
     )
+    require("PolyForm-Noncommercial-1.0.0" not in readme, "README advertises the former software license")
+    require("CC-BY-NC-SA-4.0" not in readme, "README advertises the former documentation license")
     require(
         "## Owner-authorized development" in readme,
         "development commands lack their authorization boundary",

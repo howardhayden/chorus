@@ -2,7 +2,7 @@
   "schema": "chorus.linguistics-red-team.v1",
   "recordId": "linguistics-red-team.post.v1",
   "phase": "post-correction",
-  "captureDate": "2026-09-01",
+  "captureDate": "2026-09-23",
   "authority": {
     "requestId": "SRC-U-20260831-CHORUS-LING",
     "requestSha256": "6f3045c41a3287dcf82d2c8657034dbc968fa26f8afb9d63b438316423be91d3",
@@ -11,7 +11,7 @@
     "baselineCommit": "4fffddf11a03a2fc84798a3c5343db00fc3135da"
   },
   "sourceBinding": {
-    "implementationDigest": "65a23bf8126bac896b0217cf0623b029b26e4b9931f10b2927327237933adc84",
+    "implementationDigest": "fcc3d45ec5ea49a22278e1266d7b87e1e3aa26e48d95e89188ba0f0a1225bf64",
     "verificationPath": "evidence/linguistics/linguistics-verification.v1.json",
     "preRecord": {
       "path": "evidence/linguistics/linguistics-red-team.pre.v1.json",
@@ -38,7 +38,7 @@
       "status": "corrected-with-accepted-limitation",
       "correction": "Schema 2 persists only the numeric replay trace; legacy payloads are structurally validated and canonically replayed before in-memory migration.",
       "evidenceRefs": [
-        "RUN-SAVE-20260901",
+        "RUN-SAVE-20260923",
         "LING-POST-001",
         "app/save-model.ts"
       ],
@@ -49,8 +49,8 @@
       "status": "corrected",
       "correction": "Live crossing clauses now branch on event kind, semantic, selected carriage, and separated selected/applied/background/avoided reach.",
       "evidenceRefs": [
-        "RUN-LINGUISTICS-CONTRACT-20260901",
-        "RUN-NIGHT-20260901",
+        "RUN-LINGUISTICS-CONTRACT-20260923",
+        "RUN-NIGHT-20260923",
         "app/night-engine.ts#visibleCrossingCopy"
       ],
       "residualRisk": "Manual live-region and browser announcement review remains an open promotion gap."
@@ -60,8 +60,8 @@
       "status": "corrected",
       "correction": "Both pure conclusion builders and the rendered debrief fail closed for unfinished or malformed completed state.",
       "evidenceRefs": [
-        "RUN-COPY-20260901",
-        "RUN-A11Y-20260901",
+        "RUN-COPY-20260923",
+        "RUN-A11Y-20260923",
         "app/debrief-copy.ts"
       ],
       "residualRisk": "No unresolved automated conclusion-gate defect remains."
@@ -71,8 +71,8 @@
       "status": "corrected-with-accepted-limitation",
       "correction": "The product exposes operational guidance before completion and discovers spoiler-bearing research links and embeds only after completion.",
       "evidenceRefs": [
-        "RUN-A11Y-20260901",
-        "RUN-LINGUISTICS-CONTRACT-20260901",
+        "RUN-A11Y-20260923",
+        "RUN-LINGUISTICS-CONTRACT-20260923",
         "CHR-LING-DISC-010"
       ],
       "residualRisk": "Direct static publication URLs remain public by design and are not a confidentiality boundary."
@@ -82,7 +82,7 @@
       "status": "corrected",
       "correction": "Active choice details retain situated action and omission while removing the appended protected-interest analysis.",
       "evidenceRefs": [
-        "RUN-LINGUISTICS-CONTRACT-20260901",
+        "RUN-LINGUISTICS-CONTRACT-20260923",
         "CHR-LING-ATOM-CHOICE-001"
       ],
       "residualRisk": "Stable systemic affordances repeat only in the separately typed plain-utility class."
@@ -92,7 +92,7 @@
       "status": "corrected",
       "correction": "Authored mentality and incident connection use explicit third-person fictional-seat language rather than assigning an interior to the player.",
       "evidenceRefs": [
-        "RUN-LINGUISTICS-CONTRACT-20260901",
+        "RUN-LINGUISTICS-CONTRACT-20260923",
         "app/scenario-generator.ts"
       ],
       "residualRisk": "Editorial browser review remains open; the automated 128-seed boundary passes."
@@ -102,7 +102,7 @@
       "status": "corrected",
       "correction": "Summary assembly selects complete sentences and retains every protected party, benefit, harmed party, harm, and self-cost without ellipsis.",
       "evidenceRefs": [
-        "RUN-COPY-20260901",
+        "RUN-COPY-20260923",
         "SWEEP-DEBRIEF-194"
       ],
       "residualRisk": "Manual screen-reader linearization and narrow reflow remain open promotion evidence."
@@ -112,7 +112,7 @@
       "status": "corrected",
       "correction": "Decision and room IDs, never normalized label text, establish identity; route provenance remains between exact origin and receiver decisions.",
       "evidenceRefs": [
-        "RUN-COPY-20260901",
+        "RUN-COPY-20260923",
         "CHR-LING-END-004"
       ],
       "residualRisk": "No unresolved automated identity or chronology defect remains."
@@ -122,8 +122,8 @@
       "status": "corrected",
       "correction": "The guide describes the implemented ending, and the fixed Meme lineage is explicitly labeled as a general reference rather than a played trace.",
       "evidenceRefs": [
-        "RUN-A11Y-20260901",
-        "RUN-COPY-20260901"
+        "RUN-A11Y-20260923",
+        "RUN-COPY-20260923"
       ],
       "residualRisk": "Manual product-language review remains an open promotion activity."
     },
@@ -143,7 +143,7 @@
       "status": "corrected-with-accepted-limitation",
       "correction": "Typed incident-responsive copy remains Catalysis; learnable safety, repair, and locked-ideal affordances use plain utility. Debrief cadence is state-derived, chronological, and scene-first.",
       "evidenceRefs": [
-        "RUN-COPY-20260901",
+        "RUN-COPY-20260923",
         "SWEEP-DEBRIEF-194",
         "CHR-LING-VOICE-011",
         "CHR-LING-END-005"
@@ -155,9 +155,9 @@
       "status": "corrected-with-accepted-limitation",
       "correction": "The normal workflow now exercises builders, persisted raw bytes, real event kinds, route semantics, malformed state, causal clauses, and inventory provenance.",
       "evidenceRefs": [
-        "RUN-LINGUISTICS-CONTRACT-20260901",
-        "RUN-COPY-20260901",
-        "RUN-SAVE-20260901"
+        "RUN-LINGUISTICS-CONTRACT-20260923",
+        "RUN-COPY-20260923",
+        "RUN-SAVE-20260923"
       ],
       "residualRisk": "Browser, assistive-technology, and physical viewport evidence remains explicitly open rather than inferred from source and unit contracts."
     },
@@ -166,7 +166,7 @@
       "status": "corrected-with-accepted-limitation",
       "correction": "Generator-15 publications and working-tree status now use the final implementation binding and mechanically checked focused-test and simulation counts.",
       "evidenceRefs": [
-        "RUN-DOCS-CHECK-20260901",
+        "RUN-DOCS-CHECK-20260923",
         "evidence/runs/updated-working-tree-status.v1.json",
         "linguistics-verification.v1"
       ],
@@ -182,7 +182,7 @@
       "issue": "JSON.parse materializes only one value for duplicate raw or escaped keys.",
       "correction": "Scan decoded object keys before materialization and reject duplicate seed, escaped se\\u0065d, and shadow payload probes.",
       "evidenceRefs": [
-        "RUN-SAVE-20260901",
+        "RUN-SAVE-20260923",
         "SWEEP-RAW-DUPLICATE-JSON-KEYS"
       ]
     },
@@ -194,7 +194,7 @@
       "issue": "Market-value evidence previously used an ambient frame even for selected direct content or format carriage.",
       "correction": "Use typed semantic and selectedCarriage to distinguish selected content, selected form, background, and ambient conditions.",
       "evidenceRefs": [
-        "RUN-COPY-20260901"
+        "RUN-COPY-20260923"
       ]
     },
     {
@@ -205,7 +205,7 @@
       "issue": "An ambient event could be narrated as though an actor supplied an update.",
       "correction": "Autonomous evidence names pre-choice activity and never invents a source-bearing action.",
       "evidenceRefs": [
-        "RUN-COPY-20260901"
+        "RUN-COPY-20260923"
       ]
     },
     {
@@ -216,7 +216,7 @@
       "issue": "A route chain and appended last resorts could narrate earlier decisions after later decisions.",
       "correction": "Build typed decision blocks, prevent chains from jumping intervening last resorts, and sort globally by accepted turn.",
       "evidenceRefs": [
-        "RUN-COPY-20260901",
+        "RUN-COPY-20260923",
         "SWEEP-DEBRIEF-194",
         "CHR-LING-END-004"
       ]
@@ -229,8 +229,8 @@
       "issue": "The UI completion flag could reach conclusion rendering before state consistency was checked.",
       "correction": "Validate before invoking either builder and render direct recovery copy without internal ledger detail.",
       "evidenceRefs": [
-        "RUN-A11Y-20260901",
-        "RUN-COPY-20260901"
+        "RUN-A11Y-20260923",
+        "RUN-COPY-20260923"
       ]
     },
     {
@@ -242,7 +242,7 @@
       "correction": "Specify completion as a product discovery gate only; static publications contain no played state.",
       "evidenceRefs": [
         "CHR-LING-DISC-010",
-        "RUN-A11Y-20260901"
+        "RUN-A11Y-20260923"
       ]
     },
     {
@@ -253,7 +253,7 @@
       "issue": "Exact replay cannot be claimed across a changed generation model.",
       "correction": "Reject with GENERATOR_VERSION_MISMATCH instead of silently replaying different authored state.",
       "evidenceRefs": [
-        "RUN-SAVE-20260901"
+        "RUN-SAVE-20260923"
       ]
     },
     {
@@ -264,7 +264,7 @@
       "issue": "Browser Storage exposes separate current-key and legacy-key writes/removals, so a failure can leave both or leave the current key after a clear attempt.",
       "correction": "Keep deterministic current-key read priority and explicit partial-failure recovery copy; a future storage transaction design may close the residual.",
       "evidenceRefs": [
-        "RUN-SAVE-20260901",
+        "RUN-SAVE-20260923",
         "app/save-model.ts#saveLocalSlot"
       ]
     },
@@ -288,7 +288,7 @@
       "issue": "Safety, repair, and locked-ideal actions intentionally repeat and should not be evaluated as incident-responsive literary variation.",
       "correction": "Classify from typed availability and ethics tags, never label text.",
       "evidenceRefs": [
-        "RUN-LINGUISTICS-CONTRACT-20260901",
+        "RUN-LINGUISTICS-CONTRACT-20260923",
         "CHR-LING-VOICE-011"
       ]
     },
@@ -302,7 +302,7 @@
       "evidenceRefs": [
         "SWEEP-AFTERIMAGE-EQUAL-TIE",
         "SWEEP-AFTERIMAGE-NO-CHANGE",
-        "RUN-COPY-20260901"
+        "RUN-COPY-20260923"
       ]
     },
     {
@@ -315,7 +315,7 @@
       "evidenceRefs": [
         "SWEEP-DEBRIEF-194",
         "CHR-LING-END-005",
-        "RUN-COPY-20260901"
+        "RUN-COPY-20260923"
       ]
     },
     {
@@ -328,7 +328,7 @@
       "evidenceRefs": [
         "evidence/copy/after-summary-and-map-red-team.post.v2.json",
         "SWEEP-DEBRIEF-194",
-        "RUN-COPY-20260901"
+        "RUN-COPY-20260923"
       ]
     },
     {
@@ -340,7 +340,7 @@
       "correction": "Use separate experiential, interpretive, and operative registers; select one governing route; name source, target, action, effect, and affected parties; explain status once in direct labels; and give every canonical concept a plain subtitle, exact event, and unique limit.",
       "evidenceRefs": [
         "evidence/linguistics/debrief-understandability-red-team.post.v1.json",
-        "RUN-COPY-20260901",
+        "RUN-COPY-20260923",
         "CHR-DEBRIEF-UNDERSTANDABILITY"
       ]
     },
@@ -354,8 +354,8 @@
       "evidenceRefs": [
         "CHR-SUM-IW-021",
         "CHR-COPY-COMPAT-002",
-        "RUN-SAVE-20260901",
-        "RUN-COPY-20260901"
+        "RUN-SAVE-20260923",
+        "RUN-COPY-20260923"
       ]
     }
   ],
