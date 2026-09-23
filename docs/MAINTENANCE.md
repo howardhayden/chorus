@@ -232,6 +232,8 @@ were a release transcript.
 
 ### Source and behavior
 
+- [ ] `COMMERCIAL_BASELINE.md` is present, licensing metadata agrees, and
+      `npm run test:licensing` passes.
 - [ ] Working tree contains only intended changes.
 - [ ] Generator and save version decisions are explicit.
 - [ ] All focused tests pass.
@@ -272,7 +274,10 @@ were a release transcript.
 - [ ] Traceability and known limitations are current.
 - [ ] Release evidence records environment, commands, digests, and manual matrix.
 
-### Clean distribution
+### Authorized clean distribution
+
+These checks apply only to an Owner-authorized source or product distribution;
+they do not make the public repository or build instructions a reuse grant.
 
 - [ ] Unpack archive into a new directory.
 - [ ] Run `npm ci` with no parent dependency directory.

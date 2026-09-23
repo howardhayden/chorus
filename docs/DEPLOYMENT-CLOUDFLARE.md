@@ -64,6 +64,10 @@ The workflow:
 5. confirms that the application, notebook index, and evidence index respond
    through `chorus.observer`.
 
+The verification includes the prospective licensing-policy check. It requires
+the commercial-baseline marker, aligned root/package metadata, and the recorded
+historical-license hashes. A revision that fails that check is not deployable.
+
 The committed Vite configuration keeps `workers.dev`, preview URLs, Logpush,
 invocation-log persistence, and Worker observability disabled. It declares
 `chorus.observer` as the custom-domain route. No database, remote save service,
@@ -91,6 +95,11 @@ Open **Cloudflare → Workers & Pages → chorus → Deployments**, select the l
 known-good version, and roll back to it. Then rerun the three canonical route
 checks. Do not change nameservers or delete the custom-domain route to roll
 back application code.
+
+Do not select or redeploy a revision before the commercial baseline merely as a
+technical rollback. If no post-baseline version is safe, contain access or fix
+forward under an authorized incident procedure. This does not alter rights in
+historical copies already distributed.
 
 ## Credential rotation
 

@@ -166,4 +166,7 @@ implementation. This policy applies prospectively and preserves valid earlier
 grants, third-party terms, platform rights, and statutory exceptions. See
 [`LICENSING.md`](LICENSING.md),
 [`WORKFLOW-BOUNDARIES.md`](WORKFLOW-BOUNDARIES.md), and
-[`LICENSE-MAP.json`](LICENSE-MAP.json) for scope and historical limits.
+[`LICENSE-MAP.json`](LICENSE-MAP.json) for scope and historical limits. Required
+dependency and other third-party terms remain identified in
+[`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md) and the locked dependency
+metadata.

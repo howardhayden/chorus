@@ -52,14 +52,15 @@ terms of their components.
 
 Apply applicable law and platform rights first. Preserve valid earlier grants
 and third-party terms for their material. Apply separately signed Owner
-agreements only within their express scope, then the ordered scope map and the
-default proprietary license.
+agreements only within their express scope, then protected identity or register
+terms, the ordered scope map, and the default proprietary license.
 
-Historical MIT, AGPL, PolyForm, Creative Commons, and other license notices must not
+Historical MIT, PolyForm, Creative Commons, and other license notices must not
 be deleted or rewritten to imply that earlier rights vanished. Those grants
-remain effective for their covered material, including unchanged material in
-later snapshots. Third-party fonts, packages, algorithms, and media retain their
-own notices. A public GitHub repository remains subject to the platform's
+remain effective for the copies to which they validly attached; this policy
+does not assert that an earlier grant automatically attaches to a later
+snapshot. Third-party fonts, packages, algorithms, and media retain their own
+notices. A public GitHub repository remains subject to the platform's
 viewing and forking rights; this policy does not make public bytes private.
 
 The policy does not claim ownership of unprotected ideas, facts, methods,
@@ -76,8 +77,8 @@ license maps, package metadata, published license descriptions, and licensing
 tests consistent. Preserve third-party and historical terms rather than doing
 a repository-wide replacement of every license identifier.
 
-These policy files alone do not set prices, create accounts or billing, enforce
-a paywall, change repository visibility, activate a held feature, or release a product.
+This change does not set prices, create accounts or billing, enforce a paywall,
+change repository visibility, activate a held feature, or release a product.
 Licensing, pricing, and technical access enforcement require separate work.
 Before commercial launch or enforcement, obtain qualified review of the terms,
 ownership chain, historical grants, customer assent, and actual distribution.

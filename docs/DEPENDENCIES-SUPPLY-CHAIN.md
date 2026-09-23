@@ -141,9 +141,9 @@ registry integrity values, and exact-version lifecycle-script allowlist. The
 time-bound advisory result so a later audit cannot silently rewrite an older
 release claim.
 
-## Source archive boundary
+## Authorized source archive boundary
 
-A distributable source archive includes authored source, tests, documentation,
+An Owner-authorized source archive includes authored source, tests, documentation,
 notebook sources and executed HTML, manifests, and lockfile. It excludes:
 
 - dependency directories;

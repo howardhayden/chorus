@@ -1,14 +1,15 @@
 {
   "format": "howardhayden-license-map-v3",
-  "scope_inventory_date": "2026-08-24",
+  "audited": "2026-08-24",
   "project": "CHORUS",
   "source_available_not_open_source": true,
   "default_license": "LicenseRef-Hayden-Proprietary-1.0",
-  "commercial_implementation_reuse_granted": false,
+  "commercial_use_granted": false,
   "precedence": [
     "applicable-law-and-platform-rights",
     "valid-earlier-grants-and-third-party-terms",
     "separately-signed-owner-agreements",
+    "reserved-identity-and-register-specific-terms",
     "ordered-rules-below",
     "default-license"
   ],
@@ -67,13 +68,13 @@
     "the authored model specifications, diagrams, taxonomies, labels, and test contracts"
   ],
   "permissive_exceptions": [],
-  "historical_notice": "Valid earlier grants remain effective for their covered material, including unchanged material in later snapshots. New pricing or this notice does not revoke those rights. Historical and third-party license texts are not new grants over new Owner-controlled material.",
+  "historical_notice": "Valid earlier grants remain effective for the copies to which they validly attached. This policy does not assert that an earlier grant automatically attaches to a later snapshot. New pricing or this notice does not revoke rights already attached to earlier copies. Historical and third-party license texts are not new grants over new Owner-controlled material.",
   "policy_updated": "2026-09-23",
   "policy_license_file": "LICENSE",
   "implementation_reuse_granted": false,
   "noncommercial_reuse_granted": false,
   "institutional_reuse_exception": false,
-  "official_product_operating_permission_only": true,
+  "official_product_use_only": true,
   "priced_product_requires_entitlement": true,
   "no_automatic_permissive_exceptions": true,
   "reuse_exception_requirements": {

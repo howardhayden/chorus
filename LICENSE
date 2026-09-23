@@ -32,11 +32,10 @@ terms, the Owner grants a nonexclusive, nontransferable, nonsublicensable right
 to operate the unmodified Official Product for its documented purpose within
 the scope of your end-user entitlement:
 
-- **Free offering:** an Official Product the Owner intentionally makes accessible
-  through an Owner-designated channel without an active stated price, checkout,
-  paywall, or paid-entitlement requirement may be used within its stated users,
-  edition, channel, duration, and other limits. Repository availability or the
-  absence of a source-code price is not a free Official Product offering.
+- **Expressly free offering:** you may use the functionality the Owner
+  intentionally offers without a charge, within the stated users, edition,
+  channel, duration, and other limits. Absence of a listed price by itself is
+  not permission to use repository code or an unoffered product.
 - **Priced offering:** the applicable purchase, subscription, or express written
   exception is required before using the priced functionality. A separately
   offered free trial or free edition is limited to its stated scope.
@@ -85,9 +84,8 @@ Official Product entitlement rules apply to those users. A commercial customer
 may use an Official Product at work within the purchased scope without thereby
 receiving permission to reuse or redistribute its implementation.
 
-Except for rights preserved by section 7, these terms grant no additional
-permission to extract the protected Materials for AI training, fine-tuning,
-retrieval, prompting, evaluation, or derived implementations. This
+No grant is made to extract the protected Materials for machine-learning model training,
+fine-tuning, retrieval, prompting, evaluation, or derived implementations. This
 does not prohibit the Owner's authorized agents, documented Official Product
 functionality, independently created material, or uses allowed without the
 Owner's permission under applicable law. No contractual restriction here
@@ -121,13 +119,15 @@ or necessarily supplied by applicable law.
 
 ## 7. Earlier grants, third parties, platforms, and law
 
-Valid permissions already attached to earlier distributed material remain
-available under their own terms, including where that same material appears in
-a later snapshot. A new filename, version, price, repository visibility setting,
-or license notice does not extinguish those rights. Historical license texts
+Valid permissions already attached to an earlier distributed copy remain
+available for that copy under their own terms. A later snapshot is governed by
+the terms applicable to that later distribution; this license does not assert
+that an earlier grant automatically attaches to it. A new filename, version,
+price, repository visibility setting, or license notice does not extinguish
+rights already attached to an earlier copy. Historical license texts
 and notices are retained as evidence, not expanded into a fresh grant over new
-Owner-controlled material. These terms are not an amendment to MIT, AGPL,
-PolyForm, Creative Commons, or another pre-existing license.
+Owner-controlled material. These terms are not an amendment to MIT, PolyForm,
+Creative Commons, or another pre-existing license.
 
 Third-party components, fonts, algorithms, media, and other material retain their
 own licenses and notices. Those terms control the third-party scope and may

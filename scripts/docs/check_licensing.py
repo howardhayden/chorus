@@ -11,7 +11,13 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 LICENSE_ID = "LicenseRef-Hayden-Proprietary-1.0"
 PACKAGE_LICENSE = "SEE LICENSE IN LICENSE"
+BASELINE_PARENT = "a96194f02e9e03082d63d37f5e76ba5bacdc3e6c"
+OSI_CUTOFF = "40290f61d5605fbc767abd28f014dd39f2e93fce"
 HISTORICAL_LICENSE_HASHES = {
+    "LICENSES/MIT-2026-08-18.txt":
+        "f1ae5d3c15dc06b1cadeabb6c55e1abf095275554875c1d40df41d870f797d72",
+    "LICENSES/AGPL-3.0-or-later-2026-08-24.txt":
+        "015868165b320fc0351c61233fdc4f5944f2e64c4eb7d9c0042ffa2634a90776",
     "LICENSES/PolyForm-Noncommercial-1.0.0.txt":
         "ffcca38841adb694b6f380647e15f17c446a4d1656fed51a1e2041d064c94cc8",
     "LICENSES/CC-BY-NC-SA-4.0.txt":
@@ -44,25 +50,49 @@ def main() -> None:
         and "does not revoke or narrow valid earlier grants" in normalized_license,
         "prospective and historical-grant boundaries are missing",
     )
+    require(
+        "machine-learning model training, fine-tuning" in normalized_license,
+        "machine-learning restriction wording drifted",
+    )
+    require(
+        "an earlier grant automatically attaches to it" in normalized_license,
+        "copy-specific historical-grant boundary is missing from LICENSE",
+    )
+
+    licensing = (ROOT / "LICENSING.md").read_text(encoding="utf-8")
+    normalized_licensing = " ".join(licensing.split())
+    require(
+        "an earlier grant automatically attaches to a later snapshot" in normalized_licensing,
+        "copy-specific historical-grant boundary is missing from LICENSING.md",
+    )
 
     license_map = load_json("LICENSE-MAP.json")
     require(license_map.get("format") == "howardhayden-license-map-v3", "map format drifted")
+    require(license_map.get("audited") == "2026-08-24", "prepared scope-audit date drifted")
     require(license_map.get("default_license") == LICENSE_ID, "map default drifted")
     require(
-        license_map.get("commercial_implementation_reuse_granted") is False,
+        license_map.get("commercial_use_granted") is False,
         "commercial implementation-reuse boundary drifted",
     )
     require(license_map.get("implementation_reuse_granted") is False, "reuse boundary drifted")
     require(license_map.get("noncommercial_reuse_granted") is False, "noncommercial boundary drifted")
     require(license_map.get("institutional_reuse_exception") is False, "institutional boundary drifted")
+    require(license_map.get("official_product_use_only") is True, "Official Product boundary drifted")
     require(license_map.get("priced_product_requires_entitlement") is True, "priced-product boundary drifted")
     require(
         license_map.get("no_automatic_permissive_exceptions") is True,
         "permissive-exception boundary drifted",
     )
     require(license_map.get("permissive_exceptions") == [], "unexpected permissive exception")
-    require("commercial_use_granted" not in license_map, "ambiguous commercial-use field returned")
-    require("official_product_use_only" not in license_map, "ambiguous Official Product field returned")
+    historical_notice = license_map.get("historical_notice", "")
+    require(
+        "an earlier grant automatically attaches to a later snapshot" in historical_notice,
+        "license-map copy-specific historical notice drifted",
+    )
+    require(
+        "including unchanged material in later snapshots" not in historical_notice,
+        "license-map improperly carries an earlier grant into later snapshots",
+    )
     mapped_licenses = {rule.get("license") for rule in license_map.get("rules", [])}
     require("SOURCE-COMPONENT-TERMS" in mapped_licenses, "generated-component boundary drifted")
     require("SOURCE-SPECIFIC-NOTICES" in mapped_licenses, "source-specific notice boundary drifted")
@@ -92,6 +122,13 @@ def main() -> None:
 
     contributing = (ROOT / "CONTRIBUTING.md").read_text(encoding="utf-8")
     require("This proprietary repository" in contributing, "contribution policy is stale")
+
+    baseline = (ROOT / "COMMERCIAL_BASELINE.md").read_text(encoding="utf-8")
+    require(BASELINE_PARENT in baseline, "commercial baseline parent drifted")
+    require(OSI_CUTOFF in baseline, "historical OSI cutoff drifted")
+
+    third_party = (ROOT / "THIRD_PARTY_NOTICES.md").read_text(encoding="utf-8")
+    require("package-lock.json" in third_party, "third-party dependency notice is missing")
 
     for relative, expected in HISTORICAL_LICENSE_HASHES.items():
         actual = hashlib.sha256((ROOT / relative).read_bytes()).hexdigest()
